@@ -30,11 +30,11 @@
 // global pmt variables
 float d_pmt_x[64];
 float d_pmt_y[64];
-float d_pmt_z = -1443.5;
+float d_pmt_z = -1443.5; // same for all tubes
 
 //tree invariables
-static const int max_nh = 10;
-static const int max_nf = 750;
+static const int max_nh = 10; // see from ana taxi code
+static const int max_nf = 750; // see from ana taxi code
 
 using namespace std;
 
@@ -170,17 +170,19 @@ void initialize_pmt_position();
 
 void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
 
+  // --- need some agreed upon standard for dealing with paths
+
   char outFile1[300];
-  sprintf(outFile1,"%s%d%s","/phenix/plhf/theok/taxi/Run15pAu200FVTXClusAna503/8819/processed/hist_",runNumber,".root");
+  sprintf(outFile1,"%s%d%s","/phenix/plhf/theok/taxi/Run15pAu200FVTXClusAna503/8819/processed/hist_",runNumber,".root"); // absolute paths need to be dealt with
 
   char outFile2[100];
-  sprintf(outFile2,"%s%d%s","vtx_ep_calib/shengli/rp/hrp_",runNumber,".root");
+  sprintf(outFile2,"%s%d%s","vtx_ep_calib/shengli/rp/hrp_",runNumber,".root"); // absolute paths need to be dealt with
 
   cout<<"runNumber = " <<runNumber<<" "
   <<"rp_recal_pass = "<<rp_recal_pass<<endl;
 
   char filename[500];
-  sprintf(filename,"/gpfs/mnt/gpfs02/phenix/plhf/plhf1/theok/taxi/Run15pAu200FVTXClusAna503/8819/data/%d.root",runNumber);
+  sprintf(filename,"/gpfs/mnt/gpfs02/phenix/plhf/plhf1/theok/taxi/Run15pAu200FVTXClusAna503/8819/data/%d.root",runNumber); // abslute paths need to be dealt with
 
   cout << "v2 input file: " << filename << endl;
   cout << "v2 output file: " << outFile1 << endl;
@@ -210,8 +212,9 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
   bool bbc_pmts      = true;
   bool vtx_tracks    = true;
 
-  int n_angle_config = 64;
+  int n_angle_config = 64; // move below, number is 8 * 8 (nothing to do with number of bbc tubes)
   int n_side_angle = sqrt(n_angle_config);
+  // --- these things for bookkeeping...???
   int first_bbc_angle = 2;
   int first_fvtx_angle = 64+2;
   int first_fvtx_0_angle = 2*64+2;
@@ -232,6 +235,7 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
   //                                                            //
   //------------------------------------------------------------//
 
+  // --- lots of comments needed here
   TH2D     *qx[NMUL][NHAR][NDET];
   TH2D     *qy[NMUL][NHAR][NDET];
   TProfile *ave[NMUL][NZPS][NHAR][NDET];
@@ -358,7 +362,7 @@ if(rp_recal_pass>=2)
 
   for(int iangle1 = 0; iangle1 < n_side_angle; iangle1++)
     {
-      float blue_angle = min_blue_angle+iangle1*(max_blue_angle-min_blue_angle)/n_side_angle;
+      float blue_angle = min_blue_angle+iangle1*(max_blue_angle-min_blue_angle)/n_side_angle; // always a good idea to cast ints as floats
       float blue_px = 100*TMath::Sin(blue_angle);
       float blue_py = 0.0;
       float blue_pz = 100*TMath::Cos(blue_angle);
@@ -367,7 +371,7 @@ if(rp_recal_pass>=2)
     }
   for(int iangle2 = 0; iangle2 < n_side_angle; iangle2++)
     {
-      float yellow_angle = TMath::Pi()+min_yellow_angle+iangle2*(max_yellow_angle-min_yellow_angle)/n_side_angle;
+      float yellow_angle = TMath::Pi()+min_yellow_angle+iangle2*(max_yellow_angle-min_yellow_angle)/n_side_angle; // always a good idea to cast ints as floats
       float yellow_px = 100*TMath::Sin(yellow_angle);
       float yellow_py = 0.0;
       float yellow_pz = 100*TMath::Cos(yellow_angle);
@@ -559,19 +563,23 @@ if(rp_recal_pass>=2)
 
     //if(vtx_z!=vtx_z) continue;
     //if( fabs(vtx_z) > 100) continue;
-    int ibbcz  = NZPS*(d_bbcz+30)/60;//bbc z bin for -30 <bbc z < 30
+    // --- some big questions here about the z-vertex cut
+    // --- really need to double and triple check where the zvertex cuts are applied and what they are
+    int ibbcz  = NZPS*(d_bbcz+30)/60;//bbc z bin for -30 <bbc z < 30 // how do you specify the number of bins here
 
+    // --- break and continue statements should happen much, much earlier --------------------
     if(rp_recal_pass<1 || rp_recal_pass > 3) break;// rp_recal_pass only valid between 1 and 3
 
     if(ibbcz<0||ibbcz>=NZPS) continue;
 
     if(d_nsegments==0 && rp_recal_pass > 2) continue;
+    // ---------------------------------------------------------------------------------------
 
    //------------------------------------------------------------//
    //                Calculating Event Planes                    //
    //------------------------------------------------------------//
 
-    float vtx_x = bc_x + d_bbcz*0.025/10;
+    float vtx_x = bc_x + d_bbcz*0.025/10; // z dependent x position because of beam angle rotation issues // what are these numbers?  // these are really specific to p+Au
     float vtx_y = bc_y;
 
     float bbc_qx[n_angle_config];
@@ -612,6 +620,7 @@ if(rp_recal_pass>=2)
           float energy = TMath::Sqrt(px*px+py*py+pz*pz+mass*mass);
           TLorentzVector particle_vec(px,py,pz,energy);
 
+          // --- need explanation of these two things
           int iangle_blue = iangle/n_side_angle;
           int iangle_yellow = iangle%n_side_angle;
 
@@ -646,15 +655,16 @@ if(rp_recal_pass>=2)
       {
         for(int iclus = 0; iclus < d_nFVTX_clus; iclus++)
           {
-            float fvtx_x      = d_FVTX_x[iclus] - vtx_x;
+            float fvtx_x      = d_FVTX_x[iclus] - vtx_x; // calculate for each event, function of z
             float fvtx_y      = d_FVTX_y[iclus] - vtx_y;
             float fvtx_z      = d_FVTX_z[iclus];
 
             double fvtx_r = sqrt(pow(fvtx_x,2.0)+pow(fvtx_y,2.0));
 
-            double fvtx_the = atan2(fvtx_r,fvtx_z - d_bbcz); //fvtx_z-bbcv
+            double fvtx_the = atan2(fvtx_r,fvtx_z - d_bbcz); //fvtx_z-bbcv // add a new variable to make it clear that you're using a corrected z vertex
             double fvtx_eta = -log(tan(0.5*fvtx_the));
 
+            // --- z dependent eta cut for the track, but not for the clusters???
             if(!(fabs(fvtx_eta)>1.0 && fabs(fvtx_eta)<3.5)) continue;
            // cout<<"fvtx_x: "<<fvtx_x<<" fvtx_y: "<<fvtx_y<<" fvtx_z"<<fvtx_z<<endl;
 
@@ -876,9 +886,9 @@ if(rp_recal_pass>=2)
      float phi0 = TMath::ATan2(py,px);
      float pt = sqrt(px*px+py*py);
 
-     float bbc_dphi_2 = phi0 - bbc_psi2;
+     float bbc_dphi_2 = phi0 - bbc_psi2; // move this lower?
 
-     if(-4.0<bbc_psi2 && bbc_psi2<4.0 )
+     if(-4.0<bbc_psi2 && bbc_psi2<4.0 ) // why this weird cut? why not just -pi to pi? // checking against -9999 from above
      {
        bbcs_v2_incl_default->Fill(pt,cos(2*bbc_dphi_2));
        if(dcarm==0) 
@@ -919,8 +929,8 @@ if(rp_recal_pass>=2)
 
         boost_and_rotate(particle_vec,blue_vecs[iangle_blue],yellow_vecs[iangle_yellow],1);// option 1 Lab to CoM
 
-        float phi_angle = TMath::ATan2(particle_vec.Py(),particle_vec.Px());
-        float pt_angle = TMath::Sqrt(particle_vec.Py()*particle_vec.Py()+particle_vec.Px()*particle_vec.Px());
+        float phi_angle = TMath::ATan2(particle_vec.Py(),particle_vec.Px()); // rotated phi // "modified"
+        float pt_angle = TMath::Sqrt(particle_vec.Py()*particle_vec.Py()+particle_vec.Px()*particle_vec.Px()); // rotated pt "modified"
 
         //bbc angle
         if(bbc_pmts)
