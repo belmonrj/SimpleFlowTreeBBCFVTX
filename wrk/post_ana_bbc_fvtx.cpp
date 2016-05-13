@@ -8,15 +8,15 @@
 #include "RpPar.h"
 #endif
 
-//#ifndef __CINT__  
+//#ifndef __CINT__
 #include "TROOT.h"
-#include "TFile.h" 
+#include "TFile.h"
 #include "TChain.h"
 #include "TMath.h"
-#include "TH1.h" 
-#include "TH2.h"   
+#include "TH1.h"
+#include "TH2.h"
 #include "TH3.h"
-#include "TF1.h" 
+#include "TF1.h"
 #include "TStyle.h"
 #include "TCanvas.h"
 #include "TProfile.h"
@@ -25,7 +25,7 @@
 #include "TNtuple.h"
 #include "TRandom.h"
 #include "TLorentzVector.h"
-//#endif 
+//#endif
 
 // global pmt variables
 float d_pmt_x[64];
@@ -67,12 +67,12 @@ using namespace std;
 bool DIAG = false;
 
 // JLN - 1) this function takes as 2nd, 3rd arguments the beam vectors in the Lab Frame
-//       2) it then determines the needed boost and rotatation (in that order) into the center-of-mass frame 
+//       2) it then determines the needed boost and rotatation (in that order) into the center-of-mass frame
 //          with the beams along the z-axis
-//       3) it then uses these boost and rotation values to either change the vector "vec" 
+//       3) it then uses these boost and rotation values to either change the vector "vec"
 //          from the Lab to the CoM frame (option 1) or from the CoM fram to the Lab frame (option 2)
 //       4) JLN added an option flag for this function
-//       5) Note that in this original version the function also returns the relative phi angle between frames... 
+//       5) Note that in this original version the function also returns the relative phi angle between frames...
 float boost_and_rotate(TLorentzVector & vec, TLorentzVector input1, TLorentzVector input2, int option)
 {
 
@@ -109,7 +109,7 @@ float boost_and_rotate(TLorentzVector & vec, TLorentzVector input1, TLorentzVect
   // Now rotate the beams about x to align them with z axis
   double rotAngleY1 = -input1.Angle(z);
   double rotAngleY2 = -input2.Angle(z);   // this assumes rotation is just interchanging x and z !!!!
- 
+
   if (DIAG) {
     cout << "angle around Y = " << rotAngleY1 << " (and alternate check = " << rotAngleY2 << " )" << endl;
   }
@@ -140,12 +140,12 @@ float boost_and_rotate(TLorentzVector & vec, TLorentzVector input1, TLorentzVect
   // now change vec either (option==1 from the Lab to Com) or (option==2 from the Com to Lab)
   if (option == 1) {
     // Lab to CoM - order is boost and then rotate (identical to beam manipulations)
-    vec.Boost(-cms.BoostVector()); 
+    vec.Boost(-cms.BoostVector());
     vec.RotateY(rotAngleY);
   } else if (option == 2) {
     // CoM to Lab - order is rotate and boost (opposite sign of beam manipulations)
     vec.RotateY(-rotAngleY);
-    vec.Boost(cms.BoostVector()); 
+    vec.Boost(cms.BoostVector());
   } else {
     cout << "boost_and_rotate:   Error with option not equal to 1 or 2:  option = " << option << endl;
   }
@@ -192,7 +192,7 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
 
   TFile *f=TFile::Open( filename);
 
-  if(!f) 
+  if(!f)
     {
       cout<<"ERROR, file: "<<filename<<" could not be opened"<<endl;
       return;
@@ -200,7 +200,7 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
 
   TTree *htree = (TTree *)f->Get("ntp_event");
 
-  if(!htree) 
+  if(!htree)
     {
       cout<<"ERROR, ntp_event could not be opened"<<endl;
       return;
@@ -250,11 +250,11 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
   char name[200];
   int icent = 0;
   int ic = icent;
-  for (int iz=0; iz<NZPS; iz++) 
+  for (int iz=0; iz<NZPS; iz++)
     {
-      for (int ih=1; ih<NHAR; ih++) 
+      for (int ih=1; ih<NHAR; ih++)
         {
-          for (int id=0; id<NDET; id++) 
+          for (int id=0; id<NDET; id++)
             {
               sprintf(name,"ave_%d_%d_%d_%d",ic,iz,ih,id);
               ave[ic][iz][ih][id] = new TProfile(name,name,4,-0.5,3.5,-10.1,10.1,"S");//for SMD -1.1,1.1
@@ -266,9 +266,9 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
         }
     }
 
-  for (int ih=1; ih<NHAR; ih++) 
+  for (int ih=1; ih<NHAR; ih++)
     {
-      for (int id=0; id<NDET; id++) 
+      for (int id=0; id<NDET; id++)
         {
           sprintf(name,"dis_%d_%d_%d",ic,ih,id);
           dis[ic][ih][id] = new TH2D(name,name,NZPS*3,-0.5,NZPS*3.0-0.5,50,-pi,pi);
@@ -283,18 +283,18 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
 
 
   //Initializing the calibration parameters
-  for (int iz=0; iz<NZPS; iz++) 
+  for (int iz=0; iz<NZPS; iz++)
     {
-      for (int ih=1; ih<NHAR; ih++) 
+      for (int ih=1; ih<NHAR; ih++)
         {
-          for (int id=0; id<NDET; id++) 
+          for (int id=0; id<NDET; id++)
             {
-              for (int ib=0; ib<2; ib++) 
+              for (int ib=0; ib<2; ib++)
                 {
                   mean[ic][iz][ih][id][ib]=0.0;
                   widt[ic][iz][ih][id][ib]=1.0;
 
-                  for (int io=0; io<NORD; io++) 
+                  for (int io=0; io<NORD; io++)
                     {
                       four[ic][iz][ih][id][ib][io]=0.0;
                     }
@@ -320,11 +320,11 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
       float f0,f1,f2,f3;//f4,f5,f6,f7;
       ifstream ifs;
       ifs.open(calibfile);
-      for (int iz=0; iz<NZPS; iz++) 
+      for (int iz=0; iz<NZPS; iz++)
         {
-          for (int ih=1; ih<NHAR; ih++) 
+          for (int ih=1; ih<NHAR; ih++)
             {
-              for (int id=0; id<NDET; id++) 
+              for (int id=0; id<NDET; id++)
                 {
                   ifs >> f0 >> f1 >> f2 >> f3;
                   if (f1==0.0 || f1<0.0) f1=1.0;
@@ -334,9 +334,9 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
                   mean[ic][iz][ih][id][1]=f2;
                   widt[ic][iz][ih][id][1]=f3;
                   if(id==0 && ih == 1 && DIAG) cout<<f0<<" "<<f1<<" "<<f2<<" "<<f3<<endl;//bbc psi 2 parameters
-                  for (int ib=0; ib<2; ib++) 
+                  for (int ib=0; ib<2; ib++)
                     {
-                      for (int io=0; io<NORD; io++) 
+                      for (int io=0; io<NORD; io++)
                         {
                           ifs>>four[ic][iz][ih][id][ib][io];
                         }
@@ -524,7 +524,7 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
   int nentries = htree->GetEntries();
   cout<<"total events = " << nentries<<endl;
   for ( int ievt = 0 ; ievt < nentries ; ievt++ ) {
-    
+
     if(ievt%1000==0) cout<<"event number = "<<ievt<<endl;
     //if(ievt ==1000) break;
 
@@ -543,7 +543,7 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
     if(bbc_pmts)
       b_d_BBC_charge->GetEntry(ievt);//bbc pmts charge
 
-    //FVTX clusters    
+    //FVTX clusters
     if(fvtx_clusters)
       {
         b_d_nFVTX_clus->GetEntry(ievt);
@@ -616,7 +616,7 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
               float px = pT * TMath::Cos(phi);
               float py = pT * TMath::Sin(phi);
               float pz = pT * TMath::SinH(bbc_eta);
-          
+
               float energy = TMath::Sqrt(px*px+py*py+pz*pz+mass*mass);
               TLorentzVector particle_vec(px,py,pz,energy);
 
@@ -701,7 +701,7 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
               fvtx_qy[0][iangle] += TMath::Sin(2*phi);
 
               if(iangle==0)
-                { 
+                {
                   fvtx_qw[fvtx_layer+1] ++;
                   fvtx_qw[0] ++;
                 }
@@ -710,9 +710,9 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
         }
 
     float sumxy[NHAR][NDET][4];
-    for (int i=0; i<NHAR; i++) 
+    for (int i=0; i<NHAR; i++)
       {
-        for (int j=0; j<NDET; j++) 
+        for (int j=0; j<NDET; j++)
           {
             for (int k=0; k<4; k++)//qx qy qw psi
               {
@@ -842,7 +842,7 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
         }
       }//end of id
     }//end of ih
-      
+
     if(rp_recal_pass<3) continue;
 
     float bbc_psi2 = (sumxy[1][0][2]>0)?sumxy[1][0][3]:-9999.9;
@@ -891,7 +891,7 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
           if(-4.0<bbc_psi2 && bbc_psi2<4.0 ) // why this weird cut? why not just -pi to pi? // checking against -9999 from above
             {
               bbcs_v2_incl_default->Fill(pt,cos(2*bbc_dphi_2));
-              if(dcarm==0) 
+              if(dcarm==0)
                 {
                   bbcs_v2_east_default->Fill(pt,cos(2*bbc_dphi_2));
                 }
@@ -906,7 +906,7 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
           if(-4.0<fvtx_psi2 && fvtx_psi2<4.0 )
             {
               fvtxs_v2_incl_default->Fill(pt,cos(2*fvtx_dphi_2));
-              if(dcarm==0) 
+              if(dcarm==0)
                 {
                   fvtxs_v2_east_default->Fill(pt,cos(2*fvtx_dphi_2));
                 }
@@ -1037,8 +1037,8 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
                   }
               }
         }
-  }//end of event 
-    
+  }//end of event
+
   //}
 
   if(rp_recal_pass<3 && rp_recal_pass>0)
@@ -1051,13 +1051,13 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
 
       cout << "writing out flattening parameters" << endl;
       //int icent = 0;
-      for (int iz=0; iz<NZPS; iz++) 
+      for (int iz=0; iz<NZPS; iz++)
         {
-          for (int ih=1; ih<NHAR; ih++) 
+          for (int ih=1; ih<NHAR; ih++)
             {
-              for (int id=0; id<NDET; id++) 
+              for (int id=0; id<NDET; id++)
                 {
-                  for (int ib=0; ib<2; ib++) 
+                  for (int ib=0; ib<2; ib++)
                     {
                       if(DIAG)
                         cout<<"writing ave:  "<<ic<<" "<<iz<<" "<<ih<<" "<<id<<endl;
@@ -1066,9 +1066,9 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
                       ofs << ave[icent][iz][ih][id]->GetBinError  (ib+1) << " ";
                     }
                   ofs << endl;
-                  for (int ib=0; ib<2; ib++) 
+                  for (int ib=0; ib<2; ib++)
                     {
-                      for (int io=0; io<NORD; io++) 
+                      for (int io=0; io<NORD; io++)
                         {
                           ofs << flt[icent][iz][ih][id]->GetBinContent(ib*NORD+io+1) << " ";
                         }
@@ -1086,9 +1086,9 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
     mData2->cd();
     for (int iz=0; iz<NZPS; iz++)
       {
-        for (int ih=1; ih<NHAR; ih++) 
+        for (int ih=1; ih<NHAR; ih++)
           {
-            for (int id=0; id<NDET; id++) 
+            for (int id=0; id<NDET; id++)
               {
                 ave[ic][iz][ih][id]->Write();
                 flt[ic][iz][ih][id]->Write();
@@ -1096,9 +1096,9 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
           }
       }
 
-    for (int ih=1; ih<NHAR; ih++) 
+    for (int ih=1; ih<NHAR; ih++)
       {
-        for (int id=0; id<NDET; id++) 
+        for (int id=0; id<NDET; id++)
           {
             //if(ih==1 && id==4)
             //{
@@ -1149,9 +1149,9 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
 
   cout<<"cleaning up"<<endl;
 
-  htree->Delete(); 
-  f->Close(); 
-  delete f; 
+  htree->Delete();
+  f->Close();
+  delete f;
   /*
     delete bbcs_v2_incl_default;
     delete bbcs_v2_east_default;
