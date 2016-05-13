@@ -179,7 +179,7 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
   sprintf(outFile2,"%s%d%s","vtx_ep_calib/shengli/rp/hrp_",runNumber,".root"); // absolute paths need to be dealt with
 
   cout<<"runNumber = " <<runNumber<<" "
-  <<"rp_recal_pass = "<<rp_recal_pass<<endl;
+      <<"rp_recal_pass = "<<rp_recal_pass<<endl;
 
   char filename[500];
   sprintf(filename,"/gpfs/mnt/gpfs02/phenix/plhf/plhf1/theok/taxi/Run15pAu200FVTXClusAna503/8819/data/%d.root",runNumber); // abslute paths need to be dealt with
@@ -251,57 +251,57 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
   int icent = 0;
   int ic = icent;
   for (int iz=0; iz<NZPS; iz++) 
-  {
-    for (int ih=1; ih<NHAR; ih++) 
     {
-     for (int id=0; id<NDET; id++) 
-     {
-       sprintf(name,"ave_%d_%d_%d_%d",ic,iz,ih,id);
-       ave[ic][iz][ih][id] = new TProfile(name,name,4,-0.5,3.5,-10.1,10.1,"S");//for SMD -1.1,1.1
+      for (int ih=1; ih<NHAR; ih++) 
+        {
+          for (int id=0; id<NDET; id++) 
+            {
+              sprintf(name,"ave_%d_%d_%d_%d",ic,iz,ih,id);
+              ave[ic][iz][ih][id] = new TProfile(name,name,4,-0.5,3.5,-10.1,10.1,"S");//for SMD -1.1,1.1
 
-       sprintf(name,"flt_%d_%d_%d_%d",ic,iz,ih,id);
-       flt[ic][iz][ih][id] = new TProfile(name,name,4*NORD,-0.5,NORD*4.0-0.5,-1.1,1.1);
+              sprintf(name,"flt_%d_%d_%d_%d",ic,iz,ih,id);
+              flt[ic][iz][ih][id] = new TProfile(name,name,4*NORD,-0.5,NORD*4.0-0.5,-1.1,1.1);
 
+            }
+        }
     }
-  }
-}
 
   for (int ih=1; ih<NHAR; ih++) 
-  {
-    for (int id=0; id<NDET; id++) 
     {
-     sprintf(name,"dis_%d_%d_%d",ic,ih,id);
-     dis[ic][ih][id] = new TH2D(name,name,NZPS*3,-0.5,NZPS*3.0-0.5,50,-pi,pi);
+      for (int id=0; id<NDET; id++) 
+        {
+          sprintf(name,"dis_%d_%d_%d",ic,ih,id);
+          dis[ic][ih][id] = new TH2D(name,name,NZPS*3,-0.5,NZPS*3.0-0.5,50,-pi,pi);
 
-     sprintf(name,"qx_%d_%d_%d",ic,ih,id);
-     qx[ic][ih][id] = new TH2D(name,name,NZPS*3,-0.5,NZPS*3.0-0.5, 220,-4.1,4.1);
+          sprintf(name,"qx_%d_%d_%d",ic,ih,id);
+          qx[ic][ih][id] = new TH2D(name,name,NZPS*3,-0.5,NZPS*3.0-0.5, 220,-4.1,4.1);
 
-     sprintf(name,"qy_%d_%d_%d",ic,ih,id);
-     qy[ic][ih][id] = new TH2D(name,name,NZPS*3,-0.5,NZPS*3.0-0.5, 220,-4.1,4.1);
-   }
- }
+          sprintf(name,"qy_%d_%d_%d",ic,ih,id);
+          qy[ic][ih][id] = new TH2D(name,name,NZPS*3,-0.5,NZPS*3.0-0.5, 220,-4.1,4.1);
+        }
+    }
 
 
-//Initializing the calibration parameters
+  //Initializing the calibration parameters
   for (int iz=0; iz<NZPS; iz++) 
-  {
-    for (int ih=1; ih<NHAR; ih++) 
     {
-     for (int id=0; id<NDET; id++) 
-     {
-       for (int ib=0; ib<2; ib++) 
-       {
-         mean[ic][iz][ih][id][ib]=0.0;
-         widt[ic][iz][ih][id][ib]=1.0;
+      for (int ih=1; ih<NHAR; ih++) 
+        {
+          for (int id=0; id<NDET; id++) 
+            {
+              for (int ib=0; ib<2; ib++) 
+                {
+                  mean[ic][iz][ih][id][ib]=0.0;
+                  widt[ic][iz][ih][id][ib]=1.0;
 
-         for (int io=0; io<NORD; io++) 
-         {
-           four[ic][iz][ih][id][ib][io]=0.0;
-         }
-       }
-     }
-   }
- }
+                  for (int io=0; io<NORD; io++) 
+                    {
+                      four[ic][iz][ih][id][ib][io]=0.0;
+                    }
+                }
+            }
+        }
+    }
 
   //------------------------------------------------------------//
   //   Finished Initializing Calibration Arrays & Histograms    //
@@ -313,39 +313,39 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
   //                                                            //
   //------------------------------------------------------------//
 
-if(rp_recal_pass>=2)
-{
+  if(rp_recal_pass>=2)
+    {
 
-  cout << "reading calibration file : " << calibfile << endl;
-  float f0,f1,f2,f3;//f4,f5,f6,f7;
-  ifstream ifs;
-  ifs.open(calibfile);
-  for (int iz=0; iz<NZPS; iz++) 
-  {
-   for (int ih=1; ih<NHAR; ih++) 
-   {
-     for (int id=0; id<NDET; id++) 
-     {
-       ifs >> f0 >> f1 >> f2 >> f3;
-       if (f1==0.0 || f1<0.0) f1=1.0;
-       if (f3==0.0 || f3<0.0) f3=1.0;
-       mean[ic][iz][ih][id][0]=f0;
-       widt[ic][iz][ih][id][0]=f1;
-       mean[ic][iz][ih][id][1]=f2;
-       widt[ic][iz][ih][id][1]=f3;
-       if(id==0 && ih == 1 && DIAG) cout<<f0<<" "<<f1<<" "<<f2<<" "<<f3<<endl;//bbc psi 2 parameters
-       for (int ib=0; ib<2; ib++) 
-       {
-         for (int io=0; io<NORD; io++) 
-         {
-          ifs>>four[ic][iz][ih][id][ib][io];
-         }
-       }
-     }
-   }
-  }
-  ifs.close();
-}
+      cout << "reading calibration file : " << calibfile << endl;
+      float f0,f1,f2,f3;//f4,f5,f6,f7;
+      ifstream ifs;
+      ifs.open(calibfile);
+      for (int iz=0; iz<NZPS; iz++) 
+        {
+          for (int ih=1; ih<NHAR; ih++) 
+            {
+              for (int id=0; id<NDET; id++) 
+                {
+                  ifs >> f0 >> f1 >> f2 >> f3;
+                  if (f1==0.0 || f1<0.0) f1=1.0;
+                  if (f3==0.0 || f3<0.0) f3=1.0;
+                  mean[ic][iz][ih][id][0]=f0;
+                  widt[ic][iz][ih][id][0]=f1;
+                  mean[ic][iz][ih][id][1]=f2;
+                  widt[ic][iz][ih][id][1]=f3;
+                  if(id==0 && ih == 1 && DIAG) cout<<f0<<" "<<f1<<" "<<f2<<" "<<f3<<endl;//bbc psi 2 parameters
+                  for (int ib=0; ib<2; ib++) 
+                    {
+                      for (int io=0; io<NORD; io++) 
+                        {
+                          ifs>>four[ic][iz][ih][id][ib][io];
+                        }
+                    }
+                }
+            }
+        }
+      ifs.close();
+    }
 
 
   //------------------------------------------------------------//
@@ -417,32 +417,32 @@ if(rp_recal_pass>=2)
   vector<TProfile * > fvtxs3_v2_incl_angle;
 
   for(int iangle = 0; iangle < n_angle_config; iangle++)
-  {
-    bbcs_v2_west_angle.push_back(new TProfile(Form("bbcs_v2_west_angle_%d",iangle),Form("bbcs_v2_west_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
-    bbcs_v2_east_angle.push_back(new TProfile(Form("bbcs_v2_east_angle_%d",iangle),Form("bbcs_v2_east_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
-    bbcs_v2_incl_angle.push_back(new TProfile(Form("bbcs_v2_incl_angle_%d",iangle),Form("bbcs_v2_incl_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
+    {
+      bbcs_v2_west_angle.push_back(new TProfile(Form("bbcs_v2_west_angle_%d",iangle),Form("bbcs_v2_west_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
+      bbcs_v2_east_angle.push_back(new TProfile(Form("bbcs_v2_east_angle_%d",iangle),Form("bbcs_v2_east_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
+      bbcs_v2_incl_angle.push_back(new TProfile(Form("bbcs_v2_incl_angle_%d",iangle),Form("bbcs_v2_incl_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
 
-    fvtxs_v2_west_angle.push_back(new TProfile(Form("fvtxs_v2_west_angle_%d",iangle),Form("fvtxs_v2_west_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
-    fvtxs_v2_east_angle.push_back(new TProfile(Form("fvtxs_v2_east_angle_%d",iangle),Form("fvtxs_v2_east_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
-    fvtxs_v2_incl_angle.push_back(new TProfile(Form("fvtxs_v2_incl_angle_%d",iangle),Form("fvtxs_v2_incl_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
+      fvtxs_v2_west_angle.push_back(new TProfile(Form("fvtxs_v2_west_angle_%d",iangle),Form("fvtxs_v2_west_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
+      fvtxs_v2_east_angle.push_back(new TProfile(Form("fvtxs_v2_east_angle_%d",iangle),Form("fvtxs_v2_east_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
+      fvtxs_v2_incl_angle.push_back(new TProfile(Form("fvtxs_v2_incl_angle_%d",iangle),Form("fvtxs_v2_incl_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
 
-    fvtxs0_v2_west_angle.push_back(new TProfile(Form("fvtxs0_v2_west_angle_%d",iangle),Form("fvtxs0_v2_west_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
-    fvtxs0_v2_east_angle.push_back(new TProfile(Form("fvtxs0_v2_east_angle_%d",iangle),Form("fvtxs0_v2_east_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
-    fvtxs0_v2_incl_angle.push_back(new TProfile(Form("fvtxs0_v2_incl_angle_%d",iangle),Form("fvtxs0_v2_incl_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
+      fvtxs0_v2_west_angle.push_back(new TProfile(Form("fvtxs0_v2_west_angle_%d",iangle),Form("fvtxs0_v2_west_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
+      fvtxs0_v2_east_angle.push_back(new TProfile(Form("fvtxs0_v2_east_angle_%d",iangle),Form("fvtxs0_v2_east_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
+      fvtxs0_v2_incl_angle.push_back(new TProfile(Form("fvtxs0_v2_incl_angle_%d",iangle),Form("fvtxs0_v2_incl_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
 
-    fvtxs1_v2_west_angle.push_back(new TProfile(Form("fvtxs1_v2_west_angle_%d",iangle),Form("fvtxs1_v2_west_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
-    fvtxs1_v2_east_angle.push_back(new TProfile(Form("fvtxs1_v2_east_angle_%d",iangle),Form("fvtxs1_v2_east_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
-    fvtxs1_v2_incl_angle.push_back(new TProfile(Form("fvtxs1_v2_incl_angle_%d",iangle),Form("fvtxs1_v2_incl_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
+      fvtxs1_v2_west_angle.push_back(new TProfile(Form("fvtxs1_v2_west_angle_%d",iangle),Form("fvtxs1_v2_west_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
+      fvtxs1_v2_east_angle.push_back(new TProfile(Form("fvtxs1_v2_east_angle_%d",iangle),Form("fvtxs1_v2_east_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
+      fvtxs1_v2_incl_angle.push_back(new TProfile(Form("fvtxs1_v2_incl_angle_%d",iangle),Form("fvtxs1_v2_incl_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
 
-    fvtxs2_v2_west_angle.push_back(new TProfile(Form("fvtxs2_v2_west_angle_%d",iangle),Form("fvtxs2_v2_west_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
-    fvtxs2_v2_east_angle.push_back(new TProfile(Form("fvtxs2_v2_east_angle_%d",iangle),Form("fvtxs2_v2_east_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
-    fvtxs2_v2_incl_angle.push_back(new TProfile(Form("fvtxs2_v2_incl_angle_%d",iangle),Form("fvtxs2_v2_incl_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
+      fvtxs2_v2_west_angle.push_back(new TProfile(Form("fvtxs2_v2_west_angle_%d",iangle),Form("fvtxs2_v2_west_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
+      fvtxs2_v2_east_angle.push_back(new TProfile(Form("fvtxs2_v2_east_angle_%d",iangle),Form("fvtxs2_v2_east_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
+      fvtxs2_v2_incl_angle.push_back(new TProfile(Form("fvtxs2_v2_incl_angle_%d",iangle),Form("fvtxs2_v2_incl_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
 
-    fvtxs3_v2_west_angle.push_back(new TProfile(Form("fvtxs3_v2_west_angle_%d",iangle),Form("fvtxs3_v2_west_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
-    fvtxs3_v2_east_angle.push_back(new TProfile(Form("fvtxs3_v2_east_angle_%d",iangle),Form("fvtxs3_v2_east_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
-    fvtxs3_v2_incl_angle.push_back(new TProfile(Form("fvtxs3_v2_incl_angle_%d",iangle),Form("fvtxs3_v2_incl_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
+      fvtxs3_v2_west_angle.push_back(new TProfile(Form("fvtxs3_v2_west_angle_%d",iangle),Form("fvtxs3_v2_west_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
+      fvtxs3_v2_east_angle.push_back(new TProfile(Form("fvtxs3_v2_east_angle_%d",iangle),Form("fvtxs3_v2_east_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
+      fvtxs3_v2_incl_angle.push_back(new TProfile(Form("fvtxs3_v2_incl_angle_%d",iangle),Form("fvtxs3_v2_incl_angle_%d",iangle),15, 0.0, 3.0,-1.1,1.1));
 
-  }
+    }
 
   //------------------------------------------------------------//
   //               Initializing Tree Variables                  //
@@ -545,21 +545,21 @@ if(rp_recal_pass>=2)
 
     //FVTX clusters    
     if(fvtx_clusters)
-    {
-      b_d_nFVTX_clus->GetEntry(ievt);
-      b_d_FVTX_x->GetEntry(ievt);
-      b_d_FVTX_y->GetEntry(ievt);
-      b_d_FVTX_z->GetEntry(ievt);
-    }
+      {
+        b_d_nFVTX_clus->GetEntry(ievt);
+        b_d_FVTX_x->GetEntry(ievt);
+        b_d_FVTX_y->GetEntry(ievt);
+        b_d_FVTX_z->GetEntry(ievt);
+      }
 
     //VTX Tracks
     if(vtx_tracks)
-    {
-      b_nsegments->GetEntry(ievt);
-      b_px->GetEntry(ievt);
-      b_py->GetEntry(ievt);
-      b_pz->GetEntry(ievt);
-    }
+      {
+        b_nsegments->GetEntry(ievt);
+        b_px->GetEntry(ievt);
+        b_py->GetEntry(ievt);
+        b_pz->GetEntry(ievt);
+      }
 
     //if(vtx_z!=vtx_z) continue;
     //if( fabs(vtx_z) > 100) continue;
@@ -575,9 +575,9 @@ if(rp_recal_pass>=2)
     if(d_nsegments==0 && rp_recal_pass > 2) continue;
     // ---------------------------------------------------------------------------------------
 
-   //------------------------------------------------------------//
-   //                Calculating Event Planes                    //
-   //------------------------------------------------------------//
+    //------------------------------------------------------------//
+    //                Calculating Event Planes                    //
+    //------------------------------------------------------------//
 
     float vtx_x = bc_x + d_bbcz*0.025/10; // z dependent x position because of beam angle rotation issues // what are these numbers?  // these are really specific to p+Au
     float vtx_y = bc_y;
@@ -587,261 +587,261 @@ if(rp_recal_pass>=2)
     float bbc_qw             = 0;
 
     for(int iangle = 0; iangle < n_angle_config; iangle++)
-    {
-      bbc_qx[iangle] = 0;
-      bbc_qy[iangle] = 0;
-    }
+      {
+        bbc_qx[iangle] = 0;
+        bbc_qy[iangle] = 0;
+      }
 
     if(bbc_pmts)
-    for(int iangle = 0; iangle < n_angle_config; iangle++)
-    {
-      for(int ipmt = 0; ipmt < 64; ipmt++)
+      for(int iangle = 0; iangle < n_angle_config; iangle++)
         {
-          float bbc_x      = d_pmt_x[ipmt] - vtx_x*10;//pmt location in mm
-          float bbc_y      = d_pmt_y[ipmt] - vtx_y*10;
-          float bbc_z      = d_pmt_z       - d_bbcz*10;
-          float bbc_charge = d_BBC_charge[ipmt];
-          if(bbc_charge <= 0) continue;
-          //cout<<"bbc_x: "<<bbc_x<<" bbc_y: "<<bbc_y<<" bbc_z: "<<bbc_z<<endl;
+          for(int ipmt = 0; ipmt < 64; ipmt++)
+            {
+              float bbc_x      = d_pmt_x[ipmt] - vtx_x*10;//pmt location in mm
+              float bbc_y      = d_pmt_y[ipmt] - vtx_y*10;
+              float bbc_z      = d_pmt_z       - d_bbcz*10;
+              float bbc_charge = d_BBC_charge[ipmt];
+              if(bbc_charge <= 0) continue;
+              //cout<<"bbc_x: "<<bbc_x<<" bbc_y: "<<bbc_y<<" bbc_z: "<<bbc_z<<endl;
 
-          double bbc_r = sqrt(pow(bbc_x,2.0)+pow(bbc_y,2.0));
+              double bbc_r = sqrt(pow(bbc_x,2.0)+pow(bbc_y,2.0));
 
-          double bbc_the = atan2(bbc_r,bbc_z); //fvtx_z-bbcv
-          double bbc_eta = -log(tan(0.5*bbc_the));
+              double bbc_the = atan2(bbc_r,bbc_z); //fvtx_z-bbcv
+              double bbc_eta = -log(tan(0.5*bbc_the));
 
-          float phi = TMath::ATan2(bbc_y,bbc_x);
+              float phi = TMath::ATan2(bbc_y,bbc_x);
 
-          float mass = 0.1396;//assume charged pion mass
-          float pT = 0.25;
-          float px = pT * TMath::Cos(phi);
-          float py = pT * TMath::Sin(phi);
-          float pz = pT * TMath::SinH(bbc_eta);
+              float mass = 0.1396;//assume charged pion mass
+              float pT = 0.25;
+              float px = pT * TMath::Cos(phi);
+              float py = pT * TMath::Sin(phi);
+              float pz = pT * TMath::SinH(bbc_eta);
           
-          float energy = TMath::Sqrt(px*px+py*py+pz*pz+mass*mass);
-          TLorentzVector particle_vec(px,py,pz,energy);
+              float energy = TMath::Sqrt(px*px+py*py+pz*pz+mass*mass);
+              TLorentzVector particle_vec(px,py,pz,energy);
 
-          // --- need explanation of these two things
-          int iangle_blue = iangle/n_side_angle;
-          int iangle_yellow = iangle%n_side_angle;
+              // --- need explanation of these two things
+              int iangle_blue = iangle/n_side_angle;
+              int iangle_yellow = iangle%n_side_angle;
 
-          boost_and_rotate(particle_vec,blue_vecs[iangle_blue],yellow_vecs[iangle_yellow],1);// option 1 Lab to CoM
+              boost_and_rotate(particle_vec,blue_vecs[iangle_blue],yellow_vecs[iangle_yellow],1);// option 1 Lab to CoM
 
-          phi = TMath::ATan2(particle_vec.Py(),particle_vec.Px());
+              phi = TMath::ATan2(particle_vec.Py(),particle_vec.Px());
 
-          bbc_qx[iangle] += bbc_charge*TMath::Cos(2*phi);
-          bbc_qy[iangle] += bbc_charge*TMath::Sin(2*phi);
-          if(iangle == 0)
-            bbc_qw += bbc_charge;
+              bbc_qx[iangle] += bbc_charge*TMath::Cos(2*phi);
+              bbc_qy[iangle] += bbc_charge*TMath::Sin(2*phi);
+              if(iangle == 0)
+                bbc_qw += bbc_charge;
+            }
         }
-    }
 
     float fvtx_qx[5][n_angle_config];//all layers then 0 1 2 3
     float fvtx_qy[5][n_angle_config];
     float fvtx_qw[5]                ;
 
     for(int iangle = 0; iangle < n_angle_config; iangle++)
-    {
-      for(int ilayer = 0; ilayer < 5; ilayer++)
       {
-        fvtx_qx[ilayer][iangle] = 0.0;
-        fvtx_qy[ilayer][iangle] = 0.0;
-        if(iangle==0)
-          fvtx_qw[ilayer] = 0.0;
+        for(int ilayer = 0; ilayer < 5; ilayer++)
+          {
+            fvtx_qx[ilayer][iangle] = 0.0;
+            fvtx_qy[ilayer][iangle] = 0.0;
+            if(iangle==0)
+              fvtx_qw[ilayer] = 0.0;
+          }
       }
-    }
 
     if(fvtx_clusters)
       for(int iangle = 0; iangle< n_angle_config; iangle++)
-      {
-        for(int iclus = 0; iclus < d_nFVTX_clus; iclus++)
-          {
-            float fvtx_x      = d_FVTX_x[iclus] - vtx_x; // calculate for each event, function of z
-            float fvtx_y      = d_FVTX_y[iclus] - vtx_y;
-            float fvtx_z      = d_FVTX_z[iclus];
+        {
+          for(int iclus = 0; iclus < d_nFVTX_clus; iclus++)
+            {
+              float fvtx_x      = d_FVTX_x[iclus] - vtx_x; // calculate for each event, function of z
+              float fvtx_y      = d_FVTX_y[iclus] - vtx_y;
+              float fvtx_z      = d_FVTX_z[iclus];
 
-            double fvtx_r = sqrt(pow(fvtx_x,2.0)+pow(fvtx_y,2.0));
+              double fvtx_r = sqrt(pow(fvtx_x,2.0)+pow(fvtx_y,2.0));
 
-            double fvtx_the = atan2(fvtx_r,fvtx_z - d_bbcz); //fvtx_z-bbcv // add a new variable to make it clear that you're using a corrected z vertex
-            double fvtx_eta = -log(tan(0.5*fvtx_the));
+              double fvtx_the = atan2(fvtx_r,fvtx_z - d_bbcz); //fvtx_z-bbcv // add a new variable to make it clear that you're using a corrected z vertex
+              double fvtx_eta = -log(tan(0.5*fvtx_the));
 
-            // --- z dependent eta cut for the track, but not for the clusters???
-            if(!(fabs(fvtx_eta)>1.0 && fabs(fvtx_eta)<3.5)) continue;
-           // cout<<"fvtx_x: "<<fvtx_x<<" fvtx_y: "<<fvtx_y<<" fvtx_z"<<fvtx_z<<endl;
+              // --- z dependent eta cut for the track, but not for the clusters???
+              if(!(fabs(fvtx_eta)>1.0 && fabs(fvtx_eta)<3.5)) continue;
+              // cout<<"fvtx_x: "<<fvtx_x<<" fvtx_y: "<<fvtx_y<<" fvtx_z"<<fvtx_z<<endl;
 
-            int fvtx_layer    = get_fvtx_layer(fvtx_z);
+              int fvtx_layer    = get_fvtx_layer(fvtx_z);
 
-            int igap = (fabs(fvtx_eta)-1.0)/0.5;
+              int igap = (fabs(fvtx_eta)-1.0)/0.5;
 
-            int id_fvtx = fvtx_layer*5+igap;
+              int id_fvtx = fvtx_layer*5+igap;
 
-            if(!(id_fvtx>=0 && id_fvtx<40)) continue;
+              if(!(id_fvtx>=0 && id_fvtx<40)) continue;
 
-            float phi = TMath::ATan2(fvtx_y,fvtx_x);
+              float phi = TMath::ATan2(fvtx_y,fvtx_x);
 
-            float mass = 0.1396;//assume charged pion mass
-            float pT = 0.25;
-            float px = pT * TMath::Cos(phi);
-            float py = pT * TMath::Sin(phi);
-            float pz = pT * TMath::SinH(fvtx_eta);
+              float mass = 0.1396;//assume charged pion mass
+              float pT = 0.25;
+              float px = pT * TMath::Cos(phi);
+              float py = pT * TMath::Sin(phi);
+              float pz = pT * TMath::SinH(fvtx_eta);
 
-            float energy = TMath::Sqrt(px*px+py*py+pz*pz+mass*mass);
-            TLorentzVector particle_vec(px,py,pz,energy);
+              float energy = TMath::Sqrt(px*px+py*py+pz*pz+mass*mass);
+              TLorentzVector particle_vec(px,py,pz,energy);
 
-            int iangle_blue = iangle/n_side_angle;
-            int iangle_yellow = iangle%n_side_angle;
+              int iangle_blue = iangle/n_side_angle;
+              int iangle_yellow = iangle%n_side_angle;
 
-            boost_and_rotate(particle_vec,blue_vecs[iangle_blue],yellow_vecs[iangle_yellow],1);// option 1 Lab to CoM
+              boost_and_rotate(particle_vec,blue_vecs[iangle_blue],yellow_vecs[iangle_yellow],1);// option 1 Lab to CoM
 
-            phi = TMath::ATan2(particle_vec.Py(),particle_vec.Px());
+              phi = TMath::ATan2(particle_vec.Py(),particle_vec.Px());
 
-            fvtx_qx[fvtx_layer+1][iangle] += TMath::Cos(2*phi);
-            fvtx_qy[fvtx_layer+1][iangle] += TMath::Sin(2*phi);
+              fvtx_qx[fvtx_layer+1][iangle] += TMath::Cos(2*phi);
+              fvtx_qy[fvtx_layer+1][iangle] += TMath::Sin(2*phi);
 
-            fvtx_qx[0][iangle] += TMath::Cos(2*phi);
-            fvtx_qy[0][iangle] += TMath::Sin(2*phi);
+              fvtx_qx[0][iangle] += TMath::Cos(2*phi);
+              fvtx_qy[0][iangle] += TMath::Sin(2*phi);
 
-            if(iangle==0)
-            { 
-              fvtx_qw[fvtx_layer+1] ++;
-              fvtx_qw[0] ++;
+              if(iangle==0)
+                { 
+                  fvtx_qw[fvtx_layer+1] ++;
+                  fvtx_qw[0] ++;
+                }
+
             }
-
-       }
-   }
+        }
 
     float sumxy[NHAR][NDET][4];
     for (int i=0; i<NHAR; i++) 
-    {
-     for (int j=0; j<NDET; j++) 
-     {
-       for (int k=0; k<4; k++)//qx qy qw psi
-       {
-         sumxy[i][j][k]=0;
-       }
-     }
-   }
-
-   //save bbc q vec 2
-   //cout<<"bbc from node tree: "<<d_Qx[5]<<" "<<d_Qy[5]<<" "<<d_Qw[5]<<endl;
-   sumxy[1][0][0] = d_Qx[5];
-   sumxy[1][0][1] = d_Qy[5];
-   sumxy[1][0][2] = d_Qw[5];
-
-   //save fvtx q vec 2
-   sumxy[1][1][0] = d_Qx[4];
-   sumxy[1][1][1] = d_Qy[4];
-   sumxy[1][1][2] = d_Qw[4];
-
-   if(fvtx_clusters || bbc_pmts)
-   for(int iangle = 0; iangle < n_angle_config; iangle++)
-    {
-      if(bbc_pmts)
       {
-       sumxy[1][iangle+first_bbc_angle][0] = bbc_qx[iangle];
-       sumxy[1][iangle+first_bbc_angle][1] = bbc_qy[iangle];
-       sumxy[1][iangle+first_bbc_angle][2] = bbc_qw;
+        for (int j=0; j<NDET; j++) 
+          {
+            for (int k=0; k<4; k++)//qx qy qw psi
+              {
+                sumxy[i][j][k]=0;
+              }
+          }
       }
 
-      if(fvtx_clusters)
-      {
-       sumxy[1][iangle+first_fvtx_angle][0] = fvtx_qx[0][iangle];
-       sumxy[1][iangle+first_fvtx_angle][1] = fvtx_qy[0][iangle];
-       sumxy[1][iangle+first_fvtx_angle][2] = fvtx_qw[0];
+    //save bbc q vec 2
+    //cout<<"bbc from node tree: "<<d_Qx[5]<<" "<<d_Qy[5]<<" "<<d_Qw[5]<<endl;
+    sumxy[1][0][0] = d_Qx[5];
+    sumxy[1][0][1] = d_Qy[5];
+    sumxy[1][0][2] = d_Qw[5];
 
-       sumxy[1][iangle+first_fvtx_0_angle][0] = fvtx_qx[1][iangle];
-       sumxy[1][iangle+first_fvtx_0_angle][1] = fvtx_qy[1][iangle];
-       sumxy[1][iangle+first_fvtx_0_angle][2] = fvtx_qw[1];
+    //save fvtx q vec 2
+    sumxy[1][1][0] = d_Qx[4];
+    sumxy[1][1][1] = d_Qy[4];
+    sumxy[1][1][2] = d_Qw[4];
 
-       sumxy[1][iangle+first_fvtx_1_angle][0] = fvtx_qx[2][iangle];
-       sumxy[1][iangle+first_fvtx_1_angle][1] = fvtx_qy[2][iangle];
-       sumxy[1][iangle+first_fvtx_1_angle][2] = fvtx_qw[2];
+    if(fvtx_clusters || bbc_pmts)
+      for(int iangle = 0; iangle < n_angle_config; iangle++)
+        {
+          if(bbc_pmts)
+            {
+              sumxy[1][iangle+first_bbc_angle][0] = bbc_qx[iangle];
+              sumxy[1][iangle+first_bbc_angle][1] = bbc_qy[iangle];
+              sumxy[1][iangle+first_bbc_angle][2] = bbc_qw;
+            }
 
-       sumxy[1][iangle+first_fvtx_2_angle][0] = fvtx_qx[3][iangle];
-       sumxy[1][iangle+first_fvtx_2_angle][1] = fvtx_qy[3][iangle];
-       sumxy[1][iangle+first_fvtx_2_angle][2] = fvtx_qw[3];
+          if(fvtx_clusters)
+            {
+              sumxy[1][iangle+first_fvtx_angle][0] = fvtx_qx[0][iangle];
+              sumxy[1][iangle+first_fvtx_angle][1] = fvtx_qy[0][iangle];
+              sumxy[1][iangle+first_fvtx_angle][2] = fvtx_qw[0];
 
-       sumxy[1][iangle+first_fvtx_3_angle][0] = fvtx_qx[4][iangle];
-       sumxy[1][iangle+first_fvtx_3_angle][1] = fvtx_qy[4][iangle];
-       sumxy[1][iangle+first_fvtx_3_angle][2] = fvtx_qw[4];
-      }
-    }
+              sumxy[1][iangle+first_fvtx_0_angle][0] = fvtx_qx[1][iangle];
+              sumxy[1][iangle+first_fvtx_0_angle][1] = fvtx_qy[1][iangle];
+              sumxy[1][iangle+first_fvtx_0_angle][2] = fvtx_qw[1];
+
+              sumxy[1][iangle+first_fvtx_1_angle][0] = fvtx_qx[2][iangle];
+              sumxy[1][iangle+first_fvtx_1_angle][1] = fvtx_qy[2][iangle];
+              sumxy[1][iangle+first_fvtx_1_angle][2] = fvtx_qw[2];
+
+              sumxy[1][iangle+first_fvtx_2_angle][0] = fvtx_qx[3][iangle];
+              sumxy[1][iangle+first_fvtx_2_angle][1] = fvtx_qy[3][iangle];
+              sumxy[1][iangle+first_fvtx_2_angle][2] = fvtx_qw[3];
+
+              sumxy[1][iangle+first_fvtx_3_angle][0] = fvtx_qx[4][iangle];
+              sumxy[1][iangle+first_fvtx_3_angle][1] = fvtx_qy[4][iangle];
+              sumxy[1][iangle+first_fvtx_3_angle][2] = fvtx_qw[4];
+            }
+        }
 
     if(DIAG)
-    {
-      cout<<"bbc from node tree: "<<d_Qx[5]<<" "<<d_Qy[5]<<" "<<d_Qw[5]<<endl;
-      cout<<"bbc from me: "<<bbc_qx[0]<<" "<<bbc_qy[0]<<" "<<bbc_qw<<endl;
+      {
+        cout<<"bbc from node tree: "<<d_Qx[5]<<" "<<d_Qy[5]<<" "<<d_Qw[5]<<endl;
+        cout<<"bbc from me: "<<bbc_qx[0]<<" "<<bbc_qy[0]<<" "<<bbc_qw<<endl;
 
-      cout<<"fvtx raw: "<<endl;
-      cout<<"from node tree: "<<d_Qx[4]<<" "<<d_Qy[4]<<" "<<d_Qw[4]<<endl;
-      cout<<"from clusters: " <<fvtx_qx[0][0]<<" "<<fvtx_qy[0][0]<<" "<<fvtx_qw[0]<<endl;
-    }
-  //------------------------------------------------------------//
-  //                Flattening iteration                        //
-  //------------------------------------------------------------//
-  //int icent = 0;
-  for (int ih=1; ih<NHAR; ih++) {
-   for(int id=0;id<NDET;id++){
-     if (sumxy[ih][id][2]>0.0) {
-       sumxy[ih][id][3]=atan2(sumxy[ih][id][1],sumxy[ih][id][0])/(ih+1.0);
-       if (rp_recal_pass>0) dis[icent][ih][id]->Fill(ibbcz,sumxy[ih][id][3]*(ih+1.0));
-     }
-     if (sumxy[ih][id][2]>0.0) {
-       for (int ib=0; ib<2; ib++) {
-         sumxy[ih][id][ib]/=sumxy[ih][id][2];
-  	      //if(ih==1 && id==0 && ib==0 && sumxy[ih][id][ib]>1) cout<<sumxy[ih][id][ib]<<endl;
-         if (rp_recal_pass>0) {
-          ave[icent][ibbcz][ih][id]->Fill(ib+0.0,sumxy[ih][id][ib]);
-          if(id==0 && DIAG) cout<<"filled ave: "<<ih<<" "<<id<<" "<<ib<<" with: "<<sumxy[ih][id][ib]<<endl;
-          if(ib==0) qx[icent][ih][id]->Fill(ibbcz,sumxy[ih][id][0]);
-          if(ib==1) qy[icent][ih][id]->Fill(ibbcz,sumxy[ih][id][1]);
-        }
-        float sxy=sumxy[ih][id][ib];
-        float mxy=mean[icent][ibbcz][ih][id][ib];
-        float wxy=widt[icent][ibbcz][ih][id][ib];
-
-  	      //if(icent==0 && ibbcz==0 && ih==1 && id==0) cout<<ib<<" "<<sxy<<" "<<mxy<<" "<<wxy<<endl;
-        sumxy[ih][id][ib]=(sxy-mxy)/wxy;
-        if (rp_recal_pass>0) {
-          ave[icent][ibbcz][ih][id]->Fill(ib+2.0,sumxy[ih][id][ib]);
-          if(id==0 && DIAG) cout<<"filled ave2: "<<ih<<" "<<id<<" "<<ib<<" with: "<<sumxy[ih][id][ib]<<endl;
-          if(ib==0) qx[icent][ih][id]->Fill(ibbcz+NZPS,sumxy[ih][id][0]);
-          if(ib==1) qy[icent][ih][id]->Fill(ibbcz+NZPS,sumxy[ih][id][1]);
-        }
+        cout<<"fvtx raw: "<<endl;
+        cout<<"from node tree: "<<d_Qx[4]<<" "<<d_Qy[4]<<" "<<d_Qw[4]<<endl;
+        cout<<"from clusters: " <<fvtx_qx[0][0]<<" "<<fvtx_qy[0][0]<<" "<<fvtx_qw[0]<<endl;
       }
+    //------------------------------------------------------------//
+    //                Flattening iteration                        //
+    //------------------------------------------------------------//
+    //int icent = 0;
+    for (int ih=1; ih<NHAR; ih++) {
+      for(int id=0;id<NDET;id++){
+        if (sumxy[ih][id][2]>0.0) {
+          sumxy[ih][id][3]=atan2(sumxy[ih][id][1],sumxy[ih][id][0])/(ih+1.0);
+          if (rp_recal_pass>0) dis[icent][ih][id]->Fill(ibbcz,sumxy[ih][id][3]*(ih+1.0));
+        }
+        if (sumxy[ih][id][2]>0.0) {
+          for (int ib=0; ib<2; ib++) {
+            sumxy[ih][id][ib]/=sumxy[ih][id][2];
+            //if(ih==1 && id==0 && ib==0 && sumxy[ih][id][ib]>1) cout<<sumxy[ih][id][ib]<<endl;
+            if (rp_recal_pass>0) {
+              ave[icent][ibbcz][ih][id]->Fill(ib+0.0,sumxy[ih][id][ib]);
+              if(id==0 && DIAG) cout<<"filled ave: "<<ih<<" "<<id<<" "<<ib<<" with: "<<sumxy[ih][id][ib]<<endl;
+              if(ib==0) qx[icent][ih][id]->Fill(ibbcz,sumxy[ih][id][0]);
+              if(ib==1) qy[icent][ih][id]->Fill(ibbcz,sumxy[ih][id][1]);
+            }
+            float sxy=sumxy[ih][id][ib];
+            float mxy=mean[icent][ibbcz][ih][id][ib];
+            float wxy=widt[icent][ibbcz][ih][id][ib];
 
-      sumxy[ih][id][3]=atan2(sumxy[ih][id][1],sumxy[ih][id][0])/(ih+1.0);
-      if (rp_recal_pass>0) {
-       dis[icent][ih][id]->Fill(ibbcz+NZPS,sumxy[ih][id][3]*(ih+1.0));
-     }
+            //if(icent==0 && ibbcz==0 && ih==1 && id==0) cout<<ib<<" "<<sxy<<" "<<mxy<<" "<<wxy<<endl;
+            sumxy[ih][id][ib]=(sxy-mxy)/wxy;
+            if (rp_recal_pass>0) {
+              ave[icent][ibbcz][ih][id]->Fill(ib+2.0,sumxy[ih][id][ib]);
+              if(id==0 && DIAG) cout<<"filled ave2: "<<ih<<" "<<id<<" "<<ib<<" with: "<<sumxy[ih][id][ib]<<endl;
+              if(ib==0) qx[icent][ih][id]->Fill(ibbcz+NZPS,sumxy[ih][id][0]);
+              if(ib==1) qy[icent][ih][id]->Fill(ibbcz+NZPS,sumxy[ih][id][1]);
+            }
+          }
 
-     float psi=sumxy[ih][id][3]*(ih+1.0);
-     if(ih==1 && id==0 && DIAG)  cout<<"psi2-1 bbc: "<<psi<<endl;
-     float dp=0.0;
-     for (int io=0; io<NORD; io++) {
-       float cc=cos((io+1.0)*psi);
-       float ss=sin((io+1.0)*psi);
-       if (rp_recal_pass>0) flt[icent][ibbcz][ih][id]->Fill(io+0.0,cc);
-       if (rp_recal_pass>0) flt[icent][ibbcz][ih][id]->Fill(io+NORD,ss);
-  	      float aa=four[icent][ibbcz][ih][id][0][io]; // mean cos
-  	      float bb=four[icent][ibbcz][ih][id][1][io]; // mean sin
-  	      dp+=(aa*ss-bb*cc)*2.0/(io+1.0);
-  	    }
-  	    psi+=dp;
-  	    psi=atan2(sin(psi),cos(psi));
-        if(ih==1 && id==0 && DIAG)  cout<<"psi2-2 bbc: "<<psi<<endl;
-  	    for (int io=0; io<NORD; io++) {
-         float cc=cos((io+1.0)*psi);
-         float ss=sin((io+1.0)*psi);
-         if (rp_recal_pass>0) flt[icent][ibbcz][ih][id]->Fill(io+NORD*2.0,cc);
-         if (rp_recal_pass>0) flt[icent][ibbcz][ih][id]->Fill(io+NORD*3.0,ss);
-       }
-       sumxy[ih][id][3]=psi/(ih+1.0);
-       if (rp_recal_pass>0) dis[icent][ih][id]->Fill(ibbcz+NZPS*2.0,sumxy[ih][id][3]*(ih+1.0));
-     } else {
-       sumxy[ih][id][3]=-9999.9;
-     }
-  	}//end of id
-  }//end of ih
+          sumxy[ih][id][3]=atan2(sumxy[ih][id][1],sumxy[ih][id][0])/(ih+1.0);
+          if (rp_recal_pass>0) {
+            dis[icent][ih][id]->Fill(ibbcz+NZPS,sumxy[ih][id][3]*(ih+1.0));
+          }
+
+          float psi=sumxy[ih][id][3]*(ih+1.0);
+          if(ih==1 && id==0 && DIAG)  cout<<"psi2-1 bbc: "<<psi<<endl;
+          float dp=0.0;
+          for (int io=0; io<NORD; io++) {
+            float cc=cos((io+1.0)*psi);
+            float ss=sin((io+1.0)*psi);
+            if (rp_recal_pass>0) flt[icent][ibbcz][ih][id]->Fill(io+0.0,cc);
+            if (rp_recal_pass>0) flt[icent][ibbcz][ih][id]->Fill(io+NORD,ss);
+            float aa=four[icent][ibbcz][ih][id][0][io]; // mean cos
+            float bb=four[icent][ibbcz][ih][id][1][io]; // mean sin
+            dp+=(aa*ss-bb*cc)*2.0/(io+1.0);
+          }
+          psi+=dp;
+          psi=atan2(sin(psi),cos(psi));
+          if(ih==1 && id==0 && DIAG)  cout<<"psi2-2 bbc: "<<psi<<endl;
+          for (int io=0; io<NORD; io++) {
+            float cc=cos((io+1.0)*psi);
+            float ss=sin((io+1.0)*psi);
+            if (rp_recal_pass>0) flt[icent][ibbcz][ih][id]->Fill(io+NORD*2.0,cc);
+            if (rp_recal_pass>0) flt[icent][ibbcz][ih][id]->Fill(io+NORD*3.0,ss);
+          }
+          sumxy[ih][id][3]=psi/(ih+1.0);
+          if (rp_recal_pass>0) dis[icent][ih][id]->Fill(ibbcz+NZPS*2.0,sumxy[ih][id][3]*(ih+1.0));
+        } else {
+          sumxy[ih][id][3]=-9999.9;
+        }
+      }//end of id
+    }//end of ih
       
     if(rp_recal_pass<3) continue;
 
@@ -856,193 +856,193 @@ if(rp_recal_pass>=2)
     float fvtx2_psi2_angle[n_angle_config];
     float fvtx3_psi2_angle[n_angle_config];
 
-   if(fvtx_clusters || bbc_pmts)
-   for(int iangle = 0; iangle < n_angle_config; iangle++)
-    {
-      if(bbc_pmts)
-       bbc_psi2_angle[iangle] = (sumxy[1][iangle+first_bbc_angle][2]>0)?sumxy[1][iangle+first_bbc_angle][3]:-9999.9;
+    if(fvtx_clusters || bbc_pmts)
+      for(int iangle = 0; iangle < n_angle_config; iangle++)
+        {
+          if(bbc_pmts)
+            bbc_psi2_angle[iangle] = (sumxy[1][iangle+first_bbc_angle][2]>0)?sumxy[1][iangle+first_bbc_angle][3]:-9999.9;
 
-       if(fvtx_clusters)
-       {
-        fvtx_psi2_angle[iangle] = (sumxy[1][iangle+first_fvtx_angle][2]>4)?sumxy[1][iangle+first_fvtx_angle][3]:-9999.9;
-        fvtx0_psi2_angle[iangle] = (sumxy[1][iangle+first_fvtx_0_angle][2]>4)?sumxy[1][iangle+first_fvtx_0_angle][3]:-9999.9;
-        fvtx1_psi2_angle[iangle] = (sumxy[1][iangle+first_fvtx_1_angle][2]>4)?sumxy[1][iangle+first_fvtx_1_angle][3]:-9999.9;
-        fvtx2_psi2_angle[iangle] = (sumxy[1][iangle+first_fvtx_2_angle][2]>4)?sumxy[1][iangle+first_fvtx_2_angle][3]:-9999.9;
-        fvtx3_psi2_angle[iangle] = (sumxy[1][iangle+first_fvtx_3_angle][2]>4)?sumxy[1][iangle+first_fvtx_3_angle][3]:-9999.9;
-       }
-    }
+          if(fvtx_clusters)
+            {
+              fvtx_psi2_angle[iangle] = (sumxy[1][iangle+first_fvtx_angle][2]>4)?sumxy[1][iangle+first_fvtx_angle][3]:-9999.9;
+              fvtx0_psi2_angle[iangle] = (sumxy[1][iangle+first_fvtx_0_angle][2]>4)?sumxy[1][iangle+first_fvtx_0_angle][3]:-9999.9;
+              fvtx1_psi2_angle[iangle] = (sumxy[1][iangle+first_fvtx_1_angle][2]>4)?sumxy[1][iangle+first_fvtx_1_angle][3]:-9999.9;
+              fvtx2_psi2_angle[iangle] = (sumxy[1][iangle+first_fvtx_2_angle][2]>4)?sumxy[1][iangle+first_fvtx_2_angle][3]:-9999.9;
+              fvtx3_psi2_angle[iangle] = (sumxy[1][iangle+first_fvtx_3_angle][2]>4)?sumxy[1][iangle+first_fvtx_3_angle][3]:-9999.9;
+            }
+        }
 
 
     //start of vtx stand alone track loop
     if(vtx_tracks)
-    for(int itrk=0; itrk< d_nsegments; itrk++)
-    {
-     float px    = d_px[itrk];
-     float py    = d_py[itrk];
-     float pz    = d_pz[itrk];
-     int dcarm=0;
-     if(px>0) dcarm=1;
-
-     float phi0 = TMath::ATan2(py,px);
-     float pt = sqrt(px*px+py*py);
-
-     float bbc_dphi_2 = phi0 - bbc_psi2; // move this lower?
-
-     if(-4.0<bbc_psi2 && bbc_psi2<4.0 ) // why this weird cut? why not just -pi to pi? // checking against -9999 from above
-     {
-       bbcs_v2_incl_default->Fill(pt,cos(2*bbc_dphi_2));
-       if(dcarm==0) 
-       {
-        bbcs_v2_east_default->Fill(pt,cos(2*bbc_dphi_2));
-       }
-      else if(dcarm==1)
-       {
-        bbcs_v2_west_default->Fill(pt,cos(2*bbc_dphi_2));
-       }
-     }
-
-     float fvtx_dphi_2 = phi0 - fvtx_psi2;
-
-     if(-4.0<fvtx_psi2 && fvtx_psi2<4.0 )
-     {
-       fvtxs_v2_incl_default->Fill(pt,cos(2*fvtx_dphi_2));
-       if(dcarm==0) 
-       {
-        fvtxs_v2_east_default->Fill(pt,cos(2*fvtx_dphi_2));
-      }
-      else if(dcarm==1)
-      {
-        fvtxs_v2_west_default->Fill(pt,cos(2*fvtx_dphi_2));
-      }
-     }
-
-    if(fvtx_clusters || bbc_pmts)
-      for(int iangle = 0; iangle < n_angle_config; iangle++)
-      {
-
-        float mass = 0.1396;//assume charged pion mass
-        float energy = TMath::Sqrt(px*px+py*py+pz*pz+mass*mass);
-        TLorentzVector particle_vec(px,py,pz,energy);
-
-        int iangle_blue = iangle/n_side_angle;
-        int iangle_yellow = iangle%n_side_angle;
-
-        boost_and_rotate(particle_vec,blue_vecs[iangle_blue],yellow_vecs[iangle_yellow],1);// option 1 Lab to CoM
-
-        float phi_angle = TMath::ATan2(particle_vec.Py(),particle_vec.Px()); // rotated phi // "modified"
-        float pt_angle = TMath::Sqrt(particle_vec.Py()*particle_vec.Py()+particle_vec.Px()*particle_vec.Px()); // rotated pt "modified"
-
-        //bbc angle
-        if(bbc_pmts)
-        if(-4.0<bbc_psi2_angle[iangle] && bbc_psi2_angle[iangle]<4.0)
+      for(int itrk=0; itrk< d_nsegments; itrk++)
         {
-          double bbc_dphi2_angle = phi_angle - bbc_psi2_angle[iangle];
-          double cosbbc_dphi2_angle = TMath::Cos(2*bbc_dphi2_angle);
+          float px    = d_px[itrk];
+          float py    = d_py[itrk];
+          float pz    = d_pz[itrk];
+          int dcarm=0;
+          if(px>0) dcarm=1;
 
-          if(dcarm==1)
+          float phi0 = TMath::ATan2(py,px);
+          float pt = sqrt(px*px+py*py);
+
+          float bbc_dphi_2 = phi0 - bbc_psi2; // move this lower?
+
+          if(-4.0<bbc_psi2 && bbc_psi2<4.0 ) // why this weird cut? why not just -pi to pi? // checking against -9999 from above
             {
-              bbcs_v2_west_angle[iangle]->Fill(pt_angle,cosbbc_dphi2_angle);
+              bbcs_v2_incl_default->Fill(pt,cos(2*bbc_dphi_2));
+              if(dcarm==0) 
+                {
+                  bbcs_v2_east_default->Fill(pt,cos(2*bbc_dphi_2));
+                }
+              else if(dcarm==1)
+                {
+                  bbcs_v2_west_default->Fill(pt,cos(2*bbc_dphi_2));
+                }
             }
-          else if( dcarm==0)
+
+          float fvtx_dphi_2 = phi0 - fvtx_psi2;
+
+          if(-4.0<fvtx_psi2 && fvtx_psi2<4.0 )
             {
-              bbcs_v2_east_angle[iangle]->Fill(pt_angle,cosbbc_dphi2_angle);
+              fvtxs_v2_incl_default->Fill(pt,cos(2*fvtx_dphi_2));
+              if(dcarm==0) 
+                {
+                  fvtxs_v2_east_default->Fill(pt,cos(2*fvtx_dphi_2));
+                }
+              else if(dcarm==1)
+                {
+                  fvtxs_v2_west_default->Fill(pt,cos(2*fvtx_dphi_2));
+                }
             }
-          bbcs_v2_incl_angle[iangle]->Fill(pt_angle,cosbbc_dphi2_angle);
+
+          if(fvtx_clusters || bbc_pmts)
+            for(int iangle = 0; iangle < n_angle_config; iangle++)
+              {
+
+                float mass = 0.1396;//assume charged pion mass
+                float energy = TMath::Sqrt(px*px+py*py+pz*pz+mass*mass);
+                TLorentzVector particle_vec(px,py,pz,energy);
+
+                int iangle_blue = iangle/n_side_angle;
+                int iangle_yellow = iangle%n_side_angle;
+
+                boost_and_rotate(particle_vec,blue_vecs[iangle_blue],yellow_vecs[iangle_yellow],1);// option 1 Lab to CoM
+
+                float phi_angle = TMath::ATan2(particle_vec.Py(),particle_vec.Px()); // rotated phi // "modified"
+                float pt_angle = TMath::Sqrt(particle_vec.Py()*particle_vec.Py()+particle_vec.Px()*particle_vec.Px()); // rotated pt "modified"
+
+                //bbc angle
+                if(bbc_pmts)
+                  if(-4.0<bbc_psi2_angle[iangle] && bbc_psi2_angle[iangle]<4.0)
+                    {
+                      double bbc_dphi2_angle = phi_angle - bbc_psi2_angle[iangle];
+                      double cosbbc_dphi2_angle = TMath::Cos(2*bbc_dphi2_angle);
+
+                      if(dcarm==1)
+                        {
+                          bbcs_v2_west_angle[iangle]->Fill(pt_angle,cosbbc_dphi2_angle);
+                        }
+                      else if( dcarm==0)
+                        {
+                          bbcs_v2_east_angle[iangle]->Fill(pt_angle,cosbbc_dphi2_angle);
+                        }
+                      bbcs_v2_incl_angle[iangle]->Fill(pt_angle,cosbbc_dphi2_angle);
+                    }
+
+                if(!fvtx_clusters) continue;
+                //fvtx all layers
+                if(-4.0<fvtx_psi2_angle[iangle] && fvtx_psi2_angle[iangle]<4.0)
+                  {
+                    double fvtx_dphi2_angle = phi_angle - fvtx_psi2_angle[iangle];
+                    double cosfvtx_dphi2_angle = TMath::Cos(2*fvtx_dphi2_angle);
+
+                    if(dcarm==1)
+                      {
+                        fvtxs_v2_west_angle[iangle]->Fill(pt_angle,cosfvtx_dphi2_angle);
+                      }
+                    else if( dcarm==0)
+                      {
+                        fvtxs_v2_east_angle[iangle]->Fill(pt_angle,cosfvtx_dphi2_angle);
+                      }
+                    fvtxs_v2_incl_angle[iangle]->Fill(pt_angle,cosfvtx_dphi2_angle);
+                  }
+
+                //fvtx layer 0
+                if(-4.0<fvtx0_psi2_angle[iangle] && fvtx0_psi2_angle[iangle]<4.0)
+                  {
+                    double fvtx_dphi2_angle = phi_angle - fvtx0_psi2_angle[iangle];
+                    double cosfvtx_dphi2_angle = TMath::Cos(2*fvtx_dphi2_angle);
+
+                    if(dcarm==1)
+                      {
+                        fvtxs0_v2_west_angle[iangle]->Fill(pt_angle,cosfvtx_dphi2_angle);
+                      }
+                    else if( dcarm==0)
+                      {
+                        fvtxs0_v2_east_angle[iangle]->Fill(pt_angle,cosfvtx_dphi2_angle);
+                      }
+                    fvtxs0_v2_incl_angle[iangle]->Fill(pt_angle,cosfvtx_dphi2_angle);
+                  }
+
+                //fvtx layer 1
+                if(-4.0<fvtx1_psi2_angle[iangle] && fvtx1_psi2_angle[iangle]<4.0)
+                  {
+                    double fvtx_dphi2_angle = phi_angle - fvtx1_psi2_angle[iangle];
+                    double cosfvtx_dphi2_angle = TMath::Cos(2*fvtx_dphi2_angle);
+
+                    if(dcarm==1)
+                      {
+                        fvtxs1_v2_west_angle[iangle]->Fill(pt_angle,cosfvtx_dphi2_angle);
+                      }
+                    else if( dcarm==0)
+                      {
+                        fvtxs1_v2_east_angle[iangle]->Fill(pt_angle,cosfvtx_dphi2_angle);
+                      }
+                    fvtxs1_v2_incl_angle[iangle]->Fill(pt_angle,cosfvtx_dphi2_angle);
+                  }
+
+                //fvtx layer 2
+                if(-4.0<fvtx2_psi2_angle[iangle] && fvtx2_psi2_angle[iangle]<4.0)
+                  {
+                    double fvtx_dphi2_angle = phi_angle - fvtx2_psi2_angle[iangle];
+                    double cosfvtx_dphi2_angle = TMath::Cos(2*fvtx_dphi2_angle);
+
+                    if(dcarm==1)
+                      {
+                        fvtxs2_v2_west_angle[iangle]->Fill(pt_angle,cosfvtx_dphi2_angle);
+                      }
+                    else if( dcarm==0)
+                      {
+                        fvtxs2_v2_east_angle[iangle]->Fill(pt_angle,cosfvtx_dphi2_angle);
+                      }
+                    fvtxs2_v2_incl_angle[iangle]->Fill(pt_angle,cosfvtx_dphi2_angle);
+                  }
+
+                //fvtx layer 3
+                if(-4.0<fvtx3_psi2_angle[iangle] && fvtx3_psi2_angle[iangle]<4.0)
+                  {
+                    double fvtx_dphi2_angle = phi_angle - fvtx3_psi2_angle[iangle];
+                    double cosfvtx_dphi2_angle = TMath::Cos(2*fvtx_dphi2_angle);
+
+                    if(dcarm==1)
+                      {
+                        fvtxs3_v2_west_angle[iangle]->Fill(pt_angle,cosfvtx_dphi2_angle);
+                      }
+                    else if( dcarm==0)
+                      {
+                        fvtxs3_v2_east_angle[iangle]->Fill(pt_angle,cosfvtx_dphi2_angle);
+                      }
+                    fvtxs3_v2_incl_angle[iangle]->Fill(pt_angle,cosfvtx_dphi2_angle);
+                  }
+              }
         }
-
-        if(!fvtx_clusters) continue;
-        //fvtx all layers
-        if(-4.0<fvtx_psi2_angle[iangle] && fvtx_psi2_angle[iangle]<4.0)
-        {
-          double fvtx_dphi2_angle = phi_angle - fvtx_psi2_angle[iangle];
-          double cosfvtx_dphi2_angle = TMath::Cos(2*fvtx_dphi2_angle);
-
-          if(dcarm==1)
-            {
-              fvtxs_v2_west_angle[iangle]->Fill(pt_angle,cosfvtx_dphi2_angle);
-            }
-          else if( dcarm==0)
-            {
-              fvtxs_v2_east_angle[iangle]->Fill(pt_angle,cosfvtx_dphi2_angle);
-            }
-          fvtxs_v2_incl_angle[iangle]->Fill(pt_angle,cosfvtx_dphi2_angle);
-        }
-
-        //fvtx layer 0
-        if(-4.0<fvtx0_psi2_angle[iangle] && fvtx0_psi2_angle[iangle]<4.0)
-        {
-          double fvtx_dphi2_angle = phi_angle - fvtx0_psi2_angle[iangle];
-          double cosfvtx_dphi2_angle = TMath::Cos(2*fvtx_dphi2_angle);
-
-          if(dcarm==1)
-            {
-              fvtxs0_v2_west_angle[iangle]->Fill(pt_angle,cosfvtx_dphi2_angle);
-            }
-          else if( dcarm==0)
-            {
-              fvtxs0_v2_east_angle[iangle]->Fill(pt_angle,cosfvtx_dphi2_angle);
-            }
-          fvtxs0_v2_incl_angle[iangle]->Fill(pt_angle,cosfvtx_dphi2_angle);
-        }
-
-        //fvtx layer 1
-        if(-4.0<fvtx1_psi2_angle[iangle] && fvtx1_psi2_angle[iangle]<4.0)
-        {
-          double fvtx_dphi2_angle = phi_angle - fvtx1_psi2_angle[iangle];
-          double cosfvtx_dphi2_angle = TMath::Cos(2*fvtx_dphi2_angle);
-
-          if(dcarm==1)
-            {
-              fvtxs1_v2_west_angle[iangle]->Fill(pt_angle,cosfvtx_dphi2_angle);
-            }
-          else if( dcarm==0)
-            {
-              fvtxs1_v2_east_angle[iangle]->Fill(pt_angle,cosfvtx_dphi2_angle);
-            }
-          fvtxs1_v2_incl_angle[iangle]->Fill(pt_angle,cosfvtx_dphi2_angle);
-        }
-
-        //fvtx layer 2
-        if(-4.0<fvtx2_psi2_angle[iangle] && fvtx2_psi2_angle[iangle]<4.0)
-        {
-          double fvtx_dphi2_angle = phi_angle - fvtx2_psi2_angle[iangle];
-          double cosfvtx_dphi2_angle = TMath::Cos(2*fvtx_dphi2_angle);
-
-          if(dcarm==1)
-            {
-              fvtxs2_v2_west_angle[iangle]->Fill(pt_angle,cosfvtx_dphi2_angle);
-            }
-          else if( dcarm==0)
-            {
-              fvtxs2_v2_east_angle[iangle]->Fill(pt_angle,cosfvtx_dphi2_angle);
-            }
-          fvtxs2_v2_incl_angle[iangle]->Fill(pt_angle,cosfvtx_dphi2_angle);
-        }
-
-        //fvtx layer 3
-        if(-4.0<fvtx3_psi2_angle[iangle] && fvtx3_psi2_angle[iangle]<4.0)
-        {
-          double fvtx_dphi2_angle = phi_angle - fvtx3_psi2_angle[iangle];
-          double cosfvtx_dphi2_angle = TMath::Cos(2*fvtx_dphi2_angle);
-
-          if(dcarm==1)
-            {
-              fvtxs3_v2_west_angle[iangle]->Fill(pt_angle,cosfvtx_dphi2_angle);
-            }
-          else if( dcarm==0)
-            {
-              fvtxs3_v2_east_angle[iangle]->Fill(pt_angle,cosfvtx_dphi2_angle);
-            }
-          fvtxs3_v2_incl_angle[iangle]->Fill(pt_angle,cosfvtx_dphi2_angle);
-      }
-   }
-  }
- }//end of event 
+  }//end of event 
     
   //}
 
   if(rp_recal_pass<3 && rp_recal_pass>0)
-  {
+    {
       //sprintf(calibfile,"vtx_ep_calib/new_wide_z_flattening/flattening_%d_%d.dat",runNumber,rp_recal_pass);
       sprintf(calibfile,"vtx_ep_calib/new_wide_z_flattening/flattening_%d_%d.dat",runNumber,rp_recal_pass);
       cout << "writing calibration file : " << calibfile << endl;
@@ -1052,117 +1052,117 @@ if(rp_recal_pass>=2)
       cout << "writing out flattening parameters" << endl;
       //int icent = 0;
       for (int iz=0; iz<NZPS; iz++) 
-      {
-       for (int ih=1; ih<NHAR; ih++) 
-       {
-         for (int id=0; id<NDET; id++) 
-         {
-           for (int ib=0; ib<2; ib++) 
-           {
-            if(DIAG)
-             cout<<"writing ave:  "<<ic<<" "<<iz<<" "<<ih<<" "<<id<<endl;
+        {
+          for (int ih=1; ih<NHAR; ih++) 
+            {
+              for (int id=0; id<NDET; id++) 
+                {
+                  for (int ib=0; ib<2; ib++) 
+                    {
+                      if(DIAG)
+                        cout<<"writing ave:  "<<ic<<" "<<iz<<" "<<ih<<" "<<id<<endl;
 
-             ofs << ave[icent][iz][ih][id]->GetBinContent(ib+1) << " ";
-             ofs << ave[icent][iz][ih][id]->GetBinError  (ib+1) << " ";
-           }
-           ofs << endl;
-           for (int ib=0; ib<2; ib++) 
-           {
-             for (int io=0; io<NORD; io++) 
-             {
-              ofs << flt[icent][iz][ih][id]->GetBinContent(ib*NORD+io+1) << " ";
-             }
-            ofs << endl;
-          }
+                      ofs << ave[icent][iz][ih][id]->GetBinContent(ib+1) << " ";
+                      ofs << ave[icent][iz][ih][id]->GetBinError  (ib+1) << " ";
+                    }
+                  ofs << endl;
+                  for (int ib=0; ib<2; ib++) 
+                    {
+                      for (int io=0; io<NORD; io++) 
+                        {
+                          ofs << flt[icent][iz][ih][id]->GetBinContent(ib*NORD+io+1) << " ";
+                        }
+                      ofs << endl;
+                    }
+                }
+            }
         }
-      }
+      ofs.close();
     }
-    ofs.close();
-  }
 
 
- if(rp_recal_pass>0){
-  TFile *mData2=TFile::Open(outFile2,"recreate");
-  mData2->cd();
+  if(rp_recal_pass>0){
+    TFile *mData2=TFile::Open(outFile2,"recreate");
+    mData2->cd();
     for (int iz=0; iz<NZPS; iz++)
-     {
-     for (int ih=1; ih<NHAR; ih++) 
-     {
-       for (int id=0; id<NDET; id++) 
-       {
-         ave[ic][iz][ih][id]->Write();
-         flt[ic][iz][ih][id]->Write();
-       }
-     }
-   }
+      {
+        for (int ih=1; ih<NHAR; ih++) 
+          {
+            for (int id=0; id<NDET; id++) 
+              {
+                ave[ic][iz][ih][id]->Write();
+                flt[ic][iz][ih][id]->Write();
+              }
+          }
+      }
 
     for (int ih=1; ih<NHAR; ih++) 
-    {
-     for (int id=0; id<NDET; id++) 
-     {
-      //if(ih==1 && id==4)
-      //{
-         qx[ic][ih][id]->Write();
-         qy[ic][ih][id]->Write();
+      {
+        for (int id=0; id<NDET; id++) 
+          {
+            //if(ih==1 && id==4)
+            //{
+            qx[ic][ih][id]->Write();
+            qy[ic][ih][id]->Write();
 
-         dis[ic][ih][id]->Write();
-       // }
-       }
-     }
+            dis[ic][ih][id]->Write();
+            // }
+          }
+      }
 
-  mData2->Close();
+    mData2->Close();
   }
 
   if(rp_recal_pass>2)
-  {
-    TFile *mData1=TFile::Open(outFile1,"recreate");
-    mData1->cd();
-
-    bbcs_v2_west_default->Write();
-    bbcs_v2_east_default->Write();
-    bbcs_v2_incl_default->Write();
-
-    fvtxs_v2_west_default->Write();
-    fvtxs_v2_east_default->Write();
-    fvtxs_v2_incl_default->Write();
-
-    if(fvtx_clusters || bbc_pmts)
-    for(int iangle = 0; iangle < n_angle_config; iangle++)
     {
-      if(bbc_pmts)
-        bbcs_v2_west_angle[iangle]->Write();
-      if(fvtx_clusters)
-      {
-        fvtxs_v2_west_angle[iangle]->Write();
-        fvtxs0_v2_west_angle[iangle]->Write();
-        fvtxs1_v2_west_angle[iangle]->Write();
-        fvtxs2_v2_west_angle[iangle]->Write();
-        fvtxs3_v2_west_angle[iangle]->Write();
-      }
+      TFile *mData1=TFile::Open(outFile1,"recreate");
+      mData1->cd();
+
+      bbcs_v2_west_default->Write();
+      bbcs_v2_east_default->Write();
+      bbcs_v2_incl_default->Write();
+
+      fvtxs_v2_west_default->Write();
+      fvtxs_v2_east_default->Write();
+      fvtxs_v2_incl_default->Write();
+
+      if(fvtx_clusters || bbc_pmts)
+        for(int iangle = 0; iangle < n_angle_config; iangle++)
+          {
+            if(bbc_pmts)
+              bbcs_v2_west_angle[iangle]->Write();
+            if(fvtx_clusters)
+              {
+                fvtxs_v2_west_angle[iangle]->Write();
+                fvtxs0_v2_west_angle[iangle]->Write();
+                fvtxs1_v2_west_angle[iangle]->Write();
+                fvtxs2_v2_west_angle[iangle]->Write();
+                fvtxs3_v2_west_angle[iangle]->Write();
+              }
+          }
+
+      mData1->Close();
     }
 
-    mData1->Close();
-  }
 
-
-//return;
+  //return;
 
   cout<<"cleaning up"<<endl;
 
   htree->Delete(); 
   f->Close(); 
   delete f; 
-/*
-  delete bbcs_v2_incl_default;
-  delete bbcs_v2_east_default;
-  delete bbcs_v2_west_default;
+  /*
+    delete bbcs_v2_incl_default;
+    delete bbcs_v2_east_default;
+    delete bbcs_v2_west_default;
 
-  delete fvtxs_v2_incl_default;
-  delete fvtxs_v2_east_default;
-  delete fvtxs_v2_west_default;
+    delete fvtxs_v2_incl_default;
+    delete fvtxs_v2_east_default;
+    delete fvtxs_v2_west_default;
 
-  for(int iangle = 0; iangle < n_angle_config; iangle++)
-  {
+    for(int iangle = 0; iangle < n_angle_config; iangle++)
+    {
     delete bbcs_v2_west_angle[iangle];
 
     delete fvtxs_v2_west_angle[iangle];
@@ -1170,30 +1170,30 @@ if(rp_recal_pass>=2)
     delete fvtxs1_v2_west_angle[iangle];
     delete fvtxs2_v2_west_angle[iangle];
     delete fvtxs3_v2_west_angle[iangle];
-  }
+    }
 
-  for (int ic=0; ic<NMUL; ic++) {
+    for (int ic=0; ic<NMUL; ic++) {
     for (int iz=0; iz<NZPS; iz++) {
-      for (int ih=1; ih<NHAR; ih++) {
-       for (int id=0; id<NDET; id++) {
-         delete ave[ic][iz][ih][id];
-         delete flt[ic][iz][ih][id];
-       }
-     }
-   }
-  }
-
-  for (int ic=0; ic<NMUL; ic++) {
     for (int ih=1; ih<NHAR; ih++) {
-      for (int id=0; id<NDET; id++) {
-       delete dis[ic][ih][id];
-       delete qx[ic][ih][id];
-       delete qy[ic][ih][id];
-     }
-   }
-  }
-*/
-cout<<"end of program ana"<<endl;
+    for (int id=0; id<NDET; id++) {
+    delete ave[ic][iz][ih][id];
+    delete flt[ic][iz][ih][id];
+    }
+    }
+    }
+    }
+
+    for (int ic=0; ic<NMUL; ic++) {
+    for (int ih=1; ih<NHAR; ih++) {
+    for (int id=0; id<NDET; id++) {
+    delete dis[ic][ih][id];
+    delete qx[ic][ih][id];
+    delete qy[ic][ih][id];
+    }
+    }
+    }
+  */
+  cout<<"end of program ana"<<endl;
 
   return;
 
