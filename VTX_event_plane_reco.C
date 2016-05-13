@@ -54,13 +54,9 @@
 
 using namespace std;
 
-// --- make these private
-
 float calc_chisq_fromquality(float quality, float score);
 
 bool pass_eta_cut(float eta, int bbcz_bin);
-
-// ---
 
 void VTX_event_plane_reco::boost_and_rotate(TLorentzVector & vec, TLorentzVector input1, TLorentzVector input2)
 {
@@ -104,8 +100,8 @@ VTX_event_plane_reco::VTX_event_plane_reco(): SubsysReco("VTXULTRALIGHTRECO")
   cout << PHWHERE << " random seed = " << seed << endl;
   _write_fvtx = false;
 
-  m_bbccalib = new BbcCalib(); // need to read the BBC info (which kind???)
-  m_bbcgeo   = new BbcGeo();   // need to read the BBC to get the spatial coordinates
+  m_bbccalib = new BbcCalib();
+  m_bbcgeo   = new BbcGeo();
   return;
 }
 
@@ -117,8 +113,8 @@ VTX_event_plane_reco::~VTX_event_plane_reco()
 
 int VTX_event_plane_reco::Init(PHCompositeNode *topNode)
 {
-  cout<<"using fixed boost bbc"<<endl; // should go away
-  ResetEvent(topNode); // why do it now?? // legacy code?
+  cout<<"using fixed boost bbc"<<endl;
+  ResetEvent(topNode);
 
   if (_verbosity > 1) cout << PHWHERE << "::Init() - entered." << endl;
 
@@ -141,7 +137,7 @@ int VTX_event_plane_reco::Init(PHCompositeNode *topNode)
         _ntp_event -> Branch("vtx_z",&vtx_z,"vtx_z/F");
         if(_write_bbc)
           _ntp_event -> Branch("d_BBC_charge",&d_BBC_charge,"d_BBC_charge[64]/F");
-        if(_write_fvtx_clusters) // clusters
+        if(_write_fvtx_clusters)
         {
           _ntp_event -> Branch("d_nFVTX_clus",&d_nFVTX_clus,"d_nFVTX_clus/I");
           _ntp_event -> Branch("d_FVTX_x",&d_FVTX_x,"d_FVTX_x[d_nFVTX_clus]/F");
@@ -186,12 +182,12 @@ int VTX_event_plane_reco::Init(PHCompositeNode *topNode)
           _ntp_event -> Branch("vtxposW_z",&vtxposW_z,"vtxposW_z/F");
 
         }
-        if(_write_fvtx) // tracks
+        if(_write_fvtx)
         {
           //fvtx tracking parameters
           _ntp_event -> Branch("fvtx_z",&fvtx_z,"fvtx_z/F");
           _ntp_event -> Branch("ntracklets",&ntracklets,"ntracklets/I");
-          _ntp_event -> Branch("feta",&feta,"feta[75]/F"); // why 75? // optimization for small systems?
+          _ntp_event -> Branch("feta",&feta,"feta[75]/F");
           _ntp_event -> Branch("fphi",&fphi,"fphi[75]/F");
           _ntp_event -> Branch("fchisq",&fchisq,"fchisq[75]/F");
           _ntp_event -> Branch("farm",&farm,"farm[75]/I");
@@ -200,7 +196,7 @@ int VTX_event_plane_reco::Init(PHCompositeNode *topNode)
           _ntp_event -> Branch("fDCA_Y",&fDCA_Y,"fDCA_Y[75]/F");
         }
 
-	if(_write_clusters) // svx clusters
+	if(_write_clusters)
 	  _ntp_cluster = new TNtuple("ntp_cluster","cluster-wise ntuple",
 				     "event:layer:x:y:z:adc1:adc2:section:ladder:sensor:lx:ly:lz:size:sizex:sizez:vz");
 
@@ -449,8 +445,7 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
       return ABORTEVENT;
   }
 
-  // --------------------------------
-  // --- tick cut for SVX stuff...???
+
   int pticks[3] = {0};
   for ( int i = 0; i < 3; i++ ) pticks[i] = (d_peve != NULL) ? d_peve->get_clockticks(i) : -999;
 
@@ -469,11 +464,10 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
      std::cout << "                                      pticks: "
      << pticks[0] << " " << pticks[1] << " " << pticks[2] << std::endl;
    }
-      //return ABORTEVENT; // why?
+      //return ABORTEVENT;
    failed_tick_cut = true;// skip SVX Segments if true
  }
-  // --- end of tick cut for SVX stuff
-  // ---------------------------------
+
 
   //---------------------------------------------------------//
   //
@@ -502,7 +496,7 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
  event = evthead->get_EvtSequence();
  trigger = triggers->get_lvl1_trigscaled();
 
-  int ibbcz_bin = (bbc_z+30.0)/10;//for fvtx eta cuts // need to define this
+  int ibbcz_bin = (bbc_z+30.0)/10;//for fvtx eta cuts
 
   //get the East vertex (if available)
   PHPoint vtxposE;
@@ -530,7 +524,7 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
   //---------------------------------------------------------//
 
 
-  if(_write_clusters) // vtx cluster // make this flag more descriptive
+ if(_write_clusters)
  {
    PHPoint default_vertex1 = vertexes->get_Vertex();
    float default_z = default_vertex1.getZ();//
@@ -618,8 +612,8 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
   //
   //---------------------------------------------------------//
 
-  for(int idet=62; idet<68; idet++){ // detector
-    for(int ihar=0; ihar<3; ihar++){ // harmonic, offset by 1
+    for(int idet=62; idet<68; idet++){
+      for(int ihar=0; ihar<3; ihar++){
         int idcode = -9999;
 
         if(idet<65) idcode = RP::calcIdCode(RP::ID_MPC,idet-62, ihar);
@@ -645,7 +639,7 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
     //cout<<RP::ID_FVT<<endl;
     //south
 
-  for(int idet=0; idet<20; idet++){ // 40 different versions of fvtx event plane, first 20 are the south side
+      for(int idet=0; idet<20; idet++){
         for(int ihar=0; ihar<3; ihar++){
           int idcode = RP::calcIdCode(RP::ID_FVT,idet, ihar);
 
@@ -722,11 +716,11 @@ while( TFvtxCompactCoordMap::const_pointer fvtx_ptr = _iter.next() )
     //float fvtx_the = atan2(fvtx_r,fvtx_z-vtx_z);
     //float fvtx_phi = atan2(fvtx_y,fvtx_x);
     //float fvtx_eta = -log(tan(0.5*fvtx_the));
-    if(fvtx_z < 0) // only south side for asymmetric collisions (south side (gold going by RHIC convention))
+    if(fvtx_z < 0)
     {
       if(nfvtxs_raw_clus >= N_FVTX_CLUSTER_MAX) 
       {
-        cout<<"butting against the max fvtx cluster size, breaking"<<endl; // add PHWHERE and extra info here
+        cout<<"butting against the max fvtx cluster size, breaking"<<endl;
         break;
       }
       d_FVTX_x[nfvtxs_raw_clus] = fvtx_x;
@@ -827,7 +821,7 @@ while( TFvtxCompactCoordMap::const_pointer fvtx_ptr = _iter.next() )
 
  int igoodseg = 0;
 
- if(segments && !failed_tick_cut && _write_vtx ) // put tick cut check right here to make it clearer
+ if(segments && !failed_tick_cut && _write_vtx )
  {
   //vector<int> indexes;
   //for(int isegment = 0; isegment < nsegments; isegment++)
