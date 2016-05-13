@@ -1,7 +1,8 @@
 void Run_VTX_event_plane(const char *outFile = "test_train_output.root")
 {
 
-  int z_vertex_range = 30;
+  //int z_vertex_range = 30;
+  int z_vertex_range = 10;
 
   //----------
   // Libraries
@@ -32,7 +33,7 @@ void Run_VTX_event_plane(const char *outFile = "test_train_output.root")
   //DeathToMemoryHogs *dt = new DeathToMemoryHogs();
   //se->registerSubsystem(dt);
 
-  //to get the FVTX tracks
+  //to get the FVTX tracks ----------------------------
   FvtxReadbackDST *fvtxoo = new FvtxReadbackDST();
   fvtxoo->Verbosity( 0 );
   se->registerSubsystem( fvtxoo );
@@ -59,15 +60,15 @@ void Run_VTX_event_plane(const char *outFile = "test_train_output.root")
   vtx_ep->set_z_vertex_range(z_vertex_range);         //set z_vertex range for accepted tracks
   vtx_ep->set_use_runlist(false);                     //use the runlist to select for good runs
   vtx_ep->set_create_ttree(true);
-  vtx_ep->set_write_clusters(false);
+  vtx_ep->set_write_clusters(false); // svx clusters
   vtx_ep->set_write_bbc(true);
-  vtx_ep->set_write_fvtx_clusters(true);
+  vtx_ep->set_write_fvtx_clusters(true); // i guess?
   vtx_ep->set_write_fvtx(false);
   vtx_ep->set_trimmed_tree(true);
-  vtx_ep->set_write_vtx(true);
+  vtx_ep->set_write_vtx(false); // definitely false, no DST_SVX available right now
   //vtx_ep->set_runlist_file(string);
   vtx_ep->set_output_filename(outFile);//set the ntuple output file
-  vtx_ep->Verbosity(0);
+  vtx_ep->Verbosity(2);
   se->registerSubsystem(vtx_ep);
 
   //return;
@@ -76,9 +77,9 @@ void Run_VTX_event_plane(const char *outFile = "test_train_output.root")
 void InputData(vector<string> &indata)
 {
   indata.push_back("CNT");
-  indata.push_back("DST_SVX");
+  //indata.push_back("DST_SVX"); // nope
   //indata.push_back("MWG");
-  indata.push_back("dst_fvtx");
+  //indata.push_back("dst_fvtx"); // nope
   indata.push_back("dst_eve");
   return;
 }
