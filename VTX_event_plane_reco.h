@@ -21,16 +21,18 @@
 //#include <UltraLight/UltraLightTrack.h>
 #include <SvxSegment.h>
 
-static const int NDET = 8;
-static const int NHAR = 3;
-static const int NMUL = 6;
-static const int NZPS = 10;//
-static const int NORD = 12;
-static const int NZED = 10;//matching
-static const int NMAT = 8;
-static const int NPAR = 20;
-static const int N_FVTX_CLUSTER_MAX = 750;
-static const int N_SVX_TRACK_MAX = 10;
+
+// global variables for array sizes
+static const int NDET = 8; // number of detectors (which ones?)
+static const int NHAR = 3; // number of harmonics (1,2,3)
+static const int NMUL = 6; // ?
+static const int NZPS = 10; // number of zbins
+static const int NORD = 12; // ?
+static const int NZED = 10; // matching for PHCentralTracks, not currently used
+static const int NMAT = 8; // ?
+static const int NPAR = 20; // ?
+static const int N_FVTX_CLUSTER_MAX = 750; // maximum number of fvtx clusters, may need to be changed for larger systems
+static const int N_SVX_TRACK_MAX = 10; // seems really small??
 
 class Fun4AllHistoManager;
 class BbcCalib;
@@ -59,13 +61,15 @@ class VTX_event_plane_reco: public SubsysReco
   bool is_segment_ok  (SvxSegment *part);
 
   /// Single particle ntuple output...
-  void set_output_filename(std::string filename) {_output_filename = filename;}
-  void set_z_vertex_range(float z){ _z_vertex_range = z;}
-  void set_use_runlist(bool b){ _use_runlist = b;}
-  void set_runlist_file(std::string filename) {_runlist_filename = filename;}
+  void set_output_filename(std::string filename) {_output_filename = filename;} // select output file name externally
+  void set_z_vertex_range(float z){ _z_vertex_range = z;} // z vertex range for event selection
+  void set_use_runlist(bool b){ _use_runlist = b;} // text file for runs to analyze
+  void set_runlist_file(std::string filename) {_runlist_filename = filename;} // name of file for above
   //void set_calib_file(std::string calibfile){_calib_file = calibfile;}
-  void set_create_ttree(bool b){_create_ttree = b;}
+  void set_create_ttree(bool b){_create_ttree = b;} // ??
 
+
+  // --- set methods for variousthings to write out to trees/ntuples
   void set_write_clusters(bool b){_write_clusters = b;}
 
   void set_write_bbc(bool b){_write_bbc = b;}
@@ -84,7 +88,8 @@ class VTX_event_plane_reco: public SubsysReco
 
  protected:
 
- void boost_and_rotate(TLorentzVector & vec, TLorentzVector input1, TLorentzVector input2);
+  // ---
+  void boost_and_rotate(TLorentzVector & vec, TLorentzVector input1, TLorentzVector input2);
 
   /// current event
   unsigned long _ievent;
@@ -143,10 +148,10 @@ class VTX_event_plane_reco: public SubsysReco
   float vtxposW_y;
   float vtxposW_z;
   float fvtx_z;
-  float d_Qx[9];
-  float d_Qy[9];
-  float d_Qw[9];
-  float d_BBC_charge[64];
+  float d_Qx[9]; // x comp of Q vec, 3 detectors times 3 harmonics
+  float d_Qy[9]; // y comp of Q vec, 3 detectors times 3 harmonics
+  float d_Qw[9]; // weight for q-vector (not harmonic dependent? but the option is available)
+  float d_BBC_charge[64]; // charge from each bbc tube for South side only (for asymmetric collision systems)
   int   d_nFVTX_clus;
   float d_FVTX_x[N_FVTX_CLUSTER_MAX];
   float d_FVTX_y[N_FVTX_CLUSTER_MAX];
