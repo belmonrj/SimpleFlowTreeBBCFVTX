@@ -25,10 +25,11 @@ using std::vector;
 void InputData(vector<string> &indata);
 #endif
 
-void RunMyMacro(const char *modulemacro = "Run_TestmyMpcEx.C",  // your anataxi macro name
+void RunMyMacro(const char *modulemacro = "Run_VTX_event_plane.C",  // your anataxi macro name
                 const char *outfile     = "output_test.root",   // <module_name>_<run>-<sequence>.root
                 const int nevnt         = 10000,               // number of events
-                const char *system      = "Run15pp200MPCPlusMBPro104") // system type
+                const char *system      = "Run16dAu200TEST") // system type
+                //const char *system      = "Run15pAu200CAMBPro104") // system type
 {
 
   string cntfile = "NONE";
@@ -3506,6 +3507,35 @@ void RunMyMacro(const char *modulemacro = "Run_TestmyMpcEx.C",  // your anataxi 
       dst_mpcfile = "DST_MPC_ERT_run15pAu_200GeV_MPCPlus_pro104-0000435527-9000.root";
       dst_mpcexfile = "DST_MPCEX_ERT_run15pAu_200GeV_MPCPlus_pro104-0000435527-9000.root";
       pwg_included = true;
+    }
+  // ---------------------------------------------------
+  else if (strcmp(system, "Run16dAu200TEST") == 0)
+    {
+      gSystem->Load("libfvtx_subsysreco.so");
+      gSystem->Load("libmutoo_subsysreco");
+      gSystem->Load("libfun4all.so");
+      gSystem->Load("libfun4allfuncs.so");
+      gSystem->Load("libfun4allfuncs_muons");
+      gSystem->Load("libMWGOO");
+      gSystem->Load("libmutrg");
+      gSystem->Load("librpc_subsysreco");
+      gSystem->Load("librpc_muotrackreco");
+      gSystem->Load("libcompactCNT.so");
+      gSystem->Load("librecal");
+      gSystem->Load("libBbcMultipleVtx.so" );
+
+      cntfile = "/phenix/prod/online_production/run16_online_ca/run_0000454000_0000455000/CNT/CNT_run16_online_ca-0000454785-0000.root";
+      //cntfile = "CNT_MB_run15pAu_200GeV_CA_pro104-0000435527-9000.root";
+      //mwgfile = "MWG_MB_run15pAu_200GeV_Muons_pro104-0000435527-9000.root";
+      dst_evefile = "/phenix/prod/online_production/run16_online_ca/run_0000454000_0000455000/DST_EVE/DST_EVE_run16_online_ca-0000454785-0000.root";
+      //dst_evefile = "DST_EVE_MB_run15pAu_200GeV_CA_pro104-0000435527-9000.root";
+      //dst_svxfile = "DST_SVX_MB_run15pAu_200GeV_CA_pro104-0000435527-9000.root";
+      // cntfile = "CNT_run16_online_ca-0000454785-0000.root";
+      // //cntfile = "CNT_MB_run15pAu_200GeV_CA_pro104-0000435527-9000.root";
+      // //mwgfile = "MWG_MB_run15pAu_200GeV_Muons_pro104-0000435527-9000.root";
+      // dst_evefile = "DST_EVE_run16_online_ca-0000454785-0000.root";
+      // //dst_evefile = "DST_EVE_MB_run15pAu_200GeV_CA_pro104-0000435527-9000.root";
+      // //dst_svxfile = "DST_SVX_MB_run15pAu_200GeV_CA_pro104-0000435527-9000.root";
     }
 
 
