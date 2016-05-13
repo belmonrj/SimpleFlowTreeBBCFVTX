@@ -308,7 +308,7 @@ int VTX_event_plane_reco::ResetEvent(PHCompositeNode *topNode)
     farm[i]      = -9999;
     fphi[i]      = -9999;
     feta[i]      = -9999;
-    fchisq[i]    = -9999;     
+    fchisq[i]    = -9999;
     fnhits[i]    = -9999;
     fDCA_X[i]    = -9999;
     fDCA_Y[i]    = -9999;
@@ -319,13 +319,14 @@ int VTX_event_plane_reco::ResetEvent(PHCompositeNode *topNode)
 int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
 {
 
+  if (_verbosity > 1) cout << PHWHERE << "::process_event() - entered on event #" << _ievent << endl;
+  else if ((_ievent)%10000 == 0) cout << PHWHERE << "::process_event() - event #" << _ievent << endl;
+
   // advance event counter
   _ievent++;
 
   event = _ievent;
 
-  if (_verbosity > 1) cout << PHWHERE << "::process_event() - entered on event #" << _ievent << endl;
-  else if ((_ievent-1)%10000 == 0) cout << PHWHERE << "::process_event() - event #" << _ievent << endl;
 
 
   //---------------------------------
@@ -415,13 +416,14 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
   }
 
   TFvtxCompactCoordMap* fvtx_coord_map = findNode::getClass<TFvtxCompactCoordMap>(topNode,"TFvtxCompactCoordMap");
-  if(!fvtx_coord_map)
+  if(!fvtx_coord_map && _write_fvtx_clusters)
   {
     cout<<PHWHERE<<" ERROR::TFvtxCompactCoordMap not found"<<endl;
     return ABORTEVENT;
   }
 
-  TFvtxCompactCoordMap::iterator _iter( fvtx_coord_map->range() );
+
+
 
   SvxClusterList *d_svxcls = NULL;
   d_svxcls = findNode::getClass<SvxClusterList>(topNode, "SvxClusterList");
@@ -434,8 +436,8 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
   RpSumXYObject* d_rp = findNode::getClass<RpSumXYObject>(topNode, "RpSumXYObject");
 
   if(!d_rp){
-    cout<< PHWHERE << "Could not find the RPSumXYObject"<< endl;
-    return ABORTEVENT;
+    if ( _verbosity > 0 ) cout<< PHWHERE << "Could not find the RPSumXYObject"<< endl;
+    //return ABORTEVENT;
   }
 
   BbcRaw *bbcraw=findNode::getClass<BbcRaw>(topNode,"BbcRaw");
@@ -619,7 +621,7 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
         if(idet<65) idcode = RP::calcIdCode(RP::ID_MPC,idet-62, ihar);
         else idcode = RP::calcIdCode(RP::ID_BBC,idet-65, ihar);
 
-        if(idcode>=0){
+        if(idcode>=0 && d_rp){
           RpSnglSumXY *s_rp = d_rp->getRpSumXY(idcode);
 
           if(idet==62){//MPC
@@ -643,7 +645,7 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
         for(int ihar=0; ihar<3; ihar++){
           int idcode = RP::calcIdCode(RP::ID_FVT,idet, ihar);
 
-          if(idcode>=0){
+          if(idcode>=0 && d_rp){
             RpSnglSumXY *s_rp = d_rp->getRpSumXY(idcode);
             int ifvtx = idet%5;
           if(ifvtx<4){//-1.0-3.0
@@ -662,7 +664,7 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
       d_Qw[ihar*3+1]=sumxy_fvtx[ihar][0][2];
       //}
     }
-  
+
 
   //---------------------------------------------------------//
   //             Finished retrieving Event Planes
@@ -703,34 +705,38 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
   }
 
 int nfvtxs_raw_clus = 0;
-while( TFvtxCompactCoordMap::const_pointer fvtx_ptr = _iter.next() )
-  {
-    TFvtxCompactCoord* fvtxcoord = fvtx_ptr->get();
-    PHPoint fvtx_coord_point = fvtxcoord->get_coord_midpoint();
-    //int iarm = fvtxcoord->get_arm();
-    float fvtx_x = fvtx_coord_point.getX();
-    float fvtx_y = fvtx_coord_point.getY();
-    float fvtx_z = fvtx_coord_point.getZ();
-    //float fvtx_r = sqrt(pow(fvtx_x,2.0)+pow(fvtx_y,2.0));
-    if( (fabs(fvtx_x)>999) ||(fabs(fvtx_y)>999) || (fabs(fvtx_z)>999)) continue;
-    //float fvtx_the = atan2(fvtx_r,fvtx_z-vtx_z);
-    //float fvtx_phi = atan2(fvtx_y,fvtx_x);
-    //float fvtx_eta = -log(tan(0.5*fvtx_the));
-    if(fvtx_z < 0)
-    {
-      if(nfvtxs_raw_clus >= N_FVTX_CLUSTER_MAX) 
-      {
-        cout<<"butting against the max fvtx cluster size, breaking"<<endl;
-        break;
-      }
-      d_FVTX_x[nfvtxs_raw_clus] = fvtx_x;
-      d_FVTX_y[nfvtxs_raw_clus] = fvtx_y;
-      d_FVTX_z[nfvtxs_raw_clus] = fvtx_z;
-      nfvtxs_raw_clus++;
-      //cout<<"fvtx_eta: "<<fvtx_eta<<endl;
-    }
+ if ( fvtx_coord_map )
+   {
+     TFvtxCompactCoordMap::iterator _iter( fvtx_coord_map->range() );
+     while( TFvtxCompactCoordMap::const_pointer fvtx_ptr = _iter.next() )
+       {
+         TFvtxCompactCoord* fvtxcoord = fvtx_ptr->get();
+         PHPoint fvtx_coord_point = fvtxcoord->get_coord_midpoint();
+         //int iarm = fvtxcoord->get_arm();
+         float fvtx_x = fvtx_coord_point.getX();
+         float fvtx_y = fvtx_coord_point.getY();
+         float fvtx_z = fvtx_coord_point.getZ();
+         //float fvtx_r = sqrt(pow(fvtx_x,2.0)+pow(fvtx_y,2.0));
+         if( (fabs(fvtx_x)>999) ||(fabs(fvtx_y)>999) || (fabs(fvtx_z)>999)) continue;
+         //float fvtx_the = atan2(fvtx_r,fvtx_z-vtx_z);
+         //float fvtx_phi = atan2(fvtx_y,fvtx_x);
+         //float fvtx_eta = -log(tan(0.5*fvtx_the));
+         if(fvtx_z < 0)
+           {
+             if(nfvtxs_raw_clus >= N_FVTX_CLUSTER_MAX)
+               {
+                 cout<<"butting against the max fvtx cluster size, breaking"<<endl;
+                 break;
+               }
+             d_FVTX_x[nfvtxs_raw_clus] = fvtx_x;
+             d_FVTX_y[nfvtxs_raw_clus] = fvtx_y;
+             d_FVTX_z[nfvtxs_raw_clus] = fvtx_z;
+             nfvtxs_raw_clus++;
+             //cout<<"fvtx_eta: "<<fvtx_eta<<endl;
+           } // south
 
-  }
+       } // while loop over iterator
+   } // check on fvtx_coord_map
 
   d_nFVTX_clus = nfvtxs_raw_clus;
   //cout<<"nfvtxs_raw_clus: "<<nfvtxs_raw_clus <<endl;
@@ -742,7 +748,7 @@ while( TFvtxCompactCoordMap::const_pointer fvtx_ptr = _iter.next() )
   //---------------------------------------------------------//
 
   int ntr = -1;
-  
+
   if (trkfvtx_map && _write_fvtx){
     TFvtxCompactTrkMap::const_iterator trk_iter = trkfvtx_map->range();
     while( TFvtxCompactTrkMap::const_pointer trk_ptr = trk_iter.next() ){
@@ -757,7 +763,7 @@ while( TFvtxCompactCoordMap::const_pointer fvtx_ptr = _iter.next() )
       float fvtx_y      = fvtx_trk->get_fvtx_vtx().getY();
       float fvtx_z      = fvtx_trk->get_fvtx_vtx().getZ();
       int   nfhits      = (int)fvtx_trk->get_nhits();
-      
+
       float DCA_x      = fvtx_x + tan(the)*cos(phi)*(bbc_z - fvtx_z);
       float DCA_y      = fvtx_y + tan(the)*sin(phi)*(bbc_z - fvtx_z);
       //cout<<"nfhits: "<<nfhits<<endl;
@@ -772,22 +778,22 @@ while( TFvtxCompactCoordMap::const_pointer fvtx_ptr = _iter.next() )
       */
       //if(the==0 || phi==0 || fvtx_x==0 || fvtx_y==0 || fvtx_z==0) continue;
       if(the==0) continue;
-      
+
       if(nfhits<3) continue;
       if(!pass_eta_cut(eta,ibbcz_bin)) continue;
       if(fvtx_trk->get_chi2_ndf() > 5) continue;
       if(fabs(DCA_x) > 2.0 || fabs(DCA_y) > 2.0) continue;
       ntr++;
 
-      
+
       //float DCA_R      = sqrt((DCA_x*DCA_x) + (DCA_y*DCA_y));
-      
+
       if(ntr < 75)
       {
        feta[ntr]   = eta;
        fphi[ntr]   = phi;
        fchisq[ntr] = fvtx_trk->get_chi2_ndf();
-       farm[ntr]   = arm; 
+       farm[ntr]   = arm;
        fnhits[ntr] = nfhits;
        fDCA_X[ntr] = DCA_x;
        fDCA_Y[ntr] = DCA_y;
@@ -817,7 +823,7 @@ while( TFvtxCompactCoordMap::const_pointer fvtx_ptr = _iter.next() )
 
  if(_write_vtx)
   nsegments = segments->get_nSegments();
-  //  cout<<"nsegments in this event: "<<nsegments<<endl; 
+  //  cout<<"nsegments in this event: "<<nsegments<<endl;
 
  int igoodseg = 0;
 
@@ -947,12 +953,15 @@ bool VTX_event_plane_reco::is_event_ok(PHCompositeNode *topNode)
     }
 
     double bbcz = global->getBbcZVertex();
-    if(fabs(bbcz) > 30) 
+    if(fabs(bbcz) > 30)
     {
       if(_verbosity > 0)
        cout<<"event rejected because bbc z vertex outside of 30 cm"<<endl;
      return false;
    }
+
+    return true;
+
   // bail on bad centrality
       float tmpcentrality = global->getCentrality();
       if((tmpcentrality < 0.0)||(tmpcentrality > 100.0))
@@ -969,7 +978,11 @@ bool VTX_event_plane_reco::is_event_ok(PHCompositeNode *topNode)
       return false;
     }
     return true;
-  }
+
+  } // is_event_ok
+
+
+
 
   bool VTX_event_plane_reco::is_segment_ok(SvxSegment *segment)
   {
@@ -1057,7 +1070,7 @@ bool pass_eta_cut(float eta, int bbcz_bin)
  }
  if(bbcz_bin==1)
  {
-  if(eta > -1.7 && eta < -0.8) 
+  if(eta > -1.7 && eta < -0.8)
    return true;
  if(eta > 1.7 && eta < 3.2)
    return true;
