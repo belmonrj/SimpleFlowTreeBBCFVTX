@@ -43,10 +43,6 @@ void analyze_theo(int iter = 0)
   fvtxoo->Verbosity( 0 );
   se->registerSubsystem( fvtxoo );
 
-  // --- change to vtx_event_plane
-  // ReadnDST *readndst = new ReadnDST("readndst",Form("/gpfs/mnt/gpfs02/phenix/hhj/hhj1/theok/test_readndst/454785/ntuple_454785_%d.root",iter));
-  // se->registerSubsystem(readndst);
-
   //----------------------
   // VTX_event_plane_reco
   //----------------------
@@ -62,8 +58,8 @@ void analyze_theo(int iter = 0)
   vtx_ep->set_trimmed_tree(true);
   vtx_ep->set_write_vtx(false); // definitely false, no DST_SVX available right now
   //vtx_ep->set_runlist_file(string);
-  vtx_ep->set_output_filename(Form("out/tree_0000454785_%d.root",iter));//set the ntuple output file
-  vtx_ep->Verbosity(2);
+  vtx_ep->set_output_filename(Form("out/tree_0000454811_%04d.root",iter));//set the ntuple output file
+  vtx_ep->Verbosity(0);
   se->registerSubsystem(vtx_ep);
 
   Fun4AllInputManager *in1 = new Fun4AllDstInputManager("DSTin1", "DST");
@@ -72,12 +68,7 @@ void analyze_theo(int iter = 0)
 
   cout << "Analysis started " << endl;
   gSystem->Exec("date");
-  if(iter < 10)
-    se->fileopen("DSTin1", Form("/phenix/prod/online_production/run16_online_ca/run_0000454000_0000455000/CNT/CNT_run16_online_ca-0000454785-000%d.root",iter));
-  else if(iter < 100)
-    se->fileopen("DSTin1", Form("/phenix/prod/online_production/run16_online_ca/run_0000454000_0000455000/CNT/CNT_run16_online_ca-0000454785-00%d.root",iter));
-  else if(iter < 1000)
-    se->fileopen("DSTin1", Form("/phenix/prod/online_production/run16_online_ca/run_0000454000_0000455000/CNT/CNT_run16_online_ca-0000454785-0%d.root",iter));
+  se->fileopen("DSTin1", Form("/phenix/prod/online_production/run16_online_ca/run_0000454000_0000455000/CNT/CNT_run16_online_ca-0000454811-%04d.root",iter));
 
 
   Fun4AllInputManager *in2 = new Fun4AllDstInputManager("DSTin2", "DST");
@@ -85,18 +76,8 @@ void analyze_theo(int iter = 0)
   se->registerInputManager(in2);
 
   gSystem->Exec("date");
-  if(iter < 10)
-    se->fileopen("DSTin2", Form("/phenix/prod/online_production/run16_online_ca/run_0000454000_0000455000/DST_EVE/DST_EVE_run16_online_ca-0000454785-000%d.root",iter));
-  else if(iter < 100)
-    se->fileopen("DSTin2", Form("/phenix/prod/online_production/run16_online_ca/run_0000454000_0000455000/DST_EVE/DST_EVE_run16_online_ca-0000454785-00%d.root",iter));
-  else if(iter < 1000)
-    se->fileopen("DSTin2", Form("/phenix/prod/online_production/run16_online_ca/run_0000454000_0000455000/DST_EVE/DST_EVE_run16_online_ca-0000454785-0%d.root",iter));
+  se->fileopen("DSTin2", Form("/phenix/prod/online_production/run16_online_ca/run_0000454000_0000455000/DST_EVE/DST_EVE_run16_online_ca-0000454811-%04d.root",iter));
 
-  //se->fileopen("DSTin2", cnt_file);
-  //se->fileopen("DSTin3", infile3);
-  //in1->AddListFile(list1);
-  //in2->AddListFile(list2);
-  //in3->AddListFile(list3);
   se->run(10000);
 
   se->End();
