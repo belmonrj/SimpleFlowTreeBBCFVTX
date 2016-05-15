@@ -51,32 +51,15 @@
 
 #include <PreviousEvent.h>
 
+// ------------------------
+#include "PHCentralTrack.h"
+#include "PHSnglCentralTrack.h"
+
 
 using namespace std;
 
-float calc_chisq_fromquality(float quality, float score);
 
-bool pass_eta_cut(float eta, int bbcz_bin);
-
-void VTX_event_plane_reco::boost_and_rotate(TLorentzVector & vec, TLorentzVector input1, TLorentzVector input2)
-{
-  cout<<"WARNING USING OUTDATED VERSION"<<endl;
-  return;
-  TLorentzVector cms = input1 + input2;
-
-  TVector3 z(0,0,1);
-
-  input1.Boost(-cms.BoostVector());
-  input2.Boost(-cms.BoostVector());
-  vec.Boost(-cms.BoostVector());
-
-  float rotAngleY = -input1.Angle(z);
-
-  //Now rotate the beams about x to align them with z axis
-  vec.RotateY(rotAngleY);
-
-}
-
+// --- class constructor
 VTX_event_plane_reco::VTX_event_plane_reco(): SubsysReco("VTXULTRALIGHTRECO")
 {
   _ievent = 0;
@@ -105,20 +88,22 @@ VTX_event_plane_reco::VTX_event_plane_reco(): SubsysReco("VTXULTRALIGHTRECO")
   return;
 }
 
+
+// --- class destructor
 VTX_event_plane_reco::~VTX_event_plane_reco()
 {
   delete m_bbccalib;
   delete m_bbcgeo;
 }
 
+
+// --- Init method, part of Fun4All inheriance
 int VTX_event_plane_reco::Init(PHCompositeNode *topNode)
 {
-  cout<<"using fixed boost bbc"<<endl;
-  ResetEvent(topNode);
+
+  ResetEvent(topNode); // is this needed?
 
   if (_verbosity > 1) cout << PHWHERE << "::Init() - entered." << endl;
-
-  //Fun4AllServer *se = Fun4AllServer::instance();
 
   _output_file = new TFile(_output_filename.c_str(), "RECREATE");
 
@@ -144,6 +129,10 @@ int VTX_event_plane_reco::Init(PHCompositeNode *topNode)
           _ntp_event -> Branch("d_FVTX_y",&d_FVTX_y,"d_FVTX_y[d_nFVTX_clus]/F");
           _ntp_event -> Branch("d_FVTX_z",&d_FVTX_z,"d_FVTX_z[d_nFVTX_clus]/F");
         }
+      _ntp_event -> Branch("d_ntrk",&d_ntrk,"d_ntrk/I");
+      _ntp_event -> Branch("d_cntpx",&d_cntpx,"d_cntpx[d_ntrk]/F");
+      _ntp_event -> Branch("d_cntpy",&d_cntpy,"d_cntpy[d_ntrk]/F");
+      _ntp_event -> Branch("d_cntpz",&d_cntpz,"d_cntpz[d_ntrk]/F");
       //_ntp_event -> Branch("d_BBCs_Qy",&d_BBCs_Qy,"d_BBCs_Qy[221]/F");
       //_ntp_event -> Branch("d_BBCs_Qw",&d_BBCs_Qw,"d_BBCs_Qw[221]/F");
       //now track based arrays
@@ -205,6 +194,8 @@ int VTX_event_plane_reco::Init(PHCompositeNode *topNode)
   return EVENT_OK;
 }
 
+
+// --- InitRun, part of Fun4All inheritance
 int VTX_event_plane_reco::InitRun(PHCompositeNode *topNode)
 {
 
@@ -236,6 +227,8 @@ int VTX_event_plane_reco::InitRun(PHCompositeNode *topNode)
   return EVENT_OK;
 }
 
+
+// --- ResetEvent, part of Fun4All inheritance, called after every event by Fun4All
 int VTX_event_plane_reco::ResetEvent(PHCompositeNode *topNode)
 {
   if (_verbosity > 1) cout << PHWHERE << "::ResetEvent() - entered." << endl;
@@ -313,9 +306,14 @@ int VTX_event_plane_reco::ResetEvent(PHCompositeNode *topNode)
         fDCA_X[i]    = -9999;
         fDCA_Y[i]    = -9999;
       }
+
   return EVENT_OK;
+
 }
 
+
+
+// --- process_event, inherited from Fun4All, does the main part of the analysis on an event by event basis
 int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
 {
 
@@ -725,7 +723,7 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
             {
               if(nfvtxs_raw_clus >= N_FVTX_CLUSTER_MAX)
                 {
-                  cout<<"butting against the max fvtx cluster size, breaking"<<endl;
+                  cout<<"butting against the max fvtx cluster size " << nfvtxs_raw_clus << "/" << N_FVTX_CLUSTER_MAX << ", breaking"<<endl;
                   break;
                 }
               d_FVTX_x[nfvtxs_raw_clus] = fvtx_x;
@@ -889,6 +887,45 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
 
   //if(nsegments==0) return EVENT_OK; // BAD CUT
 
+  d_ntrk = 0;
+  PHCentralTrack *ctrk = findNode::getClass<PHCentralTrack>(topNode,"PHCentralTrack");
+  if ( ctrk )
+    {
+      int ntrk = ctrk->get_npart();
+      if ( ntrk > 500 )
+        {
+          cout << PHWHERE << " WARNING: too many tracks, skipping event" << endl;
+          return ABORTEVENT;
+        }
+      int counter = 0;
+      for ( int itrk = 0; itrk < ntrk; ++itrk)
+        {
+
+          PHSnglCentralTrack *strk = ctrk->get_track(itrk);
+
+          float mom         = strk->get_mom();
+          float zed         = strk->get_zed();
+          int quality       = strk->get_quality();
+          if ( mom < 0.0 || mom > 50.0 ) continue;
+          if ( fabs(zed) < 3.0 || fabs(zed) > 70.0 ) continue;
+          if ( quality != 63 && quality != 31 ) continue;
+
+          float px = strk->get_px();
+          float py = strk->get_py();
+          float pz = strk->get_pz();
+
+          d_cntpx[counter] = px;
+          d_cntpy[counter] = py;
+          d_cntpz[counter] = pz;
+
+          ++counter;
+
+        } // loop over tracks
+
+      d_ntrk = counter;
+
+    } // check on track pointer
+
   if(_create_ttree)
     _ntp_event->Fill();
 
@@ -897,7 +934,11 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
   if(_verbosity >1) cout<<"sucessfully processed this event"<<endl;
 
   return EVENT_OK;
-}
+
+} // end of process_event
+
+
+
 
 int VTX_event_plane_reco::End(PHCompositeNode *topNode)
 {
@@ -1061,7 +1102,7 @@ bool VTX_event_plane_reco::is_run_in_list(int runnumber)
 }
 
 //these vaules were obtained from ana note 1162
-bool pass_eta_cut(float eta, int bbcz_bin)
+bool VTX_event_plane_reco::pass_eta_cut(float eta, int bbcz_bin)
 {
   if(bbcz_bin==0)
     {
@@ -1134,7 +1175,7 @@ bool pass_eta_cut(float eta, int bbcz_bin)
 }
 
 
-float calc_chisq_fromquality(float quality, float score)
+float VTX_event_plane_reco::calc_chisq_fromquality(float quality, float score)
 {
   float chisq = quality - score/100.;
   chisq = 1/chisq-2.0;

@@ -31,7 +31,8 @@ static const int NORD = 12; // ?
 static const int NZED = 10; // matching for PHCentralTracks, not currently used
 static const int NMAT = 8; // ?
 static const int NPAR = 20; // ?
-static const int N_FVTX_CLUSTER_MAX = 750; // maximum number of fvtx clusters, may need to be changed for larger systems
+//static const int N_FVTX_CLUSTER_MAX = 750; // maximum number of fvtx clusters, may need to be changed for larger systems
+static const int N_FVTX_CLUSTER_MAX = 3000; // what's the largest possible number?
 static const int N_SVX_TRACK_MAX = 10; // seems really small??
 
 class Fun4AllHistoManager;
@@ -89,7 +90,10 @@ class VTX_event_plane_reco: public SubsysReco
  protected:
 
   // ---
-  void boost_and_rotate(TLorentzVector & vec, TLorentzVector input1, TLorentzVector input2);
+
+  float calc_chisq_fromquality(float quality, float score);
+
+  bool pass_eta_cut(float eta, int bbcz_bin);
 
   /// current event
   unsigned long _ievent;
@@ -156,6 +160,12 @@ class VTX_event_plane_reco: public SubsysReco
   float d_FVTX_x[N_FVTX_CLUSTER_MAX];
   float d_FVTX_y[N_FVTX_CLUSTER_MAX];
   float d_FVTX_z[N_FVTX_CLUSTER_MAX];
+  // ----------------
+  int d_ntrk;
+  float d_cntpx[500];
+  float d_cntpy[500];
+  float d_cntpz[500];
+  // ----------------
   //float d_BBCs_Qy[221];
   //float d_BBCs_Qw[221];
   int nsegments;
