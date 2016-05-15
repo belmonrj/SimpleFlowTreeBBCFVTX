@@ -1,15 +1,16 @@
 Universe        = vanilla
 Notification    = Complete
-Executable      = /direct/phenix+u/theok/test/test_readndst/run16_analysis.csh
-Arguments       = $(Process) out/outlog/out$(Process).log
+Executable      = /phenix/plhf/belmonrj/offline/AnalysisTrain/theok/VTX_event_plane/run16_analysis.csh
+Arguments       = $(Process) log/out_$(Process).log
 Requirements    = (CPU_Speed >= 1 && CPU_Experiment == "phenix")
 Rank            = CPU_Speed
 Priority        = +1
 GetEnv          = True
-Initialdir      = /direct/phenix+u/theok/test/test_readndst/
-Error           = /direct/phenix+u/theok/test/test_readndst/out/err_443437_run16_$(Process).err
-Log             = /direct/phenix+u/theok/test/test_readndst/out/job_443437_run16_$(Process).log
+Initialdir      = /phenix/plhf/belmonrj/offline/AnalysisTrain/theok/VTX_event_plane/
+Error           = /phenix/plhf/belmonrj/offline/AnalysisTrain/theok/VTX_event_plane/log/err_$(Process).err
+Log             = /phenix/plhf/belmonrj/offline/AnalysisTrain/theok/VTX_event_plane/log/job_$(Process).log
 +Experiment     = "phenix"
 PeriodicHold = (NumJobStarts >= 1 && JobStatus == 1)
 +Job_Type       = "cas"
-Queue 294
+Queue 250
+
