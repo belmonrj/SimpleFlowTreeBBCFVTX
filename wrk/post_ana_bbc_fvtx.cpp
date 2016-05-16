@@ -33,7 +33,8 @@ float d_pmt_y[64];
 float d_pmt_z = -1443.5; // same for all tubes
 
 //tree invariables
-static const int max_nh = 10; // see from ana taxi code
+static const int max_nh = 500; // see from ana taxi code
+//static const int max_nh = 10; // see from ana taxi code
 static const int max_nf = 750; // see from ana taxi code
 
 using namespace std;
@@ -66,129 +67,36 @@ using namespace std;
 
 bool DIAG = false;
 
-// JLN - 1) this function takes as 2nd, 3rd arguments the beam vectors in the Lab Frame
-//       2) it then determines the needed boost and rotatation (in that order) into the center-of-mass frame
-//          with the beams along the z-axis
-//       3) it then uses these boost and rotation values to either change the vector "vec"
-//          from the Lab to the CoM frame (option 1) or from the CoM fram to the Lab frame (option 2)
-//       4) JLN added an option flag for this function
-//       5) Note that in this original version the function also returns the relative phi angle between frames...
-float boost_and_rotate(TLorentzVector & vec, TLorentzVector input1, TLorentzVector input2, int option)
-{
 
-  // JLN - just define a special vector for the z-axis
-  TVector3 z(0,0,1);
-
-  if (DIAG) {
-    cout << "===================================================" << endl;
-    cout << "boost_and_rotate:   input beam vectors (1,2) and then particle of interest" << endl;
-    cout << "px1 = " << input1.Px() << ", py1 = " << input1.Py() << ", pz1 = " << input1.Pz() << ", E = " << input1.E() << endl;
-    cout << "px2 = " << input2.Px() << ", py2 = " << input2.Py() << ", pz2 = " << input2.Pz() << ", E = " << input2.E() << endl;
-    cout << "px  = " << vec.Px()    << ", py  = " << vec.Py()    << ", pz  = " << vec.Pz()    << ", E = " << vec.E()    << endl;
-    cout << " " << endl;
-  }
-
-  // calculate the total four vector and then boost both beam vectors into CoM frame (not yet along z-axis)
-  TLorentzVector cms = input1 + input2;
-  input1.Boost(-cms.BoostVector()); // blue
-  input2.Boost(-cms.BoostVector()); // yellow
-
-
-  if (DIAG) {
-    cout << "boost_and_rotate:   input beam vectors after BOOST TO CoM ONLY" << endl;
-    cout << "px1 = " << input1.Px() << ", py1 = " << input1.Py() << ", pz1 = " << input1.Pz() << ", E = " << input1.E() << endl;
-    cout << "px2 = " << input2.Px() << ", py2 = " << input2.Py() << ", pz2 = " << input2.Pz() << ", E = " << input2.E() << endl;
-    cout << "Boost pxcms = " << cms.Px() << ", pycms = " << cms.Py() << ", pzcms = " << cms.Pz() << ", E = " << cms.E() << endl;
-    // JLN - as a check, boost cms vector into cvs frame (should have identically zero momentum)
-    // problem later on !!!!!
-    //    cms.Boost(-cms.BoostVector());
-    //    cout << "Check pxcms = " << cms.Px() << ", pycms = " << cms.Py() << ", pzcms = " << cms.Pz() << ", E = " << cms.E() << endl;
-    cout << " " << endl;
-  }
-
-  // Now rotate the beams about x to align them with z axis
-  double rotAngleY1 = -input1.Angle(z);
-  double rotAngleY2 = -input2.Angle(z);   // this assumes rotation is just interchanging x and z !!!!
-
-  if (DIAG) {
-    cout << "angle around Y = " << rotAngleY1 << " (and alternate check = " << rotAngleY2 << " )" << endl;
-  }
-
-  // JLN - assuming check works...
-  double rotAngleY = rotAngleY2;
-  // JLN - current check by Theo about whether rotation is in wrong direction....
-  input1.RotateY(rotAngleY);
-  if(TMath::Abs(input1.Px()) >  0.00001 ) {
-    // wrong rotation direction
-    // rotate back and set the new angle
-    rotAngleY = -1.0 * rotAngleY;
-    input1.RotateY(rotAngleY);
-  }
-  // JLN - do the correct rotation of the beam vectors
-  input1.RotateY(rotAngleY);
-  input2.RotateY(rotAngleY);
-
-  if (DIAG) {
-    cout << "boost_and_rotate:   input beam vectors after BOOST TO CoM and ROTATION TOO" << endl;
-    cout << "px1 = " << input1.Px() << ", py1 = " << input1.Py() << ", pz1 = " << input1.Pz() << ", E = " << input1.E() << endl;
-    cout << "px2 = " << input2.Px() << ", py2 = " << input2.Py() << ", pz2 = " << input2.Pz() << ", E = " << input2.E() << endl;
-    cout << " " << endl;
-  }
-
-
-  // --- Only now apply the boost + rotation to the particle vector (see option part)
-  // now change vec either (option==1 from the Lab to Com) or (option==2 from the Com to Lab)
-  if (option == 1) {
-    // Lab to CoM - order is boost and then rotate (identical to beam manipulations)
-    vec.Boost(-cms.BoostVector());
-    vec.RotateY(rotAngleY);
-  } else if (option == 2) {
-    // CoM to Lab - order is rotate and boost (opposite sign of beam manipulations)
-    vec.RotateY(-rotAngleY);
-    vec.Boost(cms.BoostVector());
-  } else {
-    cout << "boost_and_rotate:   Error with option not equal to 1 or 2:  option = " << option << endl;
-  }
-
-  // not really used here.... as return value
-  return rotAngleY;
-
-}
-
-int get_fvtx_layer(float z)
-{
-  if(z < -18 && z > -24) return 0;
-  if(z < -24 && z > -30) return 1;
-  if(z < -30 && z > -35) return 2;
-  if(z < -35)            return 3;
-
-  cout<<"get_fvtx_layer::invalid z =  "<<z<<endl;
-  return -1;
-}
-
+int get_fvtx_layer(float);
 void initialize_pmt_position();
+float boost_and_rotate(TLorentzVector&, TLorentzVector, TLorentzVector, int);
 
-void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
+
+// -----------------------------------------------------------------
+void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
+
+  int verbosity = 0;
 
   // --- need some agreed upon standard for dealing with paths
 
   char outFile1[300];
-  sprintf(outFile1,"%s%d%s","/phenix/plhf/theok/taxi/Run15pAu200FVTXClusAna503/8819/processed/hist_",runNumber,".root"); // absolute paths need to be dealt with
+  sprintf(outFile1,"%s%d%s","output/hist_",runNumber,".root"); // absolute paths need to be dealt with
 
   char outFile2[100];
-  sprintf(outFile2,"%s%d%s","vtx_ep_calib/shengli/rp/hrp_",runNumber,".root"); // absolute paths need to be dealt with
+  sprintf(outFile2,"%s%d%s","output/hrp_",runNumber,".root"); // absolute paths need to be dealt with
 
   cout<<"runNumber = " <<runNumber<<" "
       <<"rp_recal_pass = "<<rp_recal_pass<<endl;
 
   char filename[500];
-  sprintf(filename,"/gpfs/mnt/gpfs02/phenix/plhf/plhf1/theok/taxi/Run15pAu200FVTXClusAna503/8819/data/%d.root",runNumber); // abslute paths need to be dealt with
+  sprintf(filename,"input/tree_merged_%010d.root",runNumber); // abslute paths need to be dealt with
 
   cout << "v2 input file: " << filename << endl;
   cout << "v2 output file: " << outFile1 << endl;
 
   char calibfile[500];
-  sprintf(calibfile,"vtx_ep_calib/new_wide_z_flattening/flattening_%d_%d.dat",runNumber,rp_recal_pass-1);
+  sprintf(calibfile,"output/flattening_%d_%d.dat",runNumber,rp_recal_pass-1);
 
   TFile *f=TFile::Open( filename);
 
@@ -206,26 +114,36 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
       return;
     }
 
+  cout << "Initalizing PMT positions for the BBC" << endl;
+
   initialize_pmt_position();
 
   bool fvtx_clusters = true;
   bool bbc_pmts      = true;
   bool vtx_tracks    = true;
 
-  int n_angle_config = 64; // move below, number is 8 * 8 (nothing to do with number of bbc tubes)
+  bool do_boost = false;
+
+  //int n_angle_config = 64; // move below, number is 8 * 8 (nothing to do with number of bbc tubes)
+  int n_angle_config = 1; // move below, number is 8 * 8 (nothing to do with number of bbc tubes)
   int n_side_angle = sqrt(n_angle_config);
   // --- these things for bookkeeping...???
   int first_bbc_angle = 2;
-  int first_fvtx_angle = 64+2;
-  int first_fvtx_0_angle = 2*64+2;
-  int first_fvtx_1_angle = 3*64+2;
-  int first_fvtx_2_angle = 4*64+2;
-  int first_fvtx_3_angle = 5*64+2;
+  int first_fvtx_angle = n_angle_config+2;
+  int first_fvtx_0_angle = 2*n_angle_config+2;
+  int first_fvtx_1_angle = 3*n_angle_config+2;
+  int first_fvtx_2_angle = 4*n_angle_config+2;
+  int first_fvtx_3_angle = 5*n_angle_config+2;
 
-  float max_blue_angle   = 0.0032;
-  float min_blue_angle   = 0.000;
-  float max_yellow_angle = 0.0072;
-  float min_yellow_angle = 0.000;
+  // float max_blue_angle   = 0.0032;
+  // float min_blue_angle   = 0.000;
+  // float max_yellow_angle = 0.0072;
+  // float min_yellow_angle = 0.000;
+
+  float max_blue_angle   = 0.00;
+  float min_blue_angle   = 0.00;
+  float max_yellow_angle = 0.00;
+  float min_yellow_angle = 0.00;
 
   float pi = acos(-1.0);
 
@@ -234,6 +152,10 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
   //       Initializing Calibration Arrays & Histograms         //
   //                                                            //
   //------------------------------------------------------------//
+
+  // --- problems with these array dimensions??  lots of compile errors
+
+  cout << "Lots of arrays and stuff" << endl;
 
   // --- lots of comments needed here
   TH2D     *qx[NMUL][NHAR][NDET];
@@ -246,6 +168,7 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
   float    widt[NMUL][NZPS][NHAR][NDET][2];
   float    four[NMUL][NZPS][NHAR][NDET][2][NORD];
 
+  cout << "Making TProfile histograms" << endl;
 
   char name[200];
   int icent = 0;
@@ -281,6 +204,7 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
         }
     }
 
+  cout << "Initalizing calibration parameters to zero" << endl;
 
   //Initializing the calibration parameters
   for (int iz=0; iz<NZPS; iz++)
@@ -312,6 +236,8 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
   //      Reading in flattening calibration parameters          //
   //                                                            //
   //------------------------------------------------------------//
+
+  cout << "Checking for calibration pass" << endl;
 
   if(rp_recal_pass>=2)
     {
@@ -356,6 +282,8 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
   //                  Initializing boost vectors                //
   //------------------------------------------------------------//
 
+  cout << "Doing some boost and rotating stuff......" << endl;
+
   vector<TLorentzVector > blue_vecs;
   vector<TLorentzVector > yellow_vecs;
   float proton_mass = 0.938;
@@ -383,6 +311,8 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
   //------------------------------------------------------------//
   //                  Initializing histograms                   //
   //------------------------------------------------------------//
+
+  cout << "Initializing more histograms" << endl;
 
   TProfile *bbcs_v2_incl_default = new TProfile("bbcs_v2_incl_default","bbcs_v2_incl_default",15, 0.0, 3.0,-1.1,1.1);
   TProfile *bbcs_v2_east_default = new TProfile("bbcs_v2_east_default","bbcs_v2_east_default",15, 0.0, 3.0,-1.1,1.1);
@@ -448,6 +378,8 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
   //               Initializing Tree Variables                  //
   //------------------------------------------------------------//
 
+  cout << "Now getting ready to read in the tree branch addresses and stuff...." << endl;
+
   //tree variables
   float        event;
   float        d_bbcz;    // bbcz
@@ -503,10 +435,14 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
   b_d_FVTX_y->SetAddress(d_FVTX_y);
   b_d_FVTX_z->SetAddress(d_FVTX_z);
 
-  TBranch *b_nsegments = htree->GetBranch("nsegments");
-  TBranch *b_px = htree->GetBranch("px");
-  TBranch *b_py = htree->GetBranch("py");
-  TBranch *b_pz = htree->GetBranch("pz");
+  // TBranch *b_nsegments = htree->GetBranch("nsegments");
+  // TBranch *b_px = htree->GetBranch("px");
+  // TBranch *b_py = htree->GetBranch("py");
+  // TBranch *b_pz = htree->GetBranch("pz");
+  TBranch *b_nsegments = htree->GetBranch("d_ntrk");
+  TBranch *b_px = htree->GetBranch("d_cntpx");
+  TBranch *b_py = htree->GetBranch("d_cntpy");
+  TBranch *b_pz = htree->GetBranch("d_cntpz");
 
   b_nsegments->SetAddress(&d_nsegments);
   b_px->SetAddress(d_px);
@@ -521,12 +457,20 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
   //                   Looping Over Event Tree                  //
   //------------------------------------------------------------//
 
+  cout << "starting loop over events in the tree" << endl;
+
   int nentries = htree->GetEntries();
   cout<<"total events = " << nentries<<endl;
   for ( int ievt = 0 ; ievt < nentries ; ievt++ ) {
 
-    if(ievt%1000==0) cout<<"event number = "<<ievt<<endl;
+    if ( ievt > 999999 ) break; // just 1M events for now, runs a little on the slow side...
+
+    bool say_event = ( ievt%1000==0 );
+
+    if ( say_event ) cout<<"event number = "<<ievt<<endl;
     //if(ievt ==1000) break;
+
+    if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "getting event level variables" << endl;
 
     b_bbcz->GetEntry(ievt);
     b_event->GetEntry(ievt);
@@ -540,8 +484,12 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
     b_Qy->GetEntry(ievt);
     b_Qw->GetEntry(ievt);
 
+    if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "getting BBC PMT information" << endl;
+
     if(bbc_pmts)
       b_d_BBC_charge->GetEntry(ievt);//bbc pmts charge
+
+    if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "getting FVTX cluster information" << endl;
 
     //FVTX clusters
     if(fvtx_clusters)
@@ -552,6 +500,8 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
         b_d_FVTX_z->GetEntry(ievt);
       }
 
+    if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "getting track information" << endl;
+
     //VTX Tracks
     if(vtx_tracks)
       {
@@ -560,6 +510,8 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
         b_py->GetEntry(ievt);
         b_pz->GetEntry(ievt);
       }
+
+    if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Finished getting tree variables" << endl;
 
     //if(vtx_z!=vtx_z) continue;
     //if( fabs(vtx_z) > 100) continue;
@@ -570,7 +522,7 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
     // --- break and continue statements should happen much, much earlier --------------------
     if(rp_recal_pass<1 || rp_recal_pass > 3) break;// rp_recal_pass only valid between 1 and 3
 
-    if(ibbcz<0||ibbcz>=NZPS) continue;
+    if(ibbcz<0 ||ibbcz>=NZPS) continue;
 
     if(d_nsegments==0 && rp_recal_pass > 2) continue;
     // ---------------------------------------------------------------------------------------
@@ -579,7 +531,10 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
     //                Calculating Event Planes                    //
     //------------------------------------------------------------//
 
-    float vtx_x = bc_x + d_bbcz*0.025/10; // z dependent x position because of beam angle rotation issues // what are these numbers?  // these are really specific to p+Au
+    if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Calculating event planes" << endl;
+
+    //float vtx_x = bc_x + d_bbcz*0.025/10; // z dependent x position because of beam angle rotation issues // what are these numbers?  // these are really specific to p+Au
+    float vtx_x = bc_x;
     float vtx_y = bc_y;
 
     float bbc_qx[n_angle_config];
@@ -591,6 +546,8 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
         bbc_qx[iangle] = 0;
         bbc_qy[iangle] = 0;
       }
+
+    if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Looping over BBC stuff now" << endl;
 
     if(bbc_pmts)
       for(int iangle = 0; iangle < n_angle_config; iangle++)
@@ -624,7 +581,7 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
               int iangle_blue = iangle/n_side_angle;
               int iangle_yellow = iangle%n_side_angle;
 
-              boost_and_rotate(particle_vec,blue_vecs[iangle_blue],yellow_vecs[iangle_yellow],1);// option 1 Lab to CoM
+              if ( do_boost ) boost_and_rotate(particle_vec,blue_vecs[iangle_blue],yellow_vecs[iangle_yellow],1);// option 1 Lab to CoM
 
               phi = TMath::ATan2(particle_vec.Py(),particle_vec.Px());
 
@@ -632,8 +589,9 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
               bbc_qy[iangle] += bbc_charge*TMath::Sin(2*phi);
               if(iangle == 0)
                 bbc_qw += bbc_charge;
-            }
-        }
+            } // loop over tubes
+        } // loop over angles (???)
+
 
     float fvtx_qx[5][n_angle_config];//all layers then 0 1 2 3
     float fvtx_qy[5][n_angle_config];
@@ -647,9 +605,10 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
             fvtx_qy[ilayer][iangle] = 0.0;
             if(iangle==0)
               fvtx_qw[ilayer] = 0.0;
-          }
-      }
+          } // loop over layers
+      } // loop over angles (???)
 
+    if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Looping over FVTX cluster" << endl;
     if(fvtx_clusters)
       for(int iangle = 0; iangle< n_angle_config; iangle++)
         {
@@ -690,7 +649,7 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
               int iangle_blue = iangle/n_side_angle;
               int iangle_yellow = iangle%n_side_angle;
 
-              boost_and_rotate(particle_vec,blue_vecs[iangle_blue],yellow_vecs[iangle_yellow],1);// option 1 Lab to CoM
+              if ( do_boost ) boost_and_rotate(particle_vec,blue_vecs[iangle_blue],yellow_vecs[iangle_yellow],1);// option 1 Lab to CoM
 
               phi = TMath::ATan2(particle_vec.Py(),particle_vec.Px());
 
@@ -705,9 +664,8 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
                   fvtx_qw[fvtx_layer+1] ++;
                   fvtx_qw[0] ++;
                 }
-
-            }
-        }
+            } // loop over cluster
+        } // loop over angles
 
     float sumxy[NHAR][NDET][4];
     for (int i=0; i<NHAR; i++)
@@ -732,11 +690,15 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
     sumxy[1][1][1] = d_Qy[4];
     sumxy[1][1][2] = d_Qw[4];
 
+    if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Looping over angles again..." << endl;
+
     if(fvtx_clusters || bbc_pmts)
       for(int iangle = 0; iangle < n_angle_config; iangle++)
         {
+          if ( ( say_event && verbosity > 0 ) || verbosity > 2 ) cout << "Inside angle loop" << endl;
           if(bbc_pmts)
             {
+              if ( ( say_event && verbosity > 0 ) || verbosity > 2 ) cout << "Inside bbc part of angle loop" << endl;
               sumxy[1][iangle+first_bbc_angle][0] = bbc_qx[iangle];
               sumxy[1][iangle+first_bbc_angle][1] = bbc_qy[iangle];
               sumxy[1][iangle+first_bbc_angle][2] = bbc_qw;
@@ -744,6 +706,7 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
 
           if(fvtx_clusters)
             {
+              if ( ( say_event && verbosity > 0 ) || verbosity > 2 ) cout << "Inside fvtx part of angle loop" << endl;
               sumxy[1][iangle+first_fvtx_angle][0] = fvtx_qx[0][iangle];
               sumxy[1][iangle+first_fvtx_angle][1] = fvtx_qy[0][iangle];
               sumxy[1][iangle+first_fvtx_angle][2] = fvtx_qw[0];
@@ -927,7 +890,7 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
                 int iangle_blue = iangle/n_side_angle;
                 int iangle_yellow = iangle%n_side_angle;
 
-                boost_and_rotate(particle_vec,blue_vecs[iangle_blue],yellow_vecs[iangle_yellow],1);// option 1 Lab to CoM
+                if ( do_boost ) boost_and_rotate(particle_vec,blue_vecs[iangle_blue],yellow_vecs[iangle_yellow],1);// option 1 Lab to CoM
 
                 float phi_angle = TMath::ATan2(particle_vec.Py(),particle_vec.Px()); // rotated phi // "modified"
                 float pt_angle = TMath::Sqrt(particle_vec.Py()*particle_vec.Py()+particle_vec.Px()*particle_vec.Px()); // rotated pt "modified"
@@ -1043,8 +1006,8 @@ void post_ana_bbc_fvtx(int runNumber = 435823, int rp_recal_pass = 1){
 
   if(rp_recal_pass<3 && rp_recal_pass>0)
     {
-      //sprintf(calibfile,"vtx_ep_calib/new_wide_z_flattening/flattening_%d_%d.dat",runNumber,rp_recal_pass);
-      sprintf(calibfile,"vtx_ep_calib/new_wide_z_flattening/flattening_%d_%d.dat",runNumber,rp_recal_pass);
+      // --- previous pass calib file is named above, rename it here
+      sprintf(calibfile,"output/flattening_%d_%d.dat",runNumber,rp_recal_pass);
       cout << "writing calibration file : " << calibfile << endl;
       ofstream ofs;
       ofs.open(calibfile);
@@ -1332,3 +1295,106 @@ void initialize_pmt_position()
   d_pmt_y[63] = -14.2;
 
 }
+
+
+
+// JLN - 1) this function takes as 2nd, 3rd arguments the beam vectors in the Lab Frame
+//       2) it then determines the needed boost and rotatation (in that order) into the center-of-mass frame
+//          with the beams along the z-axis
+//       3) it then uses these boost and rotation values to either change the vector "vec"
+//          from the Lab to the CoM frame (option 1) or from the CoM fram to the Lab frame (option 2)
+//       4) JLN added an option flag for this function
+//       5) Note that in this original version the function also returns the relative phi angle between frames...
+float boost_and_rotate(TLorentzVector & vec, TLorentzVector input1, TLorentzVector input2, int option)
+{
+
+  // JLN - just define a special vector for the z-axis
+  TVector3 z(0,0,1);
+
+  if (DIAG) {
+    cout << "===================================================" << endl;
+    cout << "boost_and_rotate:   input beam vectors (1,2) and then particle of interest" << endl;
+    cout << "px1 = " << input1.Px() << ", py1 = " << input1.Py() << ", pz1 = " << input1.Pz() << ", E = " << input1.E() << endl;
+    cout << "px2 = " << input2.Px() << ", py2 = " << input2.Py() << ", pz2 = " << input2.Pz() << ", E = " << input2.E() << endl;
+    cout << "px  = " << vec.Px()    << ", py  = " << vec.Py()    << ", pz  = " << vec.Pz()    << ", E = " << vec.E()    << endl;
+    cout << " " << endl;
+  }
+
+  // calculate the total four vector and then boost both beam vectors into CoM frame (not yet along z-axis)
+  TLorentzVector cms = input1 + input2;
+  input1.Boost(-cms.BoostVector()); // blue
+  input2.Boost(-cms.BoostVector()); // yellow
+
+
+  if (DIAG) {
+    cout << "boost_and_rotate:   input beam vectors after BOOST TO CoM ONLY" << endl;
+    cout << "px1 = " << input1.Px() << ", py1 = " << input1.Py() << ", pz1 = " << input1.Pz() << ", E = " << input1.E() << endl;
+    cout << "px2 = " << input2.Px() << ", py2 = " << input2.Py() << ", pz2 = " << input2.Pz() << ", E = " << input2.E() << endl;
+    cout << "Boost pxcms = " << cms.Px() << ", pycms = " << cms.Py() << ", pzcms = " << cms.Pz() << ", E = " << cms.E() << endl;
+    // JLN - as a check, boost cms vector into cvs frame (should have identically zero momentum)
+    // problem later on !!!!!
+    //    cms.Boost(-cms.BoostVector());
+    //    cout << "Check pxcms = " << cms.Px() << ", pycms = " << cms.Py() << ", pzcms = " << cms.Pz() << ", E = " << cms.E() << endl;
+    cout << " " << endl;
+  }
+
+  // Now rotate the beams about x to align them with z axis
+  double rotAngleY1 = -input1.Angle(z);
+  double rotAngleY2 = -input2.Angle(z);   // this assumes rotation is just interchanging x and z !!!!
+
+  if (DIAG) {
+    cout << "angle around Y = " << rotAngleY1 << " (and alternate check = " << rotAngleY2 << " )" << endl;
+  }
+
+  // JLN - assuming check works...
+  double rotAngleY = rotAngleY2;
+  // JLN - current check by Theo about whether rotation is in wrong direction....
+  input1.RotateY(rotAngleY);
+  if(TMath::Abs(input1.Px()) >  0.00001 ) {
+    // wrong rotation direction
+    // rotate back and set the new angle
+    rotAngleY = -1.0 * rotAngleY;
+    input1.RotateY(rotAngleY);
+  }
+  // JLN - do the correct rotation of the beam vectors
+  input1.RotateY(rotAngleY);
+  input2.RotateY(rotAngleY);
+
+  if (DIAG) {
+    cout << "boost_and_rotate:   input beam vectors after BOOST TO CoM and ROTATION TOO" << endl;
+    cout << "px1 = " << input1.Px() << ", py1 = " << input1.Py() << ", pz1 = " << input1.Pz() << ", E = " << input1.E() << endl;
+    cout << "px2 = " << input2.Px() << ", py2 = " << input2.Py() << ", pz2 = " << input2.Pz() << ", E = " << input2.E() << endl;
+    cout << " " << endl;
+  }
+
+
+  // --- Only now apply the boost + rotation to the particle vector (see option part)
+  // now change vec either (option==1 from the Lab to Com) or (option==2 from the Com to Lab)
+  if (option == 1) {
+    // Lab to CoM - order is boost and then rotate (identical to beam manipulations)
+    vec.Boost(-cms.BoostVector());
+    vec.RotateY(rotAngleY);
+  } else if (option == 2) {
+    // CoM to Lab - order is rotate and boost (opposite sign of beam manipulations)
+    vec.RotateY(-rotAngleY);
+    vec.Boost(cms.BoostVector());
+  } else {
+    cout << "boost_and_rotate:   Error with option not equal to 1 or 2:  option = " << option << endl;
+  }
+
+  // not really used here.... as return value
+  return rotAngleY;
+
+}
+
+int get_fvtx_layer(float z)
+{
+  if(z < -18 && z > -24) return 0;
+  if(z < -24 && z > -30) return 1;
+  if(z < -30 && z > -35) return 2;
+  if(z < -35)            return 3;
+
+  cout<<"get_fvtx_layer::invalid z =  "<<z<<endl;
+  return -1;
+}
+
