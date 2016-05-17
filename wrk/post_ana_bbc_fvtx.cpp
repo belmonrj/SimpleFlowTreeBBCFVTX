@@ -62,15 +62,13 @@ using namespace std;
 
 
 
-// Original code sent by Theo K. on May 05, 2016
-// J. Nagle - modifications (comments and diagnostics added - see tag "// JLN"
 
 bool DIAG = false;
 
 
 int get_fvtx_layer(float);
 void initialize_pmt_position();
-float boost_and_rotate(TLorentzVector&, TLorentzVector, TLorentzVector, int);
+
 
 
 // -----------------------------------------------------------------
@@ -122,7 +120,7 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
   bool bbc_pmts      = true;
   bool vtx_tracks    = true;
 
-  bool do_boost = false;
+
 
   //int n_angle_config = 64; // move below, number is 8 * 8 (nothing to do with number of bbc tubes)
   int n_angle_config = 1; // move below, number is 8 * 8 (nothing to do with number of bbc tubes)
@@ -158,18 +156,21 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
   cout << "Lots of arrays and stuff" << endl;
 
   // --- lots of comments needed here
-  TH2D     *qx[NMUL][NHAR][NDET];
-  TH2D     *qy[NMUL][NHAR][NDET];
-  TProfile *ave[NMUL][NZPS][NHAR][NDET];
-  TProfile *flt[NMUL][NZPS][NHAR][NDET];
-  TH2D     *dis[NMUL][NHAR][NDET];
+  // --- flattening parameters output to file
+  TH2D     *qx[NMUL][NHAR][NDET]; // Q vector x component, Q vector vs z_vertex bin
+  TH2D     *qy[NMUL][NHAR][NDET]; // Q vector y component, Q vector vs z_vertex bin
+  TProfile *ave[NMUL][NZPS][NHAR][NDET]; // average Psi2
+  TProfile *flt[NMUL][NZPS][NHAR][NDET]; // flattening parameters
+  TH2D     *dis[NMUL][NHAR][NDET]; // displacement?  function of z_vertex bin
 
-  float    mean[NMUL][NZPS][NHAR][NDET][2];
-  float    widt[NMUL][NZPS][NHAR][NDET][2];
-  float    four[NMUL][NZPS][NHAR][NDET][2][NORD];
+  // flattening parameters read in from file
+  float    mean[NMUL][NZPS][NHAR][NDET][2]; // mean of Psi2 distribution
+  float    widt[NMUL][NZPS][NHAR][NDET][2]; // width of Psi2 distribution
+  float    four[NMUL][NZPS][NHAR][NDET][2][NORD]; // ?
 
   cout << "Making TProfile histograms" << endl;
 
+  // --- profile histograms for average of Psi2 and flattening parameters
   char name[200];
   int icent = 0;
   int ic = icent;
@@ -184,11 +185,11 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
 
               sprintf(name,"flt_%d_%d_%d_%d",ic,iz,ih,id);
               flt[ic][iz][ih][id] = new TProfile(name,name,4*NORD,-0.5,NORD*4.0-0.5,-1.1,1.1);
+            } // loop over ndetectors
+        } // loop over harmonics
+    } // loop over z_vertex bins
 
-            }
-        }
-    }
-
+  // --- TH2D histograms for Q vector components
   for (int ih=1; ih<NHAR; ih++)
     {
       for (int id=0; id<NDET; id++)
@@ -201,12 +202,12 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
 
           sprintf(name,"qy_%d_%d_%d",ic,ih,id);
           qy[ic][ih][id] = new TH2D(name,name,NZPS*3,-0.5,NZPS*3.0-0.5, 220,-4.1,4.1);
-        }
-    }
+        } // loop over detectors
+    } // loop over harmonics
 
   cout << "Initalizing calibration parameters to zero" << endl;
 
-  //Initializing the calibration parameters
+  //Initializing the calibration parameters to be read in from the file
   for (int iz=0; iz<NZPS; iz++)
     {
       for (int ih=1; ih<NHAR; ih++)
@@ -221,11 +222,11 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
                   for (int io=0; io<NORD; io++)
                     {
                       four[ic][iz][ih][id][ib][io]=0.0;
-                    }
-                }
-            }
-        }
-    }
+                    } // orders
+                } // x and y
+            } // detector
+        } // harmonics
+    } // z_vertex bins
 
   //------------------------------------------------------------//
   //   Finished Initializing Calibration Arrays & Histograms    //
@@ -239,6 +240,7 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
 
   cout << "Checking for calibration pass" << endl;
 
+  // --- dont read in for first pass
   if(rp_recal_pass>=2)
     {
 
@@ -253,8 +255,8 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
               for (int id=0; id<NDET; id++)
                 {
                   ifs >> f0 >> f1 >> f2 >> f3;
-                  if (f1==0.0 || f1<0.0) f1=1.0;
-                  if (f3==0.0 || f3<0.0) f3=1.0;
+                  if ( f1 <= 0.0 ) f1=1.0;
+                  if ( f3 <= 0.0 ) f3=1.0;
                   mean[ic][iz][ih][id][0]=f0;
                   widt[ic][iz][ih][id][0]=f1;
                   mean[ic][iz][ih][id][1]=f2;
@@ -265,48 +267,20 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
                       for (int io=0; io<NORD; io++)
                         {
                           ifs>>four[ic][iz][ih][id][ib][io];
-                        }
-                    }
-                }
-            }
-        }
+                        } // orders
+                    } // x and y
+                } // detectors
+            } // harmonics
+        } // z_vertex bins
       ifs.close();
-    }
+    } // check on second or third pass
 
 
   //------------------------------------------------------------//
   //  Finished Reading in flattening calibration parameters     //
   //------------------------------------------------------------//
 
-  //------------------------------------------------------------//
-  //                  Initializing boost vectors                //
-  //------------------------------------------------------------//
 
-  cout << "Doing some boost and rotating stuff......" << endl;
-
-  vector<TLorentzVector > blue_vecs;
-  vector<TLorentzVector > yellow_vecs;
-  float proton_mass = 0.938;
-
-  for(int iangle1 = 0; iangle1 < n_side_angle; iangle1++)
-    {
-      float blue_angle = min_blue_angle+iangle1*(max_blue_angle-min_blue_angle)/n_side_angle; // always a good idea to cast ints as floats
-      float blue_px = 100*TMath::Sin(blue_angle);
-      float blue_py = 0.0;
-      float blue_pz = 100*TMath::Cos(blue_angle);
-      float blue_energy = TMath::Sqrt(100*100+proton_mass*proton_mass);
-      blue_vecs.push_back(TLorentzVector(blue_px,blue_py,blue_pz,blue_energy));
-    }
-  for(int iangle2 = 0; iangle2 < n_side_angle; iangle2++)
-    {
-      float yellow_angle = TMath::Pi()+min_yellow_angle+iangle2*(max_yellow_angle-min_yellow_angle)/n_side_angle; // always a good idea to cast ints as floats
-      float yellow_px = 100*TMath::Sin(yellow_angle);
-      float yellow_py = 0.0;
-      float yellow_pz = 100*TMath::Cos(yellow_angle);
-      float yellow_energy = TMath::Sqrt(100*100+proton_mass*proton_mass);
-      yellow_vecs.push_back(TLorentzVector(yellow_px,yellow_py,yellow_pz,yellow_energy));
-
-    }
 
   //------------------------------------------------------------//
   //                  Initializing histograms                   //
@@ -463,7 +437,7 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
   cout<<"total events = " << nentries<<endl;
   for ( int ievt = 0 ; ievt < nentries ; ievt++ ) {
 
-    if ( ievt > 999999 ) break; // just 1M events for now, runs a little on the slow side...
+    // if ( ievt >= 1000 ) break; // just 1M events for now, runs a little on the slow side...
 
     bool say_event = ( ievt%1000==0 );
 
@@ -517,13 +491,16 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
     //if( fabs(vtx_z) > 100) continue;
     // --- some big questions here about the z-vertex cut
     // --- really need to double and triple check where the zvertex cuts are applied and what they are
-    int ibbcz  = NZPS*(d_bbcz+30)/60;//bbc z bin for -30 <bbc z < 30 // how do you specify the number of bins here
+    //int ibbcz  = NZPS*(d_bbcz+30)/60;//bbc z bin for -30 <bbc z < 30 // how do you specify the number of bins here
+    int ibbcz  = NZPS*(d_bbcz+10)/20;//bbc z bin for -10 <bbc z < 10 // how do you specify the number of bins here
 
     // --- break and continue statements should happen much, much earlier --------------------
     if(rp_recal_pass<1 || rp_recal_pass > 3) break;// rp_recal_pass only valid between 1 and 3
 
+    // make sure bin number doesn't exceed number of bins
     if(ibbcz<0 ||ibbcz>=NZPS) continue;
 
+    // don't do analysis if no tracks on third pass
     if(d_nsegments==0 && rp_recal_pass > 2) continue;
     // ---------------------------------------------------------------------------------------
 
@@ -534,8 +511,12 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
     if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Calculating event planes" << endl;
 
     //float vtx_x = bc_x + d_bbcz*0.025/10; // z dependent x position because of beam angle rotation issues // what are these numbers?  // these are really specific to p+Au
-    float vtx_x = bc_x;
-    float vtx_y = bc_y;
+    // --- just use the beam center for now
+    // --- beam center not available yet!!!
+    // float vtx_x = bc_x;
+    // float vtx_y = bc_y;
+    float vtx_x = 0;
+    float vtx_y = 0;
 
     float bbc_qx[n_angle_config];
     float bbc_qy[n_angle_config];
@@ -581,16 +562,17 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
               int iangle_blue = iangle/n_side_angle;
               int iangle_yellow = iangle%n_side_angle;
 
-              if ( do_boost ) boost_and_rotate(particle_vec,blue_vecs[iangle_blue],yellow_vecs[iangle_yellow],1);// option 1 Lab to CoM
+
 
               phi = TMath::ATan2(particle_vec.Py(),particle_vec.Px());
 
+              // --- need to add a harmonic loop here, this will only give psi2 for now
               bbc_qx[iangle] += bbc_charge*TMath::Cos(2*phi);
               bbc_qy[iangle] += bbc_charge*TMath::Sin(2*phi);
               if(iangle == 0)
                 bbc_qw += bbc_charge;
             } // loop over tubes
-        } // loop over angles (???)
+        } // loop over angles
 
 
     float fvtx_qx[5][n_angle_config];//all layers then 0 1 2 3
@@ -606,7 +588,7 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
             if(iangle==0)
               fvtx_qw[ilayer] = 0.0;
           } // loop over layers
-      } // loop over angles (???)
+      } // loop over angles
 
     if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Looping over FVTX cluster" << endl;
     if(fvtx_clusters)
@@ -616,24 +598,27 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
             {
               float fvtx_x      = d_FVTX_x[iclus] - vtx_x; // calculate for each event, function of z
               float fvtx_y      = d_FVTX_y[iclus] - vtx_y;
-              float fvtx_z      = d_FVTX_z[iclus];
+              float fvtx_z      = d_FVTX_z[iclus]; // need raw z to get layer
 
               double fvtx_r = sqrt(pow(fvtx_x,2.0)+pow(fvtx_y,2.0));
 
               double fvtx_the = atan2(fvtx_r,fvtx_z - d_bbcz); //fvtx_z-bbcv // add a new variable to make it clear that you're using a corrected z vertex
               double fvtx_eta = -log(tan(0.5*fvtx_the));
 
-              // --- z dependent eta cut for the track, but not for the clusters???
+              // --- probaby don't need to cut on acceptance
+              // --- shouldn't get any clusters outside of acceptance
               if(!(fabs(fvtx_eta)>1.0 && fabs(fvtx_eta)<3.5)) continue;
               // cout<<"fvtx_x: "<<fvtx_x<<" fvtx_y: "<<fvtx_y<<" fvtx_z"<<fvtx_z<<endl;
 
-              int fvtx_layer    = get_fvtx_layer(fvtx_z);
+              int fvtx_layer    = get_fvtx_layer(fvtx_z); // raw z to get layer
 
+              // --- gap cut, not sure what this does
               int igap = (fabs(fvtx_eta)-1.0)/0.5;
 
               int id_fvtx = fvtx_layer*5+igap;
 
               if(!(id_fvtx>=0 && id_fvtx<40)) continue;
+              // --------------------------------------
 
               float phi = TMath::ATan2(fvtx_y,fvtx_x);
 
@@ -649,7 +634,7 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
               int iangle_blue = iangle/n_side_angle;
               int iangle_yellow = iangle%n_side_angle;
 
-              if ( do_boost ) boost_and_rotate(particle_vec,blue_vecs[iangle_blue],yellow_vecs[iangle_yellow],1);// option 1 Lab to CoM
+
 
               phi = TMath::ATan2(particle_vec.Py(),particle_vec.Px());
 
@@ -667,6 +652,7 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
             } // loop over cluster
         } // loop over angles
 
+    // --- the array that has all of the Q vectors
     float sumxy[NHAR][NDET][4];
     for (int i=0; i<NHAR; i++)
       {
@@ -674,18 +660,20 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
           {
             for (int k=0; k<4; k++)//qx qy qw psi
               {
-                sumxy[i][j][k]=0;
-              }
-          }
-      }
+                sumxy[i][j][k]=0; // initialize to 0
+              } // x,y,w,psi
+          } // detectors
+      } // harmonics
 
     //save bbc q vec 2
     //cout<<"bbc from node tree: "<<d_Qx[5]<<" "<<d_Qy[5]<<" "<<d_Qw[5]<<endl;
+    // --- should add cut for only assign if Qw > 0
     sumxy[1][0][0] = d_Qx[5];
     sumxy[1][0][1] = d_Qy[5];
     sumxy[1][0][2] = d_Qw[5];
 
     //save fvtx q vec 2
+    // --- should add cut for only assign if Qw > 4 and Qw < 1000 (or some other large number, 1000 is for pAu)
     sumxy[1][1][0] = d_Qx[4];
     sumxy[1][1][1] = d_Qy[4];
     sumxy[1][1][2] = d_Qw[4];
@@ -742,73 +730,96 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
     //                Flattening iteration                        //
     //------------------------------------------------------------//
     //int icent = 0;
-    for (int ih=1; ih<NHAR; ih++) {
-      for(int id=0;id<NDET;id++){
-        if (sumxy[ih][id][2]>0.0) {
-          sumxy[ih][id][3]=atan2(sumxy[ih][id][1],sumxy[ih][id][0])/(ih+1.0);
-          if (rp_recal_pass>0) dis[icent][ih][id]->Fill(ibbcz,sumxy[ih][id][3]*(ih+1.0));
-        }
-        if (sumxy[ih][id][2]>0.0) {
-          for (int ib=0; ib<2; ib++) {
-            sumxy[ih][id][ib]/=sumxy[ih][id][2];
-            //if(ih==1 && id==0 && ib==0 && sumxy[ih][id][ib]>1) cout<<sumxy[ih][id][ib]<<endl;
-            if (rp_recal_pass>0) {
-              ave[icent][ibbcz][ih][id]->Fill(ib+0.0,sumxy[ih][id][ib]);
-              if(id==0 && DIAG) cout<<"filled ave: "<<ih<<" "<<id<<" "<<ib<<" with: "<<sumxy[ih][id][ib]<<endl;
-              if(ib==0) qx[icent][ih][id]->Fill(ibbcz,sumxy[ih][id][0]);
-              if(ib==1) qy[icent][ih][id]->Fill(ibbcz,sumxy[ih][id][1]);
-            }
-            float sxy=sumxy[ih][id][ib];
-            float mxy=mean[icent][ibbcz][ih][id][ib];
-            float wxy=widt[icent][ibbcz][ih][id][ib];
+    for (int ih=1; ih<NHAR; ih++)
+      {
+        for(int id=0;id<NDET;id++)
+          {
+            if (sumxy[ih][id][2]>0.0)
+              {
+                sumxy[ih][id][3]=atan2(sumxy[ih][id][1],sumxy[ih][id][0])/(ih+1.0);
+                if (rp_recal_pass>0) dis[icent][ih][id]->Fill(ibbcz,sumxy[ih][id][3]*(ih+1.0));
+              }
+            if (sumxy[ih][id][2]>0.0) // check on weight (x,y,w,psi)
+              {
+                for (int ib=0; ib<2; ib++)
+                  {
+                    sumxy[ih][id][ib]/=sumxy[ih][id][2]; // normalize to the weight
+                    //if(ih==1 && id==0 && ib==0 && sumxy[ih][id][ib]>1) cout<<sumxy[ih][id][ib]<<endl;
+                    if (rp_recal_pass>0)
+                      {
+                        ave[icent][ibbcz][ih][id]->Fill(ib+0.0,sumxy[ih][id][ib]);
+                        if(id==0 && DIAG) cout<<"filled ave: "<<ih<<" "<<id<<" "<<ib<<" with: "<<sumxy[ih][id][ib]<<endl;
+                        if(ib==0) qx[icent][ih][id]->Fill(ibbcz,sumxy[ih][id][0]);
+                        if(ib==1) qy[icent][ih][id]->Fill(ibbcz,sumxy[ih][id][1]);
+                      } // pass > 0
+                    float sxy=sumxy[ih][id][ib];
+                    float mxy=mean[icent][ibbcz][ih][id][ib]; // for recentering qx and qy
+                    float wxy=widt[icent][ibbcz][ih][id][ib]; // for recentering qx and qy
 
-            //if(icent==0 && ibbcz==0 && ih==1 && id==0) cout<<ib<<" "<<sxy<<" "<<mxy<<" "<<wxy<<endl;
-            sumxy[ih][id][ib]=(sxy-mxy)/wxy;
-            if (rp_recal_pass>0) {
-              ave[icent][ibbcz][ih][id]->Fill(ib+2.0,sumxy[ih][id][ib]);
-              if(id==0 && DIAG) cout<<"filled ave2: "<<ih<<" "<<id<<" "<<ib<<" with: "<<sumxy[ih][id][ib]<<endl;
-              if(ib==0) qx[icent][ih][id]->Fill(ibbcz+NZPS,sumxy[ih][id][0]);
-              if(ib==1) qy[icent][ih][id]->Fill(ibbcz+NZPS,sumxy[ih][id][1]);
-            }
-          }
+                    //if(icent==0 && ibbcz==0 && ih==1 && id==0) cout<<ib<<" "<<sxy<<" "<<mxy<<" "<<wxy<<endl;
+                    sumxy[ih][id][ib]=(sxy-mxy)/wxy; // recentered by mean and renormalized to width
+                    if (rp_recal_pass>0)
+                      {
+                        ave[icent][ibbcz][ih][id]->Fill(ib+2.0,sumxy[ih][id][ib]);  // ib+2 to avoid overlap
+                        if(id==0 && DIAG) cout<<"filled ave2: "<<ih<<" "<<id<<" "<<ib<<" with: "<<sumxy[ih][id][ib]<<endl;
+                        if(ib==0) qx[icent][ih][id]->Fill(ibbcz+NZPS,sumxy[ih][id][0]);
+                        if(ib==1) qy[icent][ih][id]->Fill(ibbcz+NZPS,sumxy[ih][id][1]);
+                      } // pass > 0
+                  } // if weight > 0
 
-          sumxy[ih][id][3]=atan2(sumxy[ih][id][1],sumxy[ih][id][0])/(ih+1.0);
-          if (rp_recal_pass>0) {
-            dis[icent][ih][id]->Fill(ibbcz+NZPS,sumxy[ih][id][3]*(ih+1.0));
-          }
+                sumxy[ih][id][3]=atan2(sumxy[ih][id][1],sumxy[ih][id][0])/(ih+1.0);
+                if (rp_recal_pass>0)
+                  {
+                    // fill histogram with psi calculated with recenter q vectors
+                    dis[icent][ih][id]->Fill(ibbcz+NZPS,sumxy[ih][id][3]*(ih+1.0));
+                  }
 
-          float psi=sumxy[ih][id][3]*(ih+1.0);
-          if(ih==1 && id==0 && DIAG)  cout<<"psi2-1 bbc: "<<psi<<endl;
-          float dp=0.0;
-          for (int io=0; io<NORD; io++) {
-            float cc=cos((io+1.0)*psi);
-            float ss=sin((io+1.0)*psi);
-            if (rp_recal_pass>0) flt[icent][ibbcz][ih][id]->Fill(io+0.0,cc);
-            if (rp_recal_pass>0) flt[icent][ibbcz][ih][id]->Fill(io+NORD,ss);
-            float aa=four[icent][ibbcz][ih][id][0][io]; // mean cos
-            float bb=four[icent][ibbcz][ih][id][1][io]; // mean sin
-            dp+=(aa*ss-bb*cc)*2.0/(io+1.0);
-          }
-          psi+=dp;
-          psi=atan2(sin(psi),cos(psi));
-          if(ih==1 && id==0 && DIAG)  cout<<"psi2-2 bbc: "<<psi<<endl;
-          for (int io=0; io<NORD; io++) {
-            float cc=cos((io+1.0)*psi);
-            float ss=sin((io+1.0)*psi);
-            if (rp_recal_pass>0) flt[icent][ibbcz][ih][id]->Fill(io+NORD*2.0,cc);
-            if (rp_recal_pass>0) flt[icent][ibbcz][ih][id]->Fill(io+NORD*3.0,ss);
-          }
-          sumxy[ih][id][3]=psi/(ih+1.0);
-          if (rp_recal_pass>0) dis[icent][ih][id]->Fill(ibbcz+NZPS*2.0,sumxy[ih][id][3]*(ih+1.0));
-        } else {
-          sumxy[ih][id][3]=-9999.9;
-        }
-      }//end of id
-    }//end of ih
+                float psi=sumxy[ih][id][3]*(ih+1.0);
+                if(ih==1 && id==0 && DIAG)  cout<<"psi2-1 bbc: "<<psi<<endl;
+                float dp=0.0;
+                // --- flattening part, fourier components of psi distribution
+                for (int io=0; io<NORD; io++)
+                  {
+                    float cc=cos((io+1.0)*psi);
+                    float ss=sin((io+1.0)*psi);
+                    // first set of fourier components of psi
+                    if (rp_recal_pass>0) flt[icent][ibbcz][ih][id]->Fill(io+0.0,cc);
+                    if (rp_recal_pass>0) flt[icent][ibbcz][ih][id]->Fill(io+NORD,ss);
+                    // --- four means fourier
+                    float aa=four[icent][ibbcz][ih][id][0][io]; // mean cos
+                    float bb=four[icent][ibbcz][ih][id][1][io]; // mean sin
+                    // dp is offset to psi, aa and bb are zero in first pass, non zero later
+                    dp+=(aa*ss-bb*cc)*2.0/(io+1.0); // ( trig identity cos(A+B) = cosAsinB - cosBsinA )
+                  } // orders
+                psi+=dp; // shift psi by...
+                psi=atan2(sin(psi),cos(psi)); // trick to readjust the range
+                if(ih==1 && id==0 && DIAG)  cout<<"psi2-2 bbc: "<<psi<<endl;
+                for (int io=0; io<NORD; io++)
+                  {
+                    float cc=cos((io+1.0)*psi);
+                    float ss=sin((io+1.0)*psi);
+                    // --- fourier components of modified psi
+                    if (rp_recal_pass>0) flt[icent][ibbcz][ih][id]->Fill(io+NORD*2.0,cc);
+                    if (rp_recal_pass>0) flt[icent][ibbcz][ih][id]->Fill(io+NORD*3.0,ss);
+                  }
+                sumxy[ih][id][3]=psi/(ih+1.0);
+                if (rp_recal_pass>0) dis[icent][ih][id]->Fill(ibbcz+NZPS*2.0,sumxy[ih][id][3]*(ih+1.0));
+              } // end if weight > 0
+            else
+              {
+                sumxy[ih][id][3]=-9999.9;
+              } // otherwise set psi to some crazy number
+          } // end of detectors
+      } // end of harmonics
 
-    if(rp_recal_pass<3) continue;
+    // ---
+    // --- now going to calculate v2
+    // ---
+    if(rp_recal_pass<3) continue; // don't calculate v2 except for final pass
 
+    // --- looks like these are already done above
     float bbc_psi2 = (sumxy[1][0][2]>0)?sumxy[1][0][3]:-9999.9;
+    // --- maybe 12 should be a different number (we have 4 above)
     float fvtx_psi2 = (sumxy[1][1][2]>12)?sumxy[1][1][3]:-9999.9;
 
     float bbc_psi2_angle[n_angle_config];
@@ -890,7 +901,7 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
                 int iangle_blue = iangle/n_side_angle;
                 int iangle_yellow = iangle%n_side_angle;
 
-                if ( do_boost ) boost_and_rotate(particle_vec,blue_vecs[iangle_blue],yellow_vecs[iangle_yellow],1);// option 1 Lab to CoM
+
 
                 float phi_angle = TMath::ATan2(particle_vec.Py(),particle_vec.Px()); // rotated phi // "modified"
                 float pt_angle = TMath::Sqrt(particle_vec.Py()*particle_vec.Py()+particle_vec.Px()*particle_vec.Px()); // rotated pt "modified"
@@ -1024,58 +1035,58 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
                     {
                       if(DIAG)
                         cout<<"writing ave:  "<<ic<<" "<<iz<<" "<<ih<<" "<<id<<endl;
-
+                      // write out average qx, qx error, qy, qy error
                       ofs << ave[icent][iz][ih][id]->GetBinContent(ib+1) << " ";
                       ofs << ave[icent][iz][ih][id]->GetBinError  (ib+1) << " ";
-                    }
+                    } // x and y
                   ofs << endl;
                   for (int ib=0; ib<2; ib++)
                     {
                       for (int io=0; io<NORD; io++)
                         {
+                          // write first 12 orders for fourier fit of psi
+                          // we are unsure of what's being written out here
                           ofs << flt[icent][iz][ih][id]->GetBinContent(ib*NORD+io+1) << " ";
-                        }
+                        } // orders
                       ofs << endl;
-                    }
-                }
-            }
-        }
+                    } // x and y
+                } // detectors
+            } // harmonics
+        } // z_vertex bins
       ofs.close();
+    } // if pass 1 or 2
+
+  // --- QA purpose
+  if(rp_recal_pass>0)
+    {
+      TFile *mData2=TFile::Open(outFile2,"recreate");
+      mData2->cd();
+      for (int iz=0; iz<NZPS; iz++)
+        {
+          for (int ih=1; ih<NHAR; ih++)
+            {
+              for (int id=0; id<NDET; id++)
+                {
+                  ave[ic][iz][ih][id]->Write();
+                  flt[ic][iz][ih][id]->Write();
+                } // detectors
+            } // harmonics
+        } // z_vertex bins
+
+      for (int ih=1; ih<NHAR; ih++)
+        {
+          for (int id=0; id<NDET; id++)
+            {
+              qx[ic][ih][id]->Write();
+              qy[ic][ih][id]->Write();
+              dis[ic][ih][id]->Write();
+            } // detectors
+        } // harmonics
+
+      mData2->Close();
     }
 
-
-  if(rp_recal_pass>0){
-    TFile *mData2=TFile::Open(outFile2,"recreate");
-    mData2->cd();
-    for (int iz=0; iz<NZPS; iz++)
-      {
-        for (int ih=1; ih<NHAR; ih++)
-          {
-            for (int id=0; id<NDET; id++)
-              {
-                ave[ic][iz][ih][id]->Write();
-                flt[ic][iz][ih][id]->Write();
-              }
-          }
-      }
-
-    for (int ih=1; ih<NHAR; ih++)
-      {
-        for (int id=0; id<NDET; id++)
-          {
-            //if(ih==1 && id==4)
-            //{
-            qx[ic][ih][id]->Write();
-            qy[ic][ih][id]->Write();
-
-            dis[ic][ih][id]->Write();
-            // }
-          }
-      }
-
-    mData2->Close();
-  }
-
+  // --- write v2 histograms if on last pass
   if(rp_recal_pass>2)
     {
       TFile *mData1=TFile::Open(outFile1,"recreate");
@@ -1101,11 +1112,11 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
                 fvtxs1_v2_west_angle[iangle]->Write();
                 fvtxs2_v2_west_angle[iangle]->Write();
                 fvtxs3_v2_west_angle[iangle]->Write();
-              }
-          }
+              } // fvtx clsuters
+          } // angles
 
       mData1->Close();
-    }
+    } // check on last pass
 
 
   //return;
@@ -1297,95 +1308,6 @@ void initialize_pmt_position()
 }
 
 
-
-// JLN - 1) this function takes as 2nd, 3rd arguments the beam vectors in the Lab Frame
-//       2) it then determines the needed boost and rotatation (in that order) into the center-of-mass frame
-//          with the beams along the z-axis
-//       3) it then uses these boost and rotation values to either change the vector "vec"
-//          from the Lab to the CoM frame (option 1) or from the CoM fram to the Lab frame (option 2)
-//       4) JLN added an option flag for this function
-//       5) Note that in this original version the function also returns the relative phi angle between frames...
-float boost_and_rotate(TLorentzVector & vec, TLorentzVector input1, TLorentzVector input2, int option)
-{
-
-  // JLN - just define a special vector for the z-axis
-  TVector3 z(0,0,1);
-
-  if (DIAG) {
-    cout << "===================================================" << endl;
-    cout << "boost_and_rotate:   input beam vectors (1,2) and then particle of interest" << endl;
-    cout << "px1 = " << input1.Px() << ", py1 = " << input1.Py() << ", pz1 = " << input1.Pz() << ", E = " << input1.E() << endl;
-    cout << "px2 = " << input2.Px() << ", py2 = " << input2.Py() << ", pz2 = " << input2.Pz() << ", E = " << input2.E() << endl;
-    cout << "px  = " << vec.Px()    << ", py  = " << vec.Py()    << ", pz  = " << vec.Pz()    << ", E = " << vec.E()    << endl;
-    cout << " " << endl;
-  }
-
-  // calculate the total four vector and then boost both beam vectors into CoM frame (not yet along z-axis)
-  TLorentzVector cms = input1 + input2;
-  input1.Boost(-cms.BoostVector()); // blue
-  input2.Boost(-cms.BoostVector()); // yellow
-
-
-  if (DIAG) {
-    cout << "boost_and_rotate:   input beam vectors after BOOST TO CoM ONLY" << endl;
-    cout << "px1 = " << input1.Px() << ", py1 = " << input1.Py() << ", pz1 = " << input1.Pz() << ", E = " << input1.E() << endl;
-    cout << "px2 = " << input2.Px() << ", py2 = " << input2.Py() << ", pz2 = " << input2.Pz() << ", E = " << input2.E() << endl;
-    cout << "Boost pxcms = " << cms.Px() << ", pycms = " << cms.Py() << ", pzcms = " << cms.Pz() << ", E = " << cms.E() << endl;
-    // JLN - as a check, boost cms vector into cvs frame (should have identically zero momentum)
-    // problem later on !!!!!
-    //    cms.Boost(-cms.BoostVector());
-    //    cout << "Check pxcms = " << cms.Px() << ", pycms = " << cms.Py() << ", pzcms = " << cms.Pz() << ", E = " << cms.E() << endl;
-    cout << " " << endl;
-  }
-
-  // Now rotate the beams about x to align them with z axis
-  double rotAngleY1 = -input1.Angle(z);
-  double rotAngleY2 = -input2.Angle(z);   // this assumes rotation is just interchanging x and z !!!!
-
-  if (DIAG) {
-    cout << "angle around Y = " << rotAngleY1 << " (and alternate check = " << rotAngleY2 << " )" << endl;
-  }
-
-  // JLN - assuming check works...
-  double rotAngleY = rotAngleY2;
-  // JLN - current check by Theo about whether rotation is in wrong direction....
-  input1.RotateY(rotAngleY);
-  if(TMath::Abs(input1.Px()) >  0.00001 ) {
-    // wrong rotation direction
-    // rotate back and set the new angle
-    rotAngleY = -1.0 * rotAngleY;
-    input1.RotateY(rotAngleY);
-  }
-  // JLN - do the correct rotation of the beam vectors
-  input1.RotateY(rotAngleY);
-  input2.RotateY(rotAngleY);
-
-  if (DIAG) {
-    cout << "boost_and_rotate:   input beam vectors after BOOST TO CoM and ROTATION TOO" << endl;
-    cout << "px1 = " << input1.Px() << ", py1 = " << input1.Py() << ", pz1 = " << input1.Pz() << ", E = " << input1.E() << endl;
-    cout << "px2 = " << input2.Px() << ", py2 = " << input2.Py() << ", pz2 = " << input2.Pz() << ", E = " << input2.E() << endl;
-    cout << " " << endl;
-  }
-
-
-  // --- Only now apply the boost + rotation to the particle vector (see option part)
-  // now change vec either (option==1 from the Lab to Com) or (option==2 from the Com to Lab)
-  if (option == 1) {
-    // Lab to CoM - order is boost and then rotate (identical to beam manipulations)
-    vec.Boost(-cms.BoostVector());
-    vec.RotateY(rotAngleY);
-  } else if (option == 2) {
-    // CoM to Lab - order is rotate and boost (opposite sign of beam manipulations)
-    vec.RotateY(-rotAngleY);
-    vec.Boost(cms.BoostVector());
-  } else {
-    cout << "boost_and_rotate:   Error with option not equal to 1 or 2:  option = " << option << endl;
-  }
-
-  // not really used here.... as return value
-  return rotAngleY;
-
-}
 
 int get_fvtx_layer(float z)
 {
