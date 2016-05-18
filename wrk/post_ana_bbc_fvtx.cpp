@@ -163,6 +163,9 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
   TProfile *flt[NMUL][NZPS][NHAR][NDET]; // flattening parameters
   TH2D     *dis[NMUL][NHAR][NDET]; // displacement?  function of z_vertex bin
 
+  TH2D     *psi_bf[NMUL][NHAR][NDET];
+  TH2D     *psi_af[NMUL][NHAR][NDET];
+
   // flattening parameters read in from file
   float    mean[NMUL][NZPS][NHAR][NDET][2]; // mean of Psi2 distribution
   float    widt[NMUL][NZPS][NHAR][NDET][2]; // width of Psi2 distribution
@@ -202,6 +205,13 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
 
           sprintf(name,"qy_%d_%d_%d",ic,ih,id);
           qy[ic][ih][id] = new TH2D(name,name,NZPS*3,-0.5,NZPS*3.0-0.5, 220,-4.1,4.1);
+
+          sprintf(name,"psi_bf_%d_%d_%d",ic,ih,id);
+          psi_bf[ic][ih][id] = new TH2D(name,name,NZPS*3,-0.5,NZPS*3.0-0.5, 220,-4.1,4.1);
+
+          sprintf(name,"psi_af_%d_%d_%d",ic,ih,id);
+          psi_af[ic][ih][id] = new TH2D(name,name,NZPS*3,-0.5,NZPS*3.0-0.5, 220,-4.1,4.1);
+
         } // loop over detectors
     } // loop over harmonics
 
@@ -261,7 +271,9 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
                   widt[ic][iz][ih][id][0]=f1;
                   mean[ic][iz][ih][id][1]=f2;
                   widt[ic][iz][ih][id][1]=f3;
-                  if(id==0 && ih == 1 && DIAG) cout<<f0<<" "<<f1<<" "<<f2<<" "<<f3<<endl;//bbc psi 2 parameters
+                  if ( id==2 && ih == 1 && DIAG ) cout<<f0<<" "<<f1<<" "<<f2<<" "<<f3<<endl;//bbc psi 2 parameters
+                  if ( id==2 && ih == 1 && DIAG ) cout << "---" << endl;
+                  if ( id==3 && ih == 1 && DIAG ) cout<<f0<<" "<<f1<<" "<<f2<<" "<<f3<<endl;//bbc psi 2 parameters
                   for (int ib=0; ib<2; ib++)
                     {
                       for (int io=0; io<NORD; io++)
@@ -437,7 +449,7 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
   cout<<"total events = " << nentries<<endl;
   for ( int ievt = 0 ; ievt < nentries ; ievt++ ) {
 
-    // if ( ievt >= 1000 ) break; // just 1M events for now, runs a little on the slow side...
+    if ( ievt >= 100000 ) break; // just 1M events for now, runs a little on the slow side...
 
     bool say_event = ( ievt%1000==0 );
 
@@ -726,6 +738,21 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
         cout<<"from node tree: "<<d_Qx[4]<<" "<<d_Qy[4]<<" "<<d_Qw[4]<<endl;
         cout<<"from clusters: " <<fvtx_qx[0][0]<<" "<<fvtx_qy[0][0]<<" "<<fvtx_qw[0]<<endl;
       }
+
+    for (int ih=1; ih<NHAR; ih++)
+      {
+        for (int id=0; id<NDET; id++)
+          {
+            if(sumxy[ih][id][2]>0)
+              {
+                //float psi_2 = atan2(sumxy[ih][id][1],sumxy[ih][id][0])/2.0;
+                float psi_2 = atan2(sumxy[ih][id][1],sumxy[ih][id][0])/float(ih+1);
+                if(DIAG) cout<<"RAW: for id: "<<id<<" psi_2: "<<psi_2<<endl;
+                psi_bf[ic][ih][id]->Fill(ibbcz,psi_2);
+              }
+          }
+      }
+
     //------------------------------------------------------------//
     //                Flattening iteration                        //
     //------------------------------------------------------------//
@@ -811,6 +838,21 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
               } // otherwise set psi to some crazy number
           } // end of detectors
       } // end of harmonics
+
+    if(DIAG)
+      cout<<"bbc_rp2: "<<sumxy[1][0][3]<<endl;
+
+    for (int ih=1; ih<NHAR; ih++)
+      {
+        for (int id=0; id<NDET; id++)
+          {
+            if(sumxy[1][id][2]>0)
+              {
+                psi_af[ic][ih][id]->Fill(ibbcz,sumxy[1][id][3]);
+                if(DIAG) cout<<"CORR: for id: "<<id<<" psi_2: "<<sumxy[1][id][3]<<endl;
+              }
+          }
+      }
 
     // ---
     // --- now going to calculate v2
@@ -1080,6 +1122,8 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
               qx[ic][ih][id]->Write();
               qy[ic][ih][id]->Write();
               dis[ic][ih][id]->Write();
+              psi_bf[ic][ih][id]->Write();
+              psi_af[ic][ih][id]->Write();
             } // detectors
         } // harmonics
 
@@ -1104,14 +1148,30 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
         for(int iangle = 0; iangle < n_angle_config; iangle++)
           {
             if(bbc_pmts)
-              bbcs_v2_west_angle[iangle]->Write();
+              {
+                bbcs_v2_east_angle[iangle]->Write();
+                bbcs_v2_west_angle[iangle]->Write();
+                bbcs_v2_incl_angle[iangle]->Write();
+              }
             if(fvtx_clusters)
               {
+                fvtxs_v2_east_angle[iangle]->Write();
+                fvtxs0_v2_east_angle[iangle]->Write();
+                fvtxs1_v2_east_angle[iangle]->Write();
+                fvtxs2_v2_east_angle[iangle]->Write();
+                fvtxs3_v2_east_angle[iangle]->Write();
+                // ---
                 fvtxs_v2_west_angle[iangle]->Write();
                 fvtxs0_v2_west_angle[iangle]->Write();
                 fvtxs1_v2_west_angle[iangle]->Write();
                 fvtxs2_v2_west_angle[iangle]->Write();
                 fvtxs3_v2_west_angle[iangle]->Write();
+                // ---
+                fvtxs_v2_incl_angle[iangle]->Write();
+                fvtxs0_v2_incl_angle[iangle]->Write();
+                fvtxs1_v2_incl_angle[iangle]->Write();
+                fvtxs2_v2_incl_angle[iangle]->Write();
+                fvtxs3_v2_incl_angle[iangle]->Write();
               } // fvtx clsuters
           } // angles
 
