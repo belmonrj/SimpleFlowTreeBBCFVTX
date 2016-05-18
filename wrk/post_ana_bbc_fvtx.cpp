@@ -848,10 +848,10 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
       {
         for (int id=0; id<NDET; id++)
           {
-            if(sumxy[1][id][2]>0)
+            if(sumxy[ih][id][2]>0)
               {
-                psi_af[ic][ih][id]->Fill(ibbcz,sumxy[1][id][3]);
-                if(DIAG) cout<<"CORR: for id: "<<id<<" psi_2: "<<sumxy[1][id][3]<<endl;
+                psi_af[ic][ih][id]->Fill(ibbcz,sumxy[ih][id][3]);
+                if(DIAG) cout<<"CORR: for id: "<<id<<" psi_2: "<<sumxy[ih][id][3]<<endl;
               }
           }
       }
