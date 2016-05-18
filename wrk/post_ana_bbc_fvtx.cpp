@@ -35,7 +35,7 @@ float d_pmt_z = -1443.5; // same for all tubes
 //tree invariables
 static const int max_nh = 500; // see from ana taxi code
 //static const int max_nh = 10; // see from ana taxi code
-static const int max_nf = 750; // see from ana taxi code
+static const int max_nf = 3000; // see from ana taxi code
 
 using namespace std;
 
@@ -89,6 +89,7 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
 
   char filename[500];
   sprintf(filename,"input/tree_merged_%010d.root",runNumber); // abslute paths need to be dealt with
+  //sprintf(filename,"/gpfs/mnt/gpfs02/phenix/plhf/plhf1/theok/taxi/Run15pAu200FVTXClusAna503/8833/data/434905.root"); // abslute paths need to be dealt with
 
   cout << "v2 input file: " << filename << endl;
   cout << "v2 output file: " << outFile1 << endl;
@@ -449,7 +450,7 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
   cout<<"total events = " << nentries<<endl;
   for ( int ievt = 0 ; ievt < nentries ; ievt++ ) {
 
-    if ( ievt >= 100000 ) break; // just 1M events for now, runs a little on the slow side...
+    if ( ievt >= 1000000 ) break; // just 1M events for now, runs a little on the slow side...
 
     bool say_event = ( ievt%1000==0 );
 
@@ -504,6 +505,7 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
     // --- some big questions here about the z-vertex cut
     // --- really need to double and triple check where the zvertex cuts are applied and what they are
     //int ibbcz  = NZPS*(d_bbcz+30)/60;//bbc z bin for -30 <bbc z < 30 // how do you specify the number of bins here
+    if(TMath::Abs(d_bbcz) > 10.0 ) continue;
     int ibbcz  = NZPS*(d_bbcz+10)/20;//bbc z bin for -10 <bbc z < 10 // how do you specify the number of bins here
 
     // --- break and continue statements should happen much, much earlier --------------------
@@ -513,7 +515,7 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
     if(ibbcz<0 ||ibbcz>=NZPS) continue;
 
     // don't do analysis if no tracks on third pass
-    if(d_nsegments==0 && rp_recal_pass > 2) continue;
+    //if(d_nsegments==0 && rp_recal_pass > 2) continue;
     // ---------------------------------------------------------------------------------------
 
     //------------------------------------------------------------//
@@ -623,7 +625,7 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
               // cout<<"fvtx_x: "<<fvtx_x<<" fvtx_y: "<<fvtx_y<<" fvtx_z"<<fvtx_z<<endl;
 
               int fvtx_layer    = get_fvtx_layer(fvtx_z); // raw z to get layer
-
+              if(fvtx_layer < 0) continue;
               // --- gap cut, not sure what this does
               int igap = (fabs(fvtx_eta)-1.0)/0.5;
 
@@ -943,8 +945,6 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
                 int iangle_blue = iangle/n_side_angle;
                 int iangle_yellow = iangle%n_side_angle;
 
-
-
                 float phi_angle = TMath::ATan2(particle_vec.Py(),particle_vec.Px()); // rotated phi // "modified"
                 float pt_angle = TMath::Sqrt(particle_vec.Py()*particle_vec.Py()+particle_vec.Px()*particle_vec.Px()); // rotated pt "modified"
 
@@ -952,6 +952,7 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
                 if(bbc_pmts)
                   if(-4.0<bbc_psi2_angle[iangle] && bbc_psi2_angle[iangle]<4.0)
                     {
+
                       double bbc_dphi2_angle = phi_angle - bbc_psi2_angle[iangle];
                       double cosbbc_dphi2_angle = TMath::Cos(2*bbc_dphi2_angle);
 
