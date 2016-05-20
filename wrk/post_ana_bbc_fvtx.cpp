@@ -172,6 +172,14 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
   float    widt[NMUL][NZPS][NHAR][NDET][2]; // width of Psi2 distribution
   float    four[NMUL][NZPS][NHAR][NDET][2][NORD]; // ?
 
+  // --- event plane resolution
+  TProfile* tp1f_reso2_BBC_CNT = new TProfile("tp1f_reso2_BBC_CNT","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_BBC_FVTX = new TProfile("tp1f_reso2_BBC_FVTX","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_CNT_FVTX = new TProfile("tp1f_reso2_CNT_FVTX","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_BBC_CNT = new TProfile("tp1f_reso3_BBC_CNT","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_BBC_FVTX = new TProfile("tp1f_reso3_BBC_FVTX","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_CNT_FVTX = new TProfile("tp1f_reso3_CNT_FVTX","",1,-0.5,0.5,-1e6,1e6,"");
+
   cout << "Making TProfile histograms" << endl;
 
   // --- profile histograms for average of Psi2 and flattening parameters
@@ -450,7 +458,7 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
   cout<<"total events = " << nentries<<endl;
   for ( int ievt = 0 ; ievt < nentries ; ievt++ ) {
 
-    if ( ievt >= 1000000 ) break; // just 1M events for now, runs a little on the slow side...
+    //if ( ievt >= 1000000 ) break; // just 1M events for now, runs a little on the slow side...
 
     bool say_event = ( ievt%1000==0 );
 
@@ -890,6 +898,11 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
             }
         }
 
+    float bbc_psi2_docalib = bbc_psi2_angle[0];
+    float fvtx_psi2_docalib = fvtx_psi2_angle[0];
+
+    tp1f_reso2_BBC_FVTX->Fill(0.0,cos(2*(bbc_psi2_docalib-fvtx_psi2_docalib)));
+    //tp1f_reso3_BBC_FVTX->Fill(0.0,cos(3*(bbc_psi3_docalib-fvtx_psi3_docalib)));
 
     //start of vtx stand alone track loop
     if(vtx_tracks)
@@ -938,6 +951,9 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
             for(int iangle = 0; iangle < n_angle_config; iangle++)
               {
 
+                bbc_psi2_docalib = bbc_psi2_angle[iangle];
+                fvtx_psi2_docalib = fvtx_psi2_angle[iangle];
+
                 float mass = 0.1396;//assume charged pion mass
                 float energy = TMath::Sqrt(px*px+py*py+pz*pz+mass*mass);
                 TLorentzVector particle_vec(px,py,pz,energy);
@@ -965,6 +981,8 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
                           bbcs_v2_east_angle[iangle]->Fill(pt_angle,cosbbc_dphi2_angle);
                         }
                       bbcs_v2_incl_angle[iangle]->Fill(pt_angle,cosbbc_dphi2_angle);
+                      tp1f_reso2_BBC_CNT->Fill(0.0,cosbbc_dphi2_angle);
+                      //tp1f_reso2_BBC_CNT->Fill(0.0,cosbbc_dphi2_docalib);
                     }
 
                 if(!fvtx_clusters) continue;
@@ -983,6 +1001,8 @@ void post_ana_bbc_fvtx(int runNumber = 454811, int rp_recal_pass = 1){
                         fvtxs_v2_east_angle[iangle]->Fill(pt_angle,cosfvtx_dphi2_angle);
                       }
                     fvtxs_v2_incl_angle[iangle]->Fill(pt_angle,cosfvtx_dphi2_angle);
+                    tp1f_reso2_CNT_FVTX->Fill(0.0,cosfvtx_dphi2_angle);
+                    //tp1f_reso2_CNT_FVTX->Fill(0.0,cosfvtx_dphi2_docalib);
                   }
 
                 //fvtx layer 0
