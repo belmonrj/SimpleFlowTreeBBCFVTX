@@ -682,19 +682,50 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
             {
 
               short iadc    = bbcraw->get_Adc(ipmt);
-              //short itdc    = bbcraw->get_Tdc0(ipmt);
+              short itdc    = bbcraw->get_Tdc0(ipmt);
               //float tdc1=bbcraw->get_Tdc1(ipmt);
-              //float itime0  = m_bbccalib->getHitTime0(ipmt,itdc,iadc);
+              float itime0  = m_bbccalib->getHitTime0(ipmt,itdc,iadc);
               float icharge = m_bbccalib->getCharge(ipmt,iadc);
-              //if(itime0 <=0 || icharge <=0 ) continue;
-
+              if ( ( itime0 <=0 || icharge <=0 ) && verbosity > 8 )
+                {
+                  // --- this happens A LOT
+                  cout << "EITHER SIDE!!!" << endl;
+                  cout << "For event number " << _ievent-1
+                       << " and BBC tube number " << ipmt
+                       << " the time is " << itime0
+                       << " and the charge is " << icharge
+                       << endl;
+                }
+              if ( icharge <= 0 && itime0 >=0 )
+                {
+                  // --- this never happens
+                  cout << "Holy shit!" << endl;
+                  cout << "For event number " << _ievent-1
+                       << " and BBC tube number " << ipmt
+                       << " the time is " << itime0
+                       << " and the charge is " << icharge
+                       << endl;
+                }
+              if ( itime0 <= 0 ) icharge -= 10000.0;
               //float ibbc_x  = m_bbcgeo->getX(ipmt);
               //float ibbc_y  = m_bbcgeo->getY(ipmt);
               float ibbc_z  = m_bbcgeo->getZ(ipmt);
               //cout<<"d_pmt_x["<<ipmt<<"] = "<<ibbc_x<<";"<<endl;
               //cout<<"d_pmt_y["<<ipmt<<"] = "<<ibbc_y<<";"<<endl;
               //cout<<"d_pmt_z["<<ipmt<<"] = "<<ibbc_z<<";"<<endl;
+              // --- i think this cut is unnecessary...
               if(ibbc_z > 0) continue;//only select on south bbc
+
+              if ( ( itime0 <=0 || icharge <=0 ) && verbosity > 8 )
+                {
+                  // --- this happens A LOT
+                  cout << "SOUTH SIDE!!!" << endl;
+                  cout << "For event number " << _ievent-1
+                       << " and BBC tube number " << ipmt
+                       << " the time is " << itime0
+                       << " and the charge is " << icharge
+                       << endl;
+                }
 
               d_BBC_charge[ipmt] = icharge;
 
