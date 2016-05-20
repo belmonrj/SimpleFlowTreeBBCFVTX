@@ -162,6 +162,14 @@ void post_ana_bbc_fvtx_DEV(int runNumber = 454811, int rp_recal_pass = 1){
   float    widt[NMUL][NZPS][NHAR][NDET][2]; // width of Psi distribution
   float    four[NMUL][NZPS][NHAR][NDET][2][NORD]; // ?
 
+  // --- event plane resolution
+  TProfile* tp1f_reso2_BBC_CNT = new TProfile("tp1f_reso2_BBC_CNT","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_BBC_FVTX = new TProfile("tp1f_reso2_BBC_FVTX","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_CNT_FVTX = new TProfile("tp1f_reso2_CNT_FVTX","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_BBC_CNT = new TProfile("tp1f_reso3_BBC_CNT","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_BBC_FVTX = new TProfile("tp1f_reso3_BBC_FVTX","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_CNT_FVTX = new TProfile("tp1f_reso3_CNT_FVTX","",1,-0.5,0.5,-1e6,1e6,"");
+
   cout << "Making TProfile histograms" << endl;
 
   // --- profile histograms for average of Psi and flattening parameters
@@ -425,7 +433,7 @@ void post_ana_bbc_fvtx_DEV(int runNumber = 454811, int rp_recal_pass = 1){
   for ( int ievt = 0 ; ievt < nentries ; ievt++ )
     {
 
-      if ( ievt >= 10000 ) break; // just 1M events for now, runs a little on the slow side...
+      if ( ievt >= 1000000 ) break; // just 1M events for now, runs a little on the slow side...
 
       bool say_event = ( ievt%1000==0 );
 
@@ -550,6 +558,9 @@ void post_ana_bbc_fvtx_DEV(int runNumber = 454811, int rp_recal_pass = 1){
               bbc_qw += bbc_charge;
             } // loop over tubes
         }
+
+      // --- do centrality cut here!!!
+      if ( bbc_qw < 61.5 ) continue;
 
       float fvtx_qx2[5];//all layers then 0 1 2 3
       float fvtx_qy2[5];
@@ -878,6 +889,8 @@ void post_ana_bbc_fvtx_DEV(int runNumber = 454811, int rp_recal_pass = 1){
           fvtx3_psi3_docalib = (sumxy[2][first_fvtx_3_angle][2]>4)?sumxy[1][first_fvtx_3_angle][3]:-9999.9;
         }
 
+      tp1f_reso2_BBC_FVTX->Fill(0.0,cos(2*(bbc_psi2_docalib-fvtx_psi2_docalib)));
+      tp1f_reso3_BBC_FVTX->Fill(0.0,cos(3*(bbc_psi3_docalib-fvtx_psi3_docalib)));
 
       //start of vtx stand alone track loop
       if ( vtx_tracks )
@@ -940,27 +953,18 @@ void post_ana_bbc_fvtx_DEV(int runNumber = 454811, int rp_recal_pass = 1){
                       // --- 2nd harmonic
                       double bbc_dphi2_docalib = phi_angle - bbc_psi2_docalib;
                       double cosbbc_dphi2_docalib = TMath::Cos(2*bbc_dphi2_docalib);
-                      if(dcarm==1)
-                        {
-                          bbcs_v2_west_docalib->Fill(pt_angle,cosbbc_dphi2_docalib);
-                        }
-                      else if( dcarm==0)
-                        {
-                          bbcs_v2_east_docalib->Fill(pt_angle,cosbbc_dphi2_docalib);
-                        }
                       bbcs_v2_both_docalib->Fill(pt_angle,cosbbc_dphi2_docalib);
+                      if ( dcarm == 1 ) bbcs_v2_west_docalib->Fill(pt_angle,cosbbc_dphi2_docalib);
+                      if ( dcarm == 0 ) bbcs_v2_east_docalib->Fill(pt_angle,cosbbc_dphi2_docalib);
                       // --- 3rd harmonic
                       double bbc_dphi3_docalib = phi_angle - bbc_psi3_docalib;
                       double cosbbc_dphi3_docalib = TMath::Cos(3*bbc_dphi3_docalib);
-                      if(dcarm==1)
-                        {
-                          bbcs_v3_west_docalib->Fill(pt_angle,cosbbc_dphi3_docalib);
-                        }
-                      else if( dcarm==0)
-                        {
-                          bbcs_v3_east_docalib->Fill(pt_angle,cosbbc_dphi3_docalib);
-                        }
                       bbcs_v3_both_docalib->Fill(pt_angle,cosbbc_dphi3_docalib);
+                      if ( dcarm == 1 ) bbcs_v3_west_docalib->Fill(pt_angle,cosbbc_dphi3_docalib);
+                      if ( dcarm == 0 ) bbcs_v3_east_docalib->Fill(pt_angle,cosbbc_dphi3_docalib);
+                      // --- ep reso
+                      tp1f_reso2_BBC_CNT->Fill(0.0,cosbbc_dphi2_docalib);
+                      tp1f_reso3_BBC_CNT->Fill(0.0,cosbbc_dphi3_docalib);
                     }
                 } // check on tubes
 
@@ -971,27 +975,18 @@ void post_ana_bbc_fvtx_DEV(int runNumber = 454811, int rp_recal_pass = 1){
                   // --- 2nd harmonic
                   double fvtx_dphi2_docalib = phi_angle - fvtx_psi2_docalib;
                   double cosfvtx_dphi2_docalib = TMath::Cos(2*fvtx_dphi2_docalib);
-                  if(dcarm==1)
-                    {
-                      fvtxs_v2_west_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
-                    }
-                  else if( dcarm==0)
-                    {
-                      fvtxs_v2_east_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
-                    }
                   fvtxs_v2_both_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
+                  if ( dcarm == 1 ) fvtxs_v2_west_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
+                  if ( dcarm == 0 ) fvtxs_v2_east_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
                   // --- 3rd harmonic
                   double fvtx_dphi3_docalib = phi_angle - fvtx_psi3_docalib;
                   double cosfvtx_dphi3_docalib = TMath::Cos(3*fvtx_dphi3_docalib);
-                  if(dcarm==1)
-                    {
-                      fvtxs_v3_west_docalib->Fill(pt_angle,cosfvtx_dphi3_docalib);
-                    }
-                  else if( dcarm==0)
-                    {
-                      fvtxs_v3_east_docalib->Fill(pt_angle,cosfvtx_dphi3_docalib);
-                    }
                   fvtxs_v3_both_docalib->Fill(pt_angle,cosfvtx_dphi3_docalib);
+                  if ( dcarm == 1 ) fvtxs_v3_west_docalib->Fill(pt_angle,cosfvtx_dphi3_docalib);
+                  if ( dcarm == 0 ) fvtxs_v3_east_docalib->Fill(pt_angle,cosfvtx_dphi3_docalib);
+                  // --- ep reso
+                  tp1f_reso2_CNT_FVTX->Fill(0.0,cosfvtx_dphi2_docalib);
+                  tp1f_reso3_CNT_FVTX->Fill(0.0,cosfvtx_dphi3_docalib);
                 }
 
               // --- now fvtx layers
@@ -1159,27 +1154,42 @@ void post_ana_bbc_fvtx_DEV(int runNumber = 454811, int rp_recal_pass = 1){
           bbcs_v2_east_docalib->Write();
           bbcs_v2_west_docalib->Write();
           bbcs_v2_both_docalib->Write();
+          bbcs_v3_east_docalib->Write();
+          bbcs_v3_west_docalib->Write();
+          bbcs_v3_both_docalib->Write();
         }
       if ( fvtx_clusters )
         {
           fvtxs_v2_east_docalib->Write();
+          fvtxs_v2_west_docalib->Write();
+          fvtxs_v2_both_docalib->Write();
+          // ---
+          fvtxs_v3_east_docalib->Write();
+          fvtxs_v3_west_docalib->Write();
+          fvtxs_v3_both_docalib->Write();
+          // ---
           fvtxs0_v2_east_docalib->Write();
           fvtxs1_v2_east_docalib->Write();
           fvtxs2_v2_east_docalib->Write();
           fvtxs3_v2_east_docalib->Write();
           // ---
-          fvtxs_v2_west_docalib->Write();
           fvtxs0_v2_west_docalib->Write();
           fvtxs1_v2_west_docalib->Write();
           fvtxs2_v2_west_docalib->Write();
           fvtxs3_v2_west_docalib->Write();
           // ---
-          fvtxs_v2_both_docalib->Write();
           fvtxs0_v2_both_docalib->Write();
           fvtxs1_v2_both_docalib->Write();
           fvtxs2_v2_both_docalib->Write();
           fvtxs3_v2_both_docalib->Write();
         } // fvtx clsuters
+
+      tp1f_reso2_BBC_CNT->Write();
+      tp1f_reso2_BBC_FVTX->Write();
+      tp1f_reso2_CNT_FVTX->Write();
+      tp1f_reso3_BBC_CNT->Write();
+      tp1f_reso3_BBC_FVTX->Write();
+      tp1f_reso3_CNT_FVTX->Write();
 
       mData1->Close();
 
