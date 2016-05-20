@@ -51,14 +51,15 @@ void analyze_theo(int iter = 0)
   vtx_ep->set_z_vertex_range(z_vertex_range);         //set z_vertex range for accepted tracks
   vtx_ep->set_use_runlist(false);                     //use the runlist to select for good runs
   vtx_ep->set_create_ttree(true);
-  vtx_ep->set_write_clusters(false); // svx clusters
+  vtx_ep->set_write_clusters(false); // svx clusters not available
   vtx_ep->set_write_bbc(true);
-  vtx_ep->set_write_fvtx_clusters(true); // i guess?
+  vtx_ep->set_write_fvtx_clusters(true);
   vtx_ep->set_write_fvtx(false);
   vtx_ep->set_trimmed_tree(true);
-  vtx_ep->set_write_vtx(false); // definitely false, no DST_SVX available right now
+  vtx_ep->set_write_vtx(false); // svx tracks not available
   //vtx_ep->set_runlist_file(string);
-  vtx_ep->set_output_filename(Form("out/tree_0000454811_%04d.root",iter));//set the ntuple output file
+  //vtx_ep->set_output_filename(Form("out/tree_0000454948_%04d.root",iter));//set the ntuple output file
+  vtx_ep->set_output_filename(Form("out/tree_0000455050_%04d.root",iter));//set the ntuple output file
   vtx_ep->Verbosity(0);
   se->registerSubsystem(vtx_ep);
 
@@ -68,7 +69,8 @@ void analyze_theo(int iter = 0)
 
   cout << "Analysis started " << endl;
   gSystem->Exec("date");
-  se->fileopen("DSTin1", Form("/phenix/prod/online_production/run16_online_ca/run_0000454000_0000455000/CNT/CNT_run16_online_ca-0000454811-%04d.root",iter));
+  //se->fileopen("DSTin1", Form("/phenix/prod/online_production/run16_online_ca/run_0000454000_0000455000/CNT/CNT_run16_online_ca-0000454948-%04d.root",iter));
+  se->fileopen("DSTin1", Form("/phenix/prod/online_production/run16_online_ca/run_0000455000_0000456000/CNT/CNT_run16_online_ca-0000455050-%04d.root",iter));
 
 
   Fun4AllInputManager *in2 = new Fun4AllDstInputManager("DSTin2", "DST");
@@ -76,9 +78,10 @@ void analyze_theo(int iter = 0)
   se->registerInputManager(in2);
 
   gSystem->Exec("date");
-  se->fileopen("DSTin2", Form("/phenix/prod/online_production/run16_online_ca/run_0000454000_0000455000/DST_EVE/DST_EVE_run16_online_ca-0000454811-%04d.root",iter));
+  //se->fileopen("DSTin2", Form("/phenix/prod/online_production/run16_online_ca/run_0000454000_0000455000/DST_EVE/DST_EVE_run16_online_ca-0000454948-%04d.root",iter));
+  se->fileopen("DSTin2", Form("/phenix/prod/online_production/run16_online_ca/run_0000455000_0000456000/DST_EVE/DST_EVE_run16_online_ca-0000455050-%04d.root",iter));
 
-  se->run(10000);
+  se->run(0);
 
   se->End();
   //se->dumpHistos(outFile);
@@ -87,4 +90,5 @@ void analyze_theo(int iter = 0)
   //hm->dumpHistos(histfile);
 
   cout << "Analysis finished " << endl;
+
 }
