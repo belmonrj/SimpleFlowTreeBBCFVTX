@@ -149,12 +149,12 @@ void flatten(int runNumber, int rp_recal_pass)
   //int n_angle_config = 64; // move below, number is 8 * 8 (nothing to do with number of bbc tubes)
   int n_angle_config = 1; // move below, number is 8 * 8 (nothing to do with number of bbc tubes)
   // --- see below...
-  int first_bbc_angle = 2;
-  int first_fvtx_angle = n_angle_config+2;
-  int first_fvtx_0_angle = 2*n_angle_config+2;
-  int first_fvtx_1_angle = 3*n_angle_config+2;
-  int first_fvtx_2_angle = 4*n_angle_config+2;
-  int first_fvtx_3_angle = 5*n_angle_config+2;
+  int first_bbc_angle = 2;                     // 2
+  int first_fvtx_angle = n_angle_config+2;     // 3
+  int first_fvtx_0_angle = 2*n_angle_config+2; // 4
+  int first_fvtx_1_angle = 3*n_angle_config+2; // 5
+  int first_fvtx_2_angle = 4*n_angle_config+2; // 6
+  int first_fvtx_3_angle = 5*n_angle_config+2; // 7
 
 
   float pi = acos(-1.0);
@@ -184,6 +184,12 @@ void flatten(int runNumber, int rp_recal_pass)
   float    mean[NMUL][NZPS][NHAR][NDET][2]; // mean of Psi distribution
   float    widt[NMUL][NZPS][NHAR][NDET][2]; // width of Psi distribution
   float    four[NMUL][NZPS][NHAR][NDET][2][NORD]; // ?
+
+  // ---
+  TH1D* th1d_BBC_charge = new TH1D("th1d_BBC_charge","",200,-0.5,199.5);
+  TH1D* th1d_FVTX_nclus = new TH1D("th1d_FVTX_nclus","",200,-0.5,1999.5);
+  TH2D* th2d_qBBC_nFVTX = new TH2D("th2d_qBBC_nFVTX","",200,-0.5,199.5,200,-0.5,1999.5);
+
 
   // --- event plane resolution
   TProfile* tp1f_reso2_BBC_CNT = new TProfile("tp1f_reso2_BBC_CNT","",1,-0.5,0.5,-1e6,1e6,"");
@@ -582,8 +588,15 @@ void flatten(int runNumber, int rp_recal_pass)
             } // loop over tubes
         }
 
+      th1d_BBC_charge->Fill(bbc_qw);
+      th1d_FVTX_nclus->Fill(d_nFVTX_clus);
+      th2d_qBBC_nFVTX->Fill(bbc_qw,d_nFVTX_clus);
+
+      //continue; // testing to get the charge distribution to make a centrality selection
+
       // --- do centrality cut here!!!
-      if ( bbc_qw < 61.5 ) continue;
+      //if ( bbc_qw < 61.5 ) continue; // dAu 200 GeV
+      if ( bbc_qw < 30.0 ) continue; // very rough dAu 62 GeV
 
       float fvtx_qx2[5];//all layers then 0 1 2 3
       float fvtx_qy2[5];
@@ -1155,6 +1168,9 @@ void flatten(int runNumber, int rp_recal_pass)
               psi_af[ic][ih][id]->Write();
             } // detectors
         } // harmonics
+      th1d_BBC_charge->Write();
+      th1d_FVTX_nclus->Write();
+      th2d_qBBC_nFVTX->Write();
       mData2->Close();
     }
 
@@ -1213,6 +1229,10 @@ void flatten(int runNumber, int rp_recal_pass)
       tp1f_reso3_BBC_CNT->Write();
       tp1f_reso3_BBC_FVTX->Write();
       tp1f_reso3_CNT_FVTX->Write();
+
+      th1d_BBC_charge->Write();
+      th1d_FVTX_nclus->Write();
+      th2d_qBBC_nFVTX->Write();
 
       mData1->Close();
 
