@@ -199,6 +199,13 @@ void flatten(int runNumber, int rp_recal_pass)
   TProfile* tp1f_reso3_BBC_FVTX = new TProfile("tp1f_reso3_BBC_FVTX","",1,-0.5,0.5,-1e6,1e6,"");
   TProfile* tp1f_reso3_CNT_FVTX = new TProfile("tp1f_reso3_CNT_FVTX","",1,-0.5,0.5,-1e6,1e6,"");
 
+  TH1D* th1d_reso2_BBC_CNT = new TH1D("th1d_reso2_BBC_CNT","",252,-6.3,6.3);
+  TH1D* th1d_reso2_BBC_FVTX = new TH1D("th1d_reso2_BBC_FVTX","",252,-6.3,6.3);
+  TH1D* th1d_reso2_CNT_FVTX = new TH1D("th1d_reso2_CNT_FVTX","",252,-6.3,6.3);
+  TH1D* th1d_reso3_BBC_CNT = new TH1D("th1d_reso3_BBC_CNT","",252,-6.3,6.3);
+  TH1D* th1d_reso3_BBC_FVTX = new TH1D("th1d_reso3_BBC_FVTX","",252,-6.3,6.3);
+  TH1D* th1d_reso3_CNT_FVTX = new TH1D("th1d_reso3_CNT_FVTX","",252,-6.3,6.3);
+
   cout << "Making TProfile histograms" << endl;
 
   // --- profile histograms for average of Psi and flattening parameters
@@ -928,6 +935,9 @@ void flatten(int runNumber, int rp_recal_pass)
       tp1f_reso2_BBC_FVTX->Fill(0.0,cos(2*(bbc_psi2_docalib-fvtx_psi2_docalib)));
       tp1f_reso3_BBC_FVTX->Fill(0.0,cos(3*(bbc_psi3_docalib-fvtx_psi3_docalib)));
 
+      th1d_reso2_BBC_FVTX->Fill(bbc_psi2_docalib-fvtx_psi2_docalib);
+      th1d_reso3_BBC_FVTX->Fill(bbc_psi3_docalib-fvtx_psi3_docalib);
+
       //start of vtx stand alone track loop
       if ( vtx_tracks )
         {
@@ -1001,6 +1011,8 @@ void flatten(int runNumber, int rp_recal_pass)
                       // --- ep reso
                       tp1f_reso2_BBC_CNT->Fill(0.0,cosbbc_dphi2_docalib);
                       tp1f_reso3_BBC_CNT->Fill(0.0,cosbbc_dphi3_docalib);
+                      th1d_reso2_BBC_CNT->Fill(bbc_dphi2_docalib);
+                      th1d_reso3_BBC_CNT->Fill(bbc_dphi3_docalib);
                     }
                 } // check on tubes
 
@@ -1023,6 +1035,8 @@ void flatten(int runNumber, int rp_recal_pass)
                   // --- ep reso
                   tp1f_reso2_CNT_FVTX->Fill(0.0,cosfvtx_dphi2_docalib);
                   tp1f_reso3_CNT_FVTX->Fill(0.0,cosfvtx_dphi3_docalib);
+                  th1d_reso2_CNT_FVTX->Fill(fvtx_dphi2_docalib);
+                  th1d_reso3_CNT_FVTX->Fill(fvtx_dphi3_docalib);
                 }
 
               // --- now fvtx layers
@@ -1229,6 +1243,13 @@ void flatten(int runNumber, int rp_recal_pass)
       tp1f_reso3_BBC_CNT->Write();
       tp1f_reso3_BBC_FVTX->Write();
       tp1f_reso3_CNT_FVTX->Write();
+
+      th1d_reso2_BBC_CNT->Write();
+      th1d_reso2_BBC_FVTX->Write();
+      th1d_reso2_CNT_FVTX->Write();
+      th1d_reso3_BBC_CNT->Write();
+      th1d_reso3_BBC_FVTX->Write();
+      th1d_reso3_CNT_FVTX->Write();
 
       th1d_BBC_charge->Write();
       th1d_FVTX_nclus->Write();
