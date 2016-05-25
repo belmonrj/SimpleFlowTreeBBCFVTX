@@ -1,9 +1,12 @@
 void temp_v3()
 {
 
+  gStyle->SetOptTitle(1);
+
   TCanvas* c1 = new TCanvas("c1","");
 
-  TFile* file = TFile::Open("input/combined_10.root");
+  //TFile* file = TFile::Open("input/combined_10.root");
+  TFile* file = TFile::Open("input/combined_S5.root");
   //TFile* file = TFile::Open("combined.root");
   //TFile* file = TFile::Open("../output/hist_454811.root");
 
@@ -29,6 +32,7 @@ void temp_v3()
 
   hv3_fvtxs->Scale(1.0/reso_fvtx);
   hv3_fvtxs->Draw();
+  hv3_fvtxs->SetTitle("d+Au collisions at #sqrt{s_{NN}} = 200 GeV");
   hv3_fvtxs->SetMaximum(0.15);
   hv3_fvtxs->SetMinimum(0.0);
   hv3_fvtxs->GetXaxis()->SetTitle("p_{T} (GeV/c)");
@@ -63,6 +67,41 @@ void temp_v3()
 
   c1->Print("run16dau200_v3_fvtxsbbcs_fullscale.pdf");
   c1->Print("run16dau200_v3_fvtxsbbcs_fullscale.png");
+
+  // ---
+
+  TProfile* hv3_fvtxs_east = (TProfile*)file->Get("fvtxs_v3_east_docalib");
+  TProfile* hv3_fvtxs_west = (TProfile*)file->Get("fvtxs_v3_west_docalib");
+  hv3_fvtxs_east->Scale(1.0/reso_fvtx);
+  hv3_fvtxs_west->Scale(1.0/reso_fvtx);
+  hv3_fvtxs->SetLineColor(kBlack);
+  hv3_fvtxs_east->SetLineColor(kBlue);
+  hv3_fvtxs_west->SetLineColor(kRed);
+  hv3_fvtxs->SetMinimum(-1);
+  hv3_fvtxs->SetMaximum(1);
+  hv3_fvtxs->Draw();
+  hv3_fvtxs_east->Draw("same");
+  hv3_fvtxs_west->Draw("same");
+
+  c1->Print("run16dau200_v3_fvtxs_fullscale_eastwest.pdf");
+  c1->Print("run16dau200_v3_fvtxs_fullscale_eastwest.png");
+
+
+  TProfile* hv3_bbcs_east = (TProfile*)file->Get("bbcs_v3_east_docalib");
+  TProfile* hv3_bbcs_west = (TProfile*)file->Get("bbcs_v3_west_docalib");
+  hv3_bbcs_east->Scale(1.0/reso_bbc);
+  hv3_bbcs_west->Scale(1.0/reso_bbc);
+  hv3_bbcs->SetLineColor(kBlack);
+  hv3_bbcs_east->SetLineColor(kBlue);
+  hv3_bbcs_west->SetLineColor(kRed);
+  hv3_bbcs->SetMinimum(-1);
+  hv3_bbcs->SetMaximum(1);
+  hv3_bbcs->Draw("same");
+  hv3_bbcs_east->Draw("same");
+  hv3_bbcs_west->Draw("same");
+
+  c1->Print("run16dau200_v3_fvtxsbbcs_fullscale_eastwest.pdf");
+  c1->Print("run16dau200_v3_fvtxsbbcs_fullscale_eastwest.png");
 
 
 }

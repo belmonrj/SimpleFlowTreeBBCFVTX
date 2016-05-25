@@ -1,6 +1,8 @@
 void temp_v2_62()
 {
 
+  gStyle->SetOptTitle(1);
+
   TCanvas* c1 = new TCanvas("c1","");
 
   //TFile* file = TFile::Open("input/combined_10.root");
@@ -32,6 +34,7 @@ void temp_v2_62()
   //hv2_fvtxs->Scale(1.0/0.237392);
   hv2_fvtxs->Scale(1.0/reso_fvtx);
   hv2_fvtxs->Draw();
+  hv2_fvtxs->SetTitle("d+Au collisions at #sqrt{s_{NN}} = 62.4 GeV");
   hv2_fvtxs->SetMaximum(0.15);
   hv2_fvtxs->SetMinimum(0.0);
   hv2_fvtxs->GetXaxis()->SetTitle("p_{T} (GeV/c)");
@@ -68,17 +71,17 @@ void temp_v2_62()
   leg = new TLegend(0.18,0.68,0.38,0.88);
   leg->AddEntry(hv2_fvtxs,"Run16 FVTXS","el");
   leg->AddEntry(hv2_bbcs,"Run16 BBCS","el");
-  leg->AddEntry(tge_pub,"PPG161","p");
+  leg->AddEntry(tge_pub,"Run8 (200 GeV)","p");
   leg->SetTextSize(0.05);
   leg->Draw();
 
   c1->Print("run16dau62_v2_fvtxsbbcs.pdf");
   c1->Print("run16dau62_v2_fvtxsbbcs.png");
 
-  hv2_fvtxs->SetMaximum(1.0);
+  // hv2_fvtxs->SetMaximum(1.0);
 
-  c1->Print("run16dau62_v2_fvtxsbbcs_fullscale.pdf");
-  c1->Print("run16dau62_v2_fvtxsbbcs_fullscale.png");
+  // c1->Print("run16dau62_v2_fvtxsbbcs_fullscale.pdf");
+  // c1->Print("run16dau62_v2_fvtxsbbcs_fullscale.png");
 
 
 }
