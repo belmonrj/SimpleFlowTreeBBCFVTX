@@ -916,7 +916,7 @@ void flatten(int runNumber, int rp_recal_pass)
       if ( bbc_pmts )
         {
           bbc_psi2_docalib = (sumxy[1][first_bbc_angle][2]>0)?sumxy[1][first_bbc_angle][3]:-9999.9;
-          bbc_psi3_docalib = (sumxy[2][first_bbc_angle][2]>0)?sumxy[1][first_bbc_angle][3]:-9999.9;
+          bbc_psi3_docalib = (sumxy[2][first_bbc_angle][2]>0)?sumxy[2][first_bbc_angle][3]:-9999.9;
         }
       if ( fvtx_clusters )
         {
@@ -925,11 +925,11 @@ void flatten(int runNumber, int rp_recal_pass)
           fvtx1_psi2_docalib = (sumxy[1][first_fvtx_1_angle][2]>4)?sumxy[1][first_fvtx_1_angle][3]:-9999.9;
           fvtx2_psi2_docalib = (sumxy[1][first_fvtx_2_angle][2]>4)?sumxy[1][first_fvtx_2_angle][3]:-9999.9;
           fvtx3_psi2_docalib = (sumxy[1][first_fvtx_3_angle][2]>4)?sumxy[1][first_fvtx_3_angle][3]:-9999.9;
-          fvtx_psi3_docalib = (sumxy[2][first_fvtx_angle][2]>4)?sumxy[1][first_fvtx_angle][3]:-9999.9;
-          fvtx0_psi3_docalib = (sumxy[2][first_fvtx_0_angle][2]>4)?sumxy[1][first_fvtx_0_angle][3]:-9999.9;
-          fvtx1_psi3_docalib = (sumxy[2][first_fvtx_1_angle][2]>4)?sumxy[1][first_fvtx_1_angle][3]:-9999.9;
-          fvtx2_psi3_docalib = (sumxy[2][first_fvtx_2_angle][2]>4)?sumxy[1][first_fvtx_2_angle][3]:-9999.9;
-          fvtx3_psi3_docalib = (sumxy[2][first_fvtx_3_angle][2]>4)?sumxy[1][first_fvtx_3_angle][3]:-9999.9;
+          fvtx_psi3_docalib = (sumxy[2][first_fvtx_angle][2]>4)?sumxy[2][first_fvtx_angle][3]:-9999.9;
+          fvtx0_psi3_docalib = (sumxy[2][first_fvtx_0_angle][2]>4)?sumxy[2][first_fvtx_0_angle][3]:-9999.9;
+          fvtx1_psi3_docalib = (sumxy[2][first_fvtx_1_angle][2]>4)?sumxy[2][first_fvtx_1_angle][3]:-9999.9;
+          fvtx2_psi3_docalib = (sumxy[2][first_fvtx_2_angle][2]>4)?sumxy[2][first_fvtx_2_angle][3]:-9999.9;
+          fvtx3_psi3_docalib = (sumxy[2][first_fvtx_3_angle][2]>4)?sumxy[2][first_fvtx_3_angle][3]:-9999.9;
         }
 
       tp1f_reso2_BBC_FVTX->Fill(0.0,cos(2*(bbc_psi2_docalib-fvtx_psi2_docalib)));
