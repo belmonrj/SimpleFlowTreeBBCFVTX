@@ -35,7 +35,7 @@ float d_pmt_z = -1443.5; // same for all tubes
 //tree invariables
 static const int max_nh = 500; // see from ana taxi code
 //static const int max_nh = 10; // see from ana taxi code
-static const int max_nf = 3000; // see from ana taxi code
+static const int max_nf = 4000; // see from ana taxi code
 
 using namespace std;
 
@@ -199,12 +199,19 @@ void flatten(int runNumber, int rp_recal_pass)
   TProfile* tp1f_reso3_BBC_FVTX = new TProfile("tp1f_reso3_BBC_FVTX","",1,-0.5,0.5,-1e6,1e6,"");
   TProfile* tp1f_reso3_CNT_FVTX = new TProfile("tp1f_reso3_CNT_FVTX","",1,-0.5,0.5,-1e6,1e6,"");
 
-  TH1D* th1d_reso2_BBC_CNT = new TH1D("th1d_reso2_BBC_CNT","",252,-6.3,6.3);
-  TH1D* th1d_reso2_BBC_FVTX = new TH1D("th1d_reso2_BBC_FVTX","",252,-6.3,6.3);
-  TH1D* th1d_reso2_CNT_FVTX = new TH1D("th1d_reso2_CNT_FVTX","",252,-6.3,6.3);
-  TH1D* th1d_reso3_BBC_CNT = new TH1D("th1d_reso3_BBC_CNT","",252,-6.3,6.3);
-  TH1D* th1d_reso3_BBC_FVTX = new TH1D("th1d_reso3_BBC_FVTX","",252,-6.3,6.3);
-  TH1D* th1d_reso3_CNT_FVTX = new TH1D("th1d_reso3_CNT_FVTX","",252,-6.3,6.3);
+  TH1D* th1d_reso2_BBC_CNT = new TH1D("th1d_reso2_BBC_CNT","",220,-1.1,1.1);
+  TH1D* th1d_reso2_BBC_FVTX = new TH1D("th1d_reso2_BBC_FVTX","",220,-1.1,1.1);
+  TH1D* th1d_reso2_CNT_FVTX = new TH1D("th1d_reso2_CNT_FVTX","",220,-1.1,1.1);
+  TH1D* th1d_reso3_BBC_CNT = new TH1D("th1d_reso3_BBC_CNT","",220,-1.1,1.1);
+  TH1D* th1d_reso3_BBC_FVTX = new TH1D("th1d_reso3_BBC_FVTX","",220,-1.1,1.1);
+  TH1D* th1d_reso3_CNT_FVTX = new TH1D("th1d_reso3_CNT_FVTX","",220,-1.1,1.1);
+
+  TH1D* th1d_dreso2_BBC_CNT = new TH1D("th1d_dreso2_BBC_CNT","",252,-6.3,6.3);
+  TH1D* th1d_dreso2_BBC_FVTX = new TH1D("th1d_dreso2_BBC_FVTX","",252,-6.3,6.3);
+  TH1D* th1d_dreso2_CNT_FVTX = new TH1D("th1d_dreso2_CNT_FVTX","",252,-6.3,6.3);
+  TH1D* th1d_dreso3_BBC_CNT = new TH1D("th1d_dreso3_BBC_CNT","",252,-6.3,6.3);
+  TH1D* th1d_dreso3_BBC_FVTX = new TH1D("th1d_dreso3_BBC_FVTX","",252,-6.3,6.3);
+  TH1D* th1d_dreso3_CNT_FVTX = new TH1D("th1d_dreso3_CNT_FVTX","",252,-6.3,6.3);
 
   cout << "Making TProfile histograms" << endl;
 
@@ -406,6 +413,8 @@ void flatten(int runNumber, int rp_recal_pass)
   float        d_px[max_nh];
   float        d_py[max_nh];
   float        d_pz[max_nh];
+  float        d_pc3sdz[max_nh];
+  float        d_pc3sdphi[max_nh];
 
   TBranch *b_bbcz = htree->GetBranch("bbc_z");
   TBranch *b_event = htree->GetBranch("event");
@@ -448,6 +457,8 @@ void flatten(int runNumber, int rp_recal_pass)
   TBranch *b_px = htree->GetBranch("d_cntpx");
   TBranch *b_py = htree->GetBranch("d_cntpy");
   TBranch *b_pz = htree->GetBranch("d_cntpz");
+  TBranch *b_pc3sdz = htree->GetBranch("d_pc3sdz");
+  TBranch *b_pc3sdphi = htree->GetBranch("d_pc3sdphi");
 
   b_nsegments->SetAddress(&d_nsegments);
   b_px->SetAddress(d_px);
@@ -469,7 +480,7 @@ void flatten(int runNumber, int rp_recal_pass)
   for ( int ievt = 0 ; ievt < nentries ; ievt++ )
     {
 
-      //if ( ievt >= 1000000 ) break; // just 1M events for now, runs a little on the slow side...
+      if ( ievt >= 1000000 ) break; // just 1M events for now, runs a little on the slow side...
 
       bool say_event = ( ievt%1000==0 );
 
@@ -605,19 +616,36 @@ void flatten(int runNumber, int rp_recal_pass)
       //if ( bbc_qw < 61.5 ) continue; // dAu 200 GeV
       if ( bbc_qw < 30.0 ) continue; // very rough dAu 62 GeV
 
-      float fvtx_qx2[5];//all layers then 0 1 2 3
-      float fvtx_qy2[5];
-      float fvtx_qx3[5];//all layers then 0 1 2 3
-      float fvtx_qy3[5];
-      float fvtx_qw[5];
+      float fvtxs_qx2[5];//all layers then 0 1 2 3
+      float fvtxs_qy2[5];
+      float fvtxs_qx3[5];//all layers then 0 1 2 3
+      float fvtxs_qy3[5];
+      float fvtxs_qw[5];
 
       for(int ilayer = 0; ilayer < 5; ilayer++)
         {
-          fvtx_qx2[ilayer] = 0.0;
-          fvtx_qy2[ilayer] = 0.0;
-          fvtx_qx3[ilayer] = 0.0;
-          fvtx_qy3[ilayer] = 0.0;
-          fvtx_qw[ilayer] = 0.0;
+          fvtxs_qx2[ilayer] = 0.0;
+          fvtxs_qy2[ilayer] = 0.0;
+          fvtxs_qx3[ilayer] = 0.0;
+          fvtxs_qy3[ilayer] = 0.0;
+          fvtxs_qw[ilayer] = 0.0;
+        } // loop over layers
+
+      // --- now FVTX North
+
+      float fvtxn_qx2[5];//all layers then 0 1 2 3
+      float fvtxn_qy2[5];
+      float fvtxn_qx3[5];//all layers then 0 1 2 3
+      float fvtxn_qy3[5];
+      float fvtxn_qw[5];
+
+      for(int ilayer = 0; ilayer < 5; ilayer++)
+        {
+          fvtxn_qx2[ilayer] = 0.0;
+          fvtxn_qy2[ilayer] = 0.0;
+          fvtxn_qx3[ilayer] = 0.0;
+          fvtxn_qy3[ilayer] = 0.0;
+          fvtxn_qw[ilayer] = 0.0;
         } // loop over layers
 
 
@@ -641,7 +669,8 @@ void flatten(int runNumber, int rp_recal_pass)
               // cout<<"fvtx_x: "<<fvtx_x<<" fvtx_y: "<<fvtx_y<<" fvtx_z"<<fvtx_z<<endl;
 
               int fvtx_layer    = get_fvtx_layer(fvtx_z); // raw z to get layer
-              if(fvtx_layer < 0) continue;
+              // if ( fvtx_layer < 0 ) continue;
+              // if ( fvtx_z > 0 ) continue; // have north clusters, need to figure out what to do with them
               // --- gap cut, not sure what this does
               int igap = (fabs(fvtx_eta)-1.0)/0.5;
 
@@ -652,30 +681,18 @@ void flatten(int runNumber, int rp_recal_pass)
 
               float phi = TMath::ATan2(fvtx_y,fvtx_x);
 
-              float mass = 0.1396;//assume charged pion mass
-              float pT = 0.25;
-              float px = pT * TMath::Cos(phi);
-              float py = pT * TMath::Sin(phi);
-              float pz = pT * TMath::SinH(fvtx_eta);
+              fvtxs_qx2[fvtx_layer+1] += TMath::Cos(2*phi);
+              fvtxs_qy2[fvtx_layer+1] += TMath::Sin(2*phi);
+              fvtxs_qx3[fvtx_layer+1] += TMath::Cos(3*phi);
+              fvtxs_qy3[fvtx_layer+1] += TMath::Sin(3*phi);
 
-              float energy = TMath::Sqrt(px*px+py*py+pz*pz+mass*mass);
-              TLorentzVector particle_vec(px,py,pz,energy);
+              fvtxs_qx2[0] += TMath::Cos(2*phi);
+              fvtxs_qy2[0] += TMath::Sin(2*phi);
+              fvtxs_qx3[0] += TMath::Cos(3*phi);
+              fvtxs_qy3[0] += TMath::Sin(3*phi);
 
-
-              phi = TMath::ATan2(particle_vec.Py(),particle_vec.Px());
-
-              fvtx_qx2[fvtx_layer+1] += TMath::Cos(2*phi);
-              fvtx_qy2[fvtx_layer+1] += TMath::Sin(2*phi);
-              fvtx_qx3[fvtx_layer+1] += TMath::Cos(3*phi);
-              fvtx_qy3[fvtx_layer+1] += TMath::Sin(3*phi);
-
-              fvtx_qx2[0] += TMath::Cos(2*phi);
-              fvtx_qy2[0] += TMath::Sin(2*phi);
-              fvtx_qx3[0] += TMath::Cos(3*phi);
-              fvtx_qy3[0] += TMath::Sin(3*phi);
-
-              fvtx_qw[fvtx_layer+1] ++;
-              fvtx_qw[0] ++;
+              fvtxs_qw[fvtx_layer+1] ++;
+              fvtxs_qw[0] ++;
             } // loop over cluster
         } // check on clusters
 
@@ -721,47 +738,47 @@ void flatten(int runNumber, int rp_recal_pass)
 
       if ( fvtx_clusters )
         {
-          sumxy[1][first_fvtx_angle][0] = fvtx_qx2[0];
-          sumxy[1][first_fvtx_angle][1] = fvtx_qy2[0];
-          sumxy[1][first_fvtx_angle][2] = fvtx_qw[0];
+          sumxy[1][first_fvtx_angle][0] = fvtxs_qx2[0];
+          sumxy[1][first_fvtx_angle][1] = fvtxs_qy2[0];
+          sumxy[1][first_fvtx_angle][2] = fvtxs_qw[0];
 
-          sumxy[1][first_fvtx_0_angle][0] = fvtx_qx2[1];
-          sumxy[1][first_fvtx_0_angle][1] = fvtx_qy2[1];
-          sumxy[1][first_fvtx_0_angle][2] = fvtx_qw[1];
+          sumxy[1][first_fvtx_0_angle][0] = fvtxs_qx2[1];
+          sumxy[1][first_fvtx_0_angle][1] = fvtxs_qy2[1];
+          sumxy[1][first_fvtx_0_angle][2] = fvtxs_qw[1];
 
-          sumxy[1][first_fvtx_1_angle][0] = fvtx_qx2[2];
-          sumxy[1][first_fvtx_1_angle][1] = fvtx_qy2[2];
-          sumxy[1][first_fvtx_1_angle][2] = fvtx_qw[2];
+          sumxy[1][first_fvtx_1_angle][0] = fvtxs_qx2[2];
+          sumxy[1][first_fvtx_1_angle][1] = fvtxs_qy2[2];
+          sumxy[1][first_fvtx_1_angle][2] = fvtxs_qw[2];
 
-          sumxy[1][first_fvtx_2_angle][0] = fvtx_qx2[3];
-          sumxy[1][first_fvtx_2_angle][1] = fvtx_qy2[3];
-          sumxy[1][first_fvtx_2_angle][2] = fvtx_qw[3];
+          sumxy[1][first_fvtx_2_angle][0] = fvtxs_qx2[3];
+          sumxy[1][first_fvtx_2_angle][1] = fvtxs_qy2[3];
+          sumxy[1][first_fvtx_2_angle][2] = fvtxs_qw[3];
 
-          sumxy[1][first_fvtx_3_angle][0] = fvtx_qx2[4];
-          sumxy[1][first_fvtx_3_angle][1] = fvtx_qy2[4];
-          sumxy[1][first_fvtx_3_angle][2] = fvtx_qw[4];
+          sumxy[1][first_fvtx_3_angle][0] = fvtxs_qx2[4];
+          sumxy[1][first_fvtx_3_angle][1] = fvtxs_qy2[4];
+          sumxy[1][first_fvtx_3_angle][2] = fvtxs_qw[4];
 
           // ---
 
-          sumxy[2][first_fvtx_angle][0] = fvtx_qx3[0];
-          sumxy[2][first_fvtx_angle][1] = fvtx_qy3[0];
-          sumxy[2][first_fvtx_angle][2] = fvtx_qw[0];
+          sumxy[2][first_fvtx_angle][0] = fvtxs_qx3[0];
+          sumxy[2][first_fvtx_angle][1] = fvtxs_qy3[0];
+          sumxy[2][first_fvtx_angle][2] = fvtxs_qw[0];
 
-          sumxy[2][first_fvtx_0_angle][0] = fvtx_qx3[1];
-          sumxy[2][first_fvtx_0_angle][1] = fvtx_qy3[1];
-          sumxy[2][first_fvtx_0_angle][2] = fvtx_qw[1];
+          sumxy[2][first_fvtx_0_angle][0] = fvtxs_qx3[1];
+          sumxy[2][first_fvtx_0_angle][1] = fvtxs_qy3[1];
+          sumxy[2][first_fvtx_0_angle][2] = fvtxs_qw[1];
 
-          sumxy[2][first_fvtx_1_angle][0] = fvtx_qx3[2];
-          sumxy[2][first_fvtx_1_angle][1] = fvtx_qy3[2];
-          sumxy[2][first_fvtx_1_angle][2] = fvtx_qw[2];
+          sumxy[2][first_fvtx_1_angle][0] = fvtxs_qx3[2];
+          sumxy[2][first_fvtx_1_angle][1] = fvtxs_qy3[2];
+          sumxy[2][first_fvtx_1_angle][2] = fvtxs_qw[2];
 
-          sumxy[2][first_fvtx_2_angle][0] = fvtx_qx3[3];
-          sumxy[2][first_fvtx_2_angle][1] = fvtx_qy3[3];
-          sumxy[2][first_fvtx_2_angle][2] = fvtx_qw[3];
+          sumxy[2][first_fvtx_2_angle][0] = fvtxs_qx3[3];
+          sumxy[2][first_fvtx_2_angle][1] = fvtxs_qy3[3];
+          sumxy[2][first_fvtx_2_angle][2] = fvtxs_qw[3];
 
-          sumxy[2][first_fvtx_3_angle][0] = fvtx_qx3[4];
-          sumxy[2][first_fvtx_3_angle][1] = fvtx_qy3[4];
-          sumxy[2][first_fvtx_3_angle][2] = fvtx_qw[4];
+          sumxy[2][first_fvtx_3_angle][0] = fvtxs_qx3[4];
+          sumxy[2][first_fvtx_3_angle][1] = fvtxs_qy3[4];
+          sumxy[2][first_fvtx_3_angle][2] = fvtxs_qw[4];
         }
 
 
@@ -772,7 +789,7 @@ void flatten(int runNumber, int rp_recal_pass)
 
           cout<<"fvtx raw: "<<endl;
           cout<<"from node tree: "<<d_Qx[4]<<" "<<d_Qy[4]<<" "<<d_Qw[4]<<endl;
-          cout<<"from clusters: " <<fvtx_qx2[0]<<" "<<fvtx_qy2[0]<<" "<<fvtx_qw[0]<<endl;
+          cout<<"from clusters: " <<fvtxs_qx2[0]<<" "<<fvtxs_qy2[0]<<" "<<fvtxs_qw[0]<<endl;
         }
 
       for (int ih=1; ih<NHAR; ih++)
@@ -935,8 +952,11 @@ void flatten(int runNumber, int rp_recal_pass)
       tp1f_reso2_BBC_FVTX->Fill(0.0,cos(2*(bbc_psi2_docalib-fvtx_psi2_docalib)));
       tp1f_reso3_BBC_FVTX->Fill(0.0,cos(3*(bbc_psi3_docalib-fvtx_psi3_docalib)));
 
-      th1d_reso2_BBC_FVTX->Fill(bbc_psi2_docalib-fvtx_psi2_docalib);
-      th1d_reso3_BBC_FVTX->Fill(bbc_psi3_docalib-fvtx_psi3_docalib);
+      th1d_reso2_BBC_FVTX->Fill(cos(2*(bbc_psi2_docalib-fvtx_psi2_docalib)));
+      th1d_reso3_BBC_FVTX->Fill(cos(3*(bbc_psi3_docalib-fvtx_psi3_docalib)));
+
+      th1d_dreso2_BBC_FVTX->Fill(bbc_psi2_docalib-fvtx_psi2_docalib);
+      th1d_dreso3_BBC_FVTX->Fill(bbc_psi3_docalib-fvtx_psi3_docalib);
 
       //start of vtx stand alone track loop
       if ( vtx_tracks )
@@ -1011,8 +1031,10 @@ void flatten(int runNumber, int rp_recal_pass)
                       // --- ep reso
                       tp1f_reso2_BBC_CNT->Fill(0.0,cosbbc_dphi2_docalib);
                       tp1f_reso3_BBC_CNT->Fill(0.0,cosbbc_dphi3_docalib);
-                      th1d_reso2_BBC_CNT->Fill(bbc_dphi2_docalib);
-                      th1d_reso3_BBC_CNT->Fill(bbc_dphi3_docalib);
+                      th1d_reso2_BBC_CNT->Fill(cosbbc_dphi2_docalib);
+                      th1d_reso3_BBC_CNT->Fill(cosbbc_dphi3_docalib);
+                      th1d_dreso2_BBC_CNT->Fill(bbc_dphi2_docalib);
+                      th1d_dreso3_BBC_CNT->Fill(bbc_dphi3_docalib);
                     }
                 } // check on tubes
 
@@ -1035,8 +1057,10 @@ void flatten(int runNumber, int rp_recal_pass)
                   // --- ep reso
                   tp1f_reso2_CNT_FVTX->Fill(0.0,cosfvtx_dphi2_docalib);
                   tp1f_reso3_CNT_FVTX->Fill(0.0,cosfvtx_dphi3_docalib);
-                  th1d_reso2_CNT_FVTX->Fill(fvtx_dphi2_docalib);
-                  th1d_reso3_CNT_FVTX->Fill(fvtx_dphi3_docalib);
+                  th1d_reso2_CNT_FVTX->Fill(cosfvtx_dphi2_docalib);
+                  th1d_reso3_CNT_FVTX->Fill(cosfvtx_dphi3_docalib);
+                  th1d_dreso2_CNT_FVTX->Fill(fvtx_dphi2_docalib);
+                  th1d_dreso3_CNT_FVTX->Fill(fvtx_dphi3_docalib);
                 }
 
               // --- now fvtx layers
@@ -1250,6 +1274,13 @@ void flatten(int runNumber, int rp_recal_pass)
       th1d_reso3_BBC_CNT->Write();
       th1d_reso3_BBC_FVTX->Write();
       th1d_reso3_CNT_FVTX->Write();
+
+      th1d_dreso2_BBC_CNT->Write();
+      th1d_dreso2_BBC_FVTX->Write();
+      th1d_dreso2_CNT_FVTX->Write();
+      th1d_dreso3_BBC_CNT->Write();
+      th1d_dreso3_BBC_FVTX->Write();
+      th1d_dreso3_CNT_FVTX->Write();
 
       th1d_BBC_charge->Write();
       th1d_FVTX_nclus->Write();
