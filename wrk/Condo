@@ -12,33 +12,54 @@ Output          = /phenix/plhf/belmonrj/offline/AnalysisTrain/theok/VTX_event_pl
 +Experiment     = "phenix"
 +Job_Type       = "cas"
 
-#Arguments       = 454811
-#Queue 1
+####################################
+### Run16 200 GeV without timing cut
+####################################
 
-#Arguments       = 454934
-#Queue 1
+Arguments       = 454811
+Queue 1
 
-#Arguments       = 454936
-#Queue 1
+Arguments       = 454934
+Queue 1
 
-#Arguments       = 454944
-#Queue 1
+Arguments       = 454936
+Queue 1
 
-#Arguments       = 454945
-#Queue 1
+Arguments       = 454944
+Queue 1
 
-#Arguments       = 454946
-#Queue 1
+Arguments       = 454945
+Queue 1
 
-#Arguments       = 454948
-#Queue 1
+#################################
+### Run16 200 GeV with timing cut
+#################################
 
-#Arguments       = 455050
-#Queue 1
+Arguments       = 454946
+Queue 1
 
-#Arguments       = 455051
-#Queue 1
+Arguments       = 454948
+Queue 1
+
+Arguments       = 455050
+Queue 1
+
+Arguments       = 455051
+Queue 1
 
 Arguments       = 455052
 Queue 1
+
+################
+### Run16 62 GeV
+################
+
+#Arguments       = 455795
+#Queue 1
+
+#Arguments       = 455836
+#Queue 1
+
+#Arguments       = 455875
+#Queue 1
 
