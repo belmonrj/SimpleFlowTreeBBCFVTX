@@ -1,4 +1,4 @@
-void analyze_theo(int iter = 0)
+void analyze_theo(int runnumber, int segmentnumber = 0)
 {
 
 
@@ -58,8 +58,7 @@ void analyze_theo(int iter = 0)
   vtx_ep->set_trimmed_tree(true);
   vtx_ep->set_write_vtx(false); // svx tracks not available
   //vtx_ep->set_runlist_file(string);
-  //vtx_ep->set_output_filename(Form("out/tree_0000454948_%04d.root",iter));//set the ntuple output file
-  vtx_ep->set_output_filename(Form("out/tree_0000455050_%04d.root",iter));//set the ntuple output file
+  vtx_ep->set_output_filename(Form("out/tree_%010d_%04d.root",runnumber,segmentnumber));//set the ntuple output file
   vtx_ep->Verbosity(0);
   se->registerSubsystem(vtx_ep);
 
@@ -69,8 +68,9 @@ void analyze_theo(int iter = 0)
 
   cout << "Analysis started " << endl;
   gSystem->Exec("date");
-  //se->fileopen("DSTin1", Form("/phenix/prod/online_production/run16_online_ca/run_0000454000_0000455000/CNT/CNT_run16_online_ca-0000454948-%04d.root",iter));
-  se->fileopen("DSTin1", Form("/phenix/prod/online_production/run16_online_ca/run_0000455000_0000456000/CNT/CNT_run16_online_ca-0000455050-%04d.root",iter));
+  if ( runnumber >= 454000 & runnumber < 455000 ) se->fileopen("DSTin1", Form("/phenix/prod/online_production/run16_online_ca/run_0000454000_0000455000/CNT/CNT_run16_online_ca-%010d-%04d.root",runnumber,segmentnumber));
+  if ( runnumber >= 455000 & runnumber < 456000 ) se->fileopen("DSTin1", Form("/phenix/prod/online_production/run16_online_ca/run_0000455000_0000456000/CNT/CNT_run16_online_ca-%010d-%04d.root",runnumber,segmentnumber));
+  if ( runnumber >= 456000 & runnumber < 457000 ) se->fileopen("DSTin1", Form("/phenix/prod/online_production/run16_online_ca/run_0000456000_0000457000/CNT/CNT_run16_online_ca-%010d-%04d.root",runnumber,segmentnumber));
 
 
   Fun4AllInputManager *in2 = new Fun4AllDstInputManager("DSTin2", "DST");
@@ -78,8 +78,9 @@ void analyze_theo(int iter = 0)
   se->registerInputManager(in2);
 
   gSystem->Exec("date");
-  //se->fileopen("DSTin2", Form("/phenix/prod/online_production/run16_online_ca/run_0000454000_0000455000/DST_EVE/DST_EVE_run16_online_ca-0000454948-%04d.root",iter));
-  se->fileopen("DSTin2", Form("/phenix/prod/online_production/run16_online_ca/run_0000455000_0000456000/DST_EVE/DST_EVE_run16_online_ca-0000455050-%04d.root",iter));
+  if ( runnumber >= 454000 & runnumber < 455000 ) se->fileopen("DSTin2", Form("/phenix/prod/online_production/run16_online_ca/run_0000454000_0000455000/DST_EVE/DST_EVE_run16_online_ca-%010d-%04d.root",runnumber,segmentnumber));
+  if ( runnumber >= 455000 & runnumber < 456000 ) se->fileopen("DSTin2", Form("/phenix/prod/online_production/run16_online_ca/run_0000455000_0000456000/DST_EVE/DST_EVE_run16_online_ca-%010d-%04d.root",runnumber,segmentnumber));
+  if ( runnumber >= 456000 & runnumber < 457000 ) se->fileopen("DSTin2", Form("/phenix/prod/online_production/run16_online_ca/run_0000456000_0000457000/DST_EVE/DST_EVE_run16_online_ca-%010d-%04d.root",runnumber,segmentnumber));
 
   se->run(0);
 
