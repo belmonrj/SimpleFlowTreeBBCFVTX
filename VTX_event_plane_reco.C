@@ -1,4 +1,5 @@
-#include <VTX_event_plane_reco.h>
+#include "VTX_event_plane_reco.h"
+#include "Run16RoughMatchingPC3.h"
 
 #include <cmath>
 #include <algorithm>
@@ -54,6 +55,7 @@
 // ------------------------
 #include "PHCentralTrack.h"
 #include "PHSnglCentralTrack.h"
+
 
 
 using namespace std;
@@ -133,6 +135,8 @@ int VTX_event_plane_reco::Init(PHCompositeNode *topNode)
       _ntp_event -> Branch("d_cntpx",&d_cntpx,"d_cntpx[d_ntrk]/F");
       _ntp_event -> Branch("d_cntpy",&d_cntpy,"d_cntpy[d_ntrk]/F");
       _ntp_event -> Branch("d_cntpz",&d_cntpz,"d_cntpz[d_ntrk]/F");
+      _ntp_event -> Branch("d_pc3sdz",&d_pc3sdz,"d_pc3sdz[d_ntrk]/F");
+      _ntp_event -> Branch("d_pc3sdphi",&d_pc3sdphi,"d_pc3sdphi[d_ntrk]/F");
       //_ntp_event -> Branch("d_BBCs_Qy",&d_BBCs_Qy,"d_BBCs_Qy[221]/F");
       //_ntp_event -> Branch("d_BBCs_Qw",&d_BBCs_Qw,"d_BBCs_Qw[221]/F");
       //now track based arrays
@@ -750,19 +754,19 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
           //float fvtx_the = atan2(fvtx_r,fvtx_z-vtx_z);
           //float fvtx_phi = atan2(fvtx_y,fvtx_x);
           //float fvtx_eta = -log(tan(0.5*fvtx_the));
-          if(fvtx_z < 0)
+          //if(fvtx_z < 0)
+          //{
+          if(nfvtxs_raw_clus >= N_FVTX_CLUSTER_MAX)
             {
-              if(nfvtxs_raw_clus >= N_FVTX_CLUSTER_MAX)
-                {
-                  cout<<"butting against the max fvtx cluster size " << nfvtxs_raw_clus << "/" << N_FVTX_CLUSTER_MAX << ", breaking"<<endl;
-                  break;
-                }
-              d_FVTX_x[nfvtxs_raw_clus] = fvtx_x;
-              d_FVTX_y[nfvtxs_raw_clus] = fvtx_y;
-              d_FVTX_z[nfvtxs_raw_clus] = fvtx_z;
-              nfvtxs_raw_clus++;
-              //cout<<"fvtx_eta: "<<fvtx_eta<<endl;
-            } // south
+              cout<<"butting against the max fvtx cluster size " << nfvtxs_raw_clus << "/" << N_FVTX_CLUSTER_MAX << ", breaking"<<endl;
+              break;
+            }
+          d_FVTX_x[nfvtxs_raw_clus] = fvtx_x;
+          d_FVTX_y[nfvtxs_raw_clus] = fvtx_y;
+          d_FVTX_z[nfvtxs_raw_clus] = fvtx_z;
+          nfvtxs_raw_clus++;
+          //cout<<"fvtx_eta: "<<fvtx_eta<<endl;
+          //} // south
 
         } // while loop over iterator
     } // check on fvtx_coord_map
@@ -945,9 +949,24 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
           float py = strk->get_py();
           float pz = strk->get_pz();
 
+          int arm = 0;
+          if ( px > 0 ) arm = 1;
+
+          int charge = strk->get_charge();
+
+          float pc3dphi = strk->get_pc3dphi();
+          float pc3dz = strk->get_pc3dz();
+
+          float pc3sdphi = calcsdphi(pc3dphi, arm, charge, mom);
+          float pc3sdz = calcsdz(pc3dz, arm, charge, mom);
+
+          // if ( fabs(pc3sdphi) > 3.0 || fabs(pc3sdz) > 3.0 ) continue;
+
           d_cntpx[counter] = px;
           d_cntpy[counter] = py;
           d_cntpz[counter] = pz;
+          d_pc3sdz[counter] = pc3sdz;
+          d_pc3sdphi[counter] = pc3sdphi;
 
           ++counter;
 
