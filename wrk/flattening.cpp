@@ -33,9 +33,11 @@ float d_pmt_y[64];
 float d_pmt_z = -1443.5; // same for all tubes
 
 //tree invariables
-static const int max_nh = 500; // see from ana taxi code
+//static const int max_nh = 500; // see from ana taxi code
+static const int max_nh = 50; // see from ana taxi code
 //static const int max_nh = 10; // see from ana taxi code
 static const int max_nf = 4000; // see from ana taxi code
+//static const int max_nf = 3000; // see from ana taxi code
 
 using namespace std;
 
@@ -434,10 +436,6 @@ void flatten(int runNumber, int rp_recal_pass)
   float        d_px[max_nh];
   float        d_py[max_nh];
   float        d_pz[max_nh];
-  float        d_pc3sdz[max_nh];
-  float        d_pc3sdphi[max_nh];
-
-  cout << "array addresses " << d_pc3sdz << " " << d_pc3sdphi << endl;
 
   TBranch *b_bbcz = htree->GetBranch("bbc_z");
   TBranch *b_event = htree->GetBranch("event");
@@ -480,44 +478,12 @@ void flatten(int runNumber, int rp_recal_pass)
   TBranch *b_px = htree->GetBranch("d_cntpx");
   TBranch *b_py = htree->GetBranch("d_cntpy");
   TBranch *b_pz = htree->GetBranch("d_cntpz");
-  TBranch *b_pc3sdz = htree->GetBranch("d_pc3sdz");
-  TBranch *b_pc3sdphi = htree->GetBranch("d_pc3sdphi");
-
-  cout << "branch addresses " << b_pc3sdz << " " << b_pc3sdphi << endl;
-
-  cout << "array addresses " << d_pc3sdz << " " << d_pc3sdphi << endl;
 
   b_nsegments->SetAddress(&d_nsegments);
   b_px->SetAddress(d_px);
   b_py->SetAddress(d_py);
   b_pz->SetAddress(d_pz);
-  b_pc3sdz->SetAddress(d_pc3sdz);
-  b_pc3sdphi->SetAddress(d_pc3sdphi);
 
-  cout << "branch addresses " << b_pc3sdz << " and " << b_pc3sdphi << endl;
-
-  char* cb_pc3sdz = b_pc3sdz->GetAddress();
-  char* cb_pc3sdphi = b_pc3sdphi->GetAddress();
-  // --- empty chars????
-  cout << "branch get addresses " << cb_pc3sdz << " and " << cb_pc3sdphi << endl;
-  cout << "branch get addresses " << b_pc3sdz->GetAddress() << " and " << b_pc3sdphi->GetAddress() << endl;
-
-  const char* nb_pc3sdz = b_pc3sdz->GetName();
-  const char* nb_pc3sdphi = b_pc3sdphi->GetName();
-  // --- works fine...
-  cout << "branch get names " << nb_pc3sdz << " and " << nb_pc3sdphi << endl;
-
-  cout << endl;
-  cout << "Additional info.." << endl;
-  cout << "Momenum array addresses " << d_px << " and " << d_py << endl;
-  cout << "Momenum branch addresses " << b_px << " and " << b_py << endl;
-  char* cb_px = b_px->GetAddress();
-  char* cb_py = b_py->GetAddress();
-  cout << "Momentum branch get addresses " << cb_px << " and " << cb_py << endl;
-  const char* nb_px = b_px->GetName();
-  const char* nb_py = b_py->GetName();
-  cout << "Momentum branch get names " << nb_px << " and " << nb_py << endl;
-  cout << endl;
 
   //------------------------------------------------------------//
   //          Finished Initializing Tree Variables              //
@@ -534,7 +500,7 @@ void flatten(int runNumber, int rp_recal_pass)
   for ( int ievt = 0 ; ievt < nentries ; ievt++ )
     {
 
-      if ( ievt >= 1 ) break; // just 1M events for now, runs a little on the slow side...
+      if ( ievt >= 10 ) break; // just 1M events for now, runs a little on the slow side...
 
       bool say_event = ( ievt%1000==0 );
 
@@ -1157,16 +1123,6 @@ void flatten(int runNumber, int rp_recal_pass)
               float px    = d_px[itrk];
               float py    = d_py[itrk];
               float pz    = d_pz[itrk];
-              float pc3sdz    = d_pc3sdz[itrk];
-              float pc3sdphi  = d_pc3sdphi[itrk];
-
-              // --- tracking cut...
-              cout << "Momentum info..." << px << " " << py << " " << pz << endl;
-              cout << "branch addresses " << b_pc3sdz << " " << b_pc3sdphi << endl;
-              cout << "array addresses " << d_pc3sdz << " " << d_pc3sdphi << endl;
-              cout << "array info... " << d_pc3sdz[itrk] << " " << d_pc3sdphi[itrk] << endl;
-              cout << "PC3 Matching info... " << pc3sdz << " " << pc3sdphi << endl;
-              if ( fabs(pc3sdz) > 3.0 || fabs(pc3sdphi) > 3.0 ) continue;
 
               int dcarm=0;
               if(px>0) dcarm=1;
