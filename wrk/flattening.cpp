@@ -25,6 +25,7 @@
 #include "TNtuple.h"
 #include "TRandom.h"
 #include "TLorentzVector.h"
+#include "TSystem.h"
 //#endif
 
 // global pmt variables
@@ -112,31 +113,53 @@ void flatten(int runNumber, int rp_recal_pass)
   cout<<"runNumber = " <<runNumber<<" "
       <<"rp_recal_pass = "<<rp_recal_pass<<endl;
 
-  char filename[500];
-  sprintf(filename,"input/tree_merged_%010d.root",runNumber); // abslute paths need to be dealt with
-  //sprintf(filename,"/gpfs/mnt/gpfs02/phenix/plhf/plhf1/theok/taxi/Run15pAu200FVTXClusAna503/8833/data/434905.root"); // abslute paths need to be dealt with
+  // char filename[500];
+  // sprintf(filename,"input/tree_merged_%010d.root",runNumber); // abslute paths need to be dealt with
+  // //sprintf(filename,"/gpfs/mnt/gpfs02/phenix/plhf/plhf1/theok/taxi/Run15pAu200FVTXClusAna503/8833/data/434905.root"); // abslute paths need to be dealt with
+  // cout << "tree input file: " << filename << endl;
 
-  cout << "tree input file: " << filename << endl;
   cout << "v2 histogram output file: " << outFile1 << endl;
 
   char calibfile[500];
   sprintf(calibfile,"output/flattening_%d_%d.dat",runNumber,rp_recal_pass-1);
 
-  TFile *f=TFile::Open( filename);
+  char filename[500];
+  //sprintf(filename,"/gpfs/mnt/gpfs02/phenix/hhj/hhj2/theok/VTX_event_plane/output_test_for_taxi.root",runNumber);
+  //sprintf(filename,"for_ron/input/singles/tree_0000454936_0000.root"); // abslute paths need to be dealt with
 
-  if(!f)
+  // --- get the number of files for this run number
+  string pipe_out = (string) gSystem->GetFromPipe(Form("ls input/tree_%010d_*.root | grep -c r",runNumber));
+  int nfiles = 0;
+  nfiles = atoi(pipe_out.c_str());
+  cout<<"nfiles: "<<nfiles<<endl;
+  if(nfiles==0) return;
+
+  // --- make a new TChain for the tree
+  TChain *ntp_event_chain = new TChain("ntp_event");
+  for ( int ifile = 0; ifile < nfiles; ++ifile )
     {
-      cout<<"ERROR, file: "<<filename<<" could not be opened"<<endl;
-      return;
+      sprintf(filename,"input/tree_%010d_%04d.root",runNumber,ifile);
+      cout<<"adding to tchain: "<<filename<<endl;
+      ntp_event_chain->Add(filename);
     }
 
-  TTree *htree = (TTree *)f->Get("ntp_event");
+  // TFile *f=TFile::Open( filename);
 
-  if(!htree)
-    {
-      cout<<"ERROR, ntp_event could not be opened"<<endl;
-      return;
-    }
+  // if(!f)
+  //   {
+  //     cout<<"ERROR, file: "<<filename<<" could not be opened"<<endl;
+  //     return;
+  //   }
+
+  // TTree *htree = (TTree *)f->Get("ntp_event");
+
+  // if(!htree)
+  //   {
+  //     cout<<"ERROR, ntp_event could not be opened"<<endl;
+  //     return;
+  //   }
+
+  //return;
 
   cout << "Initalizing PMT positions for the BBC" << endl;
 
@@ -415,6 +438,75 @@ void flatten(int runNumber, int rp_recal_pass)
 
   cout << "Now getting ready to read in the tree branch addresses and stuff...." << endl;
 
+  // //tree variables
+  // float        event;
+  // float        d_bbcz;    // bbcz
+  // unsigned int trigger;
+  // float        bc_x;
+  // float        bc_y;
+  // float        vtx_z;
+  // float        d_Qx[9];
+  // float        d_Qy[9];
+  // float        d_Qw[9];
+  // float        d_BBC_charge[64];
+
+  // int          d_nFVTX_clus;
+  // float        d_FVTX_x[max_nf];
+  // float        d_FVTX_y[max_nf];
+  // float        d_FVTX_z[max_nf];
+
+  // int          d_nsegments;
+  // float        d_px[max_nh];
+  // float        d_py[max_nh];
+  // float        d_pz[max_nh];
+
+  // TBranch *b_bbcz = htree->GetBranch("bbc_z");
+  // TBranch *b_event = htree->GetBranch("event");
+  // TBranch *b_trigger = htree->GetBranch("trigger");
+  // TBranch *b_bc_x = htree->GetBranch("bc_x");
+  // TBranch *b_bc_y = htree->GetBranch("bc_y");
+  // TBranch *b_vtx_z = htree->GetBranch("vtx_z");
+  // TBranch *b_Qx = htree->GetBranch("d_Qx");
+  // TBranch *b_Qy = htree->GetBranch("d_Qy");
+  // TBranch *b_Qw = htree->GetBranch("d_Qw");
+  // TBranch *b_d_BBC_charge = htree->GetBranch("d_BBC_charge");
+
+  // b_bbcz->SetAddress(&d_bbcz);
+  // b_event->SetAddress(&event);
+  // b_trigger->SetAddress(&trigger);
+  // b_bc_x->SetAddress(&bc_x);
+  // b_bc_y->SetAddress(&bc_y);
+  // b_vtx_z->SetAddress(&vtx_z);
+
+  // b_d_BBC_charge->SetAddress(d_BBC_charge);
+  // b_Qx->SetAddress(d_Qx);
+  // b_Qy->SetAddress(d_Qy);
+  // b_Qw->SetAddress(d_Qw);
+
+  // TBranch *b_d_nFVTX_clus = htree->GetBranch("d_nFVTX_clus");
+  // TBranch *b_d_FVTX_x = htree->GetBranch("d_FVTX_x");
+  // TBranch *b_d_FVTX_y = htree->GetBranch("d_FVTX_y");
+  // TBranch *b_d_FVTX_z = htree->GetBranch("d_FVTX_z");
+
+  // b_d_nFVTX_clus->SetAddress(&d_nFVTX_clus);
+  // b_d_FVTX_x->SetAddress(d_FVTX_x);
+  // b_d_FVTX_y->SetAddress(d_FVTX_y);
+  // b_d_FVTX_z->SetAddress(d_FVTX_z);
+
+  // // TBranch *b_nsegments = htree->GetBranch("nsegments");
+  // // TBranch *b_px = htree->GetBranch("px");
+  // // TBranch *b_py = htree->GetBranch("py");
+  // // TBranch *b_pz = htree->GetBranch("pz");
+  // TBranch *b_nsegments = htree->GetBranch("d_ntrk");
+  // TBranch *b_px = htree->GetBranch("d_cntpx");
+  // TBranch *b_py = htree->GetBranch("d_cntpy");
+  // TBranch *b_pz = htree->GetBranch("d_cntpz");
+
+  // b_nsegments->SetAddress(&d_nsegments);
+  // b_px->SetAddress(d_px);
+  // b_py->SetAddress(d_py);
+  // b_pz->SetAddress(d_pz);
+
   //tree variables
   float        event;
   float        d_bbcz;    // bbcz
@@ -437,52 +529,73 @@ void flatten(int runNumber, int rp_recal_pass)
   float        d_py[max_nh];
   float        d_pz[max_nh];
 
-  TBranch *b_bbcz = htree->GetBranch("bbc_z");
-  TBranch *b_event = htree->GetBranch("event");
-  TBranch *b_trigger = htree->GetBranch("trigger");
-  TBranch *b_bc_x = htree->GetBranch("bc_x");
-  TBranch *b_bc_y = htree->GetBranch("bc_y");
-  TBranch *b_vtx_z = htree->GetBranch("vtx_z");
-  TBranch *b_Qx = htree->GetBranch("d_Qx");
-  TBranch *b_Qy = htree->GetBranch("d_Qy");
-  TBranch *b_Qw = htree->GetBranch("d_Qw");
-  TBranch *b_d_BBC_charge = htree->GetBranch("d_BBC_charge");
+   // List of branches
+   TBranch        *b_event;   //!
+   TBranch        *b_bbc_z;   //!
+   TBranch        *b_trigger;   //!
+   TBranch        *b_d_Qx;   //!
+   TBranch        *b_d_Qy;   //!
+   TBranch        *b_d_Qw;   //!
+   TBranch        *b_bc_x;   //!
+   TBranch        *b_bc_y;   //!
+   TBranch        *b_vtx_z;   //!
+   TBranch        *b_d_BBC_charge;   //!
+   TBranch        *b_d_nFVTX_clus;   //!
+   TBranch        *b_d_FVTX_x;   //!
+   TBranch        *b_d_FVTX_y;   //!
+   TBranch        *b_d_FVTX_z;   //!
+   TBranch        *b_nsegments;   //!
+   TBranch        *b_px;   //!
+   TBranch        *b_py;   //!
+   TBranch        *b_pz;   //!
+   TBranch        *b_d_ntrk;   //!
+   TBranch        *b_d_cntpx;   //!
+   TBranch        *b_d_cntpy;   //!
+   TBranch        *b_d_cntpz;   //!
 
-  b_bbcz->SetAddress(&d_bbcz);
-  b_event->SetAddress(&event);
-  b_trigger->SetAddress(&trigger);
-  b_bc_x->SetAddress(&bc_x);
-  b_bc_y->SetAddress(&bc_y);
-  b_vtx_z->SetAddress(&vtx_z);
+  ntp_event_chain->SetBranchAddress("bbc_z",&d_bbcz,&b_bbc_z);
+  ntp_event_chain->SetBranchAddress("event",&event,&b_event);
+  ntp_event_chain->SetBranchAddress("trigger",&trigger,&b_trigger);
+  ntp_event_chain->SetBranchAddress("bc_x",&bc_x,&b_bc_x);
+  ntp_event_chain->SetBranchAddress("bc_y",&bc_y,&b_bc_y);
+  ntp_event_chain->SetBranchAddress("vtx_z",&vtx_z,&b_vtx_z);
 
-  b_d_BBC_charge->SetAddress(d_BBC_charge);
-  b_Qx->SetAddress(d_Qx);
-  b_Qy->SetAddress(d_Qy);
-  b_Qw->SetAddress(d_Qw);
+  ntp_event_chain->SetBranchAddress("d_BBC_charge",d_BBC_charge,&b_d_BBC_charge);
+  ntp_event_chain->SetBranchAddress("d_Qx",d_Qx,&b_d_Qx);
+  ntp_event_chain->SetBranchAddress("d_Qy",d_Qy,&b_d_Qy);
+  ntp_event_chain->SetBranchAddress("d_Qw",d_Qw,&b_d_Qw);
 
-  TBranch *b_d_nFVTX_clus = htree->GetBranch("d_nFVTX_clus");
-  TBranch *b_d_FVTX_x = htree->GetBranch("d_FVTX_x");
-  TBranch *b_d_FVTX_y = htree->GetBranch("d_FVTX_y");
-  TBranch *b_d_FVTX_z = htree->GetBranch("d_FVTX_z");
+  ntp_event_chain->SetBranchAddress("d_nFVTX_clus",&d_nFVTX_clus,&b_d_nFVTX_clus);
+  ntp_event_chain->SetBranchAddress("d_FVTX_x",d_FVTX_x,&b_d_FVTX_x);
+  ntp_event_chain->SetBranchAddress("d_FVTX_y",d_FVTX_y,&b_d_FVTX_y);
+  ntp_event_chain->SetBranchAddress("d_FVTX_z",d_FVTX_z,&b_d_FVTX_z);
 
-  b_d_nFVTX_clus->SetAddress(&d_nFVTX_clus);
-  b_d_FVTX_x->SetAddress(d_FVTX_x);
-  b_d_FVTX_y->SetAddress(d_FVTX_y);
-  b_d_FVTX_z->SetAddress(d_FVTX_z);
+  ntp_event_chain->SetBranchAddress("d_ntrk",&d_nsegments,&b_nsegments);
+  ntp_event_chain->SetBranchAddress("d_cntpx",d_px,&b_px);
+  ntp_event_chain->SetBranchAddress("d_cntpy",d_py,&b_py);
+  ntp_event_chain->SetBranchAddress("d_cntpz",d_pz,&b_pz);
 
-  // TBranch *b_nsegments = htree->GetBranch("nsegments");
-  // TBranch *b_px = htree->GetBranch("px");
-  // TBranch *b_py = htree->GetBranch("py");
-  // TBranch *b_pz = htree->GetBranch("pz");
-  TBranch *b_nsegments = htree->GetBranch("d_ntrk");
-  TBranch *b_px = htree->GetBranch("d_cntpx");
-  TBranch *b_py = htree->GetBranch("d_cntpy");
-  TBranch *b_pz = htree->GetBranch("d_cntpz");
+  // if(vtx_tracks)
+  // {
+  //   ntp_event_chain->SetBranchAddress("nsegments",&d_nsegments,&b_nsegments);
+  //   ntp_event_chain->SetBranchAddress("px",d_px,&b_px);
+  //   ntp_event_chain->SetBranchAddress("py",d_py,&b_py);
+  //   ntp_event_chain->SetBranchAddress("pz",d_pz,&b_pz);
+  // }
 
-  b_nsegments->SetAddress(&d_nsegments);
-  b_px->SetAddress(d_px);
-  b_py->SetAddress(d_py);
-  b_pz->SetAddress(d_pz);
+  // int           d_ntrk;
+  // float         d_cntpx[max_nc];   //[d_ntrk]
+  // float         d_cntpy[max_nc];   //[d_ntrk]
+  // float         d_cntpz[max_nc];   //[d_ntrk]
+
+  // if(cnt_tracks)
+  // {
+  //   ntp_event_chain->SetBranchAddress("d_ntrk", &d_ntrk,&b_d_ntrk);
+  //   ntp_event_chain->SetBranchAddress("d_cntpx", d_cntpx,&b_d_cntpx);
+  //   ntp_event_chain->SetBranchAddress("d_cntpy", d_cntpy,&b_d_cntpy);
+  //   ntp_event_chain->SetBranchAddress("d_cntpz", d_cntpz,&b_d_cntpz);
+  // }
+
 
 
   //------------------------------------------------------------//
@@ -494,58 +607,58 @@ void flatten(int runNumber, int rp_recal_pass)
   //------------------------------------------------------------//
 
   cout << "starting loop over events in the tree" << endl;
-
-  int nentries = htree->GetEntries();
-  cout<<"total events = " << nentries<<endl;
-  for ( int ievt = 0 ; ievt < nentries ; ievt++ )
+  int nentries = ntp_event_chain->GetEntries();
+  cout << "total events = " << nentries << endl;
+  for ( int ievt = 0; ievt < nentries; ++ievt )
     {
 
-      if ( ievt >= 10 ) break; // just 1M events for now, runs a little on the slow side...
+      //if ( ievt >= 1000000 ) break; // just 1M events for now, runs a little on the slow side...
 
       bool say_event = ( ievt%1000==0 );
 
       if ( say_event ) cout<<"event number = "<<ievt<<endl;
-      //if(ievt ==1000) break;
 
       if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "getting event level variables" << endl;
 
-      b_bbcz->GetEntry(ievt);
-      b_event->GetEntry(ievt);
-      b_trigger->GetEntry(ievt);
-      b_bc_x->GetEntry(ievt);
-      b_bc_y->GetEntry(ievt);
-      b_bbcz->GetEntry(ievt);
-      b_vtx_z->GetEntry(ievt);
-      //standard q vector
-      b_Qx->GetEntry(ievt);
-      b_Qy->GetEntry(ievt);
-      b_Qw->GetEntry(ievt);
+      ntp_event_chain->GetEntry(ievt);
 
-      if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "getting BBC PMT information" << endl;
+      // b_bbcz->GetEntry(ievt);
+      // b_event->GetEntry(ievt);
+      // b_trigger->GetEntry(ievt);
+      // b_bc_x->GetEntry(ievt);
+      // b_bc_y->GetEntry(ievt);
+      // b_bbcz->GetEntry(ievt);
+      // b_vtx_z->GetEntry(ievt);
+      // //standard q vector
+      // b_Qx->GetEntry(ievt);
+      // b_Qy->GetEntry(ievt);
+      // b_Qw->GetEntry(ievt);
 
-      if ( bbc_pmts )  b_d_BBC_charge->GetEntry(ievt);//bbc pmts charge
+      // if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "getting BBC PMT information" << endl;
 
-      if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "getting FVTX cluster information" << endl;
+      // if ( bbc_pmts )  b_d_BBC_charge->GetEntry(ievt);//bbc pmts charge
 
-      //FVTX clusters
-      if ( fvtx_clusters )
-        {
-          b_d_nFVTX_clus->GetEntry(ievt);
-          b_d_FVTX_x->GetEntry(ievt);
-          b_d_FVTX_y->GetEntry(ievt);
-          b_d_FVTX_z->GetEntry(ievt);
-        }
+      // if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "getting FVTX cluster information" << endl;
 
-      if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "getting track information" << endl;
+      // //FVTX clusters
+      // if ( fvtx_clusters )
+      //   {
+      //     b_d_nFVTX_clus->GetEntry(ievt);
+      //     b_d_FVTX_x->GetEntry(ievt);
+      //     b_d_FVTX_y->GetEntry(ievt);
+      //     b_d_FVTX_z->GetEntry(ievt);
+      //   }
 
-      //VTX Tracks
-      if ( vtx_tracks )
-        {
-          b_nsegments->GetEntry(ievt);
-          b_px->GetEntry(ievt);
-          b_py->GetEntry(ievt);
-          b_pz->GetEntry(ievt);
-        }
+      // if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "getting track information" << endl;
+
+      // //VTX Tracks
+      // if ( vtx_tracks )
+      //   {
+      //     b_nsegments->GetEntry(ievt);
+      //     b_px->GetEntry(ievt);
+      //     b_py->GetEntry(ievt);
+      //     b_pz->GetEntry(ievt);
+      //   }
 
       if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Finished getting tree variables" << endl;
 
@@ -1442,6 +1555,21 @@ void flatten(int runNumber, int rp_recal_pass)
       th1d_dreso3_BBC_FVTX->Write();
       th1d_dreso3_CNT_FVTX->Write();
 
+      tp1f_reso2_BBC_FVTXN->Write();
+      tp1f_reso3_BBC_FVTXN->Write();
+      tp1f_reso2_FVTXS_FVTXN->Write();
+      tp1f_reso3_FVTXS_FVTXN->Write();
+
+      th1d_reso2_BBC_FVTXN->Write();
+      th1d_reso3_BBC_FVTXN->Write();
+      th1d_reso2_FVTXS_FVTXN->Write();
+      th1d_reso3_FVTXS_FVTXN->Write();
+
+      th1d_dreso2_BBC_FVTXN->Write();
+      th1d_dreso3_BBC_FVTXN->Write();
+      th1d_dreso2_FVTXS_FVTXN->Write();
+      th1d_dreso3_FVTXS_FVTXN->Write();
+
       th1d_BBC_charge->Write();
       th1d_FVTX_nclus->Write();
       th2d_qBBC_nFVTX->Write();
@@ -1455,10 +1583,11 @@ void flatten(int runNumber, int rp_recal_pass)
 
   cout<<"cleaning up"<<endl;
 
-  htree->Delete();
-  f->Close();
-  delete f;
-  /*
+  ntp_event_chain->Delete();
+  // htree->Delete();
+  // f->Close();
+  // delete f;
+
     delete bbcs_v2_incl_nodetree;
     delete bbcs_v2_east_nodetree;
     delete bbcs_v2_west_nodetree;
@@ -1468,12 +1597,46 @@ void flatten(int runNumber, int rp_recal_pass)
     delete fvtxs_v2_west_nodetree;
 
     delete bbcs_v2_west_docalib;
-
     delete fvtxs_v2_west_docalib;
     delete fvtxs0_v2_west_docalib;
     delete fvtxs1_v2_west_docalib;
     delete fvtxs2_v2_west_docalib;
     delete fvtxs3_v2_west_docalib;
+
+    delete bbcs_v2_east_docalib;
+    delete fvtxs_v2_east_docalib;
+    delete fvtxs0_v2_east_docalib;
+    delete fvtxs1_v2_east_docalib;
+    delete fvtxs2_v2_east_docalib;
+    delete fvtxs3_v2_east_docalib;
+
+    delete bbcs_v2_both_docalib;
+    delete fvtxs_v2_both_docalib;
+    delete fvtxs0_v2_both_docalib;
+    delete fvtxs1_v2_both_docalib;
+    delete fvtxs2_v2_both_docalib;
+    delete fvtxs3_v2_both_docalib;
+
+    delete bbcs_v3_west_docalib;
+    delete fvtxs_v3_west_docalib;
+    // delete fvtxs0_v3_west_docalib;
+    // delete fvtxs1_v3_west_docalib;
+    // delete fvtxs2_v3_west_docalib;
+    // delete fvtxs3_v3_west_docalib;
+
+    delete bbcs_v3_east_docalib;
+    delete fvtxs_v3_east_docalib;
+    // delete fvtxs0_v3_east_docalib;
+    // delete fvtxs1_v3_east_docalib;
+    // delete fvtxs2_v3_east_docalib;
+    // delete fvtxs3_v3_east_docalib;
+
+    delete bbcs_v3_both_docalib;
+    delete fvtxs_v3_both_docalib;
+    // delete fvtxs0_v3_both_docalib;
+    // delete fvtxs1_v3_both_docalib;
+    // delete fvtxs2_v3_both_docalib;
+    // delete fvtxs3_v3_both_docalib;
 
     for (int ic=0; ic<NMUL; ic++) {
     for (int iz=0; iz<NZPS; iz++) {
@@ -1492,10 +1655,47 @@ void flatten(int runNumber, int rp_recal_pass)
     delete dis[ic][ih][id];
     delete qx[ic][ih][id];
     delete qy[ic][ih][id];
+    delete psi_bf[ic][ih][id];
+    delete psi_af[ic][ih][id];
     }
     }
     }
-  */
+
+    delete th1d_BBC_charge;
+    delete th1d_FVTX_nclus;
+    delete th2d_qBBC_nFVTX;
+    delete tp1f_reso2_BBC_CNT;
+    delete tp1f_reso2_BBC_FVTX;
+    delete tp1f_reso2_CNT_FVTX;
+    delete tp1f_reso3_BBC_CNT;
+    delete tp1f_reso3_BBC_FVTX;
+    delete tp1f_reso3_CNT_FVTX;
+    delete th1d_reso2_BBC_CNT;
+    delete th1d_reso2_BBC_FVTX;
+    delete th1d_reso2_CNT_FVTX;
+    delete th1d_reso3_BBC_CNT;
+    delete th1d_reso3_BBC_FVTX;
+    delete th1d_reso3_CNT_FVTX;
+    delete th1d_dreso2_BBC_CNT;
+    delete th1d_dreso2_BBC_FVTX;
+    delete th1d_dreso2_CNT_FVTX;
+    delete th1d_dreso3_BBC_CNT;
+    delete th1d_dreso3_BBC_FVTX;
+    delete th1d_dreso3_CNT_FVTX;
+    delete tp1f_reso2_BBC_FVTXN;
+    delete tp1f_reso3_BBC_FVTXN;
+    delete tp1f_reso2_FVTXS_FVTXN;
+    delete tp1f_reso3_FVTXS_FVTXN;
+    delete th1d_reso2_BBC_FVTXN;
+    delete th1d_reso3_BBC_FVTXN;
+    delete th1d_reso2_FVTXS_FVTXN;
+    delete th1d_reso3_FVTXS_FVTXN;
+    delete th1d_dreso2_BBC_FVTXN;
+    delete th1d_dreso3_BBC_FVTXN;
+    delete th1d_dreso2_FVTXS_FVTXN;
+    delete th1d_dreso3_FVTXS_FVTXN;
+
+
   cout<<"end of program ana"<<endl;
 
   return;
