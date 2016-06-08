@@ -8,7 +8,8 @@ void temp_v2_62()
   //TFile* file = TFile::Open("input/combined_10.root");
   //TFile* file = TFile::Open("input/combined_F5.root");
   //TFile* file = TFile::Open("input/combined_S5.root");
-  TFile* file = TFile::Open("input/hist_455795.root");
+  //TFile* file = TFile::Open("input/hist_455795.root");
+  TFile* file = TFile::Open("input/combined_62GeV.root");
   //TFile* file = TFile::Open("../output/hist_454811.root");
 
   // ---

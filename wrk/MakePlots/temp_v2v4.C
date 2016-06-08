@@ -1,0 +1,224 @@
+void temp_v2v4()
+{
+
+  gStyle->SetOptTitle(1);
+
+  TCanvas* c1 = new TCanvas("c1","");
+
+  TFile* file = TFile::Open("input/combined.root");
+  //TFile* file = TFile::Open("input/combined_10.root");
+  //TFile* file = TFile::Open("input/combined_F5.root");
+  //TFile* file = TFile::Open("input/combined_S5.root");
+  //TFile* file = TFile::Open("input/hist_455050.root");
+  //TFile* file = TFile::Open("input/arglebargle.root");
+  //TFile* file = TFile::Open("input/hist_455795.root");
+  //TFile* file = TFile::Open("../output/hist_454811.root");
+
+  // ---
+
+  TProfile* tp1f_bbc_fvtxN = (TProfile*)file->Get("tp1f_reso2_BBC_FVTXN");
+  TProfile* tp1f_bbc_fvtx = (TProfile*)file->Get("tp1f_reso2_BBC_FVTX");
+  TProfile* tp1f_fvtxN_fvtx = (TProfile*)file->Get("tp1f_reso2_FVTXS_FVTXN");
+
+  float float_bbc_fvtxN = tp1f_bbc_fvtxN->GetBinContent(1);
+  float float_bbc_fvtx = tp1f_bbc_fvtx->GetBinContent(1);
+  float float_fvtxN_fvtx = tp1f_fvtxN_fvtx->GetBinContent(1);
+
+  cout <<  float_bbc_fvtxN << endl;
+  cout <<  float_bbc_fvtx << endl;
+  cout <<  float_fvtxN_fvtx << endl;
+
+  float reso_bbc = sqrt((float_bbc_fvtxN*float_bbc_fvtx)/float_fvtxN_fvtx);
+  float reso_fvtx = sqrt((float_fvtxN_fvtx*float_bbc_fvtx)/float_bbc_fvtxN);
+
+  cout << "bbc resolution is " << reso_bbc << endl;
+  cout << "fvtx resolution is " << reso_fvtx << endl;
+
+  // ---
+
+  TProfile* tp1f_bbc_cnt = (TProfile*)file->Get("tp1f_reso2_BBC_CNT");
+  tp1f_bbc_fvtx = (TProfile*)file->Get("tp1f_reso2_BBC_FVTX");
+  TProfile* tp1f_cnt_fvtx = (TProfile*)file->Get("tp1f_reso2_CNT_FVTX");
+
+  float float_bbc_cnt = tp1f_bbc_cnt->GetBinContent(1);
+  float_bbc_fvtx = tp1f_bbc_fvtx->GetBinContent(1);
+  float float_cnt_fvtx = tp1f_cnt_fvtx->GetBinContent(1);
+
+  cout <<  float_bbc_cnt << endl;
+  cout <<  float_bbc_fvtx << endl;
+  cout <<  float_cnt_fvtx << endl;
+
+  reso_bbc = sqrt((float_bbc_cnt*float_bbc_fvtx)/float_cnt_fvtx);
+  reso_fvtx = sqrt((float_cnt_fvtx*float_bbc_fvtx)/float_bbc_cnt);
+
+  cout << "bbc resolution is " << reso_bbc << endl;
+  cout << "fvtx resolution is " << reso_fvtx << endl;
+
+  // ---
+
+  TProfile* hv2_fvtxs = (TProfile*)file->Get("fvtxs_v2_both_docalib");
+
+  //hv2_fvtxs->Scale(1.0/0.237392);
+  hv2_fvtxs->Scale(1.0/reso_fvtx);
+  hv2_fvtxs->Draw();
+  hv2_fvtxs->SetTitle("d+Au collisions at #sqrt{s_{NN}} = 200 GeV");
+  hv2_fvtxs->SetMaximum(0.17);
+  hv2_fvtxs->SetMinimum(0.0);
+  hv2_fvtxs->GetXaxis()->SetTitle("p_{T} (GeV/c)");
+  hv2_fvtxs->GetYaxis()->SetTitle("v_{2}{EP}");
+
+  ifstream finpub("ppg161.dat");
+  float pt[13], pubv2[13], epubv2[13], esyspubv2[13];
+  for ( int i = 0; i < 13; ++i )
+    {
+      finpub>>pt[i]>>pubv2[i]>>epubv2[i]>>esyspubv2[i];
+    }
+
+  TGraphErrors* tge_pub = new TGraphErrors(13,pt,pubv2,0,epubv2);
+  tge_pub->SetMarkerStyle(kFullCircle);
+  tge_pub->Draw("p");
+
+  TLegend *leg = new TLegend(0.18,0.68,0.38,0.88);
+  leg->AddEntry(hv2_fvtxs,"Run16 FVTXS","el");
+  leg->AddEntry(tge_pub,"Run8 (ppg161)","p");
+  leg->SetTextSize(0.05);
+  leg->Draw();
+
+  c1->Print("run16dau200_v2_fvtxs.pdf");
+  c1->Print("run16dau200_v2_fvtxs.png");
+
+  TProfile* hv2_bbcs = (TProfile*)file->Get("bbcs_v2_both_docalib");
+  hv2_bbcs->SetLineColor(kRed);
+  //hv2_bbcs->Scale(1.0/0.104519);
+  hv2_bbcs->Scale(1.0/reso_bbc);
+  hv2_bbcs->Draw("same");
+
+  delete leg;
+
+  leg = new TLegend(0.18,0.68,0.38,0.88);
+  leg->AddEntry(hv2_fvtxs,"Run16 FVTXS","el");
+  leg->AddEntry(hv2_bbcs,"Run16 BBCS","el");
+  leg->AddEntry(tge_pub,"Run8 (ppg161)","p");
+  leg->SetTextSize(0.05);
+  leg->Draw();
+
+  c1->Print("run16dau200_v2_fvtxsbbcs.pdf");
+  c1->Print("run16dau200_v2_fvtxsbbcs.png");
+
+
+  // ---
+  // --- 4Psi2
+  // ---
+
+  TProfile* hv4_4Psi2_fvtxs = (TProfile*)file->Get("fvtxs_v4_4Psi2_both_docalib");
+
+  //hv4_4Psi2_fvtxs->Scale(1.0/0.237392);
+  hv4_4Psi2_fvtxs->Scale(1.0/reso_fvtx);
+  hv4_4Psi2_fvtxs->Draw();
+  hv4_4Psi2_fvtxs->SetTitle("d+Au collisions at #sqrt{s_{NN}} = 200 GeV");
+  hv4_4Psi2_fvtxs->SetMaximum(0.1);
+  hv4_4Psi2_fvtxs->SetMinimum(-0.1);
+  hv4_4Psi2_fvtxs->GetXaxis()->SetTitle("p_{T} (GeV/c)");
+  hv4_4Psi2_fvtxs->GetYaxis()->SetTitle("v_{4}{#Psi2}");
+
+  // ifstream finpub("ppg161.dat");
+  // float pt[13], pubv4_4Psi2[13], epubv4_4Psi2[13], esyspubv4_4Psi2[13];
+  // for ( int i = 0; i < 13; ++i )
+  //   {
+  //     finpub>>pt[i]>>pubv4_4Psi2[i]>>epubv4_4Psi2[i]>>esyspubv4_4Psi2[i];
+  //   }
+
+  // TGraphErrors* tge_pub = new TGraphErrors(13,pt,pubv4_4Psi2,0,epubv4_4Psi2);
+  // tge_pub->SetMarkerStyle(kFullCircle);
+  // tge_pub->Draw("p");
+
+  if ( leg ) delete leg;
+
+  TLegend *leg = new TLegend(0.18,0.68,0.38,0.88);
+  leg->AddEntry(hv4_4Psi2_fvtxs,"Run16 FVTXS","el");
+  leg->SetTextSize(0.05);
+  leg->Draw();
+
+  c1->Print("run16dau200_v4_4Psi2_fvtxs.pdf");
+  c1->Print("run16dau200_v4_4Psi2_fvtxs.png");
+
+  TProfile* hv4_4Psi2_bbcs = (TProfile*)file->Get("bbcs_v4_4Psi2_both_docalib");
+  hv4_4Psi2_bbcs->SetLineColor(kRed);
+  //hv4_4Psi2_bbcs->Scale(1.0/0.104519);
+  hv4_4Psi2_bbcs->Scale(1.0/reso_bbc);
+  hv4_4Psi2_bbcs->Draw("same");
+
+  delete leg;
+
+  leg = new TLegend(0.18,0.68,0.38,0.88);
+  leg->AddEntry(hv4_4Psi2_fvtxs,"Run16 FVTXS","el");
+  leg->AddEntry(hv4_4Psi2_bbcs,"Run16 BBCS","el");
+  leg->SetTextSize(0.05);
+  leg->Draw();
+
+  c1->Print("run16dau200_v4_4Psi2_fvtxsbbcs.pdf");
+  c1->Print("run16dau200_v4_4Psi2_fvtxsbbcs.png");
+
+
+
+
+
+  // ---
+  // --- 2Psi2
+  // ---
+
+  TProfile* hv4_2Psi2_fvtxs = (TProfile*)file->Get("fvtxs_v4_2Psi2_both_docalib");
+
+  //hv4_2Psi2_fvtxs->Scale(1.0/0.237392);
+  hv4_2Psi2_fvtxs->Scale(1.0/reso_fvtx);
+  hv4_2Psi2_fvtxs->Draw();
+  hv4_2Psi2_fvtxs->SetTitle("d+Au collisions at #sqrt{s_{NN}} = 200 GeV");
+  hv4_2Psi2_fvtxs->SetMaximum(0.1);
+  hv4_2Psi2_fvtxs->SetMinimum(-0.1);
+  hv4_2Psi2_fvtxs->GetXaxis()->SetTitle("p_{T} (GeV/c)");
+  hv4_2Psi2_fvtxs->GetYaxis()->SetTitle("v_{4}{#Psi2}");
+
+  // ifstream finpub("ppg161.dat");
+  // float pt[13], pubv4_2Psi2[13], epubv4_2Psi2[13], esyspubv4_2Psi2[13];
+  // for ( int i = 0; i < 13; ++i )
+  //   {
+  //     finpub>>pt[i]>>pubv4_2Psi2[i]>>epubv4_2Psi2[i]>>esyspubv4_2Psi2[i];
+  //   }
+
+  // TGraphErrors* tge_pub = new TGraphErrors(13,pt,pubv4_2Psi2,0,epubv4_2Psi2);
+  // tge_pub->SetMarkerStyle(kFullCircle);
+  // tge_pub->Draw("p");
+
+  if ( leg ) delete leg;
+
+  TLegend *leg = new TLegend(0.18,0.68,0.38,0.88);
+  leg->AddEntry(hv4_2Psi2_fvtxs,"Run16 FVTXS","el");
+  leg->SetTextSize(0.05);
+  leg->Draw();
+
+  c1->Print("run16dau200_v4_2Psi2_fvtxs.pdf");
+  c1->Print("run16dau200_v4_2Psi2_fvtxs.png");
+
+  TProfile* hv4_2Psi2_bbcs = (TProfile*)file->Get("bbcs_v4_2Psi2_both_docalib");
+  hv4_2Psi2_bbcs->SetLineColor(kRed);
+  //hv4_2Psi2_bbcs->Scale(1.0/0.104519);
+  hv4_2Psi2_bbcs->Scale(1.0/reso_bbc);
+  hv4_2Psi2_bbcs->Draw("same");
+
+  delete leg;
+
+  leg = new TLegend(0.18,0.68,0.38,0.88);
+  leg->AddEntry(hv4_2Psi2_fvtxs,"Run16 FVTXS","el");
+  leg->AddEntry(hv4_2Psi2_bbcs,"Run16 BBCS","el");
+  leg->SetTextSize(0.05);
+  leg->Draw();
+
+  c1->Print("run16dau200_v4_2Psi2_fvtxsbbcs.pdf");
+  c1->Print("run16dau200_v4_2Psi2_fvtxsbbcs.png");
+
+
+
+
+
+}
+

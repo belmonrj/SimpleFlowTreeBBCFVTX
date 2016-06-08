@@ -5,9 +5,12 @@ void temp_v2()
 
   TCanvas* c1 = new TCanvas("c1","");
 
+  TFile* file = TFile::Open("input/combined.root");
   //TFile* file = TFile::Open("input/combined_10.root");
   //TFile* file = TFile::Open("input/combined_F5.root");
-  TFile* file = TFile::Open("input/combined_S5.root");
+  //TFile* file = TFile::Open("input/combined_S5.root");
+  //TFile* file = TFile::Open("input/hist_455050.root");
+  //TFile* file = TFile::Open("input/arglebargle.root");
   //TFile* file = TFile::Open("input/hist_455795.root");
   //TFile* file = TFile::Open("../output/hist_454811.root");
 
@@ -20,6 +23,10 @@ void temp_v2()
   float float_bbc_cnt = tp1f_bbc_cnt->GetBinContent(1);
   float float_bbc_fvtx = tp1f_bbc_fvtx->GetBinContent(1);
   float float_cnt_fvtx = tp1f_cnt_fvtx->GetBinContent(1);
+
+  cout <<  float_bbc_cnt << endl;
+  cout <<  float_bbc_fvtx << endl;
+  cout <<  float_cnt_fvtx << endl;
 
   float reso_bbc = sqrt((float_bbc_cnt*float_bbc_fvtx)/float_cnt_fvtx);
   float reso_fvtx = sqrt((float_cnt_fvtx*float_bbc_fvtx)/float_bbc_cnt);
@@ -35,7 +42,7 @@ void temp_v2()
   hv2_fvtxs->Scale(1.0/reso_fvtx);
   hv2_fvtxs->Draw();
   hv2_fvtxs->SetTitle("d+Au collisions at #sqrt{s_{NN}} = 200 GeV");
-  hv2_fvtxs->SetMaximum(0.15);
+  hv2_fvtxs->SetMaximum(0.17);
   hv2_fvtxs->SetMinimum(0.0);
   hv2_fvtxs->GetXaxis()->SetTitle("p_{T} (GeV/c)");
   hv2_fvtxs->GetYaxis()->SetTitle("v_{2}{EP}");

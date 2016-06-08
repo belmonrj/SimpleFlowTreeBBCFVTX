@@ -5,23 +5,50 @@ void temp_v3()
 
   TCanvas* c1 = new TCanvas("c1","");
 
+  TFile* file = TFile::Open("input/combined.root");
   //TFile* file = TFile::Open("input/combined_10.root");
-  TFile* file = TFile::Open("input/combined_S5.root");
+  //TFile* file = TFile::Open("input/combined_S5.root");
+  //TFile* file = TFile::Open("input/hist_455050.root");
+  //TFile* file = TFile::Open("input/arglebargle.root");
   //TFile* file = TFile::Open("combined.root");
   //TFile* file = TFile::Open("../output/hist_454811.root");
 
   // ---
 
-  TProfile* tp1f_bbc_cnt = (TProfile*)file->Get("tp1f_reso3_BBC_CNT");
+  TProfile* tp1f_bbc_fvtxN = (TProfile*)file->Get("tp1f_reso3_BBC_FVTXN");
   TProfile* tp1f_bbc_fvtx = (TProfile*)file->Get("tp1f_reso3_BBC_FVTX");
+  TProfile* tp1f_fvtxN_fvtx = (TProfile*)file->Get("tp1f_reso3_FVTXS_FVTXN");
+
+  float float_bbc_fvtxN = tp1f_bbc_fvtxN->GetBinContent(1);
+  float float_bbc_fvtx = tp1f_bbc_fvtx->GetBinContent(1);
+  float float_fvtxN_fvtx = tp1f_fvtxN_fvtx->GetBinContent(1);
+
+  cout <<  float_bbc_fvtxN << endl;
+  cout <<  float_bbc_fvtx << endl;
+  cout <<  float_fvtxN_fvtx << endl;
+
+  float reso_bbc = sqrt(fabs((float_bbc_fvtxN*float_bbc_fvtx)/float_fvtxN_fvtx));
+  float reso_fvtx = sqrt(fabs((float_fvtxN_fvtx*float_bbc_fvtx)/float_bbc_fvtxN));
+
+  cout << "bbc resolution is " << reso_bbc << endl;
+  cout << "fvtx resolution is " << reso_fvtx << endl;
+
+  // ---
+
+  TProfile* tp1f_bbc_cnt = (TProfile*)file->Get("tp1f_reso3_BBC_CNT");
+  tp1f_bbc_fvtx = (TProfile*)file->Get("tp1f_reso3_BBC_FVTX");
   TProfile* tp1f_cnt_fvtx = (TProfile*)file->Get("tp1f_reso3_CNT_FVTX");
 
   float float_bbc_cnt = tp1f_bbc_cnt->GetBinContent(1);
-  float float_bbc_fvtx = tp1f_bbc_fvtx->GetBinContent(1);
+  float_bbc_fvtx = tp1f_bbc_fvtx->GetBinContent(1);
   float float_cnt_fvtx = tp1f_cnt_fvtx->GetBinContent(1);
 
-  float reso_bbc = sqrt((float_bbc_cnt*float_bbc_fvtx)/float_cnt_fvtx);
-  float reso_fvtx = sqrt((float_cnt_fvtx*float_bbc_fvtx)/float_bbc_cnt);
+  cout <<  float_bbc_cnt << endl;
+  cout <<  float_bbc_fvtx << endl;
+  cout <<  float_cnt_fvtx << endl;
+
+  reso_bbc = sqrt(fabs((float_bbc_cnt*float_bbc_fvtx)/float_cnt_fvtx));
+  reso_fvtx = sqrt(fabs((float_cnt_fvtx*float_bbc_fvtx)/float_bbc_cnt));
 
   cout << "bbc resolution is " << reso_bbc << endl;
   cout << "fvtx resolution is " << reso_fvtx << endl;
@@ -62,8 +89,8 @@ void temp_v3()
   c1->Print("run16dau200_v3_fvtxsbbcs.pdf");
   c1->Print("run16dau200_v3_fvtxsbbcs.png");
 
-  hv3_fvtxs->SetMinimum(-0.1);
-  hv3_fvtxs->SetMaximum(0.1);
+  hv3_fvtxs->SetMinimum(-0.15);
+  hv3_fvtxs->SetMaximum(0.15);
 
   c1->Print("run16dau200_v3_fvtxsbbcs_fullscale.pdf");
   c1->Print("run16dau200_v3_fvtxsbbcs_fullscale.png");
