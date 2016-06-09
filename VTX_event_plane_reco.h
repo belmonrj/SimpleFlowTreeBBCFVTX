@@ -34,6 +34,7 @@ static const int NPAR = 20; // ?
 //static const int N_FVTX_CLUSTER_MAX = 750; // maximum number of fvtx clusters, may need to be changed for larger systems
 static const int N_FVTX_CLUSTER_MAX = 4000; // what's the largest possible number?
 static const int N_SVX_TRACK_MAX = 10; // seems really small??
+static const int N_CTRK_MAX = 50;
 
 class Fun4AllHistoManager;
 class BbcCalib;
@@ -162,11 +163,11 @@ class VTX_event_plane_reco: public SubsysReco
   float d_FVTX_z[N_FVTX_CLUSTER_MAX];
   // ----------------
   int d_ntrk;
-  float d_cntpx[500];
-  float d_cntpy[500];
-  float d_cntpz[500];
-  float d_pc3sdz[500];
-  float d_pc3sdphi[500];
+  float d_cntpx[N_CTRK_MAX];
+  float d_cntpy[N_CTRK_MAX];
+  float d_cntpz[N_CTRK_MAX];
+  float d_cntpc3sdz[N_CTRK_MAX];
+  float d_cntpc3sdphi[N_CTRK_MAX];
   // ----------------
   //float d_BBCs_Qy[221];
   //float d_BBCs_Qw[221];

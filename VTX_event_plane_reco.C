@@ -135,8 +135,8 @@ int VTX_event_plane_reco::Init(PHCompositeNode *topNode)
       _ntp_event -> Branch("d_cntpx",&d_cntpx,"d_cntpx[d_ntrk]/F");
       _ntp_event -> Branch("d_cntpy",&d_cntpy,"d_cntpy[d_ntrk]/F");
       _ntp_event -> Branch("d_cntpz",&d_cntpz,"d_cntpz[d_ntrk]/F");
-      _ntp_event -> Branch("d_pc3sdz",&d_pc3sdz,"d_pc3sdz[d_ntrk]/F");
-      _ntp_event -> Branch("d_pc3sdphi",&d_pc3sdphi,"d_pc3sdphi[d_ntrk]/F");
+      _ntp_event -> Branch("d_cntpc3sdz",&d_cntpc3sdz,"d_cntpc3sdz[d_ntrk]/F");
+      _ntp_event -> Branch("d_cntpc3sdphi",&d_cntpc3sdphi,"d_cntpc3sdphi[d_ntrk]/F");
       //_ntp_event -> Branch("d_BBCs_Qy",&d_BBCs_Qy,"d_BBCs_Qy[221]/F");
       //_ntp_event -> Branch("d_BBCs_Qw",&d_BBCs_Qw,"d_BBCs_Qw[221]/F");
       //now track based arrays
@@ -927,7 +927,7 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
   if ( ctrk )
     {
       int ntrk = ctrk->get_npart();
-      if ( ntrk > 500 )
+      if ( ntrk > N_CTRK_MAX )
         {
           cout << PHWHERE << " WARNING: too many tracks, skipping event" << endl;
           return ABORTEVENT;
@@ -957,16 +957,18 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
           float pc3dphi = strk->get_pc3dphi();
           float pc3dz = strk->get_pc3dz();
 
+          if ( pc3dphi < -9990 || pc3dz < -9990 ) continue;
+
           float pc3sdphi = calcsdphi(pc3dphi, arm, charge, mom);
           float pc3sdz = calcsdz(pc3dz, arm, charge, mom);
 
-          // if ( fabs(pc3sdphi) > 3.0 || fabs(pc3sdz) > 3.0 ) continue;
+          if ( fabs(pc3sdphi) > 3.0 || fabs(pc3sdz) > 3.0 ) continue;
 
           d_cntpx[counter] = px;
           d_cntpy[counter] = py;
           d_cntpz[counter] = pz;
-          d_pc3sdz[counter] = pc3sdz;
-          d_pc3sdphi[counter] = pc3sdphi;
+          d_cntpc3sdz[counter] = pc3sdz;
+          d_cntpc3sdphi[counter] = pc3sdphi;
 
           ++counter;
 
