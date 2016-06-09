@@ -64,6 +64,7 @@ void temp_v3()
   hv3_fvtxs->SetMinimum(0.0);
   hv3_fvtxs->GetXaxis()->SetTitle("p_{T} (GeV/c)");
   hv3_fvtxs->GetYaxis()->SetTitle("v_{3}{EP}");
+  hv3_fvtxs->GetYaxis()->SetTitleOffset(1.25);
 
   TLegend *leg = new TLegend(0.18,0.68,0.38,0.88);
   leg->AddEntry(hv3_fvtxs,"Run16 FVTXS","el");
@@ -89,8 +90,13 @@ void temp_v3()
   c1->Print("run16dau200_v3_fvtxsbbcs.pdf");
   c1->Print("run16dau200_v3_fvtxsbbcs.png");
 
-  hv3_fvtxs->SetMinimum(-0.15);
+  hv3_fvtxs->SetMinimum(-0.05);
   hv3_fvtxs->SetMaximum(0.15);
+
+  TLine line(0.0,0.0,3.0,0.0);
+  line.SetLineStyle(2);
+  line.SetLineWidth(2);
+  line.Draw();
 
   c1->Print("run16dau200_v3_fvtxsbbcs_fullscale.pdf");
   c1->Print("run16dau200_v3_fvtxsbbcs_fullscale.png");
