@@ -641,7 +641,7 @@ void flatten(int runNumber, int rp_recal_pass)
   for ( int ievt = 0; ievt < nentries; ++ievt )
     {
 
-      if ( ievt >= 1000000 ) break; // just 1M events for now, runs a little on the slow side...
+      //if ( ievt >= 1000000 ) break; // just 1M events for now, runs a little on the slow side...
 
       bool say_event = ( ievt%1000==0 );
 
@@ -775,8 +775,8 @@ void flatten(int runNumber, int rp_recal_pass)
       //continue; // testing to get the charge distribution to make a centrality selection
 
       // --- do centrality cut here!!!
-      //if ( bbc_qw < 61.5 ) continue; // dAu 200 GeV
-      if ( bbc_qw < 30.0 ) continue; // very rough dAu 62 GeV
+      if ( runNumber >= 454744 && runNumber <= 455639 && bbc_qw < 61.5 ) continue; // dAu 200 GeV
+      if ( runNumber >= 455792 && runNumber <= 456283 && bbc_qw < 30.0 ) continue; // very rough dAu 62 GeV
 
       float fvtxs_qx2[5];//all layers then 0 1 2 3
       float fvtxs_qy2[5];
