@@ -1,4 +1,5 @@
-void dostuff(int, double&, double&);
+void dostuff(int, double&, double&, double&, double&);
+
 
 void temp_runbyrun_epreso()
 {
@@ -12,18 +13,24 @@ void temp_runbyrun_epreso()
   double index[67];
   double bbc_reso[67];
   double fvtx_reso[67];
+  double bbc_reso_fn[67];
+  double fvtx_reso_fn[67];
   int run;
   for ( int i = 0; i < 67; ++i )
     {
       fin>>run;
       double bbc_temp = 0;
       double fvtx_temp = 0;
-      dostuff(run,bbc_temp,fvtx_temp);
+      double bbc_temp_fn = 0;
+      double fvtx_temp_fn = 0;
+      dostuff(run,bbc_temp,fvtx_temp,bbc_temp_fn,fvtx_temp_fn);
       // if ( bbc_temp != bbc_temp ) bbc_temp = 0;
       // if ( fvtx_temp != fvtx_temp ) fvtx_temp = 0;
       index[i] = i+0.5;
       bbc_reso[i] = bbc_temp;
       fvtx_reso[i] = fvtx_temp;
+      bbc_reso_fn[i] = bbc_temp_fn;
+      fvtx_reso_fn[i] = fvtx_temp_fn;
     }
 
   TGraph* tg_bbc = new TGraph(67,index,bbc_reso);
@@ -49,25 +56,36 @@ void temp_runbyrun_epreso()
   leg->SetTextSize(0.05);
   leg->Draw();
 
-  // tg_bbc->Fit("pol0","","",0,67);
-  // tg_fvtx->Fit("pol0","","",0,67);
   TF1* fun_bbc = new TF1("fun_bbc","pol0",0,67);
   TF1* fun_fvtx = new TF1("fun_fvtx","pol0",0,67);
   fun_bbc->SetLineColor(kBlack);
   fun_fvtx->SetLineColor(kBlack);
-  // tg_bbc->Fit(fun_bbc,"R");
-  // tg_fvtx->Fit(fun_fvtx,"R");
   fun_bbc->SetParameter(0,0.0969358);
   fun_fvtx->SetParameter(0,0.224709);
+  // tg_bbc->Fit(fun_bbc,"R");
+  // tg_fvtx->Fit(fun_fvtx,"R");
   fun_bbc->Draw("same");
   fun_fvtx->Draw("same");
 
   c1->Print("runbyrun_epreso.png");
   c1->Print("runbyrun_epreso.pdf");
 
+  TGraph* tg_bbc_fn = new TGraph(67,index,bbc_reso_fn);
+  tg_bbc_fn->SetMarkerStyle(kOpenCircle);
+  tg_bbc_fn->SetMarkerColor(kRed);
+  tg_bbc_fn->Draw("p");
+
+  TGraph* tg_fvtx_fn = new TGraph(67,index,fvtx_reso_fn);
+  tg_fvtx_fn->SetMarkerStyle(kOpenCircle);
+  tg_fvtx_fn->SetMarkerColor(kBlue);
+  tg_fvtx_fn->Draw("p");
+
+  c1->Print("runbyrun_epreso_fn.png");
+  c1->Print("runbyrun_epreso_fn.pdf");
+
 }
 
-void dostuff(int run, double& bbc, double& fvtx)
+void dostuff(int run, double& bbc, double& fvtx, double& bbc_fn, double& fvtx_fn)
 {
 
   int verbosity  = 0;
@@ -94,6 +112,9 @@ void dostuff(int run, double& bbc, double& fvtx)
 
   float reso_bbc = sqrt((float_bbc_fvtxN*float_bbc_fvtx)/float_fvtxN_fvtx);
   float reso_fvtx = sqrt((float_fvtxN_fvtx*float_bbc_fvtx)/float_bbc_fvtxN);
+
+  bbc_fn = reso_bbc;
+  fvtx_fn = reso_fvtx;
 
   if ( verbosity > 1 ) cout << "bbc resolution is " << reso_bbc << endl;
   if ( verbosity > 1 ) cout << "fvtx resolution is " << reso_fvtx << endl;
