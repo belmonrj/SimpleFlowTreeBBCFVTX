@@ -1,17 +1,24 @@
+void doenergy(int);
+void doenergy_eastwest(int);
+
+
 void temp_v3()
+{
+
+  doenergy(200);
+  doenergy(62);
+
+}
+
+
+void doenergy(int energy)
 {
 
   gStyle->SetOptTitle(1);
 
   TCanvas* c1 = new TCanvas("c1","");
 
-  TFile* file = TFile::Open("input/combined.root");
-  //TFile* file = TFile::Open("input/combined_10.root");
-  //TFile* file = TFile::Open("input/combined_S5.root");
-  //TFile* file = TFile::Open("input/hist_455050.root");
-  //TFile* file = TFile::Open("input/arglebargle.root");
-  //TFile* file = TFile::Open("combined.root");
-  //TFile* file = TFile::Open("../output/hist_454811.root");
+  TFile* file = TFile::Open(Form("input/combined_%d.root",energy));
 
   // ---
 
@@ -71,9 +78,6 @@ void temp_v3()
   leg->SetTextSize(0.05);
   leg->Draw();
 
-  c1->Print("run16dau200_v3_fvtxs.pdf");
-  c1->Print("run16dau200_v3_fvtxs.png");
-
   TProfile* hv3_bbcs = (TProfile*)file->Get("bbcs_v3_both_docalib");
   hv3_bbcs->SetLineColor(kRed);
   hv3_bbcs->Scale(1.0/reso_bbc);
@@ -87,8 +91,8 @@ void temp_v3()
   leg->SetTextSize(0.05);
   leg->Draw();
 
-  c1->Print("run16dau200_v3_fvtxsbbcs.pdf");
-  c1->Print("run16dau200_v3_fvtxsbbcs.png");
+  // c1->Print("run16dau200_v3_fvtxsbbcs.pdf");
+  // c1->Print("run16dau200_v3_fvtxsbbcs.png");
 
   hv3_fvtxs->SetMinimum(-0.05);
   hv3_fvtxs->SetMaximum(0.15);
@@ -98,9 +102,23 @@ void temp_v3()
   line.SetLineWidth(2);
   line.Draw();
 
-  c1->Print("run16dau200_v3_fvtxsbbcs_fullscale.pdf");
-  c1->Print("run16dau200_v3_fvtxsbbcs_fullscale.png");
+  // c1->Print("run16dau200_v3_fvtxsbbcs_fullscale.pdf");
+  // c1->Print("run16dau200_v3_fvtxsbbcs_fullscale.png");
+  c1->Print(Form("run16dau%d_v3_fvtxsbbcs.pdf",energy));
+  c1->Print(Form("run16dau%d_v3_fvtxsbbcs.png",energy));
 
+  delete c1;
+
+}
+
+
+void doenergy_eastwest(int energy)
+{
+
+  cout << "East-West code non-functional for now, will revisit later" << endl;
+  return;
+
+  TCanvas* c1 = new TCanvas();
   // ---
 
   TProfile* hv3_fvtxs_east = (TProfile*)file->Get("fvtxs_v3_east_docalib");
@@ -115,10 +133,6 @@ void temp_v3()
   hv3_fvtxs->Draw();
   hv3_fvtxs_east->Draw("same");
   hv3_fvtxs_west->Draw("same");
-
-  c1->Print("run16dau200_v3_fvtxs_fullscale_eastwest.pdf");
-  c1->Print("run16dau200_v3_fvtxs_fullscale_eastwest.png");
-
 
   TProfile* hv3_bbcs_east = (TProfile*)file->Get("bbcs_v3_east_docalib");
   TProfile* hv3_bbcs_west = (TProfile*)file->Get("bbcs_v3_west_docalib");

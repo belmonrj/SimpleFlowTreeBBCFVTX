@@ -1,18 +1,21 @@
+void doenergy(int);
+
 void temp_v2v4()
+{
+
+  doenergy(200);
+  doenergy(62);
+
+}
+
+void doenergy(int energy)
 {
 
   gStyle->SetOptTitle(1);
 
   TCanvas* c1 = new TCanvas("c1","");
 
-  TFile* file = TFile::Open("input/combined.root");
-  //TFile* file = TFile::Open("input/combined_10.root");
-  //TFile* file = TFile::Open("input/combined_F5.root");
-  //TFile* file = TFile::Open("input/combined_S5.root");
-  //TFile* file = TFile::Open("input/hist_455050.root");
-  //TFile* file = TFile::Open("input/arglebargle.root");
-  //TFile* file = TFile::Open("input/hist_455795.root");
-  //TFile* file = TFile::Open("../output/hist_454811.root");
+  TFile* file = TFile::Open(Form("input/combined_%d.root",energy));
 
   // ---
 
@@ -84,9 +87,6 @@ void temp_v2v4()
   leg->SetTextSize(0.05);
   leg->Draw();
 
-  c1->Print("run16dau200_v2_fvtxs.pdf");
-  c1->Print("run16dau200_v2_fvtxs.png");
-
   TProfile* hv2_bbcs = (TProfile*)file->Get("bbcs_v2_both_docalib");
   hv2_bbcs->SetLineColor(kRed);
   hv2_bbcs->Scale(1.0/reso_bbc);
@@ -101,8 +101,8 @@ void temp_v2v4()
   leg->SetTextSize(0.05);
   leg->Draw();
 
-  c1->Print("run16dau200_v2_fvtxsbbcs.pdf");
-  c1->Print("run16dau200_v2_fvtxsbbcs.png");
+  c1->Print(Form("run16dau%d_v2_fvtxsbbcs.pdf",energy));
+  c1->Print(Form("run16dau%d_v2_fvtxsbbcs.png",energy));
 
 
   // ---
@@ -127,9 +127,6 @@ void temp_v2v4()
   leg->SetTextSize(0.05);
   leg->Draw();
 
-  c1->Print("run16dau200_v4_4Psi2_fvtxs.pdf");
-  c1->Print("run16dau200_v4_4Psi2_fvtxs.png");
-
   TProfile* hv4_4Psi2_bbcs = (TProfile*)file->Get("bbcs_v4_4Psi2_both_docalib");
   hv4_4Psi2_bbcs->SetLineColor(kRed);
   //hv4_4Psi2_bbcs->Scale(1.0/0.104519);
@@ -149,12 +146,12 @@ void temp_v2v4()
   line.SetLineWidth(2);
   line.Draw();
 
-  c1->Print("run16dau200_v4_4Psi2_fvtxsbbcs.pdf");
-  c1->Print("run16dau200_v4_4Psi2_fvtxsbbcs.png");
+  c1->Print(Form("run16dau%d_v4_4Psi2_fvtxsbbcs.pdf",energy));
+  c1->Print(Form("run16dau%d_v4_4Psi2_fvtxsbbcs.png",energy));
 
 
 
-
+  delete c1;
 
 }
 
