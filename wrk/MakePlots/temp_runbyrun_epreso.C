@@ -1,29 +1,49 @@
-void dostuff(int, double&, double&, double&, double&);
+void dostuff(int, int, double&, double&, double&, double&);
+
+void makeplots(int, int);
+
 
 
 void temp_runbyrun_epreso()
+{
+
+  makeplots(200,2);
+  makeplots(200,3);
+  makeplots(200,42);
+
+  makeplots(62,2);
+  makeplots(62,3);
+  makeplots(62,42);
+
+}
+
+void makeplots(int energy, int harmonic)
 {
 
   gStyle->SetOptTitle(0);
 
   TCanvas* c1 = new TCanvas("c1","");
 
-  ifstream fin("list.short");
+  ifstream fin((const char*)Form("list_%d.short",energy));
 
-  double index[67];
-  double bbc_reso[67];
-  double fvtx_reso[67];
-  double bbc_reso_fn[67];
-  double fvtx_reso_fn[67];
+  double index[100];
+  double bbc_reso[100];
+  double fvtx_reso[100];
+  double bbc_reso_fn[100];
+  double fvtx_reso_fn[100];
   int run;
-  for ( int i = 0; i < 67; ++i )
+  int counter = 0;
+  for ( int i = 0; i < 100; ++i )
     {
-      fin>>run;
+      if ( fin.eof() ) break;
+      fin >> run;
+      //cout << run << endl;
+      ++counter;
       double bbc_temp = 0;
       double fvtx_temp = 0;
       double bbc_temp_fn = 0;
       double fvtx_temp_fn = 0;
-      dostuff(run,bbc_temp,fvtx_temp,bbc_temp_fn,fvtx_temp_fn);
+      dostuff(run,harmonic,bbc_temp,fvtx_temp,bbc_temp_fn,fvtx_temp_fn);
       // if ( bbc_temp != bbc_temp ) bbc_temp = 0;
       // if ( fvtx_temp != fvtx_temp ) fvtx_temp = 0;
       index[i] = i+0.5;
@@ -33,18 +53,18 @@ void temp_runbyrun_epreso()
       fvtx_reso_fn[i] = fvtx_temp_fn;
     }
 
-  TGraph* tg_bbc = new TGraph(67,index,bbc_reso);
+  TGraph* tg_bbc = new TGraph(counter,index,bbc_reso);
   tg_bbc->SetMarkerStyle(kFullCircle);
   tg_bbc->SetMarkerColor(kRed);
   tg_bbc->Draw("ap");
   tg_bbc->SetTitle("");
-  tg_bbc->GetXaxis()->SetLimits(-2,69);
+  tg_bbc->GetXaxis()->SetLimits(-2,counter+2);
   tg_bbc->GetXaxis()->SetTitle("Run Index");
   tg_bbc->GetYaxis()->SetTitle("Resolution");
   tg_bbc->SetMinimum(0);
   tg_bbc->SetMaximum(0.5);
 
-  TGraph* tg_fvtx = new TGraph(67,index,fvtx_reso);
+  TGraph* tg_fvtx = new TGraph(counter,index,fvtx_reso);
   tg_fvtx->SetMarkerStyle(kFullCircle);
   tg_fvtx->SetMarkerColor(kBlue);
   tg_fvtx->Draw("p");
@@ -56,19 +76,22 @@ void temp_runbyrun_epreso()
   leg->SetTextSize(0.05);
   leg->Draw();
 
-  TF1* fun_bbc = new TF1("fun_bbc","pol0",0,67);
-  TF1* fun_fvtx = new TF1("fun_fvtx","pol0",0,67);
+  TF1* fun_bbc = new TF1("fun_bbc","pol0",0,counter);
+  TF1* fun_fvtx = new TF1("fun_fvtx","pol0",0,counter);
   fun_bbc->SetLineColor(kBlack);
   fun_fvtx->SetLineColor(kBlack);
-  fun_bbc->SetParameter(0,0.0969358);
-  fun_fvtx->SetParameter(0,0.224709);
+  if ( energy == 200 && harmonic == 2 )
+    {
+      fun_bbc->SetParameter(0,0.0969358);
+      fun_fvtx->SetParameter(0,0.224709);
+      fun_bbc->Draw("same");
+      fun_fvtx->Draw("same");
+    }
   // tg_bbc->Fit(fun_bbc,"R");
   // tg_fvtx->Fit(fun_fvtx,"R");
-  fun_bbc->Draw("same");
-  fun_fvtx->Draw("same");
 
-  c1->Print("runbyrun_epreso.png");
-  c1->Print("runbyrun_epreso.pdf");
+  c1->Print(Form("runbyrun_%d_epreso_%d.png",energy,harmonic));
+  c1->Print(Form("runbyrun_%d_epreso_%d.pdf",energy,harmonic));
 
   TGraph* tg_bbc_fn = new TGraph(67,index,bbc_reso_fn);
   tg_bbc_fn->SetMarkerStyle(kOpenCircle);
@@ -80,13 +103,23 @@ void temp_runbyrun_epreso()
   tg_fvtx_fn->SetMarkerColor(kBlue);
   tg_fvtx_fn->Draw("p");
 
-  c1->Print("runbyrun_epreso_fn.png");
-  c1->Print("runbyrun_epreso_fn.pdf");
+  c1->Print(Form("runbyrun_%d_epreso_%d_fn.png",energy,harmonic));
+  c1->Print(Form("runbyrun_%d_epreso_%d_fn.pdf",energy,harmonic));
+
+  delete c1;
 
 }
 
-void dostuff(int run, double& bbc, double& fvtx, double& bbc_fn, double& fvtx_fn)
+
+
+void dostuff(int run, int hh, double& bbc, double& fvtx, double& bbc_fn, double& fvtx_fn)
 {
+
+  if ( run <= 0 )
+    {
+      cout << "FATAL: bad run number" << endl;
+      exit(-1);
+    }
 
   int verbosity  = 0;
 
@@ -98,9 +131,9 @@ void dostuff(int run, double& bbc, double& fvtx, double& bbc_fn, double& fvtx_fn
 
   // ---
 
-  TProfile* tp1f_bbc_fvtxN = (TProfile*)file->Get("tp1f_reso2_BBC_FVTXN");
-  TProfile* tp1f_bbc_fvtx = (TProfile*)file->Get("tp1f_reso2_BBC_FVTX");
-  TProfile* tp1f_fvtxN_fvtx = (TProfile*)file->Get("tp1f_reso2_FVTXS_FVTXN");
+  TProfile* tp1f_bbc_fvtxN = (TProfile*)file->Get(Form("tp1f_reso%d_BBC_FVTXN",hh));
+  TProfile* tp1f_bbc_fvtx = (TProfile*)file->Get(Form("tp1f_reso%d_BBC_FVTX",hh));
+  TProfile* tp1f_fvtxN_fvtx = (TProfile*)file->Get(Form("tp1f_reso%d_FVTXS_FVTXN",hh));
 
   float float_bbc_fvtxN = tp1f_bbc_fvtxN->GetBinContent(1);
   float float_bbc_fvtx = tp1f_bbc_fvtx->GetBinContent(1);
@@ -121,9 +154,9 @@ void dostuff(int run, double& bbc, double& fvtx, double& bbc_fn, double& fvtx_fn
 
   // ---
 
-  TProfile* tp1f_bbc_cnt = (TProfile*)file->Get("tp1f_reso2_BBC_CNT");
-  tp1f_bbc_fvtx = (TProfile*)file->Get("tp1f_reso2_BBC_FVTX");
-  TProfile* tp1f_cnt_fvtx = (TProfile*)file->Get("tp1f_reso2_CNT_FVTX");
+  TProfile*  tp1f_bbc_cnt = (TProfile*)file->Get(Form("tp1f_reso2_BBC_CNT",hh));
+  tp1f_bbc_fvtx = (TProfile*)file->Get(Form("tp1f_reso2_BBC_FVTX",hh));
+  TProfile* tp1f_cnt_fvtx = (TProfile*)file->Get(Form("tp1f_reso2_CNT_FVTX",hh));
 
   float float_bbc_cnt = tp1f_bbc_cnt->GetBinContent(1);
   float_bbc_fvtx = tp1f_bbc_fvtx->GetBinContent(1);
