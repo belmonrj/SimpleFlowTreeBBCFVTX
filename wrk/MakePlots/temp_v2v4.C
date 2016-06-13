@@ -5,6 +5,7 @@ void temp_v2v4()
 
   doenergy(200);
   doenergy(62);
+  doenergy(20);
 
 }
 
@@ -63,7 +64,10 @@ void doenergy(int energy)
 
   hv2_fvtxs->Scale(1.0/reso_fvtx);
   hv2_fvtxs->Draw();
-  hv2_fvtxs->SetTitle("d+Au collisions at #sqrt{s_{NN}} = 200 GeV");
+  // the 62 GeV is actually 62.4 and the 20 GeV is actually 19.6, so need to modify
+  hv2_fvtxs->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = %d GeV",energy));
+  if ( energy == 62 ) hv2_fvtxs->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = 62.4 GeV"));
+  if ( energy == 20 ) hv2_fvtxs->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = 19.6 GeV"));
   hv2_fvtxs->SetMaximum(0.17);
   hv2_fvtxs->SetMinimum(0.0);
   hv2_fvtxs->GetXaxis()->SetTitle("p_{T} (GeV/c)");
@@ -113,7 +117,10 @@ void doenergy(int energy)
 
   hv4_4Psi2_fvtxs->Scale(1.0/reso_fvtx);
   hv4_4Psi2_fvtxs->Draw();
-  hv4_4Psi2_fvtxs->SetTitle("d+Au collisions at #sqrt{s_{NN}} = 200 GeV");
+  // the 62 GeV is actually 62.4 and the 20 GeV is actually 19.6, so need to modify
+  hv4_4Psi2_fvtxs->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = %d GeV",energy));
+  if ( energy == 62 ) hv4_4Psi2_fvtxs->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = 62.4 GeV"));
+  if ( energy == 20 ) hv4_4Psi2_fvtxs->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = 19.6 GeV"));
   hv4_4Psi2_fvtxs->SetMaximum(0.05);
   hv4_4Psi2_fvtxs->SetMinimum(-0.05);
   hv4_4Psi2_fvtxs->GetXaxis()->SetTitle("p_{T} (GeV/c)");

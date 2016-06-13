@@ -15,6 +15,10 @@ void temp_runbyrun_epreso()
   makeplots(62,3);
   makeplots(62,42);
 
+  makeplots(20,2);
+  makeplots(20,3);
+  makeplots(20,42);
+
 }
 
 void makeplots(int energy, int harmonic)
