@@ -104,14 +104,15 @@ void doenergy(int energy)
   TLegend* leg = new TLegend(0.18,0.68,0.38,0.88);
   leg->AddEntry(hv2_fvtxs,"Run16 FVTXS","el");
   leg->AddEntry(hv2_bbcs,"Run16 BBCS","el");
-  leg->AddEntry(tge_pub,"Run8 (ppg161)","p");
+  if ( energy == 200 ) leg->AddEntry(tge_pub,"Run8 (ppg161)","p");
+  else leg->AddEntry(tge_pub,"Run8 (200 GeV)","p");
   leg->SetTextSize(0.05);
   leg->Draw();
 
   TLatex* latex = new TLatex(0.2,0.2,"EP resolutions calculated with CNT");
   latex->SetNDC();
   latex->SetTextSize(0.05);
-  latex->Draw();
+  //latex->Draw();
 
   c1->Print(Form("run16dau%d_v2_fvtxsbbcs.pdf",energy));
   c1->Print(Form("run16dau%d_v2_fvtxsbbcs.png",energy));
@@ -127,7 +128,8 @@ void doenergy(int energy)
   leg3->AddEntry(hv2_fvtxs,"Run16 FVTXS","el");
   leg3->AddEntry(hv2_fvtxn,"Run16 FVTXN","el");
   leg3->AddEntry(hv2_bbcs,"Run16 BBCS","el");
-  leg3->AddEntry(tge_pub,"Run8 (ppg161)","p");
+  if ( energy == 200 ) leg3->AddEntry(tge_pub,"Run8 (ppg161)","p");
+  else leg3->AddEntry(tge_pub,"Run8 (200 GeV)","p");
   leg3->SetTextSize(0.05);
   leg3->Draw();
 
@@ -158,7 +160,8 @@ void doenergy(int energy)
   leg = new TLegend(0.18,0.68,0.38,0.88);
   leg->AddEntry(hv2_fvtxs,"Run16 FVTXS","el");
   leg->AddEntry(hv2_bbcs,"Run16 BBCS","el");
-  leg->AddEntry(tge_pub,"Run8 (ppg161)","p");
+  if ( energy == 200 ) leg->AddEntry(tge_pub,"Run8 (ppg161)","p");
+  else leg->AddEntry(tge_pub,"Run8 (200 GeV)","p");
   leg->SetTextSize(0.05);
   leg->Draw();
 
