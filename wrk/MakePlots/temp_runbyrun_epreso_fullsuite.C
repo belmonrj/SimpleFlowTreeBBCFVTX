@@ -171,6 +171,32 @@ void makeplots(int energy, int harmonic)
       eresoS_BN[i] = resoS_BN[i] * sqrt ( pow(array_eBS[i]/array_BS[i],2) + pow(array_eNS[i]/array_NS[i],2) + pow(array_eBN[i]/array_BN[i],2) );
       eresoS_CN[i] = resoS_CN[i] * sqrt ( pow(array_eCS[i]/array_CS[i],2) + pow(array_eNS[i]/array_NS[i],2) + pow(array_eCN[i]/array_CN[i],2) );
 
+      // ---
+
+      // cout << "Resolutions before resetting nans" << endl;
+
+      // cout << resoB_CN[i] << endl;
+      // cout << resoB_CS[i] << endl;
+      // cout << resoB_NS[i] << endl;
+
+      if ( TMath::IsNaN(resoB_CN[i]) ) { resoB_CN[i] = -9; eresoB_CN[i] = 999; }
+      if ( TMath::IsNaN(resoB_CS[i]) ) { resoB_CS[i] = -9; eresoB_CS[i] = 999; }
+      if ( TMath::IsNaN(resoB_NS[i]) ) { resoB_NS[i] = -9; eresoB_NS[i] = 999; }
+
+      if ( TMath::IsNaN(resoN_BC[i]) ) { resoN_BC[i] = -9; eresoN_BC[i] = 999; }
+      if ( TMath::IsNaN(resoN_BS[i]) ) { resoN_BS[i] = -9; eresoN_BS[i] = 999; }
+      if ( TMath::IsNaN(resoN_CS[i]) ) { resoN_CS[i] = -9; eresoN_CS[i] = 999; }
+
+      if ( TMath::IsNaN(resoS_BC[i]) ) { resoS_BC[i] = -9; eresoS_BC[i] = 999; }
+      if ( TMath::IsNaN(resoS_BN[i]) ) { resoS_BN[i] = -9; eresoS_BN[i] = 999; }
+      if ( TMath::IsNaN(resoS_CN[i]) ) { resoS_CN[i] = -9; eresoS_CN[i] = 999; }
+
+      // cout << "Resolutions after resetting nans" << endl;
+
+      // cout << resoB_CN[i] << endl;
+      // cout << resoB_CS[i] << endl;
+      // cout << resoB_NS[i] << endl;
+
     }
 
   TGraphErrors* tgeresoB_CN = new TGraphErrors(counter-1,index,resoB_CN,0,eresoB_CN);
@@ -205,11 +231,31 @@ void makeplots(int energy, int harmonic)
   tgeresoB_CN->SetTitle("BBC EP resolution");
   tgeresoB_CN->SetMaximum(0.2);
   tgeresoB_CN->SetMinimum(0.0);
+  if ( energy != 200 || harmonic != 2 ) tgeresoB_CN->SetMinimum(-0.05);
+
+  TF1* funB_CN = new TF1("funB_CN","pol0",0,100);
+  TF1* funB_CS = new TF1("funB_CS","pol0",0,100);
+  TF1* funB_NS = new TF1("funB_NS","pol0",0,100);
+
+  // funB_CN->SetParLimits(0,0,1);
+  // funB_CS->SetParLimits(0,0,1);
+  // funB_NS->SetParLimits(0,0,1);
+
+  funB_CN->SetLineColor(kRed);
+  funB_CS->SetLineColor(kGreen+2);
+  funB_NS->SetLineColor(kBlue);
+
+  tgeresoB_CN->Fit(funB_CN,"","",0,counter-1);
+  tgeresoB_CS->Fit(funB_CS,"","",0,counter-1);
+  tgeresoB_NS->Fit(funB_NS,"","",0,counter-1);
 
   TLegend* legB = new TLegend(0.18,0.68,0.28,0.88);
-  legB->AddEntry(tgeresoB_CN,"BBC, CNT, FVTXN","p");
-  legB->AddEntry(tgeresoB_CS,"BBC, CNT, FVTXS","p");
-  legB->AddEntry(tgeresoB_NS,"BBC, FVTXN, FVTXS","p");
+  TLegendEntry* tleB_CN = legB->AddEntry(tgeresoB_CN,Form("BBC, CNT, FVTXN,   average = %f",funB_CN->GetParameter(0)),"p");
+  TLegendEntry* tleB_CS = legB->AddEntry(tgeresoB_CS,Form("BBC, CNT, FVTXS,   average = %f",funB_CS->GetParameter(0)),"p");
+  TLegendEntry* tleB_NS = legB->AddEntry(tgeresoB_NS,Form("BBC, FVTXN, FVTXS, average = %f",funB_NS->GetParameter(0)),"p");
+  tleB_CN->SetTextColor(kRed);
+  tleB_CS->SetTextColor(kGreen+2);
+  tleB_NS->SetTextColor(kBlue);
   legB->SetTextSize(0.05);
   legB->Draw();
 
@@ -236,13 +282,40 @@ void makeplots(int energy, int harmonic)
   tgeresoN_BC->SetTitle("FVTXN EP resolution");
   tgeresoN_BC->SetMaximum(0.2);
   tgeresoN_BC->SetMinimum(0.0);
+  if ( energy != 200 || harmonic != 2 ) tgeresoN_BC->SetMinimum(-0.05);
 
-  TLegend* legB = new TLegend(0.18,0.68,0.28,0.88);
-  legB->AddEntry(tgeresoN_BC,"FVTXN, BBC, CNT","p");
-  legB->AddEntry(tgeresoN_BS,"FVTXN, BBC, FVTXS","p");
-  legB->AddEntry(tgeresoN_CS,"FVTXN, CNT, FVTXS","p");
-  legB->SetTextSize(0.05);
-  legB->Draw();
+  // TLegend* legB = new TLegend(0.18,0.68,0.28,0.88);
+  // legB->AddEntry(tgeresoN_BC,"FVTXN, BBC, CNT","p");
+  // legB->AddEntry(tgeresoN_BS,"FVTXN, BBC, FVTXS","p");
+  // legB->AddEntry(tgeresoN_CS,"FVTXN, CNT, FVTXS","p");
+  // legB->SetTextSize(0.05);
+  // legB->Draw();
+
+  TF1* funN_BC = new TF1("funN_BC","pol0",0,100);
+  TF1* funN_BS = new TF1("funN_BS","pol0",0,100);
+  TF1* funN_CS = new TF1("funN_CS","pol0",0,100);
+
+  // funN_BC->SetParLimits(0,0,1);
+  // funN_BS->SetParLimits(0,0,1);
+  // funN_CS->SetParLimits(0,0,1);
+
+  funN_BC->SetLineColor(kRed);
+  funN_BS->SetLineColor(kGreen+2);
+  funN_CS->SetLineColor(kBlue);
+
+  tgeresoN_BC->Fit(funN_BC,"","",0,counter-1);
+  tgeresoN_BS->Fit(funN_BS,"","",0,counter-1);
+  tgeresoN_CS->Fit(funN_CS,"","",0,counter-1);
+
+  TLegend* legN = new TLegend(0.18,0.68,0.28,0.88);
+  TLegendEntry* tleN_BC = legN->AddEntry(tgeresoN_BC,Form("FVTXN, BBC, CNT,   average = %f",funN_BC->GetParameter(0)),"p");
+  TLegendEntry* tleN_BS = legN->AddEntry(tgeresoN_BS,Form("FVTXN, BBC, FVTXS, average = %f",funN_BS->GetParameter(0)),"p");
+  TLegendEntry* tleN_CS = legN->AddEntry(tgeresoN_CS,Form("FVTXN, CNT, FVTXS, average = %f",funN_CS->GetParameter(0)),"p");
+  tleN_BC->SetTextColor(kRed);
+  tleN_BS->SetTextColor(kGreen+2);
+  tleN_CS->SetTextColor(kBlue);
+  legN->SetTextSize(0.05);
+  legN->Draw();
 
   c1->Print(Form("figreso_fvtxn_energy%d_harmonic%d.png",energy,harmonic));
   c1->Print(Form("figreso_fvtxn_energy%d_harmonic%d.pdf",energy,harmonic));
@@ -267,13 +340,33 @@ void makeplots(int energy, int harmonic)
   tgeresoS_BC->SetTitle("FVTXS EP resolution");
   tgeresoS_BC->SetMaximum(0.4);
   tgeresoS_BC->SetMinimum(0.0);
+  if ( energy != 200 || harmonic != 2 ) tgeresoS_BC->SetMinimum(-0.05);
 
-  TLegend* legB = new TLegend(0.18,0.68,0.28,0.88);
-  legB->AddEntry(tgeresoS_BC,"FVTXS, BBC, CNT","p");
-  legB->AddEntry(tgeresoS_BN,"FVTXS, BBC, FVTXN","p");
-  legB->AddEntry(tgeresoS_CN,"FVTXS, CNT, FVTXN","p");
-  legB->SetTextSize(0.05);
-  legB->Draw();
+  TF1* funS_BC = new TF1("funS_BC","pol0",0,100);
+  TF1* funS_BN = new TF1("funS_BN","pol0",0,100);
+  TF1* funS_CN = new TF1("funS_CN","pol0",0,100);
+
+  // funS_BC->SetParLimits(0,0,1);
+  // funS_BN->SetParLimits(0,0,1);
+  // funS_CN->SetParLimits(0,0,1);
+
+  funS_BC->SetLineColor(kRed);
+  funS_BN->SetLineColor(kGreen+2);
+  funS_CN->SetLineColor(kBlue);
+
+  tgeresoS_BC->Fit(funS_BC,"","",0,counter-1);
+  tgeresoS_BN->Fit(funS_BN,"","",0,counter-1);
+  tgeresoS_CN->Fit(funS_CN,"","",0,counter-1);
+
+  TLegend* legS = new TLegend(0.18,0.68,0.28,0.88);
+  TLegendEntry* tleS_BC = legS->AddEntry(tgeresoS_BC,Form("FVTXS, BBC, CNT,   average = %f",funS_BC->GetParameter(0)),"p");
+  TLegendEntry* tleS_BN = legS->AddEntry(tgeresoS_BN,Form("FVTXS, BBC, FVTXN, average = %f",funS_BN->GetParameter(0)),"p");
+  TLegendEntry* tleS_CN = legS->AddEntry(tgeresoS_CN,Form("FVTXS, CNT, FVTXN, average = %f",funS_CN->GetParameter(0)),"p");
+  tleS_BC->SetTextColor(kRed);
+  tleS_BN->SetTextColor(kGreen+2);
+  tleS_CN->SetTextColor(kBlue);
+  legS->SetTextSize(0.05);
+  legS->Draw();
 
   c1->Print(Form("figreso_fvtxs_energy%d_harmonic%d.png",energy,harmonic));
   c1->Print(Form("figreso_fvtxs_energy%d_harmonic%d.pdf",energy,harmonic));
