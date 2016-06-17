@@ -115,6 +115,7 @@ int VTX_event_plane_reco::Init(PHCompositeNode *topNode)
       _ntp_event->SetAutoFlush(1000);
       _ntp_event -> Branch("event",&event,"event/F");
       _ntp_event -> Branch("bbc_z",&bbc_z,"bbc_z/F");
+      _ntp_event -> Branch("centrality",&centrality,"centrality/F");
       _ntp_event -> Branch("trigger",&trigger,"trigger/i");
       _ntp_event -> Branch("d_Qx",&d_Qx,"d_Qx[9]/F");
       _ntp_event -> Branch("d_Qy",&d_Qy,"d_Qy[9]/F");
@@ -122,6 +123,9 @@ int VTX_event_plane_reco::Init(PHCompositeNode *topNode)
       _ntp_event -> Branch("bc_x",&bc_x,"bc_x/F");
       _ntp_event -> Branch("bc_y",&bc_y,"bc_y/F");
       _ntp_event -> Branch("vtx_z",&vtx_z,"vtx_z/F");
+      _ntp_event -> Branch("fvtx_x",&FVTX_X,"fvtx_x/F");
+      _ntp_event -> Branch("fvtx_y",&FVTX_Y,"fvtx_y/F");
+      _ntp_event -> Branch("fvtx_z",&FVTX_Z,"fvtx_z/F");
       if(_write_bbc)
         _ntp_event -> Branch("d_BBC_charge",&d_BBC_charge,"d_BBC_charge[64]/F");
       if(_write_fvtx_clusters)
@@ -151,7 +155,7 @@ int VTX_event_plane_reco::Init(PHCompositeNode *topNode)
         {
           _ntp_event -> Branch("vtx_x",&vtx_x,"vtx_x/F");
           _ntp_event -> Branch("vtx_y",&vtx_y,"vtx_y/F");
-          _ntp_event -> Branch("centrality",&centrality,"centrality/F");
+          //          _ntp_event -> Branch("centrality",&centrality,"centrality/F");
           _ntp_event -> Branch("bbc_qn",&bbc_qn,"bbc_qn/F");
           _ntp_event -> Branch("bbc_qs",&bbc_qs,"bbc_qs/F");
           _ntp_event -> Branch("eventok",&eventok,"eventok/I");
@@ -178,7 +182,7 @@ int VTX_event_plane_reco::Init(PHCompositeNode *topNode)
       if(_write_fvtx)
         {
           //fvtx tracking parameters
-          _ntp_event -> Branch("fvtx_z",&fvtx_z,"fvtx_z/F");
+          //_ntp_event -> Branch("fvtx_z",&fvtx_z,"fvtx_z/F");
           _ntp_event -> Branch("ntracklets",&ntracklets,"ntracklets/I");
           _ntp_event -> Branch("feta",&feta,"feta[75]/F");
           _ntp_event -> Branch("fphi",&fphi,"fphi[75]/F");
@@ -438,7 +442,7 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
   RpSumXYObject* d_rp = findNode::getClass<RpSumXYObject>(topNode, "RpSumXYObject");
 
   if(!d_rp){
-    if ( _verbosity > 0 ) cout<< PHWHERE << "Could not find the RPSumXYObject"<< endl;
+    if ( _verbosity > 4 ) cout<< PHWHERE << "Could not find the RPSumXYObject"<< endl;
     //return ABORTEVENT;
   }
 
@@ -490,8 +494,10 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
   bc_y = svx_fast.getY();
   svtx_z = svx_fast.getZ();
 
+  // --- bbc_z...
   PHPoint vertex1 = vertexes->get_Vertex("BBC");
   bbc_z = vertex1.getZ();
+  if ( fabs(bbc_z) > _z_vertex_range ) return DISCARDEVENT;
 
   // phglobal fields
   centrality  = global->getCentrality();
@@ -499,6 +505,22 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
   bbc_qs      = global->getBbcChargeS();
   event = evthead->get_EvtSequence();
   trigger = triggers->get_lvl1_trigscaled();
+
+  // --- these numbers taken from run 16 run control log
+  unsigned int trigger_FVTXNSBBCScentral = 0x00100000;
+  unsigned int trigger_FVTXNSBBCS        = 0x00400000;
+  unsigned int trigger_BBCLL1narrowcent  = 0x00000008;
+  unsigned int trigger_BBCLL1narrow      = 0x00000010;
+
+  unsigned int all_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS | trigger_BBCLL1narrowcent | trigger_BBCLL1narrow ;
+
+  unsigned int passes_trigger = trigger & all_triggers;
+  if ( passes_trigger == 0 )
+    {
+      if ( _verbosity > 0 ) cout << "trigger rejected" << endl;
+      return DISCARDEVENT;
+    }
+  else if ( _verbosity > 0 ) cout << "trigger accepted" << endl;
 
   int ibbcz_bin = (bbc_z+30.0)/10;//for fvtx eta cuts
 
@@ -736,6 +758,13 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
             }//end of ipmt loop
         }
     }
+
+  PHPoint fvtx_vertex = vertexes->get_Vertex("FVTX");
+  FVTX_X = fvtx_vertex.getX();
+  FVTX_Y = fvtx_vertex.getY();
+  FVTX_Z = fvtx_vertex.getZ();
+
+  if ( _verbosity > 1 ) cout << "FVTX vertex points: " << FVTX_X << " " << FVTX_Y << " " << FVTX_Z << endl;
 
   int nfvtxs_raw_clus = 0;
   if ( fvtx_coord_map )
@@ -1045,13 +1074,15 @@ bool VTX_event_plane_reco::is_event_ok(PHCompositeNode *topNode)
       return ABORTEVENT;
     }
 
-  double bbcz = global->getBbcZVertex();
-  if(fabs(bbcz) > 30)
-    {
-      if(_verbosity > 0)
-        cout<<"event rejected because bbc z vertex outside of 30 cm"<<endl;
-      return false;
-    }
+  // --- why not use the class variable?  cut now applied below with vtxout object
+  // --- bbc_z
+  // double bbcz = global->getBbcZVertex();
+  // if(fabs(bbcz) > 30)
+  //   {
+  //     if(_verbosity > 0)
+  //       cout<<"event rejected because bbc z vertex outside of 30 cm"<<endl;
+  //     return false;
+  //   }
 
   return true;
 

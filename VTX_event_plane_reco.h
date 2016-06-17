@@ -143,6 +143,12 @@ class VTX_event_plane_reco: public SubsysReco
   float vtx_x;
   float vtx_y;
   float vtx_z;
+  //float fvtx_x;
+  //float fvtx_y;
+  //float fvtx_z;
+  float FVTX_X;
+  float FVTX_Y;
+  float FVTX_Z;
   float bc_x;
   float bc_y;
   float svtx_z;
