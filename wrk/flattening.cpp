@@ -113,10 +113,6 @@ void flatten(int runNumber, int rp_recal_pass)
   cout<<"runNumber = " <<runNumber<<" "
       <<"rp_recal_pass = "<<rp_recal_pass<<endl;
 
-  // char filename[500];
-  // sprintf(filename,"input/tree_merged_%010d.root",runNumber); // abslute paths need to be dealt with
-  // //sprintf(filename,"/gpfs/mnt/gpfs02/phenix/plhf/plhf1/theok/taxi/Run15pAu200FVTXClusAna503/8833/data/434905.root"); // abslute paths need to be dealt with
-  // cout << "tree input file: " << filename << endl;
 
   cout << "v2 histogram output file: " << outFile1 << endl;
 
@@ -124,8 +120,6 @@ void flatten(int runNumber, int rp_recal_pass)
   sprintf(calibfile,"output/flattening_%d_%d.dat",runNumber,rp_recal_pass-1);
 
   char filename[500];
-  //sprintf(filename,"/gpfs/mnt/gpfs02/phenix/hhj/hhj2/theok/VTX_event_plane/output_test_for_taxi.root",runNumber);
-  //sprintf(filename,"for_ron/input/singles/tree_0000454936_0000.root"); // abslute paths need to be dealt with
 
   // --- get the number of files for this run number
   string pipe_out = (string) gSystem->GetFromPipe(Form("ls input/tree_%010d_*.root | grep -c r",runNumber));
@@ -143,23 +137,6 @@ void flatten(int runNumber, int rp_recal_pass)
       ntp_event_chain->Add(filename);
     }
 
-  // TFile *f=TFile::Open( filename);
-
-  // if(!f)
-  //   {
-  //     cout<<"ERROR, file: "<<filename<<" could not be opened"<<endl;
-  //     return;
-  //   }
-
-  // TTree *htree = (TTree *)f->Get("ntp_event");
-
-  // if(!htree)
-  //   {
-  //     cout<<"ERROR, ntp_event could not be opened"<<endl;
-  //     return;
-  //   }
-
-  //return;
 
   cout << "Initalizing PMT positions for the BBC" << endl;
 
@@ -481,82 +458,19 @@ void flatten(int runNumber, int rp_recal_pass)
 
   cout << "Now getting ready to read in the tree branch addresses and stuff...." << endl;
 
-  // //tree variables
-  // float        event;
-  // float        d_bbcz;    // bbcz
-  // unsigned int trigger;
-  // float        bc_x;
-  // float        bc_y;
-  // float        vtx_z;
-  // float        d_Qx[9];
-  // float        d_Qy[9];
-  // float        d_Qw[9];
-  // float        d_BBC_charge[64];
 
-  // int          d_nFVTX_clus;
-  // float        d_FVTX_x[max_nf];
-  // float        d_FVTX_y[max_nf];
-  // float        d_FVTX_z[max_nf];
-
-  // int          d_nsegments;
-  // float        d_px[max_nh];
-  // float        d_py[max_nh];
-  // float        d_pz[max_nh];
-
-  // TBranch *b_bbcz = htree->GetBranch("bbc_z");
-  // TBranch *b_event = htree->GetBranch("event");
-  // TBranch *b_trigger = htree->GetBranch("trigger");
-  // TBranch *b_bc_x = htree->GetBranch("bc_x");
-  // TBranch *b_bc_y = htree->GetBranch("bc_y");
-  // TBranch *b_vtx_z = htree->GetBranch("vtx_z");
-  // TBranch *b_Qx = htree->GetBranch("d_Qx");
-  // TBranch *b_Qy = htree->GetBranch("d_Qy");
-  // TBranch *b_Qw = htree->GetBranch("d_Qw");
-  // TBranch *b_d_BBC_charge = htree->GetBranch("d_BBC_charge");
-
-  // b_bbcz->SetAddress(&d_bbcz);
-  // b_event->SetAddress(&event);
-  // b_trigger->SetAddress(&trigger);
-  // b_bc_x->SetAddress(&bc_x);
-  // b_bc_y->SetAddress(&bc_y);
-  // b_vtx_z->SetAddress(&vtx_z);
-
-  // b_d_BBC_charge->SetAddress(d_BBC_charge);
-  // b_Qx->SetAddress(d_Qx);
-  // b_Qy->SetAddress(d_Qy);
-  // b_Qw->SetAddress(d_Qw);
-
-  // TBranch *b_d_nFVTX_clus = htree->GetBranch("d_nFVTX_clus");
-  // TBranch *b_d_FVTX_x = htree->GetBranch("d_FVTX_x");
-  // TBranch *b_d_FVTX_y = htree->GetBranch("d_FVTX_y");
-  // TBranch *b_d_FVTX_z = htree->GetBranch("d_FVTX_z");
-
-  // b_d_nFVTX_clus->SetAddress(&d_nFVTX_clus);
-  // b_d_FVTX_x->SetAddress(d_FVTX_x);
-  // b_d_FVTX_y->SetAddress(d_FVTX_y);
-  // b_d_FVTX_z->SetAddress(d_FVTX_z);
-
-  // // TBranch *b_nsegments = htree->GetBranch("nsegments");
-  // // TBranch *b_px = htree->GetBranch("px");
-  // // TBranch *b_py = htree->GetBranch("py");
-  // // TBranch *b_pz = htree->GetBranch("pz");
-  // TBranch *b_nsegments = htree->GetBranch("d_ntrk");
-  // TBranch *b_px = htree->GetBranch("d_cntpx");
-  // TBranch *b_py = htree->GetBranch("d_cntpy");
-  // TBranch *b_pz = htree->GetBranch("d_cntpz");
-
-  // b_nsegments->SetAddress(&d_nsegments);
-  // b_px->SetAddress(d_px);
-  // b_py->SetAddress(d_py);
-  // b_pz->SetAddress(d_pz);
 
   //tree variables
   float        event;
   float        d_bbcz;    // bbcz
+  float        centrality; // float because of dumb mistake in tree code :(
   unsigned int trigger;
   float        bc_x;
   float        bc_y;
   float        vtx_z;
+  float        eventfvtx_x;
+  float        eventfvtx_y;
+  float        eventfvtx_z;
   float        d_Qx[9];
   float        d_Qy[9];
   float        d_Qw[9];
@@ -572,36 +486,45 @@ void flatten(int runNumber, int rp_recal_pass)
   float        d_py[max_nh];
   float        d_pz[max_nh];
 
-   // List of branches
-   TBranch        *b_event;   //!
-   TBranch        *b_bbc_z;   //!
-   TBranch        *b_trigger;   //!
-   TBranch        *b_d_Qx;   //!
-   TBranch        *b_d_Qy;   //!
-   TBranch        *b_d_Qw;   //!
-   TBranch        *b_bc_x;   //!
-   TBranch        *b_bc_y;   //!
-   TBranch        *b_vtx_z;   //!
-   TBranch        *b_d_BBC_charge;   //!
-   TBranch        *b_d_nFVTX_clus;   //!
-   TBranch        *b_d_FVTX_x;   //!
-   TBranch        *b_d_FVTX_y;   //!
-   TBranch        *b_d_FVTX_z;   //!
-   TBranch        *b_nsegments;   //!
-   TBranch        *b_px;   //!
-   TBranch        *b_py;   //!
-   TBranch        *b_pz;   //!
-   TBranch        *b_d_ntrk;   //!
-   TBranch        *b_d_cntpx;   //!
-   TBranch        *b_d_cntpy;   //!
-   TBranch        *b_d_cntpz;   //!
+  // List of branches
+  TBranch* b_event;   //!
+  TBranch* b_bbc_z;   //!
+  TBranch* b_centrality;   //!
+  TBranch* b_trigger;   //!
+  TBranch* b_d_Qx;   //!
+  TBranch* b_d_Qy;   //!
+  TBranch* b_d_Qw;   //!
+  TBranch* b_bc_x;   //!
+  TBranch* b_bc_y;   //!
+  TBranch* b_vtx_z;   //!
+  TBranch* b_fvtx_x;   //!
+  TBranch* b_fvtx_y;   //!
+  TBranch* b_fvtx_z;   //!
+  TBranch* b_d_BBC_charge;   //!
+  TBranch* b_d_nFVTX_clus;   //!
+  TBranch* b_d_FVTX_x;   //!
+  TBranch* b_d_FVTX_y;   //!
+  TBranch* b_d_FVTX_z;   //!
+  TBranch* b_nsegments;   //!
+  TBranch* b_px;   //!
+  TBranch* b_py;   //!
+  TBranch* b_pz;   //!
+  TBranch* b_d_ntrk;   //!
+  TBranch* b_d_cntpx;   //!
+  TBranch* b_d_cntpy;   //!
+  TBranch* b_d_cntpz;   //!
 
   ntp_event_chain->SetBranchAddress("bbc_z",&d_bbcz,&b_bbc_z);
+  ntp_event_chain->SetBranchAddress("centrality",&centrality,&b_centrality);
   ntp_event_chain->SetBranchAddress("event",&event,&b_event);
   ntp_event_chain->SetBranchAddress("trigger",&trigger,&b_trigger);
   ntp_event_chain->SetBranchAddress("bc_x",&bc_x,&b_bc_x);
   ntp_event_chain->SetBranchAddress("bc_y",&bc_y,&b_bc_y);
   ntp_event_chain->SetBranchAddress("vtx_z",&vtx_z,&b_vtx_z);
+
+  ntp_event_chain->SetBranchAddress("fvtx_x",&eventfvtx_x,&b_fvtx_x);
+  ntp_event_chain->SetBranchAddress("fvtx_y",&eventfvtx_y,&b_fvtx_y);
+  ntp_event_chain->SetBranchAddress("fvtx_z",&eventfvtx_z,&b_fvtx_z);
 
   ntp_event_chain->SetBranchAddress("d_BBC_charge",d_BBC_charge,&b_d_BBC_charge);
   ntp_event_chain->SetBranchAddress("d_Qx",d_Qx,&b_d_Qx);
@@ -618,26 +541,6 @@ void flatten(int runNumber, int rp_recal_pass)
   ntp_event_chain->SetBranchAddress("d_cntpy",d_py,&b_py);
   ntp_event_chain->SetBranchAddress("d_cntpz",d_pz,&b_pz);
 
-  // if(vtx_tracks)
-  // {
-  //   ntp_event_chain->SetBranchAddress("nsegments",&d_nsegments,&b_nsegments);
-  //   ntp_event_chain->SetBranchAddress("px",d_px,&b_px);
-  //   ntp_event_chain->SetBranchAddress("py",d_py,&b_py);
-  //   ntp_event_chain->SetBranchAddress("pz",d_pz,&b_pz);
-  // }
-
-  // int           d_ntrk;
-  // float         d_cntpx[max_nc];   //[d_ntrk]
-  // float         d_cntpy[max_nc];   //[d_ntrk]
-  // float         d_cntpz[max_nc];   //[d_ntrk]
-
-  // if(cnt_tracks)
-  // {
-  //   ntp_event_chain->SetBranchAddress("d_ntrk", &d_ntrk,&b_d_ntrk);
-  //   ntp_event_chain->SetBranchAddress("d_cntpx", d_cntpx,&b_d_cntpx);
-  //   ntp_event_chain->SetBranchAddress("d_cntpy", d_cntpy,&b_d_cntpy);
-  //   ntp_event_chain->SetBranchAddress("d_cntpz", d_cntpz,&b_d_cntpz);
-  // }
 
 
 
@@ -649,13 +552,19 @@ void flatten(int runNumber, int rp_recal_pass)
   //                   Looping Over Event Tree                  //
   //------------------------------------------------------------//
 
+  int EVENT_COUNTER = 0;
+
+  int all_counter = 0;
+  int bad_cent_counter = 0;
+
   cout << "starting loop over events in the tree" << endl;
   int nentries = ntp_event_chain->GetEntries();
   cout << "total events = " << nentries << endl;
   for ( int ievt = 0; ievt < nentries; ++ievt )
     {
 
-      //if ( ievt >= 1000000 ) break; // just 1M events for now, runs a little on the slow side...
+      //if ( ievt >= 100000 ) break; // just 100k events for testing, runs a little on the slow side...
+      ++all_counter;
 
       bool say_event = ( ievt%1000==0 );
 
@@ -665,43 +574,6 @@ void flatten(int runNumber, int rp_recal_pass)
 
       ntp_event_chain->GetEntry(ievt);
 
-      // b_bbcz->GetEntry(ievt);
-      // b_event->GetEntry(ievt);
-      // b_trigger->GetEntry(ievt);
-      // b_bc_x->GetEntry(ievt);
-      // b_bc_y->GetEntry(ievt);
-      // b_bbcz->GetEntry(ievt);
-      // b_vtx_z->GetEntry(ievt);
-      // //standard q vector
-      // b_Qx->GetEntry(ievt);
-      // b_Qy->GetEntry(ievt);
-      // b_Qw->GetEntry(ievt);
-
-      // if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "getting BBC PMT information" << endl;
-
-      // if ( bbc_pmts )  b_d_BBC_charge->GetEntry(ievt);//bbc pmts charge
-
-      // if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "getting FVTX cluster information" << endl;
-
-      // //FVTX clusters
-      // if ( fvtx_clusters )
-      //   {
-      //     b_d_nFVTX_clus->GetEntry(ievt);
-      //     b_d_FVTX_x->GetEntry(ievt);
-      //     b_d_FVTX_y->GetEntry(ievt);
-      //     b_d_FVTX_z->GetEntry(ievt);
-      //   }
-
-      // if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "getting track information" << endl;
-
-      // //VTX Tracks
-      // if ( vtx_tracks )
-      //   {
-      //     b_nsegments->GetEntry(ievt);
-      //     b_px->GetEntry(ievt);
-      //     b_py->GetEntry(ievt);
-      //     b_pz->GetEntry(ievt);
-      //   }
 
       if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Finished getting tree variables" << endl;
 
@@ -712,14 +584,25 @@ void flatten(int runNumber, int rp_recal_pass)
       //int ibbcz  = NZPS*(d_bbcz+30)/60;//bbc z bin for -30 <bbc z < 30 // how do you specify the number of bins here
       // --- THIS CUT IS NOT PERFORMED ON THE TREES AND IS NOT NEEDED HERE...
       // --- THIS CUT IS ALSO RUN DEPENDENT: THE 20 GeV AND 39 GeV SHOULD USE THE FVTX_Z CUT
+
       //if(TMath::Abs(d_bbcz) > 10.0 ) continue;
-      int ibbcz  = NZPS*(d_bbcz+10)/20;//bbc z bin for -10 <bbc z < 10 // how do you specify the number of bins here
+      //bbc z bin for -10 <bbc z < 10 // how do you specify the number of bins here
+      int ibbcz = -9;
+      if ( runNumber >= 454774 && runNumber <= 456283 ) ibbcz = NZPS*(d_bbcz+10)/20; // 200 and 62
+      if ( runNumber >= 456652 && runNumber <= 458167 ) ibbcz = NZPS*(eventfvtx_z+10)/20; // 20 and 39
 
       // --- break and continue statements should happen much, much earlier --------------------
       if(rp_recal_pass<1 || rp_recal_pass > 3) break;// rp_recal_pass only valid between 1 and 3
 
       // make sure bin number doesn't exceed number of bins
-      if ( ibbcz<0 || ibbcz >= NZPS ) continue;
+      if ( ibbcz < 0 || ibbcz >= NZPS )
+        {
+          cout << "z vertex bin count problem!!!!" << endl;
+          cout << "bbcz = " << d_bbcz << endl;
+          cout << "fvtx_z = " << eventfvtx_z << endl;
+          cout << "bin number is " << ibbcz << endl;
+          continue;
+        }
 
       // don't do analysis if no tracks on third pass
       //if(d_nsegments==0 && rp_recal_pass > 2) continue;
@@ -791,12 +674,37 @@ void flatten(int runNumber, int rp_recal_pass)
       //continue; // testing to get the charge distribution to make a centrality selection
 
       // --- do centrality cut here!!!
-      // --- will eventually add centrality variable to tree and cut that way
-      // --- REVISE THESE NUMBERS!!!
-      if ( runNumber >= 454744 && runNumber <= 455639 && bbc_qw < 61.5 ) continue; // dAu 200 GeV
-      if ( runNumber >= 455792 && runNumber <= 456283 && bbc_qw < 31.0 ) continue; // very rough dAu 62 GeV
-      if ( runNumber >= 456652 && runNumber <= 457298 && bbc_qw < 26.0 ) continue; // very rough dAu 20 GeV
-      if ( runNumber >= 457634 && runNumber <= 460000 && bbc_qw < 30.0 ) continue; // very rough dAu 39 GeV
+
+      if ( centrality > -999 )
+        {
+          if ( runNumber >= 454744 && runNumber <= 455639 && centrality > 5  ) continue; // dAu 200 GeV
+          if ( runNumber >= 455792 && runNumber <= 456283 && centrality > 10 ) continue; // dAu 62 GeV
+          if ( runNumber >= 456652 && runNumber <= 457298 && centrality > 20 ) continue; // dAu 20 GeV
+          if ( runNumber >= 457634 && runNumber <= 458167 && centrality > 20 ) continue; // dAu 39 GeV
+        }
+      else
+        {
+          //cout << "centrality undefined, cutting on bbc charge" << endl;
+          // --- REVISE THESE NUMBERS!!!
+          if ( runNumber >= 454744 && runNumber <= 455639 && bbc_qw < 60.0 ) continue; // dAu 200 GeV
+          if ( runNumber >= 455792 && runNumber <= 456283 && bbc_qw < 40.0 ) continue; // dAu 62 GeV
+          if ( runNumber >= 456652 && runNumber <= 457298 && bbc_qw < 25.0 ) continue; // dAu 20 GeV
+          if ( runNumber >= 457634 && runNumber <= 458167 && bbc_qw < 30.0 ) continue; // dAu 39 GeV
+          ++bad_cent_counter;
+        }
+
+      if ( say_event )
+        {
+          cout << "bbc charge = " << bbc_qw << endl;
+          cout << "centrality = " << centrality << endl;
+        }
+
+
+      //cout << "HELLO HERE I AM" << endl;
+
+      ++EVENT_COUNTER;
+
+
 
       float fvtxs_qx2[5];//all layers then 0 1 2 3
       float fvtxs_qy2[5];
@@ -1521,7 +1429,8 @@ void flatten(int runNumber, int rp_recal_pass)
         } // check on tracks
     }//end of event
 
-
+  cout << "Processed " << EVENT_COUNTER << "/" << all_counter << " events (" << (float)EVENT_COUNTER/(float)all_counter << ")" << endl;
+  cout << "Events with bad centrality = " << bad_cent_counter << " (" << (float)bad_cent_counter/(float)EVENT_COUNTER << ")" << endl;
 
   if(rp_recal_pass<3 && rp_recal_pass>0)
     {
