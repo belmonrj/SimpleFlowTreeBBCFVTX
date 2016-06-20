@@ -246,16 +246,22 @@ void flatten(int runNumber, int rp_recal_pass)
   // --- new EP resolution histograms using FVTX north
   TProfile* tp1f_reso2_BBC_FVTXN = new TProfile("tp1f_reso2_BBC_FVTXN","",1,-0.5,0.5,-1e6,1e6,"");
   TProfile* tp1f_reso3_BBC_FVTXN = new TProfile("tp1f_reso3_BBC_FVTXN","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_CNT_FVTXN = new TProfile("tp1f_reso2_CNT_FVTXN","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_CNT_FVTXN = new TProfile("tp1f_reso3_CNT_FVTXN","",1,-0.5,0.5,-1e6,1e6,"");
   TProfile* tp1f_reso2_FVTXS_FVTXN = new TProfile("tp1f_reso2_FVTXS_FVTXN","",1,-0.5,0.5,-1e6,1e6,"");
   TProfile* tp1f_reso3_FVTXS_FVTXN = new TProfile("tp1f_reso3_FVTXS_FVTXN","",1,-0.5,0.5,-1e6,1e6,"");
 
   TH1D* th1d_reso2_BBC_FVTXN = new TH1D("th1d_reso2_BBC_FVTXN","",220,-1.1,1.1);
   TH1D* th1d_reso3_BBC_FVTXN = new TH1D("th1d_reso3_BBC_FVTXN","",220,-1.1,1.1);
+  TH1D* th1d_reso2_CNT_FVTXN = new TH1D("th1d_reso2_CNT_FVTXN","",220,-1.1,1.1);
+  TH1D* th1d_reso3_CNT_FVTXN = new TH1D("th1d_reso3_CNT_FVTXN","",220,-1.1,1.1);
   TH1D* th1d_reso2_FVTXS_FVTXN = new TH1D("th1d_reso2_FVTXS_FVTXN","",220,-1.1,1.1);
   TH1D* th1d_reso3_FVTXS_FVTXN = new TH1D("th1d_reso3_FVTXS_FVTXN","",220,-1.1,1.1);
 
   TH1D* th1d_dreso2_BBC_FVTXN = new TH1D("th1d_dreso2_BBC_FVTXN","",252,-6.3,6.3);
   TH1D* th1d_dreso3_BBC_FVTXN = new TH1D("th1d_dreso3_BBC_FVTXN","",252,-6.3,6.3);
+  TH1D* th1d_dreso2_CNT_FVTXN = new TH1D("th1d_dreso2_CNT_FVTXN","",252,-6.3,6.3);
+  TH1D* th1d_dreso3_CNT_FVTXN = new TH1D("th1d_dreso3_CNT_FVTXN","",252,-6.3,6.3);
   TH1D* th1d_dreso2_FVTXS_FVTXN = new TH1D("th1d_dreso2_FVTXS_FVTXN","",252,-6.3,6.3);
   TH1D* th1d_dreso3_FVTXS_FVTXN = new TH1D("th1d_dreso3_FVTXS_FVTXN","",252,-6.3,6.3);
 
@@ -265,6 +271,7 @@ void flatten(int runNumber, int rp_recal_pass)
   TProfile* tp1f_reso42_BBC_FVTX = new TProfile("tp1f_reso42_BBC_FVTX","",1,-0.5,0.5,-1e6,1e6,"");
   TProfile* tp1f_reso42_CNT_FVTX = new TProfile("tp1f_reso42_CNT_FVTX","",1,-0.5,0.5,-1e6,1e6,"");
   TProfile* tp1f_reso42_BBC_FVTXN = new TProfile("tp1f_reso42_BBC_FVTXN","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso42_CNT_FVTXN = new TProfile("tp1f_reso42_CNT_FVTXN","",1,-0.5,0.5,-1e6,1e6,"");
   TProfile* tp1f_reso42_FVTXS_FVTXN = new TProfile("tp1f_reso42_FVTXS_FVTXN","",1,-0.5,0.5,-1e6,1e6,"");
 
 
@@ -441,14 +448,6 @@ void flatten(int runNumber, int rp_recal_pass)
 
   // ---
 
-  TProfile* bbcs_v4_2Psi2_west_docalib = new TProfile(Form("bbcs_v4_2Psi2_west_docalib"),Form("bbcs_v4_2Psi2_west_docalib"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_v4_2Psi2_east_docalib = new TProfile(Form("bbcs_v4_2Psi2_east_docalib"),Form("bbcs_v4_2Psi2_east_docalib"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_v4_2Psi2_both_docalib = new TProfile(Form("bbcs_v4_2Psi2_both_docalib"),Form("bbcs_v4_2Psi2_both_docalib"),15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs_v4_2Psi2_west_docalib = new TProfile(Form("fvtxs_v4_2Psi2_west_docalib"),Form("fvtxs_v4_2Psi2_west_docalib"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_v4_2Psi2_east_docalib = new TProfile(Form("fvtxs_v4_2Psi2_east_docalib"),Form("fvtxs_v4_2Psi2_east_docalib"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_v4_2Psi2_both_docalib = new TProfile(Form("fvtxs_v4_2Psi2_both_docalib"),Form("fvtxs_v4_2Psi2_both_docalib"),15, 0.0, 3.0, -1.1, 1.1);
-
   // ---
 
   TProfile* bbcs_v4_4Psi2_west_docalib = new TProfile(Form("bbcs_v4_4Psi2_west_docalib"),Form("bbcs_v4_4Psi2_west_docalib"),15, 0.0, 3.0, -1.1, 1.1);
@@ -458,6 +457,21 @@ void flatten(int runNumber, int rp_recal_pass)
   TProfile* fvtxs_v4_4Psi2_west_docalib = new TProfile(Form("fvtxs_v4_4Psi2_west_docalib"),Form("fvtxs_v4_4Psi2_west_docalib"),15, 0.0, 3.0, -1.1, 1.1);
   TProfile* fvtxs_v4_4Psi2_east_docalib = new TProfile(Form("fvtxs_v4_4Psi2_east_docalib"),Form("fvtxs_v4_4Psi2_east_docalib"),15, 0.0, 3.0, -1.1, 1.1);
   TProfile* fvtxs_v4_4Psi2_both_docalib = new TProfile(Form("fvtxs_v4_4Psi2_both_docalib"),Form("fvtxs_v4_4Psi2_both_docalib"),15, 0.0, 3.0, -1.1, 1.1);
+
+  // ---
+
+  TProfile* fvtxn_v2_west_docalib = new TProfile(Form("fvtxn_v2_west_docalib"),Form("fvtxn_v2_west_docalib"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxn_v2_east_docalib = new TProfile(Form("fvtxn_v2_east_docalib"),Form("fvtxn_v2_east_docalib"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxn_v2_both_docalib = new TProfile(Form("fvtxn_v2_both_docalib"),Form("fvtxn_v2_both_docalib"),15, 0.0, 3.0, -1.1, 1.1);
+
+  TProfile* fvtxn_v3_west_docalib = new TProfile(Form("fvtxn_v3_west_docalib"),Form("fvtxn_v3_west_docalib"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxn_v3_east_docalib = new TProfile(Form("fvtxn_v3_east_docalib"),Form("fvtxn_v3_east_docalib"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxn_v3_both_docalib = new TProfile(Form("fvtxn_v3_both_docalib"),Form("fvtxn_v3_both_docalib"),15, 0.0, 3.0, -1.1, 1.1);
+
+  TProfile* fvtxn_v4_4Psi2_west_docalib = new TProfile(Form("fvtxn_v4_4Psi2_west_docalib"),Form("fvtxn_v4_4Psi2_west_docalib"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxn_v4_4Psi2_east_docalib = new TProfile(Form("fvtxn_v4_4Psi2_east_docalib"),Form("fvtxn_v4_4Psi2_east_docalib"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxn_v4_4Psi2_both_docalib = new TProfile(Form("fvtxn_v4_4Psi2_both_docalib"),Form("fvtxn_v4_4Psi2_both_docalib"),15, 0.0, 3.0, -1.1, 1.1);
+
 
 
 
@@ -696,7 +710,9 @@ void flatten(int runNumber, int rp_recal_pass)
       // --- some big questions here about the z-vertex cut
       // --- really need to double and triple check where the zvertex cuts are applied and what they are
       //int ibbcz  = NZPS*(d_bbcz+30)/60;//bbc z bin for -30 <bbc z < 30 // how do you specify the number of bins here
-      if(TMath::Abs(d_bbcz) > 10.0 ) continue;
+      // --- THIS CUT IS NOT PERFORMED ON THE TREES AND IS NOT NEEDED HERE...
+      // --- THIS CUT IS ALSO RUN DEPENDENT: THE 20 GeV AND 39 GeV SHOULD USE THE FVTX_Z CUT
+      //if(TMath::Abs(d_bbcz) > 10.0 ) continue;
       int ibbcz  = NZPS*(d_bbcz+10)/20;//bbc z bin for -10 <bbc z < 10 // how do you specify the number of bins here
 
       // --- break and continue statements should happen much, much earlier --------------------
@@ -775,8 +791,12 @@ void flatten(int runNumber, int rp_recal_pass)
       //continue; // testing to get the charge distribution to make a centrality selection
 
       // --- do centrality cut here!!!
+      // --- will eventually add centrality variable to tree and cut that way
+      // --- REVISE THESE NUMBERS!!!
       if ( runNumber >= 454744 && runNumber <= 455639 && bbc_qw < 61.5 ) continue; // dAu 200 GeV
-      if ( runNumber >= 455792 && runNumber <= 456283 && bbc_qw < 30.0 ) continue; // very rough dAu 62 GeV
+      if ( runNumber >= 455792 && runNumber <= 456283 && bbc_qw < 31.0 ) continue; // very rough dAu 62 GeV
+      if ( runNumber >= 456652 && runNumber <= 457298 && bbc_qw < 26.0 ) continue; // very rough dAu 20 GeV
+      if ( runNumber >= 457634 && runNumber <= 460000 && bbc_qw < 30.0 ) continue; // very rough dAu 39 GeV
 
       float fvtxs_qx2[5];//all layers then 0 1 2 3
       float fvtxs_qy2[5];
@@ -1338,11 +1358,8 @@ void flatten(int runNumber, int rp_recal_pass)
                       if ( dcarm == 1 ) bbcs_v3_west_docalib->Fill(pt_angle,cosbbc_dphi3_docalib);
                       if ( dcarm == 0 ) bbcs_v3_east_docalib->Fill(pt_angle,cosbbc_dphi3_docalib);
                       // --- 4th harmonic
-                      double fourtwo = 4*phi_angle - 2*bbc_south_psi2_docalib;
-                      double cosfourtwo = TMath::Cos(fourtwo);
-                      bbcs_v4_2Psi2_both_docalib->Fill(pt_angle,cosfourtwo);
-                      if ( dcarm == 1 ) bbcs_v4_2Psi2_west_docalib->Fill(pt_angle,cosfourtwo);
-                      if ( dcarm == 0 ) bbcs_v4_2Psi2_east_docalib->Fill(pt_angle,cosfourtwo);
+                      // double fourtwo = 4*phi_angle - 2*bbc_south_psi2_docalib;
+                      // double cosfourtwo = TMath::Cos(fourtwo);
                       double fourfour = 4*phi_angle - 4*bbc_south_psi2_docalib;
                       double cosfourfour = TMath::Cos(fourfour);
                       bbcs_v4_4Psi2_both_docalib->Fill(pt_angle,cosfourfour);
@@ -1377,11 +1394,8 @@ void flatten(int runNumber, int rp_recal_pass)
                   if ( dcarm == 1 ) fvtxs_v3_west_docalib->Fill(pt_angle,cosfvtx_dphi3_docalib);
                   if ( dcarm == 0 ) fvtxs_v3_east_docalib->Fill(pt_angle,cosfvtx_dphi3_docalib);
                   // --- 4th harmonic
-                  double fourtwo = 4*phi_angle - 2*fvtx_south_psi2_docalib;
-                  double cosfourtwo = TMath::Cos(fourtwo);
-                  fvtxs_v4_2Psi2_both_docalib->Fill(pt_angle,cosfourtwo);
-                  if ( dcarm == 1 ) fvtxs_v4_2Psi2_west_docalib->Fill(pt_angle,cosfourtwo);
-                  if ( dcarm == 0 ) fvtxs_v4_2Psi2_east_docalib->Fill(pt_angle,cosfourtwo);
+                  // double fourtwo = 4*phi_angle - 2*fvtx_south_psi2_docalib;
+                  // double cosfourtwo = TMath::Cos(fourtwo);
                   double fourfour = 4*phi_angle - 4*fvtx_south_psi2_docalib;
                   double cosfourfour = TMath::Cos(fourfour);
                   fvtxs_v4_4Psi2_both_docalib->Fill(pt_angle,cosfourfour);
@@ -1396,6 +1410,42 @@ void flatten(int runNumber, int rp_recal_pass)
                   th1d_dreso3_CNT_FVTX->Fill(fvtx_dphi3_docalib);
                   // ---
                   tp1f_reso42_CNT_FVTX->Fill(0.0,cosfourfour);
+                }
+
+              // --- North
+
+              //fvtx all layers
+              if(-4.0<fvtx_north_psi2_docalib && fvtx_north_psi2_docalib<4.0)
+                {
+                  // --- 2nd harmonic
+                  double fvtx_dphi2_docalib = phi_angle - fvtx_north_psi2_docalib;
+                  double cosfvtx_dphi2_docalib = TMath::Cos(2*fvtx_dphi2_docalib);
+                  fvtxn_v2_both_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
+                  if ( dcarm == 1 ) fvtxn_v2_west_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
+                  if ( dcarm == 0 ) fvtxn_v2_east_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
+                  // --- 3rd harmonic
+                  double fvtx_dphi3_docalib = phi_angle - fvtx_north_psi3_docalib;
+                  double cosfvtx_dphi3_docalib = TMath::Cos(3*fvtx_dphi3_docalib);
+                  fvtxn_v3_both_docalib->Fill(pt_angle,cosfvtx_dphi3_docalib);
+                  if ( dcarm == 1 ) fvtxn_v3_west_docalib->Fill(pt_angle,cosfvtx_dphi3_docalib);
+                  if ( dcarm == 0 ) fvtxn_v3_east_docalib->Fill(pt_angle,cosfvtx_dphi3_docalib);
+                  // --- 4th harmonic
+                  // double fourtwo = 4*phi_angle - 2*fvtx_north_psi2_docalib;
+                  // double cosfourtwo = TMath::Cos(fourtwo);
+                  double fourfour = 4*phi_angle - 4*fvtx_north_psi2_docalib;
+                  double cosfourfour = TMath::Cos(fourfour);
+                  fvtxn_v4_4Psi2_both_docalib->Fill(pt_angle,cosfourfour);
+                  if ( dcarm == 1 ) fvtxn_v4_4Psi2_west_docalib->Fill(pt_angle,cosfourfour);
+                  if ( dcarm == 0 ) fvtxn_v4_4Psi2_east_docalib->Fill(pt_angle,cosfourfour);
+                  // --- ep reso
+                  tp1f_reso2_CNT_FVTXN->Fill(0.0,cosfvtx_dphi2_docalib);
+                  tp1f_reso3_CNT_FVTXN->Fill(0.0,cosfvtx_dphi3_docalib);
+                  th1d_reso2_CNT_FVTXN->Fill(cosfvtx_dphi2_docalib);
+                  th1d_reso3_CNT_FVTXN->Fill(cosfvtx_dphi3_docalib);
+                  th1d_dreso2_CNT_FVTXN->Fill(fvtx_dphi2_docalib);
+                  th1d_dreso3_CNT_FVTXN->Fill(fvtx_dphi3_docalib);
+                  // ---
+                  tp1f_reso42_CNT_FVTXN->Fill(0.0,cosfourfour);
                 }
 
               // --- now fvtx layers
@@ -1569,9 +1619,6 @@ void flatten(int runNumber, int rp_recal_pass)
           bbcs_v3_east_docalib->Write();
           bbcs_v3_west_docalib->Write();
           bbcs_v3_both_docalib->Write();
-          bbcs_v4_2Psi2_east_docalib->Write();
-          bbcs_v4_2Psi2_west_docalib->Write();
-          bbcs_v4_2Psi2_both_docalib->Write();
           bbcs_v4_4Psi2_east_docalib->Write();
           bbcs_v4_4Psi2_west_docalib->Write();
           bbcs_v4_4Psi2_both_docalib->Write();
@@ -1601,12 +1648,19 @@ void flatten(int runNumber, int rp_recal_pass)
           fvtxs2_v2_both_docalib->Write();
           fvtxs3_v2_both_docalib->Write();
           // ---
-          fvtxs_v4_2Psi2_east_docalib->Write();
-          fvtxs_v4_2Psi2_west_docalib->Write();
-          fvtxs_v4_2Psi2_both_docalib->Write();
           fvtxs_v4_4Psi2_east_docalib->Write();
           fvtxs_v4_4Psi2_west_docalib->Write();
           fvtxs_v4_4Psi2_both_docalib->Write();
+          // ---
+          fvtxn_v2_east_docalib->Write();
+          fvtxn_v2_west_docalib->Write();
+          fvtxn_v2_both_docalib->Write();
+          fvtxn_v3_east_docalib->Write();
+          fvtxn_v3_west_docalib->Write();
+          fvtxn_v3_both_docalib->Write();
+          fvtxn_v4_4Psi2_east_docalib->Write();
+          fvtxn_v4_4Psi2_west_docalib->Write();
+          fvtxn_v4_4Psi2_both_docalib->Write();
         } // fvtx clsuters
 
       tp1f_reso2_BBC_CNT->Write();
@@ -1632,16 +1686,22 @@ void flatten(int runNumber, int rp_recal_pass)
 
       tp1f_reso2_BBC_FVTXN->Write();
       tp1f_reso3_BBC_FVTXN->Write();
+      tp1f_reso2_CNT_FVTXN->Write();
+      tp1f_reso3_CNT_FVTXN->Write();
       tp1f_reso2_FVTXS_FVTXN->Write();
       tp1f_reso3_FVTXS_FVTXN->Write();
 
       th1d_reso2_BBC_FVTXN->Write();
       th1d_reso3_BBC_FVTXN->Write();
+      th1d_reso2_CNT_FVTXN->Write();
+      th1d_reso3_CNT_FVTXN->Write();
       th1d_reso2_FVTXS_FVTXN->Write();
       th1d_reso3_FVTXS_FVTXN->Write();
 
       th1d_dreso2_BBC_FVTXN->Write();
       th1d_dreso3_BBC_FVTXN->Write();
+      th1d_dreso2_CNT_FVTXN->Write();
+      th1d_dreso3_CNT_FVTXN->Write();
       th1d_dreso2_FVTXS_FVTXN->Write();
       th1d_dreso3_FVTXS_FVTXN->Write();
 
@@ -1649,6 +1709,7 @@ void flatten(int runNumber, int rp_recal_pass)
       tp1f_reso42_BBC_FVTX->Write();
       tp1f_reso42_CNT_FVTX->Write();
       tp1f_reso42_BBC_FVTXN->Write();
+      tp1f_reso42_CNT_FVTXN->Write();
       tp1f_reso42_FVTXS_FVTXN->Write();
 
       th1d_BBC_charge->Write();
