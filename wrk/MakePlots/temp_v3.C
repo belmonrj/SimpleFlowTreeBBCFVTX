@@ -8,6 +8,7 @@ void temp_v3()
   doenergy(200);
   doenergy(62);
   doenergy(20);
+  doenergy(39);
 
 }
 
