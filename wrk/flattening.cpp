@@ -619,8 +619,10 @@ void flatten(int runNumber, int rp_recal_pass)
       // --- beam center not available yet!!!
       // float vtx_x = bc_x;
       // float vtx_y = bc_y;
-      float vtx_x = 0;
-      float vtx_y = 0;
+      float vtx_z = d_bbcz;
+      if ( eventfvtx_z > -999 ) vtx_z = eventfvtx_z;
+      float vtx_x = 0.3 + 0.001*vtx_z; // 0.3 cm and 1.0 mrad from Darren 2016-06-23
+      float vtx_y = 0.02; // 0.02 cm from Darren 2016-06-23
 
       float bbc_qx2 = 0;
       float bbc_qy2 = 0;
@@ -634,12 +636,15 @@ void flatten(int runNumber, int rp_recal_pass)
         {
           for(int ipmt = 0; ipmt < 64; ipmt++)
             {
+              float bbc_charge = d_BBC_charge[ipmt];
+              if(bbc_charge <= 0) continue;
+
               float bbc_x      = d_pmt_x[ipmt] - vtx_x*10;//pmt location in mm
               float bbc_y      = d_pmt_y[ipmt] - vtx_y*10;
               float bbc_z      = d_pmt_z       - d_bbcz*10;
-              float bbc_charge = d_BBC_charge[ipmt];
-              if(bbc_charge <= 0) continue;
               //cout<<"bbc_x: "<<bbc_x<<" bbc_y: "<<bbc_y<<" bbc_z: "<<bbc_z<<endl;
+
+              bbc_x /= TMath::Cos(0.001);
 
               double bbc_r = sqrt(pow(bbc_x,2.0)+pow(bbc_y,2.0));
 
@@ -648,15 +653,15 @@ void flatten(int runNumber, int rp_recal_pass)
 
               float phi = TMath::ATan2(bbc_y,bbc_x);
 
-              float mass = 0.1396;//assume charged pion mass
-              float pT = 0.25;
-              float px = pT * TMath::Cos(phi);
-              float py = pT * TMath::Sin(phi);
-              float pz = pT * TMath::SinH(bbc_eta);
+              // float mass = 0.1396;//assume charged pion mass
+              // float pT = 0.25;
+              // float px = pT * TMath::Cos(phi);
+              // float py = pT * TMath::Sin(phi);
+              // float pz = pT * TMath::SinH(bbc_eta);
 
-              float energy = TMath::Sqrt(px*px+py*py+pz*pz+mass*mass);
-              TLorentzVector particle_vec(px,py,pz,energy);
-              phi = TMath::ATan2(particle_vec.Py(),particle_vec.Px());
+              // float energy = TMath::Sqrt(px*px+py*py+pz*pz+mass*mass);
+              // TLorentzVector particle_vec(px,py,pz,energy);
+              // phi = TMath::ATan2(particle_vec.Py(),particle_vec.Px());
 
               // --- need to add a harmonic loop here, this will only give psi for now
               bbc_qx2 += bbc_charge*TMath::Cos(2*phi);
@@ -747,6 +752,8 @@ void flatten(int runNumber, int rp_recal_pass)
               float fvtx_x      = d_FVTX_x[iclus] - vtx_x; // calculate for each event, function of z
               float fvtx_y      = d_FVTX_y[iclus] - vtx_y;
               float fvtx_z      = d_FVTX_z[iclus]; // need raw z to get layer
+
+              fvtx_x /= TMath::Cos(0.001);
 
               double fvtx_r = sqrt(pow(fvtx_x,2.0)+pow(fvtx_y,2.0));
 
