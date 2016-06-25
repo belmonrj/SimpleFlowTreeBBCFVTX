@@ -116,7 +116,8 @@ int VTX_event_plane_reco::Init(PHCompositeNode *topNode)
       _ntp_event -> Branch("event",&event,"event/F");
       _ntp_event -> Branch("bbc_z",&bbc_z,"bbc_z/F");
       _ntp_event -> Branch("centrality",&centrality,"centrality/F");
-      _ntp_event -> Branch("trigger",&trigger,"trigger/i");
+      _ntp_event -> Branch("trigger_scaled",&trigger_scaled,"trigger_scaled/i");
+      _ntp_event -> Branch("trigger_live",&trigger_live,"trigger_live/i");
       _ntp_event -> Branch("d_Qx",&d_Qx,"d_Qx[9]/F");
       _ntp_event -> Branch("d_Qy",&d_Qy,"d_Qy[9]/F");
       _ntp_event -> Branch("d_Qw",&d_Qw,"d_Qw[9]/F");
@@ -243,7 +244,8 @@ int VTX_event_plane_reco::ResetEvent(PHCompositeNode *topNode)
 
   event         = -9999;
   centrality    = -9999;
-  trigger       = -9999;
+  trigger_scaled = -9999;
+  trigger_live   = -9999;
   bbc_qn        = -9999;
   bbc_qs        = -9999;
   bbc_z         = -9999;
@@ -436,7 +438,7 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
   if (d_svxcls == NULL && _write_clusters)
     {
       std::cerr << "SvxClusterList node not found.Register SvxReco module" << std::endl;
-      return DISCARDEVENT;
+      return ABORTEVENT;
     }
 
   RpSumXYObject* d_rp = findNode::getClass<RpSumXYObject>(topNode, "RpSumXYObject");
@@ -494,33 +496,72 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
   bc_y = svx_fast.getY();
   svtx_z = svx_fast.getZ();
 
-  // --- bbc_z...
-  PHPoint vertex1 = vertexes->get_Vertex("BBC");
-  bbc_z = vertex1.getZ();
-  if ( fabs(bbc_z) > _z_vertex_range ) return DISCARDEVENT;
-
   // phglobal fields
   centrality  = global->getCentrality();
   bbc_qn      = global->getBbcChargeN();
   bbc_qs      = global->getBbcChargeS();
   event = evthead->get_EvtSequence();
-  trigger = triggers->get_lvl1_trigscaled();
+  trigger_scaled = triggers->get_lvl1_trigscaled();
+  trigger_live = triggers->get_lvl1_triglive();
 
-  // --- these numbers taken from run 16 run control log
-  unsigned int trigger_FVTXNSBBCScentral = 0x00100000;
-  unsigned int trigger_FVTXNSBBCS        = 0x00400000;
-  unsigned int trigger_BBCLL1narrowcent  = 0x00000008;
-  unsigned int trigger_BBCLL1narrow      = 0x00000010;
+  // // --- these numbers taken from run 16 run control log
+  // unsigned int trigger_FVTXNSBBCScentral = 0x00100000;
+  // unsigned int trigger_FVTXNSBBCS        = 0x00400000;
+  // unsigned int trigger_BBCLL1narrowcent  = 0x00000008;
+  // unsigned int trigger_BBCLL1narrow      = 0x00000010;
 
-  unsigned int all_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS | trigger_BBCLL1narrowcent | trigger_BBCLL1narrow ;
+  // unsigned int accepted_triggers = 0;
+  // // accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS | trigger_BBCLL1narrowcent | trigger_BBCLL1narrow ;
+  // // --- Run16dAu200
+  // if ( runnumber >= 454774 && runnumber <= 455639 ) accepted_triggers = trigger_BBCLL1narrowcent | trigger_BBCLL1narrow;
+  // // --- Run16dAu62
+  // if ( runnumber >= 455792 && runnumber <= 456283 ) accepted_triggers = trigger_BBCLL1narrowcent | trigger_BBCLL1narrow;
+  // // --- Run16dAu20
+  // if ( runnumber >= 456652 && runnumber <= 457298 ) accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS;
+  // // --- Run16dAu39
+  // if ( runnumber >= 457634 && runnumber <= 458167 ) accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS;
 
-  unsigned int passes_trigger = trigger & all_triggers;
-  if ( passes_trigger == 0 )
-    {
-      if ( _verbosity > 0 ) cout << "trigger rejected" << endl;
-      return DISCARDEVENT;
-    }
-  else if ( _verbosity > 0 ) cout << "trigger accepted" << endl;
+
+
+  // unsigned int passes_trigger = trigger_scaled & accepted_triggers;
+  // if ( passes_trigger == 0 )
+  //   {
+  //     if ( _verbosity > 0 ) cout << "trigger rejected" << endl;
+  //     return ABORTEVENT;
+  //   }
+  // else if ( _verbosity > 0 ) cout << "trigger accepted" << endl;
+
+
+
+
+  // --- bbc_z...
+  PHPoint vertex1 = vertexes->get_Vertex("BBC");
+  bbc_z = vertex1.getZ();
+  if ( bbc_z != bbc_z ) bbc_z = -9999; // reassign nan
+
+  PHPoint fvtx_vertex = vertexes->get_Vertex("FVTX");
+  FVTX_X = fvtx_vertex.getX();
+  FVTX_Y = fvtx_vertex.getY();
+  FVTX_Z = fvtx_vertex.getZ();
+  if ( FVTX_Z != FVTX_Z ) FVTX_Z = -9999; // reassign nan
+
+  // cout << endl;
+  // cout << "--- starting vertex checking ---" << endl;
+  // float zvtx = -9999;
+  // if ( runnumber >= 454744 && runnumber <= 456283 ) zvtx = bbc_z;
+  // if ( runnumber >= 456652 && runnumber <= 458167 ) zvtx = FVTX_Z;
+  // if ( fabs(zvtx) > _z_vertex_range )
+  //   {
+  //     if ( _verbosity > 0 ) cout << "rejecting event because of bad vertex " << zvtx << " cm" << endl;
+  //     return ABORTEVENT;
+  //   }
+  // else if ( _verbosity > 0 ) cout << "event accepted vertex is " << zvtx << " cm" << endl;
+
+  if ( _verbosity > 1 ) cout << "FVTX vertex points: " << FVTX_X << " " << FVTX_Y << " " << FVTX_Z << endl;
+  // cout << "FVTX_Z is " << FVTX_Z << endl;
+
+
+
 
   int ibbcz_bin = (bbc_z+30.0)/10;//for fvtx eta cuts
 
@@ -630,7 +671,7 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
       return ABORTEVENT;
     }
 
-  tmp_evt++;//to keep track of how many events pass event cuts
+  //  tmp_evt++;//to keep track of how many events pass event cuts
 
   //---------------------------------------------------------//
   //
@@ -759,12 +800,6 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
         }
     }
 
-  PHPoint fvtx_vertex = vertexes->get_Vertex("FVTX");
-  FVTX_X = fvtx_vertex.getX();
-  FVTX_Y = fvtx_vertex.getY();
-  FVTX_Z = fvtx_vertex.getZ();
-
-  if ( _verbosity > 1 ) cout << "FVTX vertex points: " << FVTX_X << " " << FVTX_Y << " " << FVTX_Z << endl;
 
   int nfvtxs_raw_clus = 0;
   if ( fvtx_coord_map )
@@ -1007,13 +1042,13 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
 
     } // check on track pointer
 
-  if(_create_ttree)
-    _ntp_event->Fill();
+  if ( _create_ttree ) _ntp_event->Fill();
 
   ResetEvent(topNode);
 
-  if(_verbosity >1) cout<<"sucessfully processed this event"<<endl;
+  if ( _verbosity > 0 ) cout << "sucessfully processed this event" << endl;
 
+  tmp_evt++;//to keep track of how many events pass event cuts
   return EVENT_OK;
 
 } // end of process_event
