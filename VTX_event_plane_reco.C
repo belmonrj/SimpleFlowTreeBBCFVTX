@@ -507,13 +507,13 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
   // // --- these numbers taken from run 16 run control log
   // unsigned int trigger_FVTXNSBBCScentral = 0x00100000;
   // unsigned int trigger_FVTXNSBBCS        = 0x00400000;
-  // unsigned int trigger_BBCLL1narrowcent  = 0x00000008;
-  // unsigned int trigger_BBCLL1narrow      = 0x00000010;
+  unsigned int trigger_BBCLL1narrowcent  = 0x00000008;
+  unsigned int trigger_BBCLL1narrow      = 0x00000010;
 
-  // unsigned int accepted_triggers = 0;
+  unsigned int accepted_triggers = 0;
   // // accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS | trigger_BBCLL1narrowcent | trigger_BBCLL1narrow ;
-  // // --- Run16dAu200
-  // if ( runnumber >= 454774 && runnumber <= 455639 ) accepted_triggers = trigger_BBCLL1narrowcent | trigger_BBCLL1narrow;
+  // --- Run16dAu200
+  if ( runnumber >= 454774 && runnumber <= 455639 ) accepted_triggers = trigger_BBCLL1narrowcent | trigger_BBCLL1narrow;
   // // --- Run16dAu62
   // if ( runnumber >= 455792 && runnumber <= 456283 ) accepted_triggers = trigger_BBCLL1narrowcent | trigger_BBCLL1narrow;
   // // --- Run16dAu20
@@ -523,13 +523,13 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
 
 
 
-  // unsigned int passes_trigger = trigger_scaled & accepted_triggers;
-  // if ( passes_trigger == 0 )
-  //   {
-  //     if ( _verbosity > 0 ) cout << "trigger rejected" << endl;
-  //     return ABORTEVENT;
-  //   }
-  // else if ( _verbosity > 0 ) cout << "trigger accepted" << endl;
+  unsigned int passes_trigger = trigger_scaled & accepted_triggers;
+  if ( passes_trigger == 0 )
+    {
+      if ( _verbosity > 0 ) cout << "trigger rejected" << endl;
+      if ( runnumber >= 454774 && runnumber <= 455639 ) return ABORTEVENT; // keep all triggers for lower energies
+    }
+  else if ( _verbosity > 0 ) cout << "trigger accepted" << endl;
 
 
 
@@ -545,17 +545,17 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
   FVTX_Z = fvtx_vertex.getZ();
   if ( FVTX_Z != FVTX_Z ) FVTX_Z = -9999; // reassign nan
 
-  // cout << endl;
-  // cout << "--- starting vertex checking ---" << endl;
-  // float zvtx = -9999;
-  // if ( runnumber >= 454744 && runnumber <= 456283 ) zvtx = bbc_z;
-  // if ( runnumber >= 456652 && runnumber <= 458167 ) zvtx = FVTX_Z;
-  // if ( fabs(zvtx) > _z_vertex_range )
-  //   {
-  //     if ( _verbosity > 0 ) cout << "rejecting event because of bad vertex " << zvtx << " cm" << endl;
-  //     return ABORTEVENT;
-  //   }
-  // else if ( _verbosity > 0 ) cout << "event accepted vertex is " << zvtx << " cm" << endl;
+  cout << endl;
+  cout << "--- starting vertex checking ---" << endl;
+  float zvtx = -9999;
+  if ( runnumber >= 454744 && runnumber <= 456283 ) zvtx = bbc_z;
+  if ( runnumber >= 456652 && runnumber <= 458167 ) zvtx = FVTX_Z;
+  if ( fabs(zvtx) > _z_vertex_range )
+    {
+      if ( _verbosity > 0 ) cout << "rejecting event because of bad vertex " << zvtx << " cm" << endl;
+      if ( runnumber >= 454774 && runnumber <= 455639 ) return ABORTEVENT; // keep all vertices for lower energies
+    }
+  else if ( _verbosity > 0 ) cout << "event accepted vertex is " << zvtx << " cm" << endl;
 
   if ( _verbosity > 1 ) cout << "FVTX vertex points: " << FVTX_X << " " << FVTX_Y << " " << FVTX_Z << endl;
   // cout << "FVTX_Z is " << FVTX_Z << endl;
