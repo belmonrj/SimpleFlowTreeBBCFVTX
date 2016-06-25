@@ -5,6 +5,9 @@ void event_plane_testing()
 {
 
   psidiff_run(455050);
+  psidiff_run(456015);
+  psidiff_run(457015);
+  psidiff_run(458014);
 
 }
 
@@ -22,26 +25,6 @@ void psidiff_run(int run)
   // ---
   // ---
 
-  TProfile* tp1f_reso2bbc_cnt = (TProfile*)file->Get("tp1f_reso2_BBC_CNT");
-  TProfile* tp1f_reso2bbc_fvtx = (TProfile*)file->Get("tp1f_reso2_BBC_FVTX");
-  TProfile* tp1f_reso2cnt_fvtx = (TProfile*)file->Get("tp1f_reso2_CNT_FVTX");
-
-  double double_reso2_bbc_cnt = tp1f_reso2bbc_cnt->GetBinContent(1);
-  double double_reso2_bbc_fvtx = tp1f_reso2bbc_fvtx->GetBinContent(1);
-  double double_reso2_cnt_fvtx = tp1f_reso2cnt_fvtx->GetBinContent(1);
-
-  cout << "BBC CNT correlation " << double_reso2_bbc_cnt << endl;
-  cout << "BBC FVTX correlation " << double_reso2_bbc_fvtx << endl;
-  cout << "CNT FVTX correlation " << double_reso2_cnt_fvtx << endl;
-
-  double reso_bbc = sqrt((double_reso2_bbc_cnt*double_reso2_bbc_fvtx)/double_reso2_cnt_fvtx);
-  double reso_fvtx = sqrt((double_reso2_cnt_fvtx*double_reso2_bbc_fvtx)/double_reso2_bbc_cnt);
-
-  cout << "bbc resolution is " << reso_bbc << endl;
-  cout << "fvtx resolution is " << reso_fvtx << endl;
-
-  // ---
-
   TH1D* th1d_reso2bbc_cnt = (TH1D*)file->Get("th1d_reso2_BBC_CNT");
   TH1D* th1d_reso2bbc_fvtx = (TH1D*)file->Get("th1d_reso2_BBC_FVTX");
   TH1D* th1d_reso2cnt_fvtx = (TH1D*)file->Get("th1d_reso2_CNT_FVTX");
@@ -50,10 +33,29 @@ void psidiff_run(int run)
   th1d_reso2bbc_fvtx->SetLineColor(kBlack);
   th1d_reso2cnt_fvtx->SetLineColor(kRed);
 
-  th1d_reso2bbc_cnt->Draw();
+  double max_BC = th1d_reso2bbc_cnt->GetMaximum();
+  double max_BS = th1d_reso2bbc_fvtx->GetMaximum();
+  double max_CS = th1d_reso2cnt_fvtx->GetMaximum();
+
+  double max = 1.0;
+  if ( max_BC > max ) max = max_BC;
+  if ( max_BS > max ) max = max_BS;
+  if ( max_CS > max ) max = max_CS;
+
+  double min_BC = th1d_reso2bbc_cnt->GetMinimum(1);
+  double min_BS = th1d_reso2bbc_fvtx->GetMinimum(1);
+  double min_CS = th1d_reso2cnt_fvtx->GetMinimum(1);
+
+  double min = min_BC;
+  if ( min_BS < min ) min = min_BS;
+  if ( min_CS < min ) min = min_CS;
+
+  TH2D* th2 = new TH2D("th2","",1,-1.1,1.1,1,0.9*min,1.1*max);
+  th2->Draw();
+  th1d_reso2bbc_cnt->Draw("same");
   th1d_reso2bbc_fvtx->Draw("same");
   th1d_reso2cnt_fvtx->Draw("same");
-  th1d_reso2bbc_cnt->SetMinimum(th1d_reso2bbc_fvtx->GetMinimum(1.0));
+
 
   c1->SetLogy(1);
   c1->Print(Form("psidiff_reso2_%d.png",run));
@@ -70,7 +72,19 @@ void psidiff_run(int run)
   th1d_dreso2bbc_fvtx->SetLineColor(kBlack);
   th1d_dreso2cnt_fvtx->SetLineColor(kRed);
 
-  th1d_dreso2bbc_cnt->Draw();
+  max_BC = th1d_dreso2bbc_cnt->GetMaximum();
+  max_BS = th1d_dreso2bbc_fvtx->GetMaximum();
+  max_CS = th1d_dreso2cnt_fvtx->GetMaximum();
+
+  max = 1;
+  if ( max_BC > max ) max = max_BC;
+  if ( max_BS > max ) max = max_BS;
+  if ( max_CS > max ) max = max_CS;
+
+  delete th2;
+  th2 = new TH2D("th2","",1,-6.0,6.0,1,0.0,1.1*max);
+  th2->Draw();
+  th1d_dreso2bbc_cnt->Draw("same");
   th1d_dreso2bbc_fvtx->Draw("same");
   th1d_dreso2cnt_fvtx->Draw("same");
 
@@ -83,26 +97,6 @@ void psidiff_run(int run)
   // ---
   // ---
 
-  TProfile* tp1f_reso3bbc_cnt = (TProfile*)file->Get("tp1f_reso3_BBC_CNT");
-  TProfile* tp1f_reso3bbc_fvtx = (TProfile*)file->Get("tp1f_reso3_BBC_FVTX");
-  TProfile* tp1f_reso3cnt_fvtx = (TProfile*)file->Get("tp1f_reso3_CNT_FVTX");
-
-  double double_reso3_bbc_cnt = tp1f_reso3bbc_cnt->GetBinContent(1);
-  double double_reso3_bbc_fvtx = tp1f_reso3bbc_fvtx->GetBinContent(1);
-  double double_reso3_cnt_fvtx = tp1f_reso3cnt_fvtx->GetBinContent(1);
-
-  cout << "BBC CNT correlation " << double_reso3_bbc_cnt << endl;
-  cout << "BBC FVTX correlation " << double_reso3_bbc_fvtx << endl;
-  cout << "CNT FVTX correlation " << double_reso3_cnt_fvtx << endl;
-
-  double reso_bbc = sqrt((double_reso3_bbc_cnt*double_reso3_bbc_fvtx)/double_reso3_cnt_fvtx);
-  double reso_fvtx = sqrt((double_reso3_cnt_fvtx*double_reso3_bbc_fvtx)/double_reso3_bbc_cnt);
-
-  cout << "bbc resolution is " << reso_bbc << endl;
-  cout << "fvtx resolution is " << reso_fvtx << endl;
-
-  // ---
-
   TH1D* th1d_reso3bbc_cnt = (TH1D*)file->Get("th1d_reso3_BBC_CNT");
   TH1D* th1d_reso3bbc_fvtx = (TH1D*)file->Get("th1d_reso3_BBC_FVTX");
   TH1D* th1d_reso3cnt_fvtx = (TH1D*)file->Get("th1d_reso3_CNT_FVTX");
@@ -111,7 +105,27 @@ void psidiff_run(int run)
   th1d_reso3bbc_fvtx->SetLineColor(kBlack);
   th1d_reso3cnt_fvtx->SetLineColor(kRed);
 
-  th1d_reso3bbc_cnt->Draw();
+  max_BC = th1d_reso3bbc_cnt->GetMaximum();
+  max_BS = th1d_reso3bbc_fvtx->GetMaximum();
+  max_CS = th1d_reso3cnt_fvtx->GetMaximum();
+
+  max = 1;
+  if ( max_BC > max ) max = max_BC;
+  if ( max_BS > max ) max = max_BS;
+  if ( max_CS > max ) max = max_CS;
+
+  min_BC = th1d_reso3bbc_cnt->GetMinimum(1);
+  min_BS = th1d_reso3bbc_fvtx->GetMinimum(1);
+  min_CS = th1d_reso3cnt_fvtx->GetMinimum(1);
+
+  min = min_BC;
+  if ( min_BS < min ) min = min_BS;
+  if ( min_CS < min ) min = min_CS;
+
+  delete th2;
+  th2 = new TH2D("th2","",1,-1.1,1.1,1,0.9*min,1.1*max);
+  th2->Draw();
+  th1d_reso3bbc_cnt->Draw("same");
   th1d_reso3bbc_fvtx->Draw("same");
   th1d_reso3cnt_fvtx->Draw("same");
   th1d_reso3bbc_cnt->SetMinimum(th1d_reso3bbc_fvtx->GetMinimum(1.0));
@@ -131,14 +145,28 @@ void psidiff_run(int run)
   th1d_dreso3bbc_fvtx->SetLineColor(kBlack);
   th1d_dreso3cnt_fvtx->SetLineColor(kRed);
 
-  th1d_dreso3bbc_cnt->Draw();
+  max_BC = th1d_dreso3bbc_cnt->GetMaximum();
+  max_BS = th1d_dreso3bbc_fvtx->GetMaximum();
+  max_CS = th1d_dreso3cnt_fvtx->GetMaximum();
+
+  max = 1;
+  if ( max_BC > max ) max = max_BC;
+  if ( max_BS > max ) max = max_BS;
+  if ( max_CS > max ) max = max_CS;
+
+  delete th2;
+  th2 = new TH2D("th2","",1,-5.0,5.0,1,0.0,1.1*max);
+  th2->Draw();
+  th1d_dreso3bbc_cnt->Draw("same");
   th1d_dreso3bbc_fvtx->Draw("same");
   th1d_dreso3cnt_fvtx->Draw("same");
 
   c1->SetLogy(0);
   c1->Print(Form("psidiff_dreso3_%d.png",run));
   c1->Print(Form("psidiff_dreso3_%d.pdf",run));
-  c1->SetLogy(1);
+  //c1->SetLogy(1); //???
+
+  delete c1;
 
 }
 
