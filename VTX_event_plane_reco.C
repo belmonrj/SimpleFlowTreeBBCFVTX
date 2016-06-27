@@ -545,8 +545,8 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
   FVTX_Z = fvtx_vertex.getZ();
   if ( FVTX_Z != FVTX_Z ) FVTX_Z = -9999; // reassign nan
 
-  cout << endl;
-  cout << "--- starting vertex checking ---" << endl;
+  // cout << endl;
+  // cout << "--- starting vertex checking ---" << endl;
   float zvtx = -9999;
   if ( runnumber >= 454744 && runnumber <= 456283 ) zvtx = bbc_z;
   if ( runnumber >= 456652 && runnumber <= 458167 ) zvtx = FVTX_Z;

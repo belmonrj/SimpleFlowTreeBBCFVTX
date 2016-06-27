@@ -34,7 +34,7 @@ static const int NPAR = 20; // ?
 //static const int N_FVTX_CLUSTER_MAX = 750; // maximum number of fvtx clusters, may need to be changed for larger systems
 static const int N_FVTX_CLUSTER_MAX = 4000; // what's the largest possible number?
 static const int N_SVX_TRACK_MAX = 10; // seems really small??
-static const int N_CTRK_MAX = 50;
+static const int N_CTRK_MAX = 75;
 
 class Fun4AllHistoManager;
 class BbcCalib;
