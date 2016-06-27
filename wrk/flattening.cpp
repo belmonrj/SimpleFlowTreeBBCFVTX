@@ -563,7 +563,7 @@ void flatten(int runNumber, int rp_recal_pass)
   for ( int ievt = 0; ievt < nentries; ++ievt )
     {
 
-      //if ( ievt >= 100000 ) break; // just 100k events for testing, runs a little on the slow side...
+      if ( ievt >= 1000000 ) break; // just 100k events for testing, runs a little on the slow side...
       ++all_counter;
 
       bool say_event = ( ievt%1000==0 );
@@ -585,11 +585,14 @@ void flatten(int runNumber, int rp_recal_pass)
       // --- THIS CUT IS NOT PERFORMED ON THE TREES AND IS NOT NEEDED HERE...
       // --- THIS CUT IS ALSO RUN DEPENDENT: THE 20 GeV AND 39 GeV SHOULD USE THE FVTX_Z CUT
 
+      double ZVTX = -9999;
+      if ( runNumber >= 454774 && runNumber <= 456283 ) ZVTX = d_bbcz;
+      if ( runNumber >= 456652 && runNumber <= 458167 ) ZVTX = eventfvtx_z;
+
       //if(TMath::Abs(d_bbcz) > 10.0 ) continue;
       //bbc z bin for -10 <bbc z < 10 // how do you specify the number of bins here
       int ibbcz = -9;
-      if ( runNumber >= 454774 && runNumber <= 456283 ) ibbcz = NZPS*(d_bbcz+10)/20; // 200 and 62
-      if ( runNumber >= 456652 && runNumber <= 458167 ) ibbcz = NZPS*(eventfvtx_z+10)/20; // 20 and 39
+      if ( runNumber >= 454774 && runNumber <= 458167 ) ibbcz = NZPS*(ZVTX+10)/20; // 200 and 62
 
       // --- break and continue statements should happen much, much earlier --------------------
       if(rp_recal_pass<1 || rp_recal_pass > 3) break;// rp_recal_pass only valid between 1 and 3
@@ -641,15 +644,15 @@ void flatten(int runNumber, int rp_recal_pass)
 
               float bbc_x      = d_pmt_x[ipmt] - vtx_x*10;//pmt location in mm
               float bbc_y      = d_pmt_y[ipmt] - vtx_y*10;
-              float bbc_z      = d_pmt_z       - d_bbcz*10;
+              // float bbc_z      = d_pmt_z       - d_bbcz*10;
               //cout<<"bbc_x: "<<bbc_x<<" bbc_y: "<<bbc_y<<" bbc_z: "<<bbc_z<<endl;
 
               bbc_x /= TMath::Cos(0.001);
 
-              double bbc_r = sqrt(pow(bbc_x,2.0)+pow(bbc_y,2.0));
+              // double bbc_r = sqrt(pow(bbc_x,2.0)+pow(bbc_y,2.0));
 
-              double bbc_the = atan2(bbc_r,bbc_z); //fvtx_z-bbcv
-              double bbc_eta = -log(tan(0.5*bbc_the));
+              // double bbc_the = atan2(bbc_r,bbc_z); //fvtx_z-bbcv
+              // double bbc_eta = -log(tan(0.5*bbc_the));
 
               float phi = TMath::ATan2(bbc_y,bbc_x);
 
@@ -671,10 +674,6 @@ void flatten(int runNumber, int rp_recal_pass)
               bbc_qw += bbc_charge;
             } // loop over tubes
         }
-
-      th1d_BBC_charge->Fill(bbc_qw);
-      th1d_FVTX_nclus->Fill(d_nFVTX_clus);
-      th2d_qBBC_nFVTX->Fill(bbc_qw,d_nFVTX_clus);
 
       //continue; // testing to get the charge distribution to make a centrality selection
 
@@ -708,6 +707,10 @@ void flatten(int runNumber, int rp_recal_pass)
       //cout << "HELLO HERE I AM" << endl;
 
       ++EVENT_COUNTER;
+
+      th1d_BBC_charge->Fill(bbc_qw);
+      th1d_FVTX_nclus->Fill(d_nFVTX_clus);
+      th2d_qBBC_nFVTX->Fill(bbc_qw,d_nFVTX_clus);
 
 
 
@@ -757,16 +760,26 @@ void flatten(int runNumber, int rp_recal_pass)
 
               double fvtx_r = sqrt(pow(fvtx_x,2.0)+pow(fvtx_y,2.0));
 
-              double fvtx_the = atan2(fvtx_r,fvtx_z - d_bbcz); //fvtx_z-bbcv // add a new variable to make it clear that you're using a corrected z vertex
+              double fvtx_the = atan2(fvtx_r,fvtx_z - ZVTX); //fvtx_z-bbcv // add a new variable to make it clear that you're using a corrected z vertex
               double fvtx_eta = -log(tan(0.5*fvtx_the));
 
               // --- probaby don't need to cut on acceptance
               // --- shouldn't get any clusters outside of acceptance
-              if(!(fabs(fvtx_eta)>1.0 && fabs(fvtx_eta)<3.5)) continue;
+              // --- 20160627-1500 this cut causes all kinds of problems, even when using the correct z-vertex for the cluster position
+              // if(!(fabs(fvtx_eta)>1.0 && fabs(fvtx_eta)<3.5))
+              //   {
+              //     cout << "cutting on eta??? " << fvtx_eta << endl;
+              //     cout << fvtx_x << " " << fvtx_y << " " << fvtx_r << " " << fvtx_z << " " << ZVTX << endl;
+              //     continue;
+              //   }
               // cout<<"fvtx_x: "<<fvtx_x<<" fvtx_y: "<<fvtx_y<<" fvtx_z"<<fvtx_z<<endl;
 
               int fvtx_layer    = get_fvtx_layer(fvtx_z); // raw z to get layer
-              if ( fvtx_layer < 0 ) continue;
+              if ( fvtx_layer < 0 )
+                {
+                  cout << "cutting on layer??? " << fvtx_layer << " " << fvtx_z << endl;
+                  continue;
+                }
 
               // --- gap cut, not sure what this does
               int igap = (fabs(fvtx_eta)-1.0)/0.5;
@@ -1152,6 +1165,46 @@ void flatten(int runNumber, int rp_recal_pass)
           fvtx3_north_psi3_docalib = (sumxy[2][north_fvtx_3_angle][2]>4)?sumxy[2][north_fvtx_3_angle][3]:-9999.9;
         }
 
+
+      if ( fvtx_north_psi2_docalib < -999 || fvtx_south_psi2_docalib < -999 || bbc_south_psi2_docalib < -999 )
+        {
+          cout << "POSSIBLE ISSUE WITH EVENT PLANES!!!  ONE OR MORE IS -9999" << endl;
+          cout << "BBC south event plane " << bbc_south_psi2_docalib << endl;
+          cout << "FVTX south event plane " << fvtx_south_psi2_docalib << endl;
+          cout << "FVTX north event plane " << fvtx_north_psi2_docalib << endl;
+          cout << "BBC charge " << bbc_qw << endl;
+          cout << "Total number of clusters is " << d_nFVTX_clus << endl;
+          cout << "Number of FVTXS clusters " << fvtxs_qw[0] << endl;
+          cout << "Number of FVTXN clusters " << fvtxn_qw[0] << endl;
+        }
+
+      // if ( fvtx_north_psi2_docalib - fvtx_south_psi2_docalib == 0  )
+      //   {
+      //     cout << "POSSIBLE ISSUE WITH EVENT PLANES!!!  IDENTICALLY 0 DIFFERENCE" << endl;
+      //     cout << "BBC south event plane " << bbc_south_psi2_docalib << endl;
+      //     cout << "FVTX south event plane " << fvtx_south_psi2_docalib << endl;
+      //     cout << "FVTX north event plane " << fvtx_north_psi2_docalib << endl;
+      //     cout << "BBC charge " << bbc_qw << endl;
+      //     cout << "Total number of clusters is " << d_nFVTX_clus << endl;
+      //     cout << "Number of FVTXS clusters " << fvtxs_qw[0] << endl;
+      //     cout << "Number of FVTXN clusters " << fvtxn_qw[0] << endl;
+      //   }
+
+      // if ( fabs(fvtx_north_psi2_docalib - fvtx_south_psi2_docalib) <= 0.001  )
+      //   {
+      //     cout << "POSSIBLE ISSUE WITH EVENT PLANES!!!  TOO SMALL DIFFERENCE" << endl;
+      //     cout << "BBC south event plane " << bbc_south_psi2_docalib << endl;
+      //     cout << "FVTX south event plane " << fvtx_south_psi2_docalib << endl;
+      //     cout << "FVTX north event plane " << fvtx_north_psi2_docalib << endl;
+      //   }
+
+      // if ( true  )
+      //   {
+      //     //cout << "POSSIBLE ISSUE WITH EVENT PLANES!!!  TOO SMALL DIFFERENCE" << endl;
+      //     cout << "BBC south event plane " << bbc_south_psi2_docalib << endl;
+      //     cout << "FVTX south event plane " << fvtx_south_psi2_docalib << endl;
+      //     cout << "FVTX north event plane " << fvtx_north_psi2_docalib << endl;
+      //   }
 
 
       // ---
