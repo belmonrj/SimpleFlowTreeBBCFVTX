@@ -196,6 +196,8 @@ void flatten(int runNumber, int rp_recal_pass)
   TH1D* th1d_BBC_charge = new TH1D("th1d_BBC_charge","",200,-0.5,199.5);
   TH1D* th1d_FVTX_nclus = new TH1D("th1d_FVTX_nclus","",200,-0.5,1999.5);
   TH2D* th2d_qBBC_nFVTX = new TH2D("th2d_qBBC_nFVTX","",200,-0.5,199.5,200,-0.5,1999.5);
+  TH1D* th1d_FVTXS_nclus = new TH1D("th1d_FVTXS_nclus","",200,-0.5,1999.5);
+  TH1D* th1d_FVTXN_nclus = new TH1D("th1d_FVTXN_nclus","",200,-0.5,1999.5);
 
 
   // --- event plane resolution
@@ -830,6 +832,8 @@ void flatten(int runNumber, int rp_recal_pass)
             } // loop over cluster
         } // check on clusters
 
+      th1d_FVTXS_nclus->Fill(fvtxs_qw[0]);
+      th1d_FVTXN_nclus->Fill(fvtxn_qw[0]);
 
 
       // --- the array that has all of the Q vectors
@@ -1178,33 +1182,6 @@ void flatten(int runNumber, int rp_recal_pass)
           cout << "Number of FVTXN clusters " << fvtxn_qw[0] << endl;
         }
 
-      // if ( fvtx_north_psi2_docalib - fvtx_south_psi2_docalib == 0  )
-      //   {
-      //     cout << "POSSIBLE ISSUE WITH EVENT PLANES!!!  IDENTICALLY 0 DIFFERENCE" << endl;
-      //     cout << "BBC south event plane " << bbc_south_psi2_docalib << endl;
-      //     cout << "FVTX south event plane " << fvtx_south_psi2_docalib << endl;
-      //     cout << "FVTX north event plane " << fvtx_north_psi2_docalib << endl;
-      //     cout << "BBC charge " << bbc_qw << endl;
-      //     cout << "Total number of clusters is " << d_nFVTX_clus << endl;
-      //     cout << "Number of FVTXS clusters " << fvtxs_qw[0] << endl;
-      //     cout << "Number of FVTXN clusters " << fvtxn_qw[0] << endl;
-      //   }
-
-      // if ( fabs(fvtx_north_psi2_docalib - fvtx_south_psi2_docalib) <= 0.001  )
-      //   {
-      //     cout << "POSSIBLE ISSUE WITH EVENT PLANES!!!  TOO SMALL DIFFERENCE" << endl;
-      //     cout << "BBC south event plane " << bbc_south_psi2_docalib << endl;
-      //     cout << "FVTX south event plane " << fvtx_south_psi2_docalib << endl;
-      //     cout << "FVTX north event plane " << fvtx_north_psi2_docalib << endl;
-      //   }
-
-      // if ( true  )
-      //   {
-      //     //cout << "POSSIBLE ISSUE WITH EVENT PLANES!!!  TOO SMALL DIFFERENCE" << endl;
-      //     cout << "BBC south event plane " << bbc_south_psi2_docalib << endl;
-      //     cout << "FVTX south event plane " << fvtx_south_psi2_docalib << endl;
-      //     cout << "FVTX north event plane " << fvtx_north_psi2_docalib << endl;
-      //   }
 
 
       // ---
@@ -1423,15 +1400,8 @@ void flatten(int runNumber, int rp_recal_pass)
                 {
                   double fvtx_dphi2_docalib = phi_angle - fvtx0_south_psi2_docalib;
                   double cosfvtx_dphi2_docalib = TMath::Cos(2*fvtx_dphi2_docalib);
-
-                  if(dcarm==1)
-                    {
-                      fvtxs0_v2_west_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
-                    }
-                  else if( dcarm==0)
-                    {
-                      fvtxs0_v2_east_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
-                    }
+                  if ( dcarm == 1 ) fvtxs0_v2_west_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
+                  if ( dcarm == 0 ) fvtxs0_v2_east_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
                   fvtxs0_v2_both_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
                 }
 
@@ -1440,15 +1410,8 @@ void flatten(int runNumber, int rp_recal_pass)
                 {
                   double fvtx_dphi2_docalib = phi_angle - fvtx1_south_psi2_docalib;
                   double cosfvtx_dphi2_docalib = TMath::Cos(2*fvtx_dphi2_docalib);
-
-                  if(dcarm==1)
-                    {
-                      fvtxs1_v2_west_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
-                    }
-                  else if( dcarm==0)
-                    {
-                      fvtxs1_v2_east_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
-                    }
+                  if ( dcarm == 1 ) fvtxs1_v2_west_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
+                  if ( dcarm == 0 ) fvtxs1_v2_east_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
                   fvtxs1_v2_both_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
                 }
 
@@ -1457,15 +1420,8 @@ void flatten(int runNumber, int rp_recal_pass)
                 {
                   double fvtx_dphi2_docalib = phi_angle - fvtx2_south_psi2_docalib;
                   double cosfvtx_dphi2_docalib = TMath::Cos(2*fvtx_dphi2_docalib);
-
-                  if(dcarm==1)
-                    {
-                      fvtxs2_v2_west_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
-                    }
-                  else if( dcarm==0)
-                    {
-                      fvtxs2_v2_east_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
-                    }
+                  if ( dcarm == 1 ) fvtxs2_v2_west_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
+                  if ( dcarm == 0 ) fvtxs2_v2_east_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
                   fvtxs2_v2_both_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
                 }
 
@@ -1474,15 +1430,8 @@ void flatten(int runNumber, int rp_recal_pass)
                 {
                   double fvtx_dphi2_docalib = phi_angle - fvtx3_south_psi2_docalib;
                   double cosfvtx_dphi2_docalib = TMath::Cos(2*fvtx_dphi2_docalib);
-
-                  if(dcarm==1)
-                    {
-                      fvtxs3_v2_west_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
-                    }
-                  else if( dcarm==0)
-                    {
-                      fvtxs3_v2_east_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
-                    }
+                  if ( dcarm == 1 ) fvtxs3_v2_west_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
+                  if ( dcarm == 0 ) fvtxs3_v2_east_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
                   fvtxs3_v2_both_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
                 } // check on psi
             } // loop over tracks
@@ -1562,6 +1511,8 @@ void flatten(int runNumber, int rp_recal_pass)
         } // harmonics
       th1d_BBC_charge->Write();
       th1d_FVTX_nclus->Write();
+      th1d_FVTXS_nclus->Write();
+      th1d_FVTXN_nclus->Write();
       th2d_qBBC_nFVTX->Write();
       mData2->Close();
     }
@@ -1683,6 +1634,8 @@ void flatten(int runNumber, int rp_recal_pass)
 
       th1d_BBC_charge->Write();
       th1d_FVTX_nclus->Write();
+      th1d_FVTXS_nclus->Write();
+      th1d_FVTXN_nclus->Write();
       th2d_qBBC_nFVTX->Write();
 
       mData1->Close();
@@ -1774,6 +1727,8 @@ void flatten(int runNumber, int rp_recal_pass)
 
     delete th1d_BBC_charge;
     delete th1d_FVTX_nclus;
+    delete th1d_FVTXN_nclus;
+    delete th1d_FVTXS_nclus;
     delete th2d_qBBC_nFVTX;
     delete tp1f_reso2_BBC_CNT;
     delete tp1f_reso2_BBC_FVTX;
