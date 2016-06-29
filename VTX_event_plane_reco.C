@@ -505,21 +505,21 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
   trigger_live = triggers->get_lvl1_triglive();
 
   // // --- these numbers taken from run 16 run control log
-  // unsigned int trigger_FVTXNSBBCScentral = 0x00100000;
-  // unsigned int trigger_FVTXNSBBCS        = 0x00400000;
+  unsigned int trigger_FVTXNSBBCScentral = 0x00100000;
+  unsigned int trigger_FVTXNSBBCS        = 0x00400000;
   unsigned int trigger_BBCLL1narrowcent  = 0x00000008;
   unsigned int trigger_BBCLL1narrow      = 0x00000010;
 
   unsigned int accepted_triggers = 0;
-  // // accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS | trigger_BBCLL1narrowcent | trigger_BBCLL1narrow ;
+  // accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS | trigger_BBCLL1narrowcent | trigger_BBCLL1narrow ;
   // --- Run16dAu200
   if ( runnumber >= 454774 && runnumber <= 455639 ) accepted_triggers = trigger_BBCLL1narrowcent | trigger_BBCLL1narrow;
-  // // --- Run16dAu62
-  // if ( runnumber >= 455792 && runnumber <= 456283 ) accepted_triggers = trigger_BBCLL1narrowcent | trigger_BBCLL1narrow;
-  // // --- Run16dAu20
-  // if ( runnumber >= 456652 && runnumber <= 457298 ) accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS;
-  // // --- Run16dAu39
-  // if ( runnumber >= 457634 && runnumber <= 458167 ) accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS;
+  // --- Run16dAu62
+  if ( runnumber >= 455792 && runnumber <= 456283 ) accepted_triggers = trigger_BBCLL1narrowcent | trigger_BBCLL1narrow;
+  // --- Run16dAu20
+  if ( runnumber >= 456652 && runnumber <= 457298 ) accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS;
+  // --- Run16dAu39
+  if ( runnumber >= 457634 && runnumber <= 458167 ) accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS;
 
 
 
@@ -527,7 +527,7 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
   if ( passes_trigger == 0 )
     {
       if ( _verbosity > 0 ) cout << "trigger rejected" << endl;
-      if ( runnumber >= 454774 && runnumber <= 455639 ) return ABORTEVENT; // keep all triggers for lower energies
+      // return ABORTEVENT;
     }
   else if ( _verbosity > 0 ) cout << "trigger accepted" << endl;
 
@@ -550,10 +550,11 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
   float zvtx = -9999;
   if ( runnumber >= 454744 && runnumber <= 456283 ) zvtx = bbc_z;
   if ( runnumber >= 456652 && runnumber <= 458167 ) zvtx = FVTX_Z;
-  if ( fabs(zvtx) > _z_vertex_range )
+  // if ( fabs(zvtx) > _z_vertex_range )
+  if ( !( fabs(bbc_z) < _z_vertex_range || fabs(FVTX_Z) < _z_vertex_range ) )
     {
       if ( _verbosity > 0 ) cout << "rejecting event because of bad vertex " << zvtx << " cm" << endl;
-      if ( runnumber >= 454774 && runnumber <= 455639 ) return ABORTEVENT; // keep all vertices for lower energies
+      return ABORTEVENT;
     }
   else if ( _verbosity > 0 ) cout << "event accepted vertex is " << zvtx << " cm" << endl;
 
