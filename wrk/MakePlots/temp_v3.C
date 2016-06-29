@@ -108,8 +108,8 @@ void doenergy(int energy)
 
   // c1->Print("run16dau200_v3_fvtxsbbcs_fullscale.pdf");
   // c1->Print("run16dau200_v3_fvtxsbbcs_fullscale.png");
-  c1->Print(Form("run16dau%d_v3_fvtxsbbcs.pdf",energy));
-  c1->Print(Form("run16dau%d_v3_fvtxsbbcs.png",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v3_fvtxsbbcs.pdf",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v3_fvtxsbbcs.png",energy));
 
   delete c1;
 
@@ -151,8 +151,8 @@ void doenergy_eastwest(int energy)
   hv3_bbcs_east->Draw("same");
   hv3_bbcs_west->Draw("same");
 
-  c1->Print("run16dau200_v3_fvtxsbbcs_fullscale_eastwest.pdf");
-  c1->Print("run16dau200_v3_fvtxsbbcs_fullscale_eastwest.png");
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v3_fvtxsbbcs_fullscale_eastwest.pdf",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v3_fvtxsbbcs_fullscale_eastwest.png",energy));
 
 
 }

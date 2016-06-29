@@ -19,6 +19,10 @@ void temp_runbyrun_epreso_fullsuite()
   makeplots(20,3);
   makeplots(20,42);
 
+  makeplots(39,2);
+  makeplots(39,3);
+  makeplots(39,42);
+
 }
 
 
@@ -259,8 +263,8 @@ void makeplots(int energy, int harmonic)
   legB->SetTextSize(0.05);
   legB->Draw();
 
-  c1->Print(Form("figreso_bbc_energy%d_harmonic%d.png",energy,harmonic));
-  c1->Print(Form("figreso_bbc_energy%d_harmonic%d.pdf",energy,harmonic));
+  c1->Print(Form("FigsEventPlane/figreso_bbc_energy%d_harmonic%d.png",energy,harmonic));
+  c1->Print(Form("FigsEventPlane/figreso_bbc_energy%d_harmonic%d.pdf",energy,harmonic));
 
   // ---
 
@@ -317,8 +321,8 @@ void makeplots(int energy, int harmonic)
   legN->SetTextSize(0.05);
   legN->Draw();
 
-  c1->Print(Form("figreso_fvtxn_energy%d_harmonic%d.png",energy,harmonic));
-  c1->Print(Form("figreso_fvtxn_energy%d_harmonic%d.pdf",energy,harmonic));
+  c1->Print(Form("FigsEventPlane/figreso_fvtxn_energy%d_harmonic%d.png",energy,harmonic));
+  c1->Print(Form("FigsEventPlane/figreso_fvtxn_energy%d_harmonic%d.pdf",energy,harmonic));
 
   // ---
 
@@ -368,8 +372,8 @@ void makeplots(int energy, int harmonic)
   legS->SetTextSize(0.05);
   legS->Draw();
 
-  c1->Print(Form("figreso_fvtxs_energy%d_harmonic%d.png",energy,harmonic));
-  c1->Print(Form("figreso_fvtxs_energy%d_harmonic%d.pdf",energy,harmonic));
+  c1->Print(Form("FigsEventPlane/figreso_fvtxs_energy%d_harmonic%d.png",energy,harmonic));
+  c1->Print(Form("FigsEventPlane/figreso_fvtxs_energy%d_harmonic%d.pdf",energy,harmonic));
 
   // ---
 

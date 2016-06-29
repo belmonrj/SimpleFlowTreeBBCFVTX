@@ -49,35 +49,35 @@ void beforeafterflat_run(int run, int harmonic)
   TH1D* hbbc = (TH1D*) ((TH2D*)file->Get("psi_bf_0_1_2"))->ProjectionY();
   hbbc->Draw();
   hbbc->GetXaxis()->SetTitle("#Psi_{2}, BBCS");
-  c1->Print(Form("before_psi2_bbcs_%d.png",run));
-  c1->Print(Form("before_psi2_bbcs_%d.pdf",run));
+  c1->Print(Form("FigsEventPlane/before_psi2_bbcs_%d.png",run));
+  c1->Print(Form("FigsEventPlane/before_psi2_bbcs_%d.pdf",run));
   TH1D* hbbcA = (TH1D*) ((TH2D*)file->Get("psi_af_0_1_2"))->ProjectionY();
   hbbcA->Draw("same");
   hbbcA->GetXaxis()->SetTitle("#Psi_{2}, BBCS");
-  c1->Print(Form("after_psi2_bbcs_%d.png",run));
-  c1->Print(Form("after_psi2_bbcs_%d.pdf",run));
+  c1->Print(Form("FigsEventPlane/after_psi2_bbcs_%d.png",run));
+  c1->Print(Form("FigsEventPlane/after_psi2_bbcs_%d.pdf",run));
 
   TH1D* hfvtxs = (TH1D*) ((TH2D*)file->Get("psi_bf_0_1_3"))->ProjectionY();
   hfvtxs->Draw();
   hfvtxs->GetXaxis()->SetTitle("#Psi_{2}, FVTXS");
-  c1->Print(Form("before_psi2_fvtxs_%d.png",run));
-  c1->Print(Form("before_psi2_fvtxs_%d.pdf",run));
+  c1->Print(Form("FigsEventPlane/before_psi2_fvtxs_%d.png",run));
+  c1->Print(Form("FigsEventPlane/before_psi2_fvtxs_%d.pdf",run));
   TH1D* hfvtxsA = (TH1D*) ((TH2D*)file->Get("psi_af_0_1_3"))->ProjectionY();
   hfvtxsA->Draw("same");
   hfvtxsA->GetXaxis()->SetTitle("#Psi_{2}, FVTXS");
-  c1->Print(Form("after_psi2_fvtxs_%d.png",run));
-  c1->Print(Form("after_psi2_fvtxs_%d.pdf",run));
+  c1->Print(Form("FigsEventPlane/after_psi2_fvtxs_%d.png",run));
+  c1->Print(Form("FigsEventPlane/after_psi2_fvtxs_%d.pdf",run));
 
   TH1D* hfvtxn = (TH1D*) ((TH2D*)file->Get("psi_bf_0_1_8"))->ProjectionY();
   hfvtxn->Draw();
   hfvtxn->GetXaxis()->SetTitle("#Psi_{2}, FVTXN");
-  c1->Print(Form("before_psi2_fvtxn_%d.png",run));
-  c1->Print(Form("before_psi2_fvtxn_%d.pdf",run));
+  c1->Print(Form("FigsEventPlane/before_psi2_fvtxn_%d.png",run));
+  c1->Print(Form("FigsEventPlane/before_psi2_fvtxn_%d.pdf",run));
   TH1D* hfvtxnA = (TH1D*) ((TH2D*)file->Get("psi_af_0_1_8"))->ProjectionY();
   hfvtxnA->Draw("same");
   hfvtxnA->GetXaxis()->SetTitle("#Psi_{2}, FVTXN");
-  c1->Print(Form("after_psi2_fvtxn_%d.png",run));
-  c1->Print(Form("after_psi2_fvtxn_%d.pdf",run));
+  c1->Print(Form("FigsEventPlane/after_psi2_fvtxn_%d.png",run));
+  c1->Print(Form("FigsEventPlane/after_psi2_fvtxn_%d.pdf",run));
 
   delete c1;
 
@@ -140,8 +140,8 @@ void psidiff_run(int run, int harmonic)
   th1d_dreso_cnt_fvtxn->Draw("same");
   th1d_dreso_fvtxs_fvtxn->Draw("same");
   TLegend* leg = new TLegend();
-  c1->Print(Form("psidiff_dreso%d_%d.png",harmonic,run));
-  c1->Print(Form("psidiff_dreso%d_%d.pdf",harmonic,run));
+  c1->Print(Form("FigsEventPlane/psidiff_dreso%d_%d.png",harmonic,run));
+  c1->Print(Form("FigsEventPlane/psidiff_dreso%d_%d.pdf",harmonic,run));
   delete th2;
   delete leg;
 
@@ -174,8 +174,8 @@ void psidiff_run(int run, int harmonic)
   leg->AddEntry(th1d_dreso_fvtxs_fvtxn,"FVTXS-FVTXN","l");
   leg->SetTextSize(0.045);
   leg->Draw();
-  c1->Print(Form("psidiff_dreso%d_%d_SANSCNT.png",harmonic,run));
-  c1->Print(Form("psidiff_dreso%d_%d_SANSCNT.pdf",harmonic,run));
+  c1->Print(Form("FigsEventPlane/psidiff_dreso%d_%d_SANSCNT.png",harmonic,run));
+  c1->Print(Form("FigsEventPlane/psidiff_dreso%d_%d_SANSCNT.pdf",harmonic,run));
   delete th2;
 
   max = 1;
@@ -195,8 +195,8 @@ void psidiff_run(int run, int harmonic)
   leg->AddEntry(th1d_dreso_cnt_fvtxn,"CNT-FVTXN","l");
   leg->SetTextSize(0.045);
   leg->Draw();
-  c1->Print(Form("psidiff_dreso%d_%d_AVECCNT.png",harmonic,run));
-  c1->Print(Form("psidiff_dreso%d_%d_AVECCNT.pdf",harmonic,run));
+  c1->Print(Form("FigsEventPlane/psidiff_dreso%d_%d_AVECCNT.png",harmonic,run));
+  c1->Print(Form("FigsEventPlane/psidiff_dreso%d_%d_AVECCNT.pdf",harmonic,run));
   delete th2;
 
 
@@ -264,8 +264,8 @@ void cospsidiff_run(int run, int harmonic)
   th1d_reso_cnt_fvtxn->Draw("same");
   th1d_reso_fvtxs_fvtxn->Draw("same");
   TLegend* leg = new TLegend();
-  c1->Print(Form("psidiff_reso%d_%d.png",harmonic,run));
-  c1->Print(Form("psidiff_reso%d_%d.pdf",harmonic,run));
+  c1->Print(Form("FigsEventPlane/psidiff_reso%d_%d.png",harmonic,run));
+  c1->Print(Form("FigsEventPlane/psidiff_reso%d_%d.pdf",harmonic,run));
   delete th2;
   delete leg;
 
@@ -298,8 +298,8 @@ void cospsidiff_run(int run, int harmonic)
   leg->AddEntry(th1d_reso_fvtxs_fvtxn,"FVTXS-FVTXN","l");
   leg->SetTextSize(0.045);
   leg->Draw();
-  c1->Print(Form("psidiff_reso%d_%d_SANSCNT.png",harmonic,run));
-  c1->Print(Form("psidiff_reso%d_%d_SANSCNT.pdf",harmonic,run));
+  c1->Print(Form("FigsEventPlane/psidiff_reso%d_%d_SANSCNT.png",harmonic,run));
+  c1->Print(Form("FigsEventPlane/psidiff_reso%d_%d_SANSCNT.pdf",harmonic,run));
   delete th2;
 
   max = 1;
@@ -319,8 +319,8 @@ void cospsidiff_run(int run, int harmonic)
   leg->AddEntry(th1d_reso_cnt_fvtxn,"CNT-FVTXN","l");
   leg->SetTextSize(0.045);
   leg->Draw();
-  c1->Print(Form("psidiff_reso%d_%d_AVECCNT.png",harmonic,run));
-  c1->Print(Form("psidiff_reso%d_%d_AVECCNT.pdf",harmonic,run));
+  c1->Print(Form("FigsEventPlane/psidiff_reso%d_%d_AVECCNT.png",harmonic,run));
+  c1->Print(Form("FigsEventPlane/psidiff_reso%d_%d_AVECCNT.pdf",harmonic,run));
   delete th2;
 
 

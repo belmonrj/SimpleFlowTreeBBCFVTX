@@ -125,8 +125,8 @@ void doenergy(int energy)
   latex->SetTextSize(0.05);
   //latex->Draw();
 
-  c1->Print(Form("run16dau%d_v2_fvtxsbbcs.pdf",energy));
-  c1->Print(Form("run16dau%d_v2_fvtxsbbcs.png",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v2_fvtxsbbcs.pdf",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v2_fvtxsbbcs.png",energy));
 
   TProfile* hv2_fvtxn = (TProfile*)file->Get("fvtxn_v2_both_docalib");
   hv2_fvtxn->SetLineColor(kGreen+2);
@@ -146,8 +146,8 @@ void doenergy(int energy)
 
   //latex->Draw();
 
-  c1->Print(Form("run16dau%d_v2_fvtxsnbbcs.pdf",energy));
-  c1->Print(Form("run16dau%d_v2_fvtxsnbbcs.png",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v2_fvtxsnbbcs.pdf",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v2_fvtxsnbbcs.png",energy));
 
   hv2_fvtxn->Scale(reso_fvtxN/reso_fvtxN_fn);
   hv2_fvtxs->Scale(reso_fvtx/reso_fvtx_fn);
@@ -161,8 +161,8 @@ void doenergy(int energy)
 
   //  latex->DrawLatex(0.2,0.2,"EP resolutions calculated without CNT");
 
-  c1->Print(Form("run16dau%d_v2_fvtxsnbbcs_fn.pdf",energy));
-  c1->Print(Form("run16dau%d_v2_fvtxsnbbcs_fn.png",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v2_fvtxsnbbcs_fn.pdf",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v2_fvtxsnbbcs_fn.png",energy));
 
   c1->Clear();
   hv2_fvtxs->Draw();
@@ -178,8 +178,8 @@ void doenergy(int energy)
 
   latex->Draw();
 
-  c1->Print(Form("run16dau%d_v2_fvtxsbbcs_fn.pdf",energy));
-  c1->Print(Form("run16dau%d_v2_fvtxsbbcs_fn.png",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v2_fvtxsbbcs_fn.pdf",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v2_fvtxsbbcs_fn.png",energy));
 
   hv2_fvtxn->Scale(2*reso_fvtxN_fn/(reso_fvtxN_fn+reso_fvtxN));
   hv2_fvtxs->Scale(2*reso_fvtx_fn/(reso_fvtx_fn+reso_fvtx));
@@ -193,8 +193,8 @@ void doenergy(int energy)
 
   //  latex->DrawLatex(0.2,0.2,"Average of EP resolutions with and without CNT");
 
-  c1->Print(Form("run16dau%d_v2_fvtxsbbcs_ave.pdf",energy));
-  c1->Print(Form("run16dau%d_v2_fvtxsbbcs_ave.png",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v2_fvtxsbbcs_ave.pdf",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v2_fvtxsbbcs_ave.png",energy));
 
   delete leg;
   hv2_fvtxn->Draw("same");
@@ -202,8 +202,8 @@ void doenergy(int energy)
 
   //latex->Draw();
 
-  c1->Print(Form("run16dau%d_v2_fvtxsnbbcs_ave.pdf",energy));
-  c1->Print(Form("run16dau%d_v2_fvtxsnbbcs_ave.png",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v2_fvtxsnbbcs_ave.pdf",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v2_fvtxsnbbcs_ave.png",energy));
 
   c1->Clear();
 
@@ -251,8 +251,8 @@ void doenergy(int energy)
   line.SetLineWidth(2);
   line.Draw();
 
-  c1->Print(Form("run16dau%d_v4_4Psi2_fvtxsbbcs.pdf",energy));
-  c1->Print(Form("run16dau%d_v4_4Psi2_fvtxsbbcs.png",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v4_4Psi2_fvtxsbbcs.pdf",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v4_4Psi2_fvtxsbbcs.png",energy));
 
 
 
@@ -270,55 +270,7 @@ void diagnostic(int energy)
 
   TFile* file = TFile::Open(Form("input/combined_%d.root",energy));
 
-  // ---
 
-  TProfile* tp1f_bbc_fvtxN = (TProfile*)file->Get("tp1f_reso2_BBC_FVTXN");
-  TProfile* tp1f_bbc_fvtx = (TProfile*)file->Get("tp1f_reso2_BBC_FVTX");
-  TProfile* tp1f_fvtxN_fvtx = (TProfile*)file->Get("tp1f_reso2_FVTXS_FVTXN");
-
-  float float_bbc_fvtxN = tp1f_bbc_fvtxN->GetBinContent(1);
-  float float_bbc_fvtx = tp1f_bbc_fvtx->GetBinContent(1);
-  float float_fvtxN_fvtx = tp1f_fvtxN_fvtx->GetBinContent(1);
-
-  cout << "bbc-fvtxn " << float_bbc_fvtxN << endl;
-  cout << "bbc-fvtxs " << float_bbc_fvtx << endl;
-  cout << "fvtxn-fvtxs " << float_fvtxN_fvtx << endl;
-
-  float reso_bbc_fn = sqrt((float_bbc_fvtxN*float_bbc_fvtx)/float_fvtxN_fvtx); // BNBS/NS
-  float reso_fvtx_fn = sqrt((float_fvtxN_fvtx*float_bbc_fvtx)/float_bbc_fvtxN); // NSBS/BN
-  float reso_fvtxN_fn = sqrt((float_fvtxN_fvtx*float_bbc_fvtxN)/float_bbc_fvtx); // NSBN/BS
-
-  cout << "bbc resolution is " << reso_bbc_fn << endl;
-  cout << "fvtx resolution is " << reso_fvtx_fn << endl;
-  cout << "fvtxN resolution is " << reso_fvtxN_fn << endl;
-
-  // ---
-
-  TProfile* tp1f_bbc_cnt = (TProfile*)file->Get("tp1f_reso2_BBC_CNT");
-  TProfile* tp1f_cnt_fvtx = (TProfile*)file->Get("tp1f_reso2_CNT_FVTX");
-  TProfile* tp1f_cnt_fvtxN = (TProfile*)file->Get("tp1f_reso2_CNT_FVTXN");
-
-  float float_bbc_cnt = tp1f_bbc_cnt->GetBinContent(1);
-  float float_cnt_fvtx = tp1f_cnt_fvtx->GetBinContent(1);
-  float float_cnt_fvtxN = tp1f_cnt_fvtxN->GetBinContent(1);
-
-  cout << "bbc-cnt " << float_bbc_cnt << endl;
-  cout << "cnt-fvtxs " << float_cnt_fvtx << endl;
-  cout << "cbt-fvtxn " << float_cnt_fvtxN << endl;
-
-  float reso_bbc = sqrt(fabs((float_bbc_cnt*float_bbc_fvtx)/float_cnt_fvtx)); // BCBS/CS
-  float reso_fvtx = sqrt(fabs((float_cnt_fvtx*float_bbc_fvtx)/float_bbc_cnt)); // CSBS/BC
-  float reso_fvtxN = sqrt(fabs((float_cnt_fvtxN*float_bbc_fvtxN)/float_bbc_cnt)); // CNBN/BC
-
-  cout << "bbc resolution is " << reso_bbc << endl;
-  cout << "fvtx resolution is " << reso_fvtx << endl;
-  cout << "fvtxN resolution is " << reso_fvtxN << endl;
-
-  // ---
-
-  float reso_fvtxN_xb = sqrt ( ( float_fvtxN_fvtx * float_cnt_fvtxN ) / float_cnt_fvtx ) ; // NSNC/SC
-
-  cout << "fvtxN resolution is " << reso_fvtxN_xb << endl;
 
   float MIN = -1;
   float MAX = 1;
@@ -359,8 +311,51 @@ void diagnostic(int energy)
   leg->SetTextSize(0.05);
   leg->Draw();
 
-  c1->Print(Form("diagnostic_fvtxs_EBW_energy%d.png",energy));
-  c1->Print(Form("diagnostic_fvtxs_EBW_energy%d.pdf",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/diagnostic_fvtxs_EBW_energy%d.png",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/diagnostic_fvtxs_EBW_energy%d.pdf",energy));
+
+
+
+  TProfile* hv2_fvtxs0_B = (TProfile*)file->Get("fvtxs0_v2_both_docalib");
+  TProfile* hv2_fvtxs1_B = (TProfile*)file->Get("fvtxs1_v2_both_docalib");
+  TProfile* hv2_fvtxs2_B = (TProfile*)file->Get("fvtxs2_v2_both_docalib");
+  TProfile* hv2_fvtxs3_B = (TProfile*)file->Get("fvtxs3_v2_both_docalib");
+
+  hv2_fvtxs0_B->SetLineColor(kBlue);
+  hv2_fvtxs1_B->SetLineColor(kRed);
+  hv2_fvtxs2_B->SetLineColor(kGreen+2);
+  hv2_fvtxs3_B->SetLineColor(kMagenta+2);
+
+  if ( energy == 200 ) {MIN = -0.01; MAX = 0.05;}
+  if ( energy == 62 ) {MIN = -0.01; MAX = 0.05;}
+  if ( energy == 39 ) {MIN = -0.03; MAX = 0.05;}
+  if ( energy == 20 ) {MIN = -0.1; MAX = 0.2;}
+  delete h2dummy;
+  h2dummy = new TH2D("h2dummy","",1,0.0,3.0,1,MIN,MAX);
+  h2dummy->Draw();
+  h2dummy->GetXaxis()->SetTitle("p_{T} (GeV/c)");
+  h2dummy->GetYaxis()->SetTitle("v_{2} not corrected for EP resolution");
+  h2dummy->GetYaxis()->SetTitleOffset(1.3);
+
+  hv2_fvtxs_B->Draw("same");
+  hv2_fvtxs0_B->Draw("same");
+  hv2_fvtxs1_B->Draw("same");
+  hv2_fvtxs2_B->Draw("same");
+  hv2_fvtxs3_B->Draw("same");
+
+  delete leg;
+  leg = new TLegend(0.18,0.68,0.38,0.88);
+  leg->SetHeader(Form("%d GeV, FVTXS",energy));
+  leg->AddEntry(hv2_fvtxs_B,"all layers","el");
+  leg->AddEntry(hv2_fvtxs0_B,"layer 0","el");
+  leg->AddEntry(hv2_fvtxs1_B,"layer 1","el");
+  leg->AddEntry(hv2_fvtxs2_B,"layer 2","el");
+  leg->AddEntry(hv2_fvtxs3_B,"layer 3","el");
+  leg->SetTextSize(0.05);
+  leg->Draw();
+
+  c1->Print(Form("FigsHarmonicCoefficient/diagnostic_fvtxsL_B_energy%d.png",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/diagnostic_fvtxsL_B_energy%d.pdf",energy));
 
 
 
@@ -400,62 +395,10 @@ void diagnostic(int energy)
   leg->SetTextSize(0.05);
   leg->Draw();
 
-  c1->Print(Form("diagnostic_bbcs_EBW_energy%d.png",energy));
-  c1->Print(Form("diagnostic_bbcs_EBW_energy%d.pdf",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/diagnostic_bbcs_EBW_energy%d.png",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/diagnostic_bbcs_EBW_energy%d.pdf",energy));
 
-  if ( energy == 20 )
-    {
-      float chi2_B = 0;
-      float chi2_E = 0;
-      float chi2_W = 0;
-      float obs, unc, chi2;
-      const int nbins = hv2_bbcs_B->GetNbinsX();
-      for ( int i = 0; i < nbins; ++i )
-        {
-          obs = hv2_bbcs_B->GetBinContent(i+1);
-          unc = hv2_bbcs_B->GetBinError(i+1);
-          chi2 = (obs*obs)/(unc*unc);
-          chi2_B += chi2;
-          obs = hv2_bbcs_E->GetBinContent(i+1);
-          unc = hv2_bbcs_E->GetBinError(i+1);
-          chi2 = (obs*obs)/(unc*unc);
-          chi2_E += chi2;
-          obs = hv2_bbcs_W->GetBinContent(i+1);
-          unc = hv2_bbcs_W->GetBinError(i+1);
-          chi2 = (obs*obs)/(unc*unc);
-          chi2_W += chi2;
-        }
-      cout << "chi2_B = " << chi2_B << endl;
-      cout << "chi2_E = " << chi2_E << endl;
-      cout << "chi2_W = " << chi2_W << endl;
-      cout << "chi2_B/ndf = " << chi2_B/nbins << endl;
-      cout << "chi2_E/ndf = " << chi2_E/nbins << endl;
-      cout << "chi2_W/ndf = " << chi2_W/nbins << endl;
-      chi2_B = 0;
-      chi2_E = 0;
-      chi2_W = 0;
-      for ( int i = 0; i < nbins; ++i )
-        {
-          obs = hv2_fvtxs_B->GetBinContent(i+1);
-          unc = hv2_fvtxs_B->GetBinError(i+1);
-          chi2 = (obs*obs)/(unc*unc);
-          chi2_B += chi2;
-          obs = hv2_fvtxs_E->GetBinContent(i+1);
-          unc = hv2_fvtxs_E->GetBinError(i+1);
-          chi2 = (obs*obs)/(unc*unc);
-          chi2_E += chi2;
-          obs = hv2_fvtxs_W->GetBinContent(i+1);
-          unc = hv2_fvtxs_W->GetBinError(i+1);
-          chi2 = (obs*obs)/(unc*unc);
-          chi2_W += chi2;
-        }
-      cout << "chi2_B = " << chi2_B << endl;
-      cout << "chi2_E = " << chi2_E << endl;
-      cout << "chi2_W = " << chi2_W << endl;
-      cout << "chi2_B/ndf = " << chi2_B/nbins << endl;
-      cout << "chi2_E/ndf = " << chi2_E/nbins << endl;
-      cout << "chi2_W/ndf = " << chi2_W/nbins << endl;
-    }
+
 
   delete c1;
 

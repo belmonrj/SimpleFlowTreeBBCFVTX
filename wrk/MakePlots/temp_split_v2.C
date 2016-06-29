@@ -106,8 +106,8 @@ void doenergy(int energy)
   leg->SetTextSize(0.05);
   leg->Draw();
 
-  c1->Print(Form("run16dau%d_v2_fvtxsbbcs.pdf",energy));
-  c1->Print(Form("run16dau%d_v2_fvtxsbbcs.png",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v2_fvtxsbbcs.pdf",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v2_fvtxsbbcs.png",energy));
 
   c1->Clear();
 
@@ -167,8 +167,8 @@ void doenergy(int energy)
   line1->Draw();
   line2->Draw();
 
-  c1->Print(Form("run16dau%d_v2_fvtxsbbcs_split.pdf",energy));
-  c1->Print(Form("run16dau%d_v2_fvtxsbbcs_split.png",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v2_fvtxsbbcs_split.pdf",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v2_fvtxsbbcs_split.png",energy));
 
   delete c1;
 

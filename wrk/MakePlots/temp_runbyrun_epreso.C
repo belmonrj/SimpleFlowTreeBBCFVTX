@@ -19,6 +19,10 @@ void temp_runbyrun_epreso()
   makeplots(20,3);
   makeplots(20,42);
 
+  makeplots(39,2);
+  makeplots(39,3);
+  makeplots(39,42);
+
 }
 
 void makeplots(int energy, int harmonic)
@@ -94,8 +98,8 @@ void makeplots(int energy, int harmonic)
   // tg_bbc->Fit(fun_bbc,"R");
   // tg_fvtx->Fit(fun_fvtx,"R");
 
-  c1->Print(Form("runbyrun_%d_epreso_%d.png",energy,harmonic));
-  c1->Print(Form("runbyrun_%d_epreso_%d.pdf",energy,harmonic));
+  c1->Print(Form("FigsEventPlane/runbyrun_%d_epreso_%d.png",energy,harmonic));
+  c1->Print(Form("FigsEventPlane/runbyrun_%d_epreso_%d.pdf",energy,harmonic));
 
   TGraph* tg_bbc_fn = new TGraph(67,index,bbc_reso_fn);
   tg_bbc_fn->SetMarkerStyle(kOpenCircle);
@@ -107,8 +111,8 @@ void makeplots(int energy, int harmonic)
   tg_fvtx_fn->SetMarkerColor(kBlue);
   tg_fvtx_fn->Draw("p");
 
-  c1->Print(Form("runbyrun_%d_epreso_%d_fn.png",energy,harmonic));
-  c1->Print(Form("runbyrun_%d_epreso_%d_fn.pdf",energy,harmonic));
+  c1->Print(Form("FigsEventPlane/runbyrun_%d_epreso_%d_fn.png",energy,harmonic));
+  c1->Print(Form("FigsEventPlane/runbyrun_%d_epreso_%d_fn.pdf",energy,harmonic));
 
   delete c1;
 
