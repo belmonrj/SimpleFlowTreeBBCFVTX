@@ -624,9 +624,12 @@ void flatten(int runNumber, int rp_recal_pass)
       // --- beam center not available yet!!!
       // float vtx_x = bc_x;
       // float vtx_y = bc_y;
+      // 0.3 cm and 1.0 mrad from Darren 2016-06-23
+      const float x_off = 0.3;
+      const float beam_angle = 0.001;
       float vtx_z = d_bbcz;
       if ( eventfvtx_z > -999 ) vtx_z = eventfvtx_z;
-      float vtx_x = 0.3 + 0.001*vtx_z; // 0.3 cm and 1.0 mrad from Darren 2016-06-23
+      float vtx_x = x_off + atan(beam_angle)*vtx_z;
       float vtx_y = 0.02; // 0.02 cm from Darren 2016-06-23
 
       float bbc_qx2 = 0;
@@ -649,7 +652,7 @@ void flatten(int runNumber, int rp_recal_pass)
               // float bbc_z      = d_pmt_z       - d_bbcz*10;
               //cout<<"bbc_x: "<<bbc_x<<" bbc_y: "<<bbc_y<<" bbc_z: "<<bbc_z<<endl;
 
-              bbc_x /= TMath::Cos(0.001);
+              bbc_x = vtx_z*sin(-beam_angle) + bbc_x*cos(-beam_angle);
 
               // double bbc_r = sqrt(pow(bbc_x,2.0)+pow(bbc_y,2.0));
 
@@ -758,7 +761,7 @@ void flatten(int runNumber, int rp_recal_pass)
               float fvtx_y      = d_FVTX_y[iclus] - vtx_y;
               float fvtx_z      = d_FVTX_z[iclus]; // need raw z to get layer
 
-              fvtx_x /= TMath::Cos(0.001);
+              fvtx_x = vtx_z*sin(-beam_angle) + fvtx_x*cos(-beam_angle);
 
               double fvtx_r = sqrt(pow(fvtx_x,2.0)+pow(fvtx_y,2.0));
 
