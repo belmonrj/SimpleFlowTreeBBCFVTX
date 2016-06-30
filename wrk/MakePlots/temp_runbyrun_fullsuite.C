@@ -1,33 +1,42 @@
 void getstuff(int, int, double&, double&, double&, double&, double&, double&, double&, double&, double&, double&, double&, double&);
 
+void getmult(int, double&, double&, double&, double&, double&, double&);
 
 void makeplots(int, int);
+void makemult(int);
 
 
-void temp_runbyrun_epreso_fullsuite()
+void temp_runbyrun_fullsuite()
 {
 
-  makeplots(200,2);
-  makeplots(200,3);
-  makeplots(200,42);
+  // makeplots(200,2);
+  // makeplots(200,3);
+  // makeplots(200,42);
 
-  makeplots(62,2);
-  makeplots(62,3);
-  makeplots(62,42);
+  // makeplots(62,2);
+  // makeplots(62,3);
+  // makeplots(62,42);
 
-  makeplots(20,2);
-  makeplots(20,3);
-  makeplots(20,42);
+  // makeplots(20,2);
+  // makeplots(20,3);
+  // makeplots(20,42);
 
-  makeplots(39,2);
-  makeplots(39,3);
-  makeplots(39,42);
+  // makeplots(39,2);
+  // makeplots(39,3);
+  // makeplots(39,42);
+
+  //  makemult(200);
+  makemult(62);
+  makemult(20);
+  makemult(39);
 
 }
 
 
 void makeplots(int energy, int harmonic)
 {
+
+  if ( harmonic != 2 ) return;
 
   gStyle->SetOptTitle(0);
 
@@ -36,24 +45,24 @@ void makeplots(int energy, int harmonic)
   // -----------------------------------------
   // --- first get the individual correlations
   // -----------------------------------------
-  double index[100];
+  double index[110];
   double
-    array_BC[100],
-    array_BN[100],
-    array_BS[100],
-    array_CN[100],
-    array_CS[100],
-    array_NS[100],
-    array_eBC[100],
-    array_eBN[100],
-    array_eBS[100],
-    array_eCN[100],
-    array_eCS[100],
-    array_eNS[100];
+    array_BC[110],
+    array_BN[110],
+    array_BS[110],
+    array_CN[110],
+    array_CS[110],
+    array_NS[110],
+    array_eBC[110],
+    array_eBN[110],
+    array_eBS[110],
+    array_eCN[110],
+    array_eCS[110],
+    array_eNS[110];
   int run;
   int counter = 0;
   ifstream fin((const char*)Form("list_%d.short",energy));
-  for ( int i = 0; i < 100; ++i )
+  for ( int i = 0; i < 110; ++i )
     {
       index[i] = i + 0.5;
       double
@@ -123,29 +132,29 @@ void makeplots(int energy, int harmonic)
   // --- now get the resolutions built from the correlations
   // -------------------------------------------------------
 
-  double resoB_CN[100]; // BBC(B) resolution using CNT(C) and FVTXN(N)
-  double resoB_CS[100]; // BBC(B) resolution using CNT(C) and FVTXS(S)
-  double resoB_NS[100]; // BBC(B) resolution using FVTXN(N) and FVTXS(S)
+  double resoB_CN[110]; // BBCS(B) resolution using CNT(C) and FVTXN(N)
+  double resoB_CS[110]; // BBCS(B) resolution using CNT(C) and FVTXS(S)
+  double resoB_NS[110]; // BBCS(B) resolution using FVTXN(N) and FVTXS(S)
 
-  double resoN_BC[100]; // FVTXN(N) resolution using BBC(B) and CNT(C)
-  double resoN_BS[100]; // FVTXN(N) resolution using BBC(B) and FVTXS(S)
-  double resoN_CS[100]; // FVTXN(N) resolution using CNT(C) and FVTXS(S)
+  double resoN_BC[110]; // FVTXN(N) resolution using BBCS(B) and CNT(C)
+  double resoN_BS[110]; // FVTXN(N) resolution using BBCS(B) and FVTXS(S)
+  double resoN_CS[110]; // FVTXN(N) resolution using CNT(C) and FVTXS(S)
 
-  double resoS_BC[100]; // FVTXS(S) resolution using BBC(B) and CNT(C)
-  double resoS_BN[100]; // FVTXS(S) resolution using BBC(B) and CNT(C)
-  double resoS_CN[100]; // FVTXS(S) resolution using CNT(C) and FVTXN(N)
+  double resoS_BC[110]; // FVTXS(S) resolution using BBCS(B) and CNT(C)
+  double resoS_BN[110]; // FVTXS(S) resolution using BBCS(B) and CNT(C)
+  double resoS_CN[110]; // FVTXS(S) resolution using CNT(C) and FVTXN(N)
 
-  double eresoB_CN[100]; // BBC(B) resolution using CNT(C) and FVTXN(N)
-  double eresoB_CS[100]; // BBC(B) resolution using CNT(C) and FVTXS(S)
-  double eresoB_NS[100]; // BBC(B) resolution using FVTXN(N) and FVTXS(S)
+  double eresoB_CN[110]; // BBCS(B) resolution using CNT(C) and FVTXN(N)
+  double eresoB_CS[110]; // BBCS(B) resolution using CNT(C) and FVTXS(S)
+  double eresoB_NS[110]; // BBCS(B) resolution using FVTXN(N) and FVTXS(S)
 
-  double eresoN_BC[100]; // FVTXN(N) resolution using BBC(B) and CNT(C)
-  double eresoN_BS[100]; // FVTXN(N) resolution using BBC(B) and FVTXS(S)
-  double eresoN_CS[100]; // FVTXN(N) resolution using CNT(C) and FVTXS(S)
+  double eresoN_BC[110]; // FVTXN(N) resolution using BBCS(B) and CNT(C)
+  double eresoN_BS[110]; // FVTXN(N) resolution using BBCS(B) and FVTXS(S)
+  double eresoN_CS[110]; // FVTXN(N) resolution using CNT(C) and FVTXS(S)
 
-  double eresoS_BC[100]; // FVTXS(S) resolution using BBC(B) and CNT(C)
-  double eresoS_BN[100]; // FVTXS(S) resolution using BBC(B) and CNT(C)
-  double eresoS_CN[100]; // FVTXS(S) resolution using CNT(C) and FVTXN(N)
+  double eresoS_BC[110]; // FVTXS(S) resolution using BBCS(B) and CNT(C)
+  double eresoS_BN[110]; // FVTXS(S) resolution using BBCS(B) and CNT(C)
+  double eresoS_CN[110]; // FVTXS(S) resolution using CNT(C) and FVTXN(N)
 
   for ( int i = 0; i < counter-1; ++i )
     {
@@ -231,15 +240,15 @@ void makeplots(int energy, int harmonic)
 
   tgeresoB_CN->GetXaxis()->SetLimits(-2,counter+1);
   tgeresoB_CN->GetXaxis()->SetTitle("Run Index");
-  tgeresoB_CN->GetYaxis()->SetTitle("BBC EP resolution");
-  tgeresoB_CN->SetTitle("BBC EP resolution");
+  tgeresoB_CN->GetYaxis()->SetTitle("BBCS EP resolution");
+  tgeresoB_CN->SetTitle("BBCS EP resolution");
   tgeresoB_CN->SetMaximum(0.2);
   tgeresoB_CN->SetMinimum(0.0);
   if ( energy != 200 || harmonic != 2 ) tgeresoB_CN->SetMinimum(-0.05);
 
-  TF1* funB_CN = new TF1("funB_CN","pol0",0,100);
-  TF1* funB_CS = new TF1("funB_CS","pol0",0,100);
-  TF1* funB_NS = new TF1("funB_NS","pol0",0,100);
+  TF1* funB_CN = new TF1("funB_CN","pol0",0,110);
+  TF1* funB_CS = new TF1("funB_CS","pol0",0,110);
+  TF1* funB_NS = new TF1("funB_NS","pol0",0,110);
 
   // funB_CN->SetParLimits(0,0,1);
   // funB_CS->SetParLimits(0,0,1);
@@ -249,22 +258,22 @@ void makeplots(int energy, int harmonic)
   funB_CS->SetLineColor(kGreen+2);
   funB_NS->SetLineColor(kBlue);
 
-  tgeresoB_CN->Fit(funB_CN,"","",0,counter-1);
-  tgeresoB_CS->Fit(funB_CS,"","",0,counter-1);
-  tgeresoB_NS->Fit(funB_NS,"","",0,counter-1);
+  tgeresoB_CN->Fit(funB_CN,"Q","",0,counter-1);
+  tgeresoB_CS->Fit(funB_CS,"Q","",0,counter-1);
+  tgeresoB_NS->Fit(funB_NS,"Q","",0,counter-1);
 
   TLegend* legB = new TLegend(0.18,0.68,0.28,0.88);
-  TLegendEntry* tleB_CN = legB->AddEntry(tgeresoB_CN,Form("BBC, CNT, FVTXN,   average = %f",funB_CN->GetParameter(0)),"p");
-  TLegendEntry* tleB_CS = legB->AddEntry(tgeresoB_CS,Form("BBC, CNT, FVTXS,   average = %f",funB_CS->GetParameter(0)),"p");
-  TLegendEntry* tleB_NS = legB->AddEntry(tgeresoB_NS,Form("BBC, FVTXN, FVTXS, average = %f",funB_NS->GetParameter(0)),"p");
+  TLegendEntry* tleB_CN = legB->AddEntry(tgeresoB_CN,Form("BBCS, CNT, FVTXN,   average = %f",funB_CN->GetParameter(0)),"p");
+  TLegendEntry* tleB_CS = legB->AddEntry(tgeresoB_CS,Form("BBCS, CNT, FVTXS,   average = %f",funB_CS->GetParameter(0)),"p");
+  TLegendEntry* tleB_NS = legB->AddEntry(tgeresoB_NS,Form("BBCS, FVTXN, FVTXS, average = %f",funB_NS->GetParameter(0)),"p");
   tleB_CN->SetTextColor(kRed);
   tleB_CS->SetTextColor(kGreen+2);
   tleB_NS->SetTextColor(kBlue);
   legB->SetTextSize(0.05);
   legB->Draw();
 
-  c1->Print(Form("FigsEventPlane/figreso_bbc_energy%d_harmonic%d.png",energy,harmonic));
-  c1->Print(Form("FigsEventPlane/figreso_bbc_energy%d_harmonic%d.pdf",energy,harmonic));
+  c1->Print(Form("FigsEventPlane/figreso_bbcs_energy%d_harmonic%d.png",energy,harmonic));
+  c1->Print(Form("FigsEventPlane/figreso_bbcs_energy%d_harmonic%d.pdf",energy,harmonic));
 
   // ---
 
@@ -289,15 +298,15 @@ void makeplots(int energy, int harmonic)
   if ( energy != 200 || harmonic != 2 ) tgeresoN_BC->SetMinimum(-0.05);
 
   // TLegend* legB = new TLegend(0.18,0.68,0.28,0.88);
-  // legB->AddEntry(tgeresoN_BC,"FVTXN, BBC, CNT","p");
-  // legB->AddEntry(tgeresoN_BS,"FVTXN, BBC, FVTXS","p");
+  // legB->AddEntry(tgeresoN_BC,"FVTXN, BBCS, CNT","p");
+  // legB->AddEntry(tgeresoN_BS,"FVTXN, BBCS, FVTXS","p");
   // legB->AddEntry(tgeresoN_CS,"FVTXN, CNT, FVTXS","p");
   // legB->SetTextSize(0.05);
   // legB->Draw();
 
-  TF1* funN_BC = new TF1("funN_BC","pol0",0,100);
-  TF1* funN_BS = new TF1("funN_BS","pol0",0,100);
-  TF1* funN_CS = new TF1("funN_CS","pol0",0,100);
+  TF1* funN_BC = new TF1("funN_BC","pol0",0,110);
+  TF1* funN_BS = new TF1("funN_BS","pol0",0,110);
+  TF1* funN_CS = new TF1("funN_CS","pol0",0,110);
 
   // funN_BC->SetParLimits(0,0,1);
   // funN_BS->SetParLimits(0,0,1);
@@ -307,13 +316,13 @@ void makeplots(int energy, int harmonic)
   funN_BS->SetLineColor(kGreen+2);
   funN_CS->SetLineColor(kBlue);
 
-  tgeresoN_BC->Fit(funN_BC,"","",0,counter-1);
-  tgeresoN_BS->Fit(funN_BS,"","",0,counter-1);
-  tgeresoN_CS->Fit(funN_CS,"","",0,counter-1);
+  tgeresoN_BC->Fit(funN_BC,"Q","",0,counter-1);
+  tgeresoN_BS->Fit(funN_BS,"Q","",0,counter-1);
+  tgeresoN_CS->Fit(funN_CS,"Q","",0,counter-1);
 
   TLegend* legN = new TLegend(0.18,0.68,0.28,0.88);
-  TLegendEntry* tleN_BC = legN->AddEntry(tgeresoN_BC,Form("FVTXN, BBC, CNT,   average = %f",funN_BC->GetParameter(0)),"p");
-  TLegendEntry* tleN_BS = legN->AddEntry(tgeresoN_BS,Form("FVTXN, BBC, FVTXS, average = %f",funN_BS->GetParameter(0)),"p");
+  TLegendEntry* tleN_BC = legN->AddEntry(tgeresoN_BC,Form("FVTXN, BBCS, CNT,   average = %f",funN_BC->GetParameter(0)),"p");
+  TLegendEntry* tleN_BS = legN->AddEntry(tgeresoN_BS,Form("FVTXN, BBCS, FVTXS, average = %f",funN_BS->GetParameter(0)),"p");
   TLegendEntry* tleN_CS = legN->AddEntry(tgeresoN_CS,Form("FVTXN, CNT, FVTXS, average = %f",funN_CS->GetParameter(0)),"p");
   tleN_BC->SetTextColor(kRed);
   tleN_BS->SetTextColor(kGreen+2);
@@ -346,9 +355,9 @@ void makeplots(int energy, int harmonic)
   tgeresoS_BC->SetMinimum(0.0);
   if ( energy != 200 || harmonic != 2 ) tgeresoS_BC->SetMinimum(-0.05);
 
-  TF1* funS_BC = new TF1("funS_BC","pol0",0,100);
-  TF1* funS_BN = new TF1("funS_BN","pol0",0,100);
-  TF1* funS_CN = new TF1("funS_CN","pol0",0,100);
+  TF1* funS_BC = new TF1("funS_BC","pol0",0,110);
+  TF1* funS_BN = new TF1("funS_BN","pol0",0,110);
+  TF1* funS_CN = new TF1("funS_CN","pol0",0,110);
 
   // funS_BC->SetParLimits(0,0,1);
   // funS_BN->SetParLimits(0,0,1);
@@ -358,13 +367,13 @@ void makeplots(int energy, int harmonic)
   funS_BN->SetLineColor(kGreen+2);
   funS_CN->SetLineColor(kBlue);
 
-  tgeresoS_BC->Fit(funS_BC,"","",0,counter-1);
-  tgeresoS_BN->Fit(funS_BN,"","",0,counter-1);
-  tgeresoS_CN->Fit(funS_CN,"","",0,counter-1);
+  tgeresoS_BC->Fit(funS_BC,"Q","",0,counter-1);
+  tgeresoS_BN->Fit(funS_BN,"Q","",0,counter-1);
+  tgeresoS_CN->Fit(funS_CN,"Q","",0,counter-1);
 
   TLegend* legS = new TLegend(0.18,0.68,0.28,0.88);
-  TLegendEntry* tleS_BC = legS->AddEntry(tgeresoS_BC,Form("FVTXS, BBC, CNT,   average = %f",funS_BC->GetParameter(0)),"p");
-  TLegendEntry* tleS_BN = legS->AddEntry(tgeresoS_BN,Form("FVTXS, BBC, FVTXN, average = %f",funS_BN->GetParameter(0)),"p");
+  TLegendEntry* tleS_BC = legS->AddEntry(tgeresoS_BC,Form("FVTXS, BBCS, CNT,   average = %f",funS_BC->GetParameter(0)),"p");
+  TLegendEntry* tleS_BN = legS->AddEntry(tgeresoS_BN,Form("FVTXS, BBCS, FVTXN, average = %f",funS_BN->GetParameter(0)),"p");
   TLegendEntry* tleS_CN = legS->AddEntry(tgeresoS_CN,Form("FVTXS, CNT, FVTXN, average = %f",funS_CN->GetParameter(0)),"p");
   tleS_BC->SetTextColor(kRed);
   tleS_BN->SetTextColor(kGreen+2);
@@ -415,19 +424,12 @@ void getstuff(int run, int hh,
 
   // ---
 
-  TProfile* tp1f_BC = (TProfile*)file->Get(Form("tp1f_reso2_BBC_CNT",hh));
+  TProfile* tp1f_BC = (TProfile*)file->Get(Form("tp1f_reso%d_BBC_CNT",hh));
   TProfile* tp1f_BN = (TProfile*)file->Get(Form("tp1f_reso%d_BBC_FVTXN",hh));
   TProfile* tp1f_BS = (TProfile*)file->Get(Form("tp1f_reso%d_BBC_FVTX",hh));
-  TProfile* tp1f_CN = (TProfile*)file->Get(Form("tp1f_reso2_CNT_FVTXN",hh));
-  TProfile* tp1f_CS = (TProfile*)file->Get(Form("tp1f_reso2_CNT_FVTX",hh));
+  TProfile* tp1f_CN = (TProfile*)file->Get(Form("tp1f_reso%d_CNT_FVTXN",hh));
+  TProfile* tp1f_CS = (TProfile*)file->Get(Form("tp1f_reso%d_CNT_FVTX",hh));
   TProfile* tp1f_NS = (TProfile*)file->Get(Form("tp1f_reso%d_FVTXS_FVTXN",hh));
-
-  // cout << tp1f_BC << endl;
-  // cout << tp1f_BC << endl;
-  // cout << tp1f_BS << endl;
-  // cout << tp1f_CN << endl;
-  // cout << tp1f_CS << endl;
-  // cout << tp1f_NS << endl;
 
   double_BC = tp1f_BC->GetBinContent(1);
   double_BN = tp1f_BN->GetBinContent(1);
@@ -443,15 +445,135 @@ void getstuff(int run, int hh,
   double_eCS = tp1f_CS->GetBinError(1);
   double_eNS = tp1f_NS->GetBinError(1);
 
-  // cout << "Values assigned..." << endl;
-  // cout << double_BC << endl;
-  // cout << double_BN << endl;
-  // cout << double_BS << endl;
-  // cout << double_CN << endl;
-  // cout << double_CS << endl;
-  // cout << double_NS << endl;
-
   file->Close();
 
 }
 
+
+void makemult(int energy)
+{
+
+  gStyle->SetOptTitle(0);
+
+  TCanvas* c1 = new TCanvas("c1","");
+
+  // -----------------------------------------
+  // --- first get the individual correlations
+  // -----------------------------------------
+  double index[110];
+  double
+    array_BBCS[110],
+    array_FVTXS[110],
+    array_FVTXN[110],
+    array_eBBCS[110],
+    array_eFVTXS[110],
+    array_eFVTXN[110];
+  int run;
+  int counter = 0;
+  ifstream fin((const char*)Form("list_%d.short",energy));
+  for ( int i = 0; i < 110; ++i )
+    {
+      if ( fin.eof() ) break;
+      fin >> run;
+      // cout << "energy is " << energy << endl;
+      // cout << "list name is " << (const char*)Form("list_%d.short",energy) << endl;
+      // cout << "run is " << run << endl;
+      double temp_bbcs, temp_fvtxs, temp_fvtxn;
+      double temp_ebbcs, temp_efvtxs, temp_efvtxn;
+      index[i] = i+0.5;
+      if ( !getmult(run,temp_bbcs,temp_fvtxs,temp_fvtxn,temp_ebbcs,temp_efvtxs,temp_efvtxn) ) continue;
+      ++counter;
+      array_BBCS[i] = temp_bbcs;
+      array_FVTXS[i] = temp_fvtxs;
+      array_FVTXN[i] = temp_fvtxn;
+      array_eBBCS[i] = temp_ebbcs;
+      array_eFVTXS[i] = temp_efvtxs;
+      array_eFVTXN[i] = temp_efvtxn;
+    }
+  fin.close();
+
+  TGraphErrors* tge_fvtxs = new TGraphErrors(counter,index,array_FVTXS,0,array_eFVTXS);
+  TGraphErrors* tge_fvtxn = new TGraphErrors(counter,index,array_FVTXN,0,array_eFVTXN);
+  TGraphErrors* tge_bbcs = new TGraphErrors(counter,index,array_BBCS,0,array_eBBCS);
+
+  tge_bbcs->SetMarkerColor(kBlack);
+  tge_fvtxs->SetMarkerColor(kRed);
+  tge_fvtxn->SetMarkerColor(kBlue);
+
+  tge_bbcs->SetMarkerStyle(kOpenCircle);
+  tge_fvtxs->SetMarkerStyle(kOpenCircle);
+  tge_fvtxn->SetMarkerStyle(kOpenCircle);
+
+  tge_fvtxs->Draw("ap");
+  tge_fvtxs->SetMinimum(0);
+  tge_fvtxs->GetXaxis()->SetLimits(-2,counter+1);
+  tge_fvtxs->GetXaxis()->SetTitle("Run Index");
+  tge_fvtxs->GetYaxis()->SetTitle("Mean Multiplicity");
+  tge_fvtxn->Draw("p");
+  tge_bbcs->Draw("p");
+
+  TLegend* leg = new TLegend(0.78,0.78,0.98,0.98);
+  leg->AddEntry(tge_bbcs,"BBCS","p");
+  leg->AddEntry(tge_fvtxs,"FVTXS","p");
+  leg->AddEntry(tge_fvtxn,"FVTXN","p");
+  leg->SetFillStyle(0);
+  leg->SetTextSize(0.045);
+  leg->Draw();
+
+  TF1* fun_bbcs = new TF1("fun_bbcs","pol0",0,110);
+  TF1* fun_fvtxs = new TF1("fun_fvtxs","pol0",0,110);
+  TF1* fun_fvtxn = new TF1("fun_fvtxn","pol0",0,110);
+  fun_bbcs->SetLineColor(kBlack);
+  fun_fvtxs->SetLineColor(kRed);
+  fun_fvtxn->SetLineColor(kBlue);
+
+  tge_bbcs->Fit(fun_bbcs,"Q","",0,counter);
+  tge_fvtxs->Fit(fun_fvtxs,"Q","",0,counter);
+  tge_fvtxn->Fit(fun_fvtxn,"Q","",0,counter);
+
+  c1->Print(Form("FigsOther/mult_runbyrun_energy%d.png",energy));
+  c1->Print(Form("FigsOther/mult_runbyrun_energy%d.pdf",energy));
+
+  delete c1;
+
+}
+
+
+
+bool getmult(int run, double& bbcs, double& fvtxs, double& fvtxn, double& ebbcs, double& efvtxs, double& efvtxn)
+{
+
+  if ( run <= 0 )
+    {
+      cout << "FATAL: bad run number" << endl;
+      exit(-1);
+    }
+
+  TFile* file = TFile::Open(Form("input/hist_%d.root",run));
+  if ( !file )
+    {
+      cout << "missing run " << run << endl;
+      return false;
+    }
+
+  TH1D* th1d_bbcs = (TH1D*)file->Get("th1d_BBC_charge");
+  TH1D* th1d_fvtxs = (TH1D*)file->Get("th1d_FVTXS_nclus");
+  TH1D* th1d_fvtxn = (TH1D*)file->Get("th1d_FVTXN_nclus");
+
+  if ( !th1d_bbcs || !th1d_fvtxs || !th1d_fvtxn )
+    {
+      cout << "mising histograms " << run << " " << th1d_bbcs << " " << th1d_fvtxs << " " << th1d_fvtxn << endl;
+      return false;
+    }
+
+  bbcs = th1d_bbcs->GetMean();
+  fvtxs = th1d_fvtxs->GetMean();
+  fvtxn = th1d_fvtxn->GetMean();
+
+  ebbcs = th1d_bbcs->GetMeanError();
+  efvtxs = th1d_fvtxs->GetMeanError();
+  efvtxn = th1d_fvtxn->GetMeanError();
+
+  return true;
+
+}
