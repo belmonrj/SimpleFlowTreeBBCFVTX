@@ -400,6 +400,46 @@ void diagnostic(int energy)
 
 
 
+  // ---------
+  // --- FVTXN
+  // ---------
+
+  TProfile* hv2_fvtxn_B = (TProfile*)file->Get("fvtxn_v2_both_docalib");
+  TProfile* hv2_fvtxn_E = (TProfile*)file->Get("fvtxn_v2_east_docalib");
+  TProfile* hv2_fvtxn_W = (TProfile*)file->Get("fvtxn_v2_west_docalib");
+
+  hv2_fvtxn_B->SetLineColor(kBlack);
+  hv2_fvtxn_E->SetLineColor(kRed);
+  hv2_fvtxn_W->SetLineColor(kBlue);
+
+  if ( energy == 200 ) {MIN = -0.01; MAX = 0.05;}
+  if ( energy == 62 ) {MIN = -0.01; MAX = 0.05;}
+  if ( energy == 39 ) {MIN = -0.03; MAX = 0.05;}
+  if ( energy == 20 ) {MIN = -0.1; MAX = 0.2;}
+  delete h2dummy;
+  h2dummy = new TH2D("h2dummy","",1,0.0,3.0,1,MIN,MAX);
+  h2dummy->Draw();
+  h2dummy->GetXaxis()->SetTitle("p_{T} (GeV/c)");
+  h2dummy->GetYaxis()->SetTitle("v_{2} not corrected for EP resolution");
+  h2dummy->GetYaxis()->SetTitleOffset(1.3);
+
+  hv2_fvtxn_B->Draw("same");
+  hv2_fvtxn_E->Draw("same");
+  hv2_fvtxn_W->Draw("same");
+
+  TLegend* leg = new TLegend(0.18,0.68,0.38,0.88);
+  leg->SetHeader(Form("%d GeV, FVTXN",energy));
+  leg->AddEntry(hv2_fvtxn_B,"both","el");
+  leg->AddEntry(hv2_fvtxn_E,"east","el");
+  leg->AddEntry(hv2_fvtxn_W,"west","el");
+  leg->SetTextSize(0.05);
+  leg->Draw();
+
+  c1->Print(Form("FigsHarmonicCoefficient/diagnostic_fvtxn_EBW_energy%d.png",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/diagnostic_fvtxn_EBW_energy%d.pdf",energy));
+
+
+
   delete c1;
 
 }
