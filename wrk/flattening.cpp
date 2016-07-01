@@ -102,17 +102,13 @@ void flatten(int runNumber, int rp_recal_pass)
 
   int verbosity = 0;
 
-  // --- need some agreed upon standard for dealing with paths
-
   char outFile1[300];
-  sprintf(outFile1,"%s%d%s","output/hist_",runNumber,".root"); // absolute paths need to be dealt with
+  sprintf(outFile1,"%s%d%s","output/hist_",runNumber,".root");
 
   char outFile2[100];
-  sprintf(outFile2,"%s%d%s","output/hrp_",runNumber,".root"); // absolute paths need to be dealt with
+  sprintf(outFile2,"%s%d%s","output/hrp_",runNumber,".root");
 
-  cout<<"runNumber = " <<runNumber<<" "
-      <<"rp_recal_pass = "<<rp_recal_pass<<endl;
-
+  cout << "runNumber = " << runNumber << " rp_recal_pass = " << rp_recal_pass << endl;
 
   cout << "v2 histogram output file: " << outFile1 << endl;
 
@@ -144,12 +140,12 @@ void flatten(int runNumber, int rp_recal_pass)
 
   bool fvtx_clusters = true;
   bool bbc_pmts      = true;
-  bool vtx_tracks    = true;
+  bool cnt_tracks    = true;
 
 
 
-  //int n_angle_config = 64; // move below, number is 8 * 8 (nothing to do with number of bbc tubes)
-  int n_angle_config = 1; // move below, number is 8 * 8 (nothing to do with number of bbc tubes)
+
+  int n_angle_config = 1;
   // --- see below...
   int south_bbc_angle = 2;                     // 2
   int south_fvtx_angle = n_angle_config+2;     // 3
@@ -157,7 +153,7 @@ void flatten(int runNumber, int rp_recal_pass)
   int south_fvtx_1_angle = 3*n_angle_config+2; // 5
   int south_fvtx_2_angle = 4*n_angle_config+2; // 6
   int south_fvtx_3_angle = 5*n_angle_config+2; // 7
-  int north_fvtx_angle = 6*n_angle_config+2;     // 8
+  int north_fvtx_angle = 6*n_angle_config+2;   // 8
   int north_fvtx_0_angle = 7*n_angle_config+2; // 9
   int north_fvtx_1_angle = 8*n_angle_config+2; // 10
   int north_fvtx_2_angle = 9*n_angle_config+2; // 11
@@ -199,6 +195,19 @@ void flatten(int runNumber, int rp_recal_pass)
   TH1D* th1d_FVTXS_nclus = new TH1D("th1d_FVTXS_nclus","",200,-0.5,1999.5);
   TH1D* th1d_FVTXN_nclus = new TH1D("th1d_FVTXN_nclus","",200,-0.5,1999.5);
 
+  TH1D* th1d_bbc_charge_phi = new TH1D("th1d_bbc_charge_phi","",50,-pi,pi);
+
+  TH1D* th1d_fvtxs_clus_phi = new TH1D("th1d_fvtxs_clus_phi","",50,-pi,pi);
+  TH1D* th1d_fvtxs0_clus_phi = new TH1D("th1d_fvtxs0_clus_phi","",50,-pi,pi);
+  TH1D* th1d_fvtxs1_clus_phi = new TH1D("th1d_fvtxs1_clus_phi","",50,-pi,pi);
+  TH1D* th1d_fvtxs2_clus_phi = new TH1D("th1d_fvtxs2_clus_phi","",50,-pi,pi);
+  TH1D* th1d_fvtxs3_clus_phi = new TH1D("th1d_fvtxs3_clus_phi","",50,-pi,pi);
+
+  TH1D* th1d_fvtxn_clus_phi = new TH1D("th1d_fvtxn_clus_phi","",50,-pi,pi);
+  TH1D* th1d_fvtxn0_clus_phi = new TH1D("th1d_fvtxn0_clus_phi","",50,-pi,pi);
+  TH1D* th1d_fvtxn1_clus_phi = new TH1D("th1d_fvtxn1_clus_phi","",50,-pi,pi);
+  TH1D* th1d_fvtxn2_clus_phi = new TH1D("th1d_fvtxn2_clus_phi","",50,-pi,pi);
+  TH1D* th1d_fvtxn3_clus_phi = new TH1D("th1d_fvtxn3_clus_phi","",50,-pi,pi);
 
   // --- event plane resolution
   TProfile* tp1f_reso2_BBC_CNT = new TProfile("tp1f_reso2_BBC_CNT","",1,-0.5,0.5,-1e6,1e6,"");
@@ -466,7 +475,8 @@ void flatten(int runNumber, int rp_recal_pass)
   float        event;
   float        d_bbcz;    // bbcz
   float        centrality; // float because of dumb mistake in tree code :(
-  unsigned int trigger;
+  unsigned int trigger_scaled;
+  unsigned int trigger_live;
   float        bc_x;
   float        bc_y;
   float        vtx_z;
@@ -483,7 +493,7 @@ void flatten(int runNumber, int rp_recal_pass)
   float        d_FVTX_y[max_nf];
   float        d_FVTX_z[max_nf];
 
-  int          d_nsegments;
+  int          d_ntrk;
   float        d_px[max_nh];
   float        d_py[max_nh];
   float        d_pz[max_nh];
@@ -492,7 +502,8 @@ void flatten(int runNumber, int rp_recal_pass)
   TBranch* b_event;   //!
   TBranch* b_bbc_z;   //!
   TBranch* b_centrality;   //!
-  TBranch* b_trigger;   //!
+  TBranch* b_trigger_scaled;   //!
+  TBranch* b_trigger_live;   //!
   TBranch* b_d_Qx;   //!
   TBranch* b_d_Qy;   //!
   TBranch* b_d_Qw;   //!
@@ -507,7 +518,7 @@ void flatten(int runNumber, int rp_recal_pass)
   TBranch* b_d_FVTX_x;   //!
   TBranch* b_d_FVTX_y;   //!
   TBranch* b_d_FVTX_z;   //!
-  TBranch* b_nsegments;   //!
+  TBranch* b_ntrk;   //!
   TBranch* b_px;   //!
   TBranch* b_py;   //!
   TBranch* b_pz;   //!
@@ -519,7 +530,8 @@ void flatten(int runNumber, int rp_recal_pass)
   ntp_event_chain->SetBranchAddress("bbc_z",&d_bbcz,&b_bbc_z);
   ntp_event_chain->SetBranchAddress("centrality",&centrality,&b_centrality);
   ntp_event_chain->SetBranchAddress("event",&event,&b_event);
-  ntp_event_chain->SetBranchAddress("trigger",&trigger,&b_trigger);
+  ntp_event_chain->SetBranchAddress("trigger_scaled",&trigger_scaled,&b_trigger_scaled);
+  ntp_event_chain->SetBranchAddress("trigger_live",&trigger_live,&b_trigger_live);
   ntp_event_chain->SetBranchAddress("bc_x",&bc_x,&b_bc_x);
   ntp_event_chain->SetBranchAddress("bc_y",&bc_y,&b_bc_y);
   ntp_event_chain->SetBranchAddress("vtx_z",&vtx_z,&b_vtx_z);
@@ -538,7 +550,7 @@ void flatten(int runNumber, int rp_recal_pass)
   ntp_event_chain->SetBranchAddress("d_FVTX_y",d_FVTX_y,&b_d_FVTX_y);
   ntp_event_chain->SetBranchAddress("d_FVTX_z",d_FVTX_z,&b_d_FVTX_z);
 
-  ntp_event_chain->SetBranchAddress("d_ntrk",&d_nsegments,&b_nsegments);
+  ntp_event_chain->SetBranchAddress("d_ntrk",&d_ntrk,&b_ntrk);
   ntp_event_chain->SetBranchAddress("d_cntpx",d_px,&b_px);
   ntp_event_chain->SetBranchAddress("d_cntpy",d_py,&b_py);
   ntp_event_chain->SetBranchAddress("d_cntpz",d_pz,&b_pz);
@@ -554,10 +566,13 @@ void flatten(int runNumber, int rp_recal_pass)
   //                   Looping Over Event Tree                  //
   //------------------------------------------------------------//
 
-  int EVENT_COUNTER = 0;
+  int event_counter = 0;
 
   int all_counter = 0;
   int bad_cent_counter = 0;
+
+  Long64_t cluster_counter = 0;
+  Long64_t gapcut_counter = 0;
 
   cout << "starting loop over events in the tree" << endl;
   int nentries = ntp_event_chain->GetEntries();
@@ -565,39 +580,55 @@ void flatten(int runNumber, int rp_recal_pass)
   for ( int ievt = 0; ievt < nentries; ++ievt )
     {
 
-      if ( ievt >= 1000000 ) break; // just 100k events for testing, runs a little on the slow side...
+      // --- break and continue statements should happen much, much earlier --------------------
+      if(rp_recal_pass<1 || rp_recal_pass > 3) break;// rp_recal_pass only valid between 1 and 3
+
+      //if ( ievt >= 100000 ) break; // just 100k events for testing, runs a little on the slow side...
       ++all_counter;
 
       bool say_event = ( ievt%1000==0 );
 
-      if ( say_event ) cout<<"event number = "<<ievt<<endl;
+      if ( say_event ) cout << "event number = " << ievt << endl;
 
       if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "getting event level variables" << endl;
-
       ntp_event_chain->GetEntry(ievt);
-
-
       if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Finished getting tree variables" << endl;
 
-      //if(vtx_z!=vtx_z) continue;
-      //if( fabs(vtx_z) > 100) continue;
-      // --- some big questions here about the z-vertex cut
-      // --- really need to double and triple check where the zvertex cuts are applied and what they are
-      //int ibbcz  = NZPS*(d_bbcz+30)/60;//bbc z bin for -30 <bbc z < 30 // how do you specify the number of bins here
-      // --- THIS CUT IS NOT PERFORMED ON THE TREES AND IS NOT NEEDED HERE...
-      // --- THIS CUT IS ALSO RUN DEPENDENT: THE 20 GeV AND 39 GeV SHOULD USE THE FVTX_Z CUT
+      // ---------------------
+      // --- trigger selection
+      // ---------------------
+
+      unsigned int trigger_FVTXNSBBCScentral = 0x00100000;
+      unsigned int trigger_FVTXNSBBCS        = 0x00400000;
+      unsigned int trigger_BBCLL1narrowcent  = 0x00000008;
+      unsigned int trigger_BBCLL1narrow      = 0x00000010;
+
+      unsigned int accepted_triggers = 0;
+      // --- Run16dAu200
+      if ( runNumber >= 454774 && runNumber <= 455639 ) accepted_triggers = trigger_BBCLL1narrowcent | trigger_BBCLL1narrow;
+      // --- Run16dAu62
+      if ( runNumber >= 455792 && runNumber <= 456283 ) accepted_triggers = trigger_BBCLL1narrowcent | trigger_BBCLL1narrow;
+      // --- Run16dAu20
+      if ( runNumber >= 456652 && runNumber <= 457298 ) accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS;
+      // --- Run16dAu39
+      if ( runNumber >= 457634 && runNumber <= 458167 ) accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS;
+
+      unsigned int passes_trigger = trigger_scaled & accepted_triggers;
+      if ( passes_trigger == 0 )
+        {
+          if ( verbosity > 0 ) cout << "trigger rejected" << endl;
+          continue;
+        }
 
       double ZVTX = -9999;
       if ( runNumber >= 454774 && runNumber <= 456283 ) ZVTX = d_bbcz;
       if ( runNumber >= 456652 && runNumber <= 458167 ) ZVTX = eventfvtx_z;
-
-      //if(TMath::Abs(d_bbcz) > 10.0 ) continue;
-      //bbc z bin for -10 <bbc z < 10 // how do you specify the number of bins here
-      int ibbcz = -9;
-      if ( runNumber >= 454774 && runNumber <= 458167 ) ibbcz = NZPS*(ZVTX+10)/20; // 200 and 62
-
-      // --- break and continue statements should happen much, much earlier --------------------
-      if(rp_recal_pass<1 || rp_recal_pass > 3) break;// rp_recal_pass only valid between 1 and 3
+      if ( fabs(ZVTX) > 10.0 )
+        {
+          if ( verbosity > 0 ) cout << "vertex rejected" << endl;
+          continue;
+        }
+      int ibbcz = NZPS*(ZVTX+10)/20;
 
       // make sure bin number doesn't exceed number of bins
       if ( ibbcz < 0 || ibbcz >= NZPS )
@@ -609,8 +640,6 @@ void flatten(int runNumber, int rp_recal_pass)
           continue;
         }
 
-      // don't do analysis if no tracks on third pass
-      //if(d_nsegments==0 && rp_recal_pass > 2) continue;
       // ---------------------------------------------------------------------------------------
 
       //------------------------------------------------------------//
@@ -619,18 +648,17 @@ void flatten(int runNumber, int rp_recal_pass)
 
       if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Calculating event planes" << endl;
 
-      //float vtx_x = bc_x + d_bbcz*0.025/10; // z dependent x position because of beam angle rotation issues // what are these numbers?  // these are really specific to p+Au
-      // --- just use the beam center for now
-      // --- beam center not available yet!!!
-      // float vtx_x = bc_x;
-      // float vtx_y = bc_y;
-      // 0.3 cm and 1.0 mrad from Darren 2016-06-23
+      // --- all numbers from Darren 2016-06-23
       const float x_off = 0.3;
       const float beam_angle = 0.001;
       float vtx_z = d_bbcz;
       if ( eventfvtx_z > -999 ) vtx_z = eventfvtx_z;
       float vtx_x = x_off + atan(beam_angle)*vtx_z;
-      float vtx_y = 0.02; // 0.02 cm from Darren 2016-06-23
+      float vtx_y = 0.02;
+
+      // -------------
+      // --- BBC stuff
+      // -------------
 
       float bbc_qx2 = 0;
       float bbc_qy2 = 0;
@@ -649,38 +677,22 @@ void flatten(int runNumber, int rp_recal_pass)
 
               float bbc_x      = d_pmt_x[ipmt] - vtx_x*10;//pmt location in mm
               float bbc_y      = d_pmt_y[ipmt] - vtx_y*10;
-              // float bbc_z      = d_pmt_z       - d_bbcz*10;
-              //cout<<"bbc_x: "<<bbc_x<<" bbc_y: "<<bbc_y<<" bbc_z: "<<bbc_z<<endl;
+              float bbc_z      = d_pmt_z       - vtx_z*10;
 
-              bbc_x = vtx_z*sin(-beam_angle) + bbc_x*cos(-beam_angle);
-
-              // double bbc_r = sqrt(pow(bbc_x,2.0)+pow(bbc_y,2.0));
-
-              // double bbc_the = atan2(bbc_r,bbc_z); //fvtx_z-bbcv
-              // double bbc_eta = -log(tan(0.5*bbc_the));
+              // --- rotation
+              bbc_x = bbc_z*sin(-beam_angle) + bbc_x*cos(-beam_angle);
 
               float phi = TMath::ATan2(bbc_y,bbc_x);
 
-              // float mass = 0.1396;//assume charged pion mass
-              // float pT = 0.25;
-              // float px = pT * TMath::Cos(phi);
-              // float py = pT * TMath::Sin(phi);
-              // float pz = pT * TMath::SinH(bbc_eta);
+              th1d_bbc_charge_phi->Fill(phi,bbc_charge);
 
-              // float energy = TMath::Sqrt(px*px+py*py+pz*pz+mass*mass);
-              // TLorentzVector particle_vec(px,py,pz,energy);
-              // phi = TMath::ATan2(particle_vec.Py(),particle_vec.Px());
-
-              // --- need to add a harmonic loop here, this will only give psi for now
               bbc_qx2 += bbc_charge*TMath::Cos(2*phi);
               bbc_qy2 += bbc_charge*TMath::Sin(2*phi);
               bbc_qx3 += bbc_charge*TMath::Cos(3*phi);
               bbc_qy3 += bbc_charge*TMath::Sin(3*phi);
               bbc_qw += bbc_charge;
             } // loop over tubes
-        }
-
-      //continue; // testing to get the charge distribution to make a centrality selection
+        } // check on tubes
 
       // --- do centrality cut here!!!
 
@@ -694,7 +706,7 @@ void flatten(int runNumber, int rp_recal_pass)
       else
         {
           //cout << "centrality undefined, cutting on bbc charge" << endl;
-          // --- REVISE THESE NUMBERS!!!
+          // --- revise these numbers as needed
           if ( runNumber >= 454744 && runNumber <= 455639 && bbc_qw < 60.0 ) continue; // dAu 200 GeV
           if ( runNumber >= 455792 && runNumber <= 456283 && bbc_qw < 40.0 ) continue; // dAu 62 GeV
           if ( runNumber >= 456652 && runNumber <= 457298 && bbc_qw < 25.0 ) continue; // dAu 20 GeV
@@ -711,13 +723,15 @@ void flatten(int runNumber, int rp_recal_pass)
 
       //cout << "HELLO HERE I AM" << endl;
 
-      ++EVENT_COUNTER;
+      ++event_counter;
 
       th1d_BBC_charge->Fill(bbc_qw);
       th1d_FVTX_nclus->Fill(d_nFVTX_clus);
       th2d_qBBC_nFVTX->Fill(bbc_qw,d_nFVTX_clus);
 
-
+      // --------------
+      // --- FVTX stuff
+      // --------------
 
       float fvtxs_qx2[5];//all layers then 0 1 2 3
       float fvtxs_qy2[5];
@@ -757,41 +771,33 @@ void flatten(int runNumber, int rp_recal_pass)
         {
           for(int iclus = 0; iclus < d_nFVTX_clus; iclus++)
             {
-              float fvtx_x      = d_FVTX_x[iclus] - vtx_x; // calculate for each event, function of z
+              float fvtx_x      = d_FVTX_x[iclus] - vtx_x;
               float fvtx_y      = d_FVTX_y[iclus] - vtx_y;
-              float fvtx_z      = d_FVTX_z[iclus]; // need raw z to get layer
+              float fvtx_z      = d_FVTX_z[iclus] - vtx_z;
 
-              fvtx_x = vtx_z*sin(-beam_angle) + fvtx_x*cos(-beam_angle);
+              // --- rotation
+              fvtx_x = fvtx_z*sin(-beam_angle) + fvtx_x*cos(-beam_angle);
 
               double fvtx_r = sqrt(pow(fvtx_x,2.0)+pow(fvtx_y,2.0));
-
-              double fvtx_the = atan2(fvtx_r,fvtx_z - ZVTX); //fvtx_z-bbcv // add a new variable to make it clear that you're using a corrected z vertex
+              double fvtx_the = atan2(fvtx_r,fvtx_z);
               double fvtx_eta = -log(tan(0.5*fvtx_the));
 
-              // --- probaby don't need to cut on acceptance
-              // --- shouldn't get any clusters outside of acceptance
-              // --- 20160627-1500 this cut causes all kinds of problems, even when using the correct z-vertex for the cluster position
-              // if(!(fabs(fvtx_eta)>1.0 && fabs(fvtx_eta)<3.5))
-              //   {
-              //     cout << "cutting on eta??? " << fvtx_eta << endl;
-              //     cout << fvtx_x << " " << fvtx_y << " " << fvtx_r << " " << fvtx_z << " " << ZVTX << endl;
-              //     continue;
-              //   }
-              // cout<<"fvtx_x: "<<fvtx_x<<" fvtx_y: "<<fvtx_y<<" fvtx_z"<<fvtx_z<<endl;
-
-              int fvtx_layer    = get_fvtx_layer(fvtx_z); // raw z to get layer
+              // --- determine layer based on cluster z
+              int fvtx_layer = get_fvtx_layer(d_FVTX_z[iclus]); // raw z to get layer
               if ( fvtx_layer < 0 )
                 {
-                  cout << "cutting on layer??? " << fvtx_layer << " " << fvtx_z << endl;
+                  cout << "cutting on layer??? " << fvtx_layer << " " << d_FVTX_z[iclus] << endl;
                   continue;
                 }
 
               // --- gap cut, not sure what this does
               int igap = (fabs(fvtx_eta)-1.0)/0.5;
               int id_fvtx = fvtx_layer*5+igap;
+              ++cluster_counter;
               if(!(id_fvtx>=0 && id_fvtx<40))
                 {
-                  cout << "gap cut rejecting cluster, z = " << fvtx_z << endl;
+                  //cout << "gap cut rejecting cluster??? z = " << d_FVTX_z[iclus] << endl;
+                  ++gapcut_counter;
                   continue;
                 }
               // --------------------------------------
@@ -799,7 +805,7 @@ void flatten(int runNumber, int rp_recal_pass)
               float phi = TMath::ATan2(fvtx_y,fvtx_x);
 
               // --- south side
-              if ( fvtx_z < 0 )
+              if ( d_FVTX_z[iclus] < 0 )
                 {
                   fvtxs_qx2[fvtx_layer+1] += TMath::Cos(2*phi);
                   fvtxs_qy2[fvtx_layer+1] += TMath::Sin(2*phi);
@@ -813,10 +819,16 @@ void flatten(int runNumber, int rp_recal_pass)
 
                   fvtxs_qw[fvtx_layer+1] ++;
                   fvtxs_qw[0] ++;
+
+                  th1d_fvtxs_clus_phi->Fill(phi);
+                  if ( fvtx_layer == 0 ) th1d_fvtxs0_clus_phi->Fill(phi);
+                  if ( fvtx_layer == 1 ) th1d_fvtxs1_clus_phi->Fill(phi);
+                  if ( fvtx_layer == 2 ) th1d_fvtxs2_clus_phi->Fill(phi);
+                  if ( fvtx_layer == 3 ) th1d_fvtxs3_clus_phi->Fill(phi);
                 } // check on south
 
               // --- north side
-              if ( fvtx_z > 0 )
+              if ( d_FVTX_z[iclus] > 0 )
                 {
                   fvtxn_qx2[fvtx_layer+1] += TMath::Cos(2*phi);
                   fvtxn_qy2[fvtx_layer+1] += TMath::Sin(2*phi);
@@ -830,6 +842,12 @@ void flatten(int runNumber, int rp_recal_pass)
 
                   fvtxn_qw[fvtx_layer+1] ++;
                   fvtxn_qw[0] ++;
+
+                  th1d_fvtxn_clus_phi->Fill(phi);
+                  if ( fvtx_layer == 0 ) th1d_fvtxn0_clus_phi->Fill(phi);
+                  if ( fvtx_layer == 1 ) th1d_fvtxn1_clus_phi->Fill(phi);
+                  if ( fvtx_layer == 2 ) th1d_fvtxn2_clus_phi->Fill(phi);
+                  if ( fvtx_layer == 3 ) th1d_fvtxn3_clus_phi->Fill(phi);
                 } // check on north
 
             } // loop over cluster
@@ -879,7 +897,6 @@ void flatten(int runNumber, int rp_recal_pass)
 
       if ( fvtx_clusters )
         {
-
           // --- south side, 2nd harmonic
 
           sumxy[1][south_fvtx_angle][0] = fvtxs_qx2[0];
@@ -967,7 +984,6 @@ void flatten(int runNumber, int rp_recal_pass)
           sumxy[2][north_fvtx_3_angle][0] = fvtxn_qx3[4];
           sumxy[2][north_fvtx_3_angle][1] = fvtxn_qy3[4];
           sumxy[2][north_fvtx_3_angle][2] = fvtxn_qw[4];
-
         }
 
 
@@ -1233,9 +1249,9 @@ void flatten(int runNumber, int rp_recal_pass)
 
 
       //start of vtx stand alone track loop
-      if ( vtx_tracks )
+      if ( cnt_tracks )
         {
-          for(int itrk=0; itrk< d_nsegments; itrk++)
+          for(int itrk=0; itrk< d_ntrk; itrk++)
             {
               float px    = d_px[itrk];
               float py    = d_py[itrk];
@@ -1247,46 +1263,36 @@ void flatten(int runNumber, int rp_recal_pass)
               float phi0 = TMath::ATan2(py,px);
               float pt = sqrt(px*px+py*py);
 
-              float bbc_dphi2 = phi0 - bbc_psi2; // move this lower?
+              if ( pt < 0.2 || pt > 5.0 ) continue; // pt cut added 2016-06-30
 
+              float bbc_dphi2 = phi0 - bbc_psi2;
               if(-4.0<bbc_psi2 && bbc_psi2<4.0 ) // why this weird cut? why not just -pi to pi? // checking against -9999 from above
                 {
                   bbcs_v2_incl_nodetree->Fill(pt,cos(2*bbc_dphi2));
-                  if(dcarm==0)
-                    {
-                      bbcs_v2_east_nodetree->Fill(pt,cos(2*bbc_dphi2));
-                    }
-                  else if(dcarm==1)
-                    {
-                      bbcs_v2_west_nodetree->Fill(pt,cos(2*bbc_dphi2));
-                    }
+                  if(dcarm==0) bbcs_v2_east_nodetree->Fill(pt,cos(2*bbc_dphi2));
+                  else if(dcarm==1) bbcs_v2_west_nodetree->Fill(pt,cos(2*bbc_dphi2));
                 }
 
               float fvtx_dphi2 = phi0 - fvtx_psi2;
-
               if(-4.0<fvtx_psi2 && fvtx_psi2<4.0 )
                 {
                   fvtxs_v2_incl_nodetree->Fill(pt,cos(2*fvtx_dphi2));
-                  if(dcarm==0)
-                    {
-                      fvtxs_v2_east_nodetree->Fill(pt,cos(2*fvtx_dphi2));
-                    }
-                  else if(dcarm==1)
-                    {
-                      fvtxs_v2_west_nodetree->Fill(pt,cos(2*fvtx_dphi2));
-                    }
+                  if(dcarm==0) fvtxs_v2_east_nodetree->Fill(pt,cos(2*fvtx_dphi2));
+                  else if(dcarm==1) fvtxs_v2_west_nodetree->Fill(pt,cos(2*fvtx_dphi2));
                 }
 
+              // -------------------------------------------------------
               // --- finished with nodetree part, now doing docalib part
+              // -------------------------------------------------------
 
-              // float mass = 0.1396;//assume charged pion mass
-              // float energy = TMath::Sqrt(px*px+py*py+pz*pz+mass*mass);
-              // TLorentzVector particle_vec(px,py,pz,energy);
 
-              // float phi_angle = TMath::ATan2(particle_vec.Py(),particle_vec.Px()); // rotated phi // "modified"
-              // float pt_angle = TMath::Sqrt(particle_vec.Py()*particle_vec.Py()+particle_vec.Px()*particle_vec.Px()); // rotated pt "modified"
-              float phi_angle = phi0;
-              float pt_angle = pt;
+
+              // --- rotation on single particles here
+              px = pz*sin(-beam_angle) + px*cos(-beam_angle);
+              float phi_angle = TMath::ATan2(py,px);
+              float pt_angle = sqrt(px*px+py*py);
+
+              if ( pt <_angle 0.2 || pt_angle > 5.0 ) continue; // pt cut added 2016-06-30
 
               //bbc angle
               if ( bbc_pmts )
@@ -1306,8 +1312,6 @@ void flatten(int runNumber, int rp_recal_pass)
                       if ( dcarm == 1 ) bbcs_v3_west_docalib->Fill(pt_angle,cosbbc_dphi3_docalib);
                       if ( dcarm == 0 ) bbcs_v3_east_docalib->Fill(pt_angle,cosbbc_dphi3_docalib);
                       // --- 4th harmonic
-                      // double fourtwo = 4*phi_angle - 2*bbc_south_psi2_docalib;
-                      // double cosfourtwo = TMath::Cos(fourtwo);
                       double fourfour = 4*phi_angle - 4*bbc_south_psi2_docalib;
                       double cosfourfour = TMath::Cos(fourfour);
                       bbcs_v4_4Psi2_both_docalib->Fill(pt_angle,cosfourfour);
@@ -1342,8 +1346,6 @@ void flatten(int runNumber, int rp_recal_pass)
                   if ( dcarm == 1 ) fvtxs_v3_west_docalib->Fill(pt_angle,cosfvtx_dphi3_docalib);
                   if ( dcarm == 0 ) fvtxs_v3_east_docalib->Fill(pt_angle,cosfvtx_dphi3_docalib);
                   // --- 4th harmonic
-                  // double fourtwo = 4*phi_angle - 2*fvtx_south_psi2_docalib;
-                  // double cosfourtwo = TMath::Cos(fourtwo);
                   double fourfour = 4*phi_angle - 4*fvtx_south_psi2_docalib;
                   double cosfourfour = TMath::Cos(fourfour);
                   fvtxs_v4_4Psi2_both_docalib->Fill(pt_angle,cosfourfour);
@@ -1378,8 +1380,6 @@ void flatten(int runNumber, int rp_recal_pass)
                   if ( dcarm == 1 ) fvtxn_v3_west_docalib->Fill(pt_angle,cosfvtx_dphi3_docalib);
                   if ( dcarm == 0 ) fvtxn_v3_east_docalib->Fill(pt_angle,cosfvtx_dphi3_docalib);
                   // --- 4th harmonic
-                  // double fourtwo = 4*phi_angle - 2*fvtx_north_psi2_docalib;
-                  // double cosfourtwo = TMath::Cos(fourtwo);
                   double fourfour = 4*phi_angle - 4*fvtx_north_psi2_docalib;
                   double cosfourfour = TMath::Cos(fourfour);
                   fvtxn_v4_4Psi2_both_docalib->Fill(pt_angle,cosfourfour);
@@ -1441,8 +1441,9 @@ void flatten(int runNumber, int rp_recal_pass)
         } // check on tracks
     }//end of event
 
-  cout << "Processed " << EVENT_COUNTER << "/" << all_counter << " events (" << (float)EVENT_COUNTER/(float)all_counter << ")" << endl;
-  cout << "Events with bad centrality = " << bad_cent_counter << " (" << (float)bad_cent_counter/(float)EVENT_COUNTER << ")" << endl;
+  cout << "Processed " << event_counter << "/" << all_counter << " events (" << (float)event_counter/(float)all_counter << ")" << endl;
+  cout << "Events with bad centrality = " << bad_cent_counter << " (" << (float)bad_cent_counter/(float)event_counter << ")" << endl;
+  cout << "Gap cuts applied " << gapcut_counter << "/" << cluster_counter << " (" << (float)gapcut_counter/(float)cluster_counter << ")" << endl;
 
   if(rp_recal_pass<3 && rp_recal_pass>0)
     {
@@ -1517,6 +1518,21 @@ void flatten(int runNumber, int rp_recal_pass)
       th1d_FVTXS_nclus->Write();
       th1d_FVTXN_nclus->Write();
       th2d_qBBC_nFVTX->Write();
+
+      th1d_bbc_charge_phi->Write();
+
+      th1d_fvtxs_clus_phi->Write();
+      th1d_fvtxs0_clus_phi->Write();
+      th1d_fvtxs1_clus_phi->Write();
+      th1d_fvtxs2_clus_phi->Write();
+      th1d_fvtxs3_clus_phi->Write();
+
+      th1d_fvtxn_clus_phi->Write();
+      th1d_fvtxn0_clus_phi->Write();
+      th1d_fvtxn1_clus_phi->Write();
+      th1d_fvtxn2_clus_phi->Write();
+      th1d_fvtxn3_clus_phi->Write();
+
       mData2->Close();
     }
 
@@ -1641,6 +1657,20 @@ void flatten(int runNumber, int rp_recal_pass)
       th1d_FVTXN_nclus->Write();
       th2d_qBBC_nFVTX->Write();
 
+      th1d_bbc_charge_phi->Write();
+
+      th1d_fvtxs_clus_phi->Write();
+      th1d_fvtxs0_clus_phi->Write();
+      th1d_fvtxs1_clus_phi->Write();
+      th1d_fvtxs2_clus_phi->Write();
+      th1d_fvtxs3_clus_phi->Write();
+
+      th1d_fvtxn_clus_phi->Write();
+      th1d_fvtxn0_clus_phi->Write();
+      th1d_fvtxn1_clus_phi->Write();
+      th1d_fvtxn2_clus_phi->Write();
+      th1d_fvtxn3_clus_phi->Write();
+
       mData1->Close();
 
     } // check on last pass
@@ -1655,114 +1685,156 @@ void flatten(int runNumber, int rp_recal_pass)
   // f->Close();
   // delete f;
 
-    delete bbcs_v2_incl_nodetree;
-    delete bbcs_v2_east_nodetree;
-    delete bbcs_v2_west_nodetree;
+  delete bbcs_v2_incl_nodetree;
+  delete bbcs_v2_east_nodetree;
+  delete bbcs_v2_west_nodetree;
 
-    delete fvtxs_v2_incl_nodetree;
-    delete fvtxs_v2_east_nodetree;
-    delete fvtxs_v2_west_nodetree;
+  delete fvtxs_v2_incl_nodetree;
+  delete fvtxs_v2_east_nodetree;
+  delete fvtxs_v2_west_nodetree;
 
-    delete bbcs_v2_west_docalib;
-    delete fvtxs_v2_west_docalib;
-    delete fvtxs0_v2_west_docalib;
-    delete fvtxs1_v2_west_docalib;
-    delete fvtxs2_v2_west_docalib;
-    delete fvtxs3_v2_west_docalib;
+  delete bbcs_v2_west_docalib;
+  delete fvtxs_v2_west_docalib;
+  delete fvtxs0_v2_west_docalib;
+  delete fvtxs1_v2_west_docalib;
+  delete fvtxs2_v2_west_docalib;
+  delete fvtxs3_v2_west_docalib;
 
-    delete bbcs_v2_east_docalib;
-    delete fvtxs_v2_east_docalib;
-    delete fvtxs0_v2_east_docalib;
-    delete fvtxs1_v2_east_docalib;
-    delete fvtxs2_v2_east_docalib;
-    delete fvtxs3_v2_east_docalib;
+  delete bbcs_v2_east_docalib;
+  delete fvtxs_v2_east_docalib;
+  delete fvtxs0_v2_east_docalib;
+  delete fvtxs1_v2_east_docalib;
+  delete fvtxs2_v2_east_docalib;
+  delete fvtxs3_v2_east_docalib;
 
-    delete bbcs_v2_both_docalib;
-    delete fvtxs_v2_both_docalib;
-    delete fvtxs0_v2_both_docalib;
-    delete fvtxs1_v2_both_docalib;
-    delete fvtxs2_v2_both_docalib;
-    delete fvtxs3_v2_both_docalib;
+  delete bbcs_v2_both_docalib;
+  delete fvtxs_v2_both_docalib;
+  delete fvtxs0_v2_both_docalib;
+  delete fvtxs1_v2_both_docalib;
+  delete fvtxs2_v2_both_docalib;
+  delete fvtxs3_v2_both_docalib;
 
-    delete bbcs_v3_west_docalib;
-    delete fvtxs_v3_west_docalib;
-    // delete fvtxs0_v3_west_docalib;
-    // delete fvtxs1_v3_west_docalib;
-    // delete fvtxs2_v3_west_docalib;
-    // delete fvtxs3_v3_west_docalib;
+  delete bbcs_v3_west_docalib;
+  delete fvtxs_v3_west_docalib;
+  // delete fvtxs0_v3_west_docalib;
+  // delete fvtxs1_v3_west_docalib;
+  // delete fvtxs2_v3_west_docalib;
+  // delete fvtxs3_v3_west_docalib;
 
-    delete bbcs_v3_east_docalib;
-    delete fvtxs_v3_east_docalib;
-    // delete fvtxs0_v3_east_docalib;
-    // delete fvtxs1_v3_east_docalib;
-    // delete fvtxs2_v3_east_docalib;
-    // delete fvtxs3_v3_east_docalib;
+  delete bbcs_v3_east_docalib;
+  delete fvtxs_v3_east_docalib;
+  // delete fvtxs0_v3_east_docalib;
+  // delete fvtxs1_v3_east_docalib;
+  // delete fvtxs2_v3_east_docalib;
+  // delete fvtxs3_v3_east_docalib;
 
-    delete bbcs_v3_both_docalib;
-    delete fvtxs_v3_both_docalib;
-    // delete fvtxs0_v3_both_docalib;
-    // delete fvtxs1_v3_both_docalib;
-    // delete fvtxs2_v3_both_docalib;
-    // delete fvtxs3_v3_both_docalib;
+  delete bbcs_v3_both_docalib;
+  delete fvtxs_v3_both_docalib;
+  // delete fvtxs0_v3_both_docalib;
+  // delete fvtxs1_v3_both_docalib;
+  // delete fvtxs2_v3_both_docalib;
+  // delete fvtxs3_v3_both_docalib;
 
-    for (int ic=0; ic<NMUL; ic++) {
-    for (int iz=0; iz<NZPS; iz++) {
-    for (int ih=1; ih<NHAR; ih++) {
-    for (int id=0; id<NDET; id++) {
-    delete ave[ic][iz][ih][id];
-    delete flt[ic][iz][ih][id];
-    }
-    }
-    }
-    }
+  for (int ic=0; ic<NMUL; ic++) {
+  for (int iz=0; iz<NZPS; iz++) {
+  for (int ih=1; ih<NHAR; ih++) {
+  for (int id=0; id<NDET; id++) {
+  delete ave[ic][iz][ih][id];
+  delete flt[ic][iz][ih][id];
+  }
+  }
+  }
+  }
 
-    for (int ic=0; ic<NMUL; ic++) {
-    for (int ih=1; ih<NHAR; ih++) {
-    for (int id=0; id<NDET; id++) {
-    delete dis[ic][ih][id];
-    delete qx[ic][ih][id];
-    delete qy[ic][ih][id];
-    delete psi_bf[ic][ih][id];
-    delete psi_af[ic][ih][id];
-    }
-    }
-    }
+  for (int ic=0; ic<NMUL; ic++) {
+  for (int ih=1; ih<NHAR; ih++) {
+  for (int id=0; id<NDET; id++) {
+  delete dis[ic][ih][id];
+  delete qx[ic][ih][id];
+  delete qy[ic][ih][id];
+  delete psi_bf[ic][ih][id];
+  delete psi_af[ic][ih][id];
+  }
+  }
+  }
 
-    delete th1d_BBC_charge;
-    delete th1d_FVTX_nclus;
-    delete th1d_FVTXN_nclus;
-    delete th1d_FVTXS_nclus;
-    delete th2d_qBBC_nFVTX;
-    delete tp1f_reso2_BBC_CNT;
-    delete tp1f_reso2_BBC_FVTX;
-    delete tp1f_reso2_CNT_FVTX;
-    delete tp1f_reso3_BBC_CNT;
-    delete tp1f_reso3_BBC_FVTX;
-    delete tp1f_reso3_CNT_FVTX;
-    delete th1d_reso2_BBC_CNT;
-    delete th1d_reso2_BBC_FVTX;
-    delete th1d_reso2_CNT_FVTX;
-    delete th1d_reso3_BBC_CNT;
-    delete th1d_reso3_BBC_FVTX;
-    delete th1d_reso3_CNT_FVTX;
-    delete th1d_dreso2_BBC_CNT;
-    delete th1d_dreso2_BBC_FVTX;
-    delete th1d_dreso2_CNT_FVTX;
-    delete th1d_dreso3_BBC_CNT;
-    delete th1d_dreso3_BBC_FVTX;
-    delete th1d_dreso3_CNT_FVTX;
-    delete tp1f_reso2_BBC_FVTXN;
-    delete tp1f_reso3_BBC_FVTXN;
-    delete tp1f_reso2_FVTXS_FVTXN;
-    delete tp1f_reso3_FVTXS_FVTXN;
-    delete th1d_reso2_BBC_FVTXN;
-    delete th1d_reso3_BBC_FVTXN;
-    delete th1d_reso2_FVTXS_FVTXN;
-    delete th1d_reso3_FVTXS_FVTXN;
-    delete th1d_dreso2_BBC_FVTXN;
-    delete th1d_dreso3_BBC_FVTXN;
-    delete th1d_dreso2_FVTXS_FVTXN;
-    delete th1d_dreso3_FVTXS_FVTXN;
+  delete th1d_BBC_charge;
+  delete th1d_FVTX_nclus;
+  delete th1d_FVTXN_nclus;
+  delete th1d_FVTXS_nclus;
+  delete th2d_qBBC_nFVTX;
+  delete tp1f_reso2_BBC_CNT;
+  delete tp1f_reso2_BBC_FVTX;
+  delete tp1f_reso2_CNT_FVTX;
+  delete tp1f_reso3_BBC_CNT;
+  delete tp1f_reso3_BBC_FVTX;
+  delete tp1f_reso3_CNT_FVTX;
+  delete th1d_reso2_BBC_CNT;
+  delete th1d_reso2_BBC_FVTX;
+  delete th1d_reso2_CNT_FVTX;
+  delete th1d_reso3_BBC_CNT;
+  delete th1d_reso3_BBC_FVTX;
+  delete th1d_reso3_CNT_FVTX;
+  delete th1d_dreso2_BBC_CNT;
+  delete th1d_dreso2_BBC_FVTX;
+  delete th1d_dreso2_CNT_FVTX;
+  delete th1d_dreso3_BBC_CNT;
+  delete th1d_dreso3_BBC_FVTX;
+  delete th1d_dreso3_CNT_FVTX;
+  delete tp1f_reso2_BBC_FVTXN;
+  delete tp1f_reso3_BBC_FVTXN;
+  delete tp1f_reso2_FVTXS_FVTXN;
+  delete tp1f_reso3_FVTXS_FVTXN;
+  delete th1d_reso2_BBC_FVTXN;
+  delete th1d_reso3_BBC_FVTXN;
+  delete th1d_reso2_FVTXS_FVTXN;
+  delete th1d_reso3_FVTXS_FVTXN;
+  delete th1d_dreso2_BBC_FVTXN;
+  delete th1d_dreso3_BBC_FVTXN;
+  delete th1d_dreso2_FVTXS_FVTXN;
+  delete th1d_dreso3_FVTXS_FVTXN;
+
+  delete th1d_bbc_charge_phi;
+
+  delete th1d_fvtxs_clus_phi;
+  delete th1d_fvtxs0_clus_phi;
+  delete th1d_fvtxs1_clus_phi;
+  delete th1d_fvtxs2_clus_phi;
+  delete th1d_fvtxs3_clus_phi;
+
+  delete th1d_fvtxn_clus_phi;
+  delete th1d_fvtxn0_clus_phi;
+  delete th1d_fvtxn1_clus_phi;
+  delete th1d_fvtxn2_clus_phi;
+  delete th1d_fvtxn3_clus_phi;
+
+  delete tp1f_reso3_CNT_FVTXN;
+  delete th1d_reso2_CNT_FVTXN;
+  delete th1d_reso3_CNT_FVTXN;
+  delete th1d_dreso2_CNT_FVTXN;
+  delete th1d_dreso3_CNT_FVTXN;
+  delete tp1f_reso42_BBC_CNT;
+  delete tp1f_reso42_BBC_FVTX;
+  delete tp1f_reso42_CNT_FVTX;
+  delete tp1f_reso42_BBC_FVTXN;
+  delete tp1f_reso42_CNT_FVTXN;
+  delete tp1f_reso42_FVTXS_FVTXN;
+  delete bbcs_v4_4Psi2_west_docalib;
+  delete bbcs_v4_4Psi2_east_docalib;
+  delete bbcs_v4_4Psi2_both_docalib;
+  delete fvtxs_v4_4Psi2_west_docalib;
+  delete fvtxs_v4_4Psi2_east_docalib;
+  delete fvtxs_v4_4Psi2_both_docalib;
+  delete fvtxn_v2_west_docalib;
+  delete fvtxn_v2_east_docalib;
+  delete fvtxn_v2_both_docalib;
+  delete fvtxn_v3_west_docalib;
+  delete fvtxn_v3_east_docalib;
+  delete fvtxn_v3_both_docalib;
+  delete fvtxn_v4_4Psi2_west_docalib;
+  delete fvtxn_v4_4Psi2_east_docalib;
+  delete fvtxn_v4_4Psi2_both_docalib;
+
 
 
   cout<<"end of program ana"<<endl;
