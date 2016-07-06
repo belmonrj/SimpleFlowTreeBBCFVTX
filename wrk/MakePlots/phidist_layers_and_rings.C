@@ -1,8 +1,13 @@
 void doe(int);
 
+void combe();
+
 
 void phidist_layers_and_rings()
 {
+
+  combe();
+  return;
 
   doe(62);
   doe(39);
@@ -10,6 +15,144 @@ void phidist_layers_and_rings()
 
 }
 
+
+void combe()
+{
+
+  TCanvas* c1 = new TCanvas("c1","");
+
+  TFile* file_62 = TFile::Open("input/combined_62.root");
+  TFile* file_39 = TFile::Open("input/combined_39.root");
+  TFile* file_20 = TFile::Open("input/combined_20.root");
+
+  TH1D* th1d_bbc_charge_62 = (TH1D*)file_62->Get("th1d_BBC_charge");
+  TH1D* th1d_bbc_charge_39 = (TH1D*)file_39->Get("th1d_BBC_charge");
+  TH1D* th1d_bbc_charge_20 = (TH1D*)file_20->Get("th1d_BBC_charge");
+  int nevents_62 = th1d_bbc_charge_62->GetEntries();
+  int nevents_39 = th1d_bbc_charge_39->GetEntries();
+  int nevents_20 = th1d_bbc_charge_20->GetEntries();
+
+  TH1D* th1d_south_layerA_62 = (TH1D*)file_62->Get("th1d_fvtxs_clus_phi");
+  TH1D* th1d_south_layer0_62 = (TH1D*)file_62->Get("th1d_fvtxs0_clus_phi");
+  TH1D* th1d_south_layer1_62 = (TH1D*)file_62->Get("th1d_fvtxs1_clus_phi");
+  TH1D* th1d_south_layer2_62 = (TH1D*)file_62->Get("th1d_fvtxs2_clus_phi");
+  TH1D* th1d_south_layer3_62 = (TH1D*)file_62->Get("th1d_fvtxs3_clus_phi");
+
+  TH1D* th1d_south_layerA_39 = (TH1D*)file_39->Get("th1d_fvtxs_clus_phi");
+  TH1D* th1d_south_layer0_39 = (TH1D*)file_39->Get("th1d_fvtxs0_clus_phi");
+  TH1D* th1d_south_layer1_39 = (TH1D*)file_39->Get("th1d_fvtxs1_clus_phi");
+  TH1D* th1d_south_layer2_39 = (TH1D*)file_39->Get("th1d_fvtxs2_clus_phi");
+  TH1D* th1d_south_layer3_39 = (TH1D*)file_39->Get("th1d_fvtxs3_clus_phi");
+
+  TH1D* th1d_south_layerA_20 = (TH1D*)file_20->Get("th1d_fvtxs_clus_phi");
+  TH1D* th1d_south_layer0_20 = (TH1D*)file_20->Get("th1d_fvtxs0_clus_phi");
+  TH1D* th1d_south_layer1_20 = (TH1D*)file_20->Get("th1d_fvtxs1_clus_phi");
+  TH1D* th1d_south_layer2_20 = (TH1D*)file_20->Get("th1d_fvtxs2_clus_phi");
+  TH1D* th1d_south_layer3_20 = (TH1D*)file_20->Get("th1d_fvtxs3_clus_phi");
+
+  th1d_south_layerA_62->Scale(1.0/nevents_62);
+  th1d_south_layer0_62->Scale(1.0/nevents_62);
+  th1d_south_layer1_62->Scale(1.0/nevents_62);
+  th1d_south_layer2_62->Scale(1.0/nevents_62);
+  th1d_south_layer3_62->Scale(1.0/nevents_62);
+
+  th1d_south_layerA_39->Scale(1.0/nevents_39);
+  th1d_south_layer0_39->Scale(1.0/nevents_39);
+  th1d_south_layer1_39->Scale(1.0/nevents_39);
+  th1d_south_layer2_39->Scale(1.0/nevents_39);
+  th1d_south_layer3_39->Scale(1.0/nevents_39);
+
+  th1d_south_layerA_20->Scale(1.0/nevents_20);
+  th1d_south_layer0_20->Scale(1.0/nevents_20);
+  th1d_south_layer1_20->Scale(1.0/nevents_20);
+  th1d_south_layer2_20->Scale(1.0/nevents_20);
+  th1d_south_layer3_20->Scale(1.0/nevents_20);
+
+  // ---
+
+  th1d_south_layerA_20->SetLineColor(kBlack);
+  th1d_south_layerA_39->SetLineColor(kRed);
+  th1d_south_layerA_62->SetLineColor(kBlue);
+  th1d_south_layerA_20->Draw();
+  th1d_south_layerA_20->SetMinimum(0.0);
+  th1d_south_layerA_20->GetXaxis()->SetTitle("cluster #phi (rad)");
+  th1d_south_layerA_39->Draw("same");
+  th1d_south_layerA_62->Draw("same");
+  th1d_south_layerA_20->SetTitle(Form("FVTX South, all layers"));
+  th1d_south_layerA_20->GetXaxis()->SetTitle("cluster #phi (rad)");
+  th1d_south_layerA_20->GetYaxis()->SetTitle("counts/event");
+  TLegend* legA = new TLegend(0.18,0.68,0.38,0.88);
+  legA->AddEntry(th1d_south_layerA_62,"62 GeV","l");
+  legA->AddEntry(th1d_south_layerA_39,"39 GeV","l");
+  legA->AddEntry(th1d_south_layerA_20,"20 GeV","l");
+  legA->SetTextSize(0.045);
+  legA->Draw();
+  c1->Print(Form("FigsOther/cluster_phidist_fvtxs_allenergy.png"));
+  c1->Print(Form("FigsOther/cluster_phidist_fvtxs_allenergy.pdf"));
+
+  th1d_south_layer0_20->SetLineColor(kBlack);
+  th1d_south_layer0_39->SetLineColor(kRed);
+  th1d_south_layer0_62->SetLineColor(kBlue);
+  th1d_south_layer0_20->Draw();
+  th1d_south_layer0_20->SetMinimum(0.0);
+  th1d_south_layer0_20->GetXaxis()->SetTitle("cluster #phi (rad)");
+  th1d_south_layer0_39->Draw("same");
+  th1d_south_layer0_62->Draw("same");
+  th1d_south_layer0_20->SetTitle(Form("FVTX South, layer 0"));
+  th1d_south_layer0_20->GetXaxis()->SetTitle("cluster #phi (rad)");
+  th1d_south_layer0_20->GetYaxis()->SetTitle("counts/event");
+  legA->Draw();
+  c1->Print(Form("FigsOther/cluster_phidist_fvtxs0_allenergy.png"));
+  c1->Print(Form("FigsOther/cluster_phidist_fvtxs0_allenergy.pdf"));
+
+  th1d_south_layer1_20->SetLineColor(kBlack);
+  th1d_south_layer1_39->SetLineColor(kRed);
+  th1d_south_layer1_62->SetLineColor(kBlue);
+  th1d_south_layer1_20->Draw();
+  th1d_south_layer1_20->SetMinimum(0.0);
+  th1d_south_layer1_20->GetXaxis()->SetTitle("cluster #phi (rad)");
+  th1d_south_layer1_39->Draw("same");
+  th1d_south_layer1_62->Draw("same");
+  th1d_south_layer1_20->SetTitle(Form("FVTX South, layer 1"));
+  th1d_south_layer1_20->GetXaxis()->SetTitle("cluster #phi (rad)");
+  th1d_south_layer1_20->GetYaxis()->SetTitle("counts/event");
+  legA->Draw();
+  c1->Print(Form("FigsOther/cluster_phidist_fvtxs1_allenergy.png"));
+  c1->Print(Form("FigsOther/cluster_phidist_fvtxs1_allenergy.pdf"));
+
+  th1d_south_layer2_20->SetLineColor(kBlack);
+  th1d_south_layer2_39->SetLineColor(kRed);
+  th1d_south_layer2_62->SetLineColor(kBlue);
+  th1d_south_layer2_20->Draw();
+  th1d_south_layer2_20->SetMinimum(0.0);
+  th1d_south_layer2_20->GetXaxis()->SetTitle("cluster #phi (rad)");
+  th1d_south_layer2_39->Draw("same");
+  th1d_south_layer2_62->Draw("same");
+  th1d_south_layer2_20->SetTitle(Form("FVTX South, layer 2"));
+  th1d_south_layer2_20->GetXaxis()->SetTitle("cluster #phi (rad)");
+  th1d_south_layer2_20->GetYaxis()->SetTitle("counts/event");
+  legA->Draw();
+  c1->Print(Form("FigsOther/cluster_phidist_fvtxs2_allenergy.png"));
+  c1->Print(Form("FigsOther/cluster_phidist_fvtxs2_allenergy.pdf"));
+
+  th1d_south_layer3_20->SetLineColor(kBlack);
+  th1d_south_layer3_39->SetLineColor(kRed);
+  th1d_south_layer3_62->SetLineColor(kBlue);
+  th1d_south_layer3_20->Draw();
+  th1d_south_layer3_20->SetMinimum(0.0);
+  th1d_south_layer3_20->GetXaxis()->SetTitle("cluster #phi (rad)");
+  th1d_south_layer3_39->Draw("same");
+  th1d_south_layer3_62->Draw("same");
+  th1d_south_layer3_20->SetTitle(Form("FVTX South, layer 3"));
+  th1d_south_layer3_20->GetXaxis()->SetTitle("cluster #phi (rad)");
+  th1d_south_layer3_20->GetYaxis()->SetTitle("counts/event");
+  legA->Draw();
+  c1->Print(Form("FigsOther/cluster_phidist_fvtxs3_allenergy.png"));
+  c1->Print(Form("FigsOther/cluster_phidist_fvtxs3_allenergy.pdf"));
+
+  delete c1;
+
+}
 
 void doe(int energy)
 {

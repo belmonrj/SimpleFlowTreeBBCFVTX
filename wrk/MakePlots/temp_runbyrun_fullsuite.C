@@ -460,6 +460,7 @@ void makemult(int energy)
   // -----------------------------------------
   // --- first get the individual correlations
   // -----------------------------------------
+  int runn[110];
   double index[110];
   double
     array_BBCS[110],
@@ -481,6 +482,7 @@ void makemult(int energy)
       double temp_bbcs, temp_fvtxs, temp_fvtxn;
       double temp_ebbcs, temp_efvtxs, temp_efvtxn;
       index[i] = i+0.5;
+      runn[i] = run;
       if ( !getmult(run,temp_bbcs,temp_fvtxs,temp_fvtxn,temp_ebbcs,temp_efvtxs,temp_efvtxn) ) continue;
       ++counter;
       array_BBCS[i] = temp_bbcs;
@@ -527,12 +529,89 @@ void makemult(int energy)
   fun_fvtxs->SetLineColor(kRed);
   fun_fvtxn->SetLineColor(kBlue);
 
-  tge_bbcs->Fit(fun_bbcs,"Q","",0,counter);
-  tge_fvtxs->Fit(fun_fvtxs,"Q","",0,counter);
-  tge_fvtxn->Fit(fun_fvtxn,"Q","",0,counter);
+  tge_bbcs->Fit(fun_bbcs,"","",0,counter);
+  tge_fvtxs->Fit(fun_fvtxs,"","",0,counter);
+  tge_fvtxn->Fit(fun_fvtxn,"","",0,counter);
 
   c1->Print(Form("FigsOther/mult_runbyrun_energy%d.png",energy));
   c1->Print(Form("FigsOther/mult_runbyrun_energy%d.pdf",energy));
+
+  // -------------------------------------------------
+  // --- now attempting to do simplistic run by run QA
+  // -------------------------------------------------
+
+  double ave_BBCS = 0;
+  double rms_BBCS = 0;
+  double ave_FVTXS = 0;
+  double rms_FVTXS = 0;
+  double ave_FVTXN = 0;
+  double rms_FVTXN = 0;
+  for ( int i = 0; i < counter; ++i )
+    {
+      ave_BBCS += array_BBCS[i];
+      rms_BBCS += pow(array_BBCS[i],2);
+      ave_FVTXS += array_FVTXS[i];
+      rms_FVTXS += pow(array_FVTXS[i],2);
+      ave_FVTXN += array_FVTXN[i];
+      rms_FVTXN += pow(array_FVTXN[i],2);
+    }
+  ave_BBCS /= counter;
+  rms_BBCS /= counter;
+  ave_FVTXS /= counter;
+  rms_FVTXS /= counter;
+  ave_FVTXN /= counter;
+  rms_FVTXN /= counter;
+  double fit_BBCS = fun_bbcs->GetParameter(0);
+  double fit_FVTXS = fun_fvtxs->GetParameter(0);
+  double fit_FVTXN = fun_fvtxn->GetParameter(0);
+  for ( int i = 0; i < counter; ++i )
+    {
+      //if ( fabs(array_BBCS[i]-ave_BBCS) > (rms_BBCS-ave_BBCS) )
+      //if ( fabs(array_BBCS[i]-ave_BBCS) > (1.2*ave_BBCS) )
+      //if ( fabs(array_BBCS[i]-fit_BBCS) > (1.05*fit_BBCS) )
+      if ( array_BBCS[i] > 999 )
+        {
+          cout << "BBCS out of bounds for runnumber " << runn[i] << endl;
+          array_BBCS[i] = 999; // just playing around for visualizations...
+        }
+      //if ( fabs(array_FVTXS[i]-ave_FVTXS) > (rms_FVTXS-ave_FVTXS) )
+      //if ( fabs(array_FVTXS[i]-ave_FVTXS) > (1.2*ave_FVTXS) )
+      if ( array_FVTXS[i] > 300 )
+        {
+          cout << "FVTXS out of bounds for runnumber " << runn[i] << endl;
+          array_FVTXS[i] = 999; // just playing around for visualizations...
+        }
+      //if ( fabs(array_FVTXN[i]-ave_FVTXN) > (rms_FVTXN-ave_FVTXN) )
+      //if ( fabs(array_FVTXN[i]-ave_FVTXN) > (1.2*ave_FVTXN) )
+      if ( array_FVTXN[i] > 200 )
+        {
+          cout << "FVTXN out of bounds for runnumber " << runn[i] << endl;
+          array_FVTXN[i] = 999; // just playing around for visualizations...
+        }
+    }
+
+  TGraphErrors* tge_fvtxs = new TGraphErrors(counter,index,array_FVTXS,0,array_eFVTXS);
+  TGraphErrors* tge_fvtxn = new TGraphErrors(counter,index,array_FVTXN,0,array_eFVTXN);
+  TGraphErrors* tge_bbcs = new TGraphErrors(counter,index,array_BBCS,0,array_eBBCS);
+
+  tge_bbcs->SetMarkerColor(kBlack);
+  tge_fvtxs->SetMarkerColor(kRed);
+  tge_fvtxn->SetMarkerColor(kBlue);
+
+  tge_bbcs->SetMarkerStyle(kOpenCircle);
+  tge_fvtxs->SetMarkerStyle(kOpenCircle);
+  tge_fvtxn->SetMarkerStyle(kOpenCircle);
+
+  tge_fvtxs->Draw("ap");
+  tge_fvtxs->SetMinimum(0);
+  tge_fvtxs->GetXaxis()->SetLimits(-2,counter+1);
+  tge_fvtxs->GetXaxis()->SetTitle("Run Index");
+  tge_fvtxs->GetYaxis()->SetTitle("Mean Multiplicity");
+  tge_fvtxn->Draw("p");
+  tge_bbcs->Draw("p");
+  leg->Draw();
+  c1->Print(Form("FigsOther/mult_runbyrun_energy%d_rejects.png",energy));
+  c1->Print(Form("FigsOther/mult_runbyrun_energy%d_rejects.pdf",energy));
 
   delete c1;
 
