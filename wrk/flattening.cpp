@@ -71,6 +71,7 @@ bool DIAG = false;
 
 int get_fvtx_layer(float);
 void initialize_pmt_position();
+int get_pmt_layer(int);
 void flatten(int, int);
 
 using namespace std;
@@ -195,7 +196,13 @@ void flatten(int runNumber, int rp_recal_pass)
   TH1D* th1d_FVTXS_nclus = new TH1D("th1d_FVTXS_nclus","",200,-0.5,1999.5);
   TH1D* th1d_FVTXN_nclus = new TH1D("th1d_FVTXN_nclus","",200,-0.5,1999.5);
 
+  // --- come back here to make rings
   TH1D* th1d_bbc_charge_phi = new TH1D("th1d_bbc_charge_phi","",50,-pi,pi);
+  TH1D* th1d_bbc0_charge_phi = new TH1D("th1d_bbc0_charge_phi","",50,-pi,pi);
+  TH1D* th1d_bbc1_charge_phi = new TH1D("th1d_bbc1_charge_phi","",50,-pi,pi);
+  TH1D* th1d_bbc2_charge_phi = new TH1D("th1d_bbc2_charge_phi","",50,-pi,pi);
+  TH1D* th1d_bbc3_charge_phi = new TH1D("th1d_bbc3_charge_phi","",50,-pi,pi);
+  TH1D* th1d_bbc4_charge_phi = new TH1D("th1d_bbc4_charge_phi","",50,-pi,pi);
 
   TH1D* th1d_fvtxs_clus_phi = new TH1D("th1d_fvtxs_clus_phi","",50,-pi,pi);
   TH1D* th1d_fvtxs0_clus_phi = new TH1D("th1d_fvtxs0_clus_phi","",50,-pi,pi);
@@ -571,6 +578,8 @@ void flatten(int runNumber, int rp_recal_pass)
   int all_counter = 0;
   int bad_cent_counter = 0;
 
+  int bad_vertex_counter = 0;
+
   Long64_t cluster_counter = 0;
   Long64_t gapcut_counter = 0;
 
@@ -628,9 +637,16 @@ void flatten(int runNumber, int rp_recal_pass)
           if ( verbosity > 0 ) cout << "vertex rejected" << endl;
           continue;
         }
-      int ibbcz = NZPS*(ZVTX+10)/20;
+      // --- this cut might be a good idea but it throws out too many events, further study needed
+      // if ( d_bbcz > -999 && eventfvtx_z > -999 && fabs(d_bbcz-eventfvtx_z) > 5 )
+      //   {
+      //     if ( verbosity > 0 ) cout << "bbc and fvtx vertex exist but out of range of each other " << d_bbcz << " " << eventfvtx_z << endl;
+      //     ++bad_vertex_counter;
+      //     continue;
+      //   }
 
       // make sure bin number doesn't exceed number of bins
+      int ibbcz = NZPS*(ZVTX+10)/20;
       if ( ibbcz < 0 || ibbcz >= NZPS )
         {
           cout << "z vertex bin count problem!!!!" << endl;
@@ -684,7 +700,13 @@ void flatten(int runNumber, int rp_recal_pass)
 
               float phi = TMath::ATan2(bbc_y,bbc_x);
 
+              int ring = get_pmt_layer(ipmt);
               th1d_bbc_charge_phi->Fill(phi,bbc_charge);
+              if ( ring == 0 ) th1d_bbc0_charge_phi->Fill(phi,bbc_charge);
+              if ( ring == 1 ) th1d_bbc1_charge_phi->Fill(phi,bbc_charge);
+              if ( ring == 2 ) th1d_bbc2_charge_phi->Fill(phi,bbc_charge);
+              if ( ring == 3 ) th1d_bbc3_charge_phi->Fill(phi,bbc_charge);
+              if ( ring == 4 ) th1d_bbc4_charge_phi->Fill(phi,bbc_charge);
 
               bbc_qx2 += bbc_charge*TMath::Cos(2*phi);
               bbc_qy2 += bbc_charge*TMath::Sin(2*phi);
@@ -784,19 +806,22 @@ void flatten(int runNumber, int rp_recal_pass)
 
               // --- determine layer based on cluster z
               int fvtx_layer = get_fvtx_layer(d_FVTX_z[iclus]); // raw z to get layer
-              if ( fvtx_layer < 0 )
-                {
-                  cout << "cutting on layer??? " << fvtx_layer << " " << d_FVTX_z[iclus] << endl;
-                  continue;
-                }
 
-              // --- gap cut, not sure what this does
+              // --- gap cut removes events where fvtx z vertex is right below fvtx south
               int igap = (fabs(fvtx_eta)-1.0)/0.5;
               int id_fvtx = fvtx_layer*5+igap;
               ++cluster_counter;
               if(!(id_fvtx>=0 && id_fvtx<40))
                 {
-                  //cout << "gap cut rejecting cluster??? z = " << d_FVTX_z[iclus] << endl;
+                  if ( verbosity > 0 )
+                    {
+                      cout << "gap cut rejecting cluster??? cluster z = "
+                           << d_FVTX_z[iclus] << " fvtx z = "
+                           << eventfvtx_z << " bbc z = "
+                           << d_bbcz << " eta = "
+                           << fvtx_eta << " "
+                           << endl;
+                    }
                   ++gapcut_counter;
                   continue;
                 }
@@ -1292,7 +1317,7 @@ void flatten(int runNumber, int rp_recal_pass)
               float phi_angle = TMath::ATan2(py,px);
               float pt_angle = sqrt(px*px+py*py);
 
-              if ( pt <_angle 0.2 || pt_angle > 5.0 ) continue; // pt cut added 2016-06-30
+              if ( pt_angle < 0.2 || pt_angle > 5.0 ) continue; // pt cut added 2016-06-30
 
               //bbc angle
               if ( bbc_pmts )
@@ -1443,6 +1468,7 @@ void flatten(int runNumber, int rp_recal_pass)
 
   cout << "Processed " << event_counter << "/" << all_counter << " events (" << (float)event_counter/(float)all_counter << ")" << endl;
   cout << "Events with bad centrality = " << bad_cent_counter << " (" << (float)bad_cent_counter/(float)event_counter << ")" << endl;
+  cout << "Events with vertex disagreement = " << bad_vertex_counter << " (" << (float)bad_vertex_counter/(float)event_counter << ")" << endl;
   cout << "Gap cuts applied " << gapcut_counter << "/" << cluster_counter << " (" << (float)gapcut_counter/(float)cluster_counter << ")" << endl;
 
   if(rp_recal_pass<3 && rp_recal_pass>0)
@@ -1520,6 +1546,11 @@ void flatten(int runNumber, int rp_recal_pass)
       th2d_qBBC_nFVTX->Write();
 
       th1d_bbc_charge_phi->Write();
+      th1d_bbc0_charge_phi->Write();
+      th1d_bbc1_charge_phi->Write();
+      th1d_bbc2_charge_phi->Write();
+      th1d_bbc3_charge_phi->Write();
+      th1d_bbc4_charge_phi->Write();
 
       th1d_fvtxs_clus_phi->Write();
       th1d_fvtxs0_clus_phi->Write();
@@ -1658,6 +1689,11 @@ void flatten(int runNumber, int rp_recal_pass)
       th2d_qBBC_nFVTX->Write();
 
       th1d_bbc_charge_phi->Write();
+      th1d_bbc0_charge_phi->Write();
+      th1d_bbc1_charge_phi->Write();
+      th1d_bbc2_charge_phi->Write();
+      th1d_bbc3_charge_phi->Write();
+      th1d_bbc4_charge_phi->Write();
 
       th1d_fvtxs_clus_phi->Write();
       th1d_fvtxs0_clus_phi->Write();
@@ -1795,6 +1831,11 @@ void flatten(int runNumber, int rp_recal_pass)
   delete th1d_dreso3_FVTXS_FVTXN;
 
   delete th1d_bbc_charge_phi;
+  delete th1d_bbc0_charge_phi;
+  delete th1d_bbc1_charge_phi;
+  delete th1d_bbc2_charge_phi;
+  delete th1d_bbc3_charge_phi;
+  delete th1d_bbc4_charge_phi;
 
   delete th1d_fvtxs_clus_phi;
   delete th1d_fvtxs0_clus_phi;
@@ -1977,6 +2018,84 @@ void initialize_pmt_position()
 
 }
 
+
+
+int get_pmt_layer(int i)
+{
+
+  if ( i == 8 ||
+       i == 11||
+       i == 14||
+       i == 19||
+       i == 22||
+       i == 26||
+       i == 40||
+       i == 43||
+       i == 46||
+       i == 51||
+       i == 54||
+       i == 58 ) return 0; // inner layer
+
+  if ( i == 7 ||
+       i == 16||
+       i == 25||
+       i == 39||
+       i == 48||
+       i == 57 ) return 1; // inner middle layer
+
+  if ( i == 4 ||
+       i == 6 ||
+       i == 10||
+       i == 13||
+       i == 18||
+       i == 21||
+       i == 24||
+       i == 29||
+       i == 36||
+       i == 38||
+       i == 42||
+       i == 45||
+       i == 45||
+       i == 50||
+       i == 53||
+       i == 56||
+       i == 61 ) return 2; // middle layer
+
+  if ( i == 3 ||
+       i == 15||
+       i == 28||
+       i == 35||
+       i == 47||
+       i == 60 ) return 3; //outer middle layer
+
+  if ( i == 0 ||
+       i == 1 ||
+       i == 2 ||
+       i == 5 ||
+       i == 9 ||
+       i == 12||
+       i == 17||
+       i == 20||
+       i == 23||
+       i == 27||
+       i == 30||
+       i == 31||
+       i == 32||
+       i == 33||
+       i == 34||
+       i == 37||
+       i == 41||
+       i == 44||
+       i == 49||
+       i == 52||
+       i == 55||
+       i == 59||
+       i == 62||
+       i == 63 ) return 4; // outer layer
+
+  return -1;
+
+}
 
 
 int get_fvtx_layer(float z)
