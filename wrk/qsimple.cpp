@@ -149,19 +149,19 @@ void flatten(int runNumber, int passNumber)
 
 
 
-  int n_angle_config = 1;
-  // --- see below...
-  int south_bbc_angle = 2;                     // 2
-  int south_fvtx_angle = n_angle_config+2;     // 3
-  int south_fvtx_0_angle = 2*n_angle_config+2; // 4
-  int south_fvtx_1_angle = 3*n_angle_config+2; // 5
-  int south_fvtx_2_angle = 4*n_angle_config+2; // 6
-  int south_fvtx_3_angle = 5*n_angle_config+2; // 7
-  int north_fvtx_angle = 6*n_angle_config+2;   // 8
-  int north_fvtx_0_angle = 7*n_angle_config+2; // 9
-  int north_fvtx_1_angle = 8*n_angle_config+2; // 10
-  int north_fvtx_2_angle = 9*n_angle_config+2; // 11
-  int north_fvtx_3_angle = 10*n_angle_config+2; // 12
+  // int n_angle_config = 1;
+  // // --- see below...
+  // int south_bbc_angle = 2;                     // 2
+  // int south_fvtx_angle = n_angle_config+2;     // 3
+  // int south_fvtx_0_angle = 2*n_angle_config+2; // 4
+  // int south_fvtx_1_angle = 3*n_angle_config+2; // 5
+  // int south_fvtx_2_angle = 4*n_angle_config+2; // 6
+  // int south_fvtx_3_angle = 5*n_angle_config+2; // 7
+  // int north_fvtx_angle = 6*n_angle_config+2;   // 8
+  // int north_fvtx_0_angle = 7*n_angle_config+2; // 9
+  // int north_fvtx_1_angle = 8*n_angle_config+2; // 10
+  // int north_fvtx_2_angle = 9*n_angle_config+2; // 11
+  // int north_fvtx_3_angle = 10*n_angle_config+2; // 12
 
 
   const float pi = TMath::Pi();
