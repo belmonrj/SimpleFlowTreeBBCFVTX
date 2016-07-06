@@ -185,13 +185,13 @@ int VTX_event_plane_reco::Init(PHCompositeNode *topNode)
           //fvtx tracking parameters
           //_ntp_event -> Branch("fvtx_z",&fvtx_z,"fvtx_z/F");
           _ntp_event -> Branch("ntracklets",&ntracklets,"ntracklets/I");
-          _ntp_event -> Branch("feta",&feta,"feta[75]/F");
-          _ntp_event -> Branch("fphi",&fphi,"fphi[75]/F");
-          _ntp_event -> Branch("fchisq",&fchisq,"fchisq[75]/F");
-          _ntp_event -> Branch("farm",&farm,"farm[75]/I");
-          _ntp_event -> Branch("fnhits",&fnhits,"fnhits[75]/I");
-          _ntp_event -> Branch("fDCA_X",&fDCA_X,"fDCA_X[75]/F");
-          _ntp_event -> Branch("fDCA_Y",&fDCA_Y,"fDCA_Y[75]/F");
+          _ntp_event -> Branch("feta",&feta,"feta[ntracklets]/F");
+          _ntp_event -> Branch("fphi",&fphi,"fphi[ntracklets]/F");
+          _ntp_event -> Branch("fchisq",&fchisq,"fchisq[ntracklets]/F");
+          _ntp_event -> Branch("farm",&farm,"farm[ntracklets]/I");
+          _ntp_event -> Branch("fnhits",&fnhits,"fnhits[ntracklets]/I");
+          _ntp_event -> Branch("fDCA_X",&fDCA_X,"fDCA_X[ntracklets]/F");
+          _ntp_event -> Branch("fDCA_Y",&fDCA_Y,"fDCA_Y[ntracklets]/F");
         }
 
       if(_write_clusters)
@@ -564,7 +564,7 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
 
 
 
-  int ibbcz_bin = (bbc_z+30.0)/10;//for fvtx eta cuts
+  //int ibbcz_bin = (bbc_z+30.0)/10;//for fvtx eta cuts
 
   //get the East vertex (if available)
   PHPoint vtxposE;
@@ -845,67 +845,73 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
   //
   //---------------------------------------------------------//
 
-  int ntr = -1;
+  //int ntr = -1;
+  int ntr = 0;
 
-  if (trkfvtx_map && _write_fvtx){
-    TFvtxCompactTrkMap::const_iterator trk_iter = trkfvtx_map->range();
-    while( TFvtxCompactTrkMap::const_pointer trk_ptr = trk_iter.next() ){
-
-      TFvtxCompactTrk* fvtx_trk = trk_ptr->get();
-
-      float the = fvtx_trk->get_fvtx_theta();
-      float eta = fvtx_trk->get_fvtx_eta();
-      float phi = fvtx_trk->get_fvtx_phi();
-      int   arm = (int)fvtx_trk->get_arm();
-      float fvtx_x      = fvtx_trk->get_fvtx_vtx().getX();
-      float fvtx_y      = fvtx_trk->get_fvtx_vtx().getY();
-      float fvtx_z      = fvtx_trk->get_fvtx_vtx().getZ();
-      int   nfhits      = (int)fvtx_trk->get_nhits();
-
-      float DCA_x      = fvtx_x + tan(the)*cos(phi)*(bbc_z - fvtx_z);
-      float DCA_y      = fvtx_y + tan(the)*sin(phi)*(bbc_z - fvtx_z);
-      //cout<<"nfhits: "<<nfhits<<endl;
-
-      //use this code of you want to figure out which layers have the hits
-      /*      short nhits = 0;
-              for (int i=0; i<8; i++)
-	      nhits += has_hit(i);
-              for (int i=0; i<4; i++)
-	      nhits += has_svxhit(i);
-              return nhits;
-      */
-      //if(the==0 || phi==0 || fvtx_x==0 || fvtx_y==0 || fvtx_z==0) continue;
-      if(the==0) continue;
-
-      if(nfhits<3) continue;
-      if(!pass_eta_cut(eta,ibbcz_bin)) continue;
-      if(fvtx_trk->get_chi2_ndf() > 5) continue;
-      if(fabs(DCA_x) > 2.0 || fabs(DCA_y) > 2.0) continue;
-      ntr++;
-
-
-      //float DCA_R      = sqrt((DCA_x*DCA_x) + (DCA_y*DCA_y));
-
-      if(ntr < 75)
+  if ( trkfvtx_map && _write_fvtx )
+    {
+      TFvtxCompactTrkMap::const_iterator trk_iter = trkfvtx_map->range();
+      while ( TFvtxCompactTrkMap::const_pointer trk_ptr = trk_iter.next() )
         {
-          feta[ntr]   = eta;
-          fphi[ntr]   = phi;
-          fchisq[ntr] = fvtx_trk->get_chi2_ndf();
-          farm[ntr]   = arm;
-          fnhits[ntr] = nfhits;
-          fDCA_X[ntr] = DCA_x;
-          fDCA_Y[ntr] = DCA_y;
-        }
-      else
-        {
-          cout<<"butting up against the boundary of fvtx tracks"<<endl;
-          break;
-        }
-      //short_chi2 = fvtx_trk->get_short_chi2_ndf();
-      //chi2       = fvtx_trk->get_chi2_ndf();
 
-    }
-  }
+          TFvtxCompactTrk* fvtx_trk = trk_ptr->get();
+
+          float the = fvtx_trk->get_fvtx_theta();
+          float eta = fvtx_trk->get_fvtx_eta();
+          float phi = fvtx_trk->get_fvtx_phi();
+          int   arm = (int)fvtx_trk->get_arm();
+          float fvtx_x      = fvtx_trk->get_fvtx_vtx().getX();
+          float fvtx_y      = fvtx_trk->get_fvtx_vtx().getY();
+          float fvtx_z      = fvtx_trk->get_fvtx_vtx().getZ();
+          int   nfhits      = (int)fvtx_trk->get_nhits();
+
+          float vertex_z = bbc_z;
+          if ( FVTX_Z > -999 ) vertex_z = FVTX_Z;
+          float DCA_x      = fvtx_x + tan(the)*cos(phi)*(vertex_z - fvtx_z);
+          float DCA_y      = fvtx_y + tan(the)*sin(phi)*(vertex_z - fvtx_z);
+          //cout<<"nfhits: "<<nfhits<<endl;
+
+          //use this code of you want to figure out which layers have the hits
+          /*      short nhits = 0;
+                  for (int i=0; i<8; i++)
+                  nhits += has_hit(i);
+                  for (int i=0; i<4; i++)
+                  nhits += has_svxhit(i);
+                  return nhits;
+          */
+          //if(the==0 || phi==0 || fvtx_x==0 || fvtx_y==0 || fvtx_z==0) continue;
+          //if(the==0) continue;
+
+          //if ( nfhits < 3 ) continue;
+          //if ( !pass_eta_cut(eta,ibbcz_bin) ) continue;
+          if ( fvtx_trk->get_chi2_ndf() > 5 ) continue;
+          if ( fabs(DCA_x-0.3) > 2.0 || fabs(DCA_y-0.02) > 2.0 ) continue;
+
+
+          //float DCA_R      = sqrt((DCA_x*DCA_x) + (DCA_y*DCA_y));
+
+          if(ntr < 74)
+            {
+              feta[ntr]   = eta;
+              fphi[ntr]   = phi;
+              fchisq[ntr] = fvtx_trk->get_chi2_ndf();
+              farm[ntr]   = arm;
+              fnhits[ntr] = nfhits;
+              fDCA_X[ntr] = DCA_x;
+              fDCA_Y[ntr] = DCA_y;
+            }
+          else
+            {
+              cout<<"butting up against the boundary of fvtx tracks"<<endl;
+              break;
+            }
+          //short_chi2 = fvtx_trk->get_short_chi2_ndf();
+          //chi2       = fvtx_trk->get_chi2_ndf();
+
+          ++ntr;
+
+        } // end while loop over tracks
+    } // check on fvtx track map
 
   ntracklets = ntr;
 
