@@ -54,7 +54,7 @@ void analyze_theo(int runnumber, int segmentnumber = 0)
   vtx_ep->set_write_clusters(false); // svx clusters not available
   vtx_ep->set_write_bbc(true);
   vtx_ep->set_write_fvtx_clusters(true);
-  vtx_ep->set_write_fvtx(false);
+  vtx_ep->set_write_fvtx(true);
   vtx_ep->set_trimmed_tree(true);
   vtx_ep->set_write_vtx(false); // svx tracks not available
   //vtx_ep->set_runlist_file(string);
