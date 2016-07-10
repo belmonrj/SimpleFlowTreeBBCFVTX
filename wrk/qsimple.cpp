@@ -148,22 +148,6 @@ void flatten(int runNumber, int passNumber)
 
 
 
-
-  // int n_angle_config = 1;
-  // // --- see below...
-  // int south_bbc_angle = 2;                     // 2
-  // int south_fvtx_angle = n_angle_config+2;     // 3
-  // int south_fvtx_0_angle = 2*n_angle_config+2; // 4
-  // int south_fvtx_1_angle = 3*n_angle_config+2; // 5
-  // int south_fvtx_2_angle = 4*n_angle_config+2; // 6
-  // int south_fvtx_3_angle = 5*n_angle_config+2; // 7
-  // int north_fvtx_angle = 6*n_angle_config+2;   // 8
-  // int north_fvtx_0_angle = 7*n_angle_config+2; // 9
-  // int north_fvtx_1_angle = 8*n_angle_config+2; // 10
-  // int north_fvtx_2_angle = 9*n_angle_config+2; // 11
-  // int north_fvtx_3_angle = 10*n_angle_config+2; // 12
-
-
   const float pi = TMath::Pi();
 
   //------------------------------------------------------------//
@@ -322,6 +306,25 @@ void flatten(int runNumber, int passNumber)
   TH1D* th1d_FVTXN_nclus_OR = new TH1D("th1d_FVTXN_nclus_OR","",200,-0.5,1999.5);
 
 
+  TH2D* th2d_fvtxs_clus_phi = new TH2D("th2d_fvtxs_clus_phi","",10,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxs0_clus_phi = new TH2D("th2d_fvtxs0_clus_phi","",10,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxs1_clus_phi = new TH2D("th2d_fvtxs1_clus_phi","",10,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxs2_clus_phi = new TH2D("th2d_fvtxs2_clus_phi","",10,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxs3_clus_phi = new TH2D("th2d_fvtxs3_clus_phi","",10,-10.0,10.0,50,-pi,pi);
+
+  TH2D* th2d_fvtxs_clus_phi_IR = new TH2D("th2d_fvtxs_clus_phi_IR","",10,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxs0_clus_phi_IR = new TH2D("th2d_fvtxs0_clus_phi_IR","",10,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxs1_clus_phi_IR = new TH2D("th2d_fvtxs1_clus_phi_IR","",10,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxs2_clus_phi_IR = new TH2D("th2d_fvtxs2_clus_phi_IR","",10,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxs3_clus_phi_IR = new TH2D("th2d_fvtxs3_clus_phi_IR","",10,-10.0,10.0,50,-pi,pi);
+
+  TH2D* th2d_fvtxs_clus_phi_OR = new TH2D("th2d_fvtxs_clus_phi_OR","",10,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxs0_clus_phi_OR = new TH2D("th2d_fvtxs0_clus_phi_OR","",10,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxs1_clus_phi_OR = new TH2D("th2d_fvtxs1_clus_phi_OR","",10,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxs2_clus_phi_OR = new TH2D("th2d_fvtxs2_clus_phi_OR","",10,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxs3_clus_phi_OR = new TH2D("th2d_fvtxs3_clus_phi_OR","",10,-10.0,10.0,50,-pi,pi);
+
+
   // ---
 
   // --- q-vectors vs z for selected centrality
@@ -386,6 +389,7 @@ void flatten(int runNumber, int passNumber)
   int all_counter = 0;
   int event_counter = 0;
   int bad_cent_counter = 0;
+  int bad_trigger_counter = 0;
   int bad_vertex_counter = 0;
   int bad_radius_counter = 0;
 
@@ -435,6 +439,7 @@ void flatten(int runNumber, int passNumber)
       if ( passes_trigger == 0 )
         {
           if ( verbosity > 0 ) cout << "trigger rejected" << endl;
+          ++bad_trigger_counter;
           continue;
         }
 
@@ -444,6 +449,7 @@ void flatten(int runNumber, int passNumber)
       if ( fabs(ZVTX) > 10.0 )
         {
           if ( verbosity > 0 ) cout << "vertex rejected" << endl;
+          ++bad_vertex_counter;
           continue;
         }
       // --- this cut might be a good idea but it throws out too many events, further study needed
@@ -638,7 +644,7 @@ void flatten(int runNumber, int passNumber)
                 }
               // --------------------------------------
 
-              float phib = TMath::ATan2(d_FVTX_x[iclus],d_FVTX_x[iclus]);
+              float phib = TMath::ATan2(d_FVTX_y[iclus],d_FVTX_x[iclus]);
               float phi = TMath::ATan2(fvtx_y,fvtx_x);
 
               // --- south side
@@ -670,6 +676,11 @@ void flatten(int runNumber, int passNumber)
                       if ( fvtx_layer == 1 ) th1d_fvtxs1_clus_phi_IR->Fill(phi);
                       if ( fvtx_layer == 2 ) th1d_fvtxs2_clus_phi_IR->Fill(phi);
                       if ( fvtx_layer == 3 ) th1d_fvtxs3_clus_phi_IR->Fill(phi);
+                      th2d_fvtxs_clus_phi_IR->Fill(vtx_z,phi);
+                      if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_phi_IR->Fill(vtx_z,phi);
+                      if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_phi_IR->Fill(vtx_z,phi);
+                      if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_phi_IR->Fill(vtx_z,phi);
+                      if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_phi_IR->Fill(vtx_z,phi);
                     }
                   else
                     {
@@ -678,6 +689,11 @@ void flatten(int runNumber, int passNumber)
                       if ( fvtx_layer == 1 ) th1d_fvtxs1_clus_phi_OR->Fill(phi);
                       if ( fvtx_layer == 2 ) th1d_fvtxs2_clus_phi_OR->Fill(phi);
                       if ( fvtx_layer == 3 ) th1d_fvtxs3_clus_phi_OR->Fill(phi);
+                      th2d_fvtxs_clus_phi_OR->Fill(vtx_z,phi);
+                      if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_phi_OR->Fill(vtx_z,phi);
+                      if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_phi_OR->Fill(vtx_z,phi);
+                      if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_phi_OR->Fill(vtx_z,phi);
+                      if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_phi_OR->Fill(vtx_z,phi);
                     }
 
                   th1d_fvtxs_clus_phi->Fill(phi);
@@ -685,6 +701,11 @@ void flatten(int runNumber, int passNumber)
                   if ( fvtx_layer == 1 ) th1d_fvtxs1_clus_phi->Fill(phi);
                   if ( fvtx_layer == 2 ) th1d_fvtxs2_clus_phi->Fill(phi);
                   if ( fvtx_layer == 3 ) th1d_fvtxs3_clus_phi->Fill(phi);
+                  th2d_fvtxs_clus_phi->Fill(vtx_z,phi);
+                  if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_phi->Fill(vtx_z,phi);
+                  if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_phi->Fill(vtx_z,phi);
+                  if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_phi->Fill(vtx_z,phi);
+                  if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_phi->Fill(vtx_z,phi);
 
                 } // check on south
 
@@ -858,6 +879,8 @@ void flatten(int runNumber, int passNumber)
     }//end of event
 
   cout << "Processed " << event_counter << "/" << all_counter << " events (" << (float)event_counter/(float)all_counter << ")" << endl;
+  cout << "Events outside vertex = " << bad_vertex_counter << " (" << (float)bad_vertex_counter/(float)all_counter << ")" << endl;
+  cout << "Events with wrong trigger = " << bad_vertex_counter << " (" << (float)bad_vertex_counter/(float)all_counter << ")" << endl;
   cout << "Events with bad centrality = " << bad_cent_counter << " (" << (float)bad_cent_counter/(float)event_counter << ")" << endl;
   //cout << "Events with vertex disagreement = " << bad_vertex_counter << " (" << (float)bad_vertex_counter/(float)event_counter << ")" << endl;
   cout << "Events with outside fvtx radius = " << bad_radius_counter << " (" << (float)bad_radius_counter/(float)event_counter << ")" << endl;
