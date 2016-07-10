@@ -1,12 +1,14 @@
 void runweight(int);
+void runweight2d(int);
 
 
 void weight()
 {
 
-  // runweight(456652);
+  //runweight(456652);
+  runweight2d(456652);
 
-  // return;
+  return;
 
   int run;
   ifstream fin;
@@ -18,6 +20,55 @@ void weight()
   fin.open("list_39.short");
   while ( fin >> run ) runweight(run);
   fin.close();
+
+}
+
+
+void runweight2d(int run)
+{
+
+  TCanvas* c1 = new TCanvas("c1","");
+
+  TFile* file = TFile::Open(Form("RootFiles/svrb_run%d_pass0.root",run));
+  if ( !file )
+    {
+      cout << "WARNING: file does not exist for run " << run << endl;
+      return;
+    }
+  TH2D* th2d_fvtxs_clus_phi_IR = (TH2D*)file->Get("th2d_fvtxs_clus_phi_IR");
+  TH2D* th2d_fvtxs0_clus_phi_IR = (TH2D*)file->Get("th2d_fvtxs0_clus_phi_IR");
+  TH2D* th2d_fvtxs1_clus_phi_IR = (TH2D*)file->Get("th2d_fvtxs1_clus_phi_IR");
+  TH2D* th2d_fvtxs2_clus_phi_IR = (TH2D*)file->Get("th2d_fvtxs2_clus_phi_IR");
+  TH2D* th2d_fvtxs3_clus_phi_IR = (TH2D*)file->Get("th2d_fvtxs3_clus_phi_IR");
+
+  const int nbinsx = 10;
+  if ( th2d_fvtxs_clus_phi_IR->GetNbinsX() != nbinsx )
+    {
+      cout << "YOU'RE GONNA DIE " << nbinsx << " " << th2d_fvtxs_clus_phi_IR->GetNbinsX() << endl;
+      return;
+    }
+  const int nbinsy = 50;
+  if ( th2d_fvtxs_clus_phi_IR->GetNbinsY() != nbinsy )
+    {
+      cout << "YOU'RE GONNA DIE " << nbinsy << " " << th2d_fvtxs_clus_phi_IR->GetNbinsX() << endl;
+      return;
+    }
+
+  TFile* fout = TFile::Open(Form("WeightFiles/weight2d_run%d.root",run),"recreate");
+
+  // -- loop over z bins
+  for ( int i = 0; i < nbinsx; ++i )
+    {
+      TH1D* th1d_fvtxs0_zvtxbin_clus_phi_IR = (TH1D*)th2d_fvtxs0_clus_phi_IR->ProjectionY(Form("th1d_fvtxs0_zvtx%d_clus_phi_IR",i),i+1,i+1);
+      th1d_fvtxs0_zvtxbin_clus_phi_IR->Write();
+      th1d_fvtxs0_zvtxbin_clus_phi_IR->Draw();
+      c1->Print(Form("FigsWeight/weight2d_fvtxs0_zvtx%d_clus_phi_IR.png",i));
+    }
+
+  fout->Write();
+  fout->Close();
+
+  delete c1;
 
 }
 
