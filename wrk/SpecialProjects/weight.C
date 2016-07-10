@@ -86,46 +86,40 @@ void runweight2d(int run)
       c1->Print(Form("FigsWeight/weight2d_fvtxs3_zvtx%d_clus_phi_IR.png",i));
 
       // --- make 1d clones
-      TH1D* th1d_weight_fvtxs_zvtxbin_clus_phi_IR = (TH1D*)th1d_fvtxs_clus_phi_IR->Clone(Form("th1d_fvtxs_zvtx%d_clus_phi_IR",i));
-      TH1D* th1d_weight_fvtxs0_zvtxbin_clus_phi_IR = (TH1D*)th1d_fvtxs0_clus_phi_IR->Clone(Form("th1d_fvtxs0_zvtx%d_clus_phi_IR",i));
-      TH1D* th1d_weight_fvtxs1_zvtxbin_clus_phi_IR = (TH1D*)th1d_fvtxs1_clus_phi_IR->Clone(Form("th1d_fvtxs1_zvtx%d_clus_phi_IR",i));
-      TH1D* th1d_weight_fvtxs2_zvtxbin_clus_phi_IR = (TH1D*)th1d_fvtxs2_clus_phi_IR->Clone(Form("th1d_fvtxs2_zvtx%d_clus_phi_IR",i));
-      TH1D* th1d_weight_fvtxs3_zvtxbin_clus_phi_IR = (TH1D*)th1d_fvtxs3_clus_phi_IR->Clone(Form("th1d_fvtxs3_zvtx%d_clus_phi_IR",i));
-      double ave = th1d_fvtxs_clus_phi_IR->Integral(1,nbins); // use 1 and nbins to exclude underflow (0) and overflow (nbins+1)
-      double ave0 = th1d_fvtxs0_clus_phi_IR->Integral(1,nbins);
-      double ave1 = th1d_fvtxs1_clus_phi_IR->Integral(1,nbins);
-      double ave2 = th1d_fvtxs2_clus_phi_IR->Integral(1,nbins);
-      double ave3 = th1d_fvtxs3_clus_phi_IR->Integral(1,nbins);
-      ave /= nbins;
-      ave0 /= nbins;
-      ave1 /= nbins;
-      ave2 /= nbins;
-      ave3 /= nbins;
-      double pphi[nbins];
-      double pweight[nbins];
-      double pweight0[nbins];
-      double pweight1[nbins];
-      double pweight2[nbins];
-      double pweight3[nbins];
-      for ( int i = 0; i < nbins; ++i )
+      TH1D* th1d_weight_fvtxs_zvtxbin_clus_phi_IR = (TH1D*)th1d_fvtxs_zvtxbin_clus_phi_IR->Clone(Form("th1d_weight_fvtxs_zvtx%d_clus_phi_IR",i));
+      TH1D* th1d_weight_fvtxs0_zvtxbin_clus_phi_IR = (TH1D*)th1d_fvtxs0_zvtxbin_clus_phi_IR->Clone(Form("th1d_weight_fvtxs0_zvtx%d_clus_phi_IR",i));
+      TH1D* th1d_weight_fvtxs1_zvtxbin_clus_phi_IR = (TH1D*)th1d_fvtxs1_zvtxbin_clus_phi_IR->Clone(Form("th1d_weight_fvtxs1_zvtx%d_clus_phi_IR",i));
+      TH1D* th1d_weight_fvtxs2_zvtxbin_clus_phi_IR = (TH1D*)th1d_fvtxs2_zvtxbin_clus_phi_IR->Clone(Form("th1d_weight_fvtxs2_zvtx%d_clus_phi_IR",i));
+      TH1D* th1d_weight_fvtxs3_zvtxbin_clus_phi_IR = (TH1D*)th1d_fvtxs3_zvtxbin_clus_phi_IR->Clone(Form("th1d_weight_fvtxs3_zvtx%d_clus_phi_IR",i));
+      double ave = th1d_fvtxs_zvtxbin_clus_phi_IR->Integral(1,nbinsy); // use 1 and nbins to exclude underflow (0) and overflow (nbins+1)
+      double ave0 = th1d_fvtxs0_zvtxbin_clus_phi_IR->Integral(1,nbinsy);
+      double ave1 = th1d_fvtxs1_zvtxbin_clus_phi_IR->Integral(1,nbinsy);
+      double ave2 = th1d_fvtxs2_zvtxbin_clus_phi_IR->Integral(1,nbinsy);
+      double ave3 = th1d_fvtxs3_zvtxbin_clus_phi_IR->Integral(1,nbinsy);
+      ave /= nbinsy;
+      ave0 /= nbinsy;
+      ave1 /= nbinsy;
+      ave2 /= nbinsy;
+      ave3 /= nbinsy;
+      for ( int j = 0; j < nbinsy; ++j )
 	{
-	  double phi = th1d_fvtxs_clus_phi_IR->GetBinCenter(i+1);
-	  double weight = ave/th1d_fvtxs_clus_phi_IR->GetBinContent(i+1);
-	  double weight0 = ave0/th1d_fvtxs0_clus_phi_IR->GetBinContent(i+1);
-	  double weight1 = ave1/th1d_fvtxs1_clus_phi_IR->GetBinContent(i+1);
-	  double weight2 = ave2/th1d_fvtxs2_clus_phi_IR->GetBinContent(i+1);
-	  double weight3 = ave3/th1d_fvtxs3_clus_phi_IR->GetBinContent(i+1);
+	  double phi = th1d_fvtxs_zvtxbin_clus_phi_IR->GetBinCenter(j+1);
+	  double weight = ave/th1d_fvtxs_zvtxbin_clus_phi_IR->GetBinContent(j+1);
+	  double weight0 = ave0/th1d_fvtxs0_zvtxbin_clus_phi_IR->GetBinContent(j+1);
+	  double weight1 = ave1/th1d_fvtxs1_zvtxbin_clus_phi_IR->GetBinContent(j+1);
+	  double weight2 = ave2/th1d_fvtxs2_zvtxbin_clus_phi_IR->GetBinContent(j+1);
+	  double weight3 = ave3/th1d_fvtxs3_zvtxbin_clus_phi_IR->GetBinContent(j+1);
 	  if ( !TMath::Finite(weight) ) weight = 0;
 	  if ( !TMath::Finite(weight0) ) weight0 = 0;
 	  if ( !TMath::Finite(weight1) ) weight1 = 0;
 	  if ( !TMath::Finite(weight2) ) weight2 = 0;
 	  if ( !TMath::Finite(weight3) ) weight3 = 0;
 	  // ---
-	  th1d_weight_fvtxs_zvtxbin_clus_phi_IR->SetBinContent(i+1,weight);
-	  th1d_weight_fvtxs0_zvtxbin_clus_phi_IR->SetBinContent(i+1,weight0);
-	  th1d_weight_fvtxs1_zvtxbin_clus_phi_IR->SetBinContent(i+1,weight1);
-	  th1d_weight_fvtxs2_zvtxbin_clus_phi_IR->SetBinContent(i+1,weight2);
-	  th1d_weight_fvtxs3_zvtxbin_clus_phi_IR->SetBinContent(i+1,weight3);
+	  th1d_weight_fvtxs_zvtxbin_clus_phi_IR->SetBinContent(j+1,weight);
+	  th1d_weight_fvtxs0_zvtxbin_clus_phi_IR->SetBinContent(j+1,weight0);
+	  th1d_weight_fvtxs1_zvtxbin_clus_phi_IR->SetBinContent(j+1,weight1);
+	  th1d_weight_fvtxs2_zvtxbin_clus_phi_IR->SetBinContent(j+1,weight2);
+	  th1d_weight_fvtxs3_zvtxbin_clus_phi_IR->SetBinContent(j+1,weight3);
 	}
 
       // --- write the weights to file
