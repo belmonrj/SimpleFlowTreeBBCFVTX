@@ -6,19 +6,19 @@ void weight()
 {
 
   //runweight(456652);
-  runweight2d(456652);
+  runweight2d(456652); // i have no idea why doing this first helps...
 
-  return;
+  // return;
 
   int run;
   ifstream fin;
 
   fin.open("list_20.short");
-  while ( fin >> run ) runweight(run);
+  while ( fin >> run ) runweight2d(run);
   fin.close();
 
   fin.open("list_39.short");
-  while ( fin >> run ) runweight(run);
+  while ( fin >> run ) runweight2d(run);
   fin.close();
 
 }
@@ -27,7 +27,11 @@ void weight()
 void runweight2d(int run)
 {
 
+  cout << "Now processing run " << run << endl;
+
   TCanvas* c1 = new TCanvas("c1","");
+
+  cout << "Attempting to open the file" << endl;
 
   TFile* file = TFile::Open(Form("RootFiles/svrb_run%d_pass0.root",run));
   if ( !file )
@@ -63,27 +67,27 @@ void runweight2d(int run)
       TH1D* th1d_fvtxs_zvtxbin_clus_phi_IR = (TH1D*)th2d_fvtxs_clus_phi_IR->ProjectionY(Form("th1d_fvtxs_zvtx%d_clus_phi_IR",i),i+1,i+1);
       th1d_fvtxs_zvtxbin_clus_phi_IR->Write();
       th1d_fvtxs_zvtxbin_clus_phi_IR->Draw();
-      c1->Print(Form("FigsWeight/weight2d_fvtxs_zvtx%d_clus_phi_IR.png",i));
+      c1->Print(Form("FigsWeight/weight2d_fvtxs_zvtx%d_clus_phi_IR_run%d.png",i,run));
 
       TH1D* th1d_fvtxs0_zvtxbin_clus_phi_IR = (TH1D*)th2d_fvtxs0_clus_phi_IR->ProjectionY(Form("th1d_fvtxs0_zvtx%d_clus_phi_IR",i),i+1,i+1);
       th1d_fvtxs0_zvtxbin_clus_phi_IR->Write();
       th1d_fvtxs0_zvtxbin_clus_phi_IR->Draw();
-      c1->Print(Form("FigsWeight/weight2d_fvtxs0_zvtx%d_clus_phi_IR.png",i));
+      c1->Print(Form("FigsWeight/weight2d_fvtxs0_zvtx%d_clus_phi_IR_run%d.png",i,run));
 
       TH1D* th1d_fvtxs1_zvtxbin_clus_phi_IR = (TH1D*)th2d_fvtxs1_clus_phi_IR->ProjectionY(Form("th1d_fvtxs1_zvtx%d_clus_phi_IR",i),i+1,i+1);
       th1d_fvtxs1_zvtxbin_clus_phi_IR->Write();
       th1d_fvtxs1_zvtxbin_clus_phi_IR->Draw();
-      c1->Print(Form("FigsWeight/weight2d_fvtxs1_zvtx%d_clus_phi_IR.png",i));
+      c1->Print(Form("FigsWeight/weight2d_fvtxs1_zvtx%d_clus_phi_IR_run%d.png",i,run));
 
       TH1D* th1d_fvtxs2_zvtxbin_clus_phi_IR = (TH1D*)th2d_fvtxs2_clus_phi_IR->ProjectionY(Form("th1d_fvtxs2_zvtx%d_clus_phi_IR",i),i+1,i+1);
       th1d_fvtxs2_zvtxbin_clus_phi_IR->Write();
       th1d_fvtxs2_zvtxbin_clus_phi_IR->Draw();
-      c1->Print(Form("FigsWeight/weight2d_fvtxs2_zvtx%d_clus_phi_IR.png",i));
+      c1->Print(Form("FigsWeight/weight2d_fvtxs2_zvtx%d_clus_phi_IR_run%d.png",i,run));
 
       TH1D* th1d_fvtxs3_zvtxbin_clus_phi_IR = (TH1D*)th2d_fvtxs3_clus_phi_IR->ProjectionY(Form("th1d_fvtxs3_zvtx%d_clus_phi_IR",i),i+1,i+1);
       th1d_fvtxs3_zvtxbin_clus_phi_IR->Write();
       th1d_fvtxs3_zvtxbin_clus_phi_IR->Draw();
-      c1->Print(Form("FigsWeight/weight2d_fvtxs3_zvtx%d_clus_phi_IR.png",i));
+      c1->Print(Form("FigsWeight/weight2d_fvtxs3_zvtx%d_clus_phi_IR_run%d.png",i,run));
 
       // --- make 1d clones
       TH1D* th1d_weight_fvtxs_zvtxbin_clus_phi_IR = (TH1D*)th1d_fvtxs_zvtxbin_clus_phi_IR->Clone(Form("th1d_weight_fvtxs_zvtx%d_clus_phi_IR",i));
@@ -125,28 +129,30 @@ void runweight2d(int run)
       // --- write the weights to file
       th1d_weight_fvtxs_zvtxbin_clus_phi_IR->Write();
       th1d_weight_fvtxs_zvtxbin_clus_phi_IR->Draw();
-      c1->Print(Form("FigsWeight/wweight2d_fvtxs_zvtx%d_clus_phi_IR.png",i));
+      c1->Print(Form("FigsWeight/wweight2d_fvtxs_zvtx%d_clus_phi_IR_run%d.png",i,run));
 
       th1d_weight_fvtxs0_zvtxbin_clus_phi_IR->Write();
       th1d_weight_fvtxs0_zvtxbin_clus_phi_IR->Draw();
-      c1->Print(Form("FigsWeight/wweight2d_fvtxs0_zvtx%d_clus_phi_IR.png",i));
+      c1->Print(Form("FigsWeight/wweight2d_fvtxs0_zvtx%d_clus_phi_IR_run%d.png",i,run));
 
       th1d_weight_fvtxs1_zvtxbin_clus_phi_IR->Write();
       th1d_weight_fvtxs1_zvtxbin_clus_phi_IR->Draw();
-      c1->Print(Form("FigsWeight/wweight2d_fvtxs1_zvtx%d_clus_phi_IR.png",i));
+      c1->Print(Form("FigsWeight/wweight2d_fvtxs1_zvtx%d_clus_phi_IR_run%d.png",i,run));
 
       th1d_weight_fvtxs2_zvtxbin_clus_phi_IR->Write();
       th1d_weight_fvtxs2_zvtxbin_clus_phi_IR->Draw();
-      c1->Print(Form("FigsWeight/wweight2d_fvtxs2_zvtx%d_clus_phi_IR.png",i));
+      c1->Print(Form("FigsWeight/wweight2d_fvtxs2_zvtx%d_clus_phi_IR_run%d.png",i,run));
 
       th1d_weight_fvtxs3_zvtxbin_clus_phi_IR->Write();
       th1d_weight_fvtxs3_zvtxbin_clus_phi_IR->Draw();
-      c1->Print(Form("FigsWeight/wweight2d_fvtxs3_zvtx%d_clus_phi_IR.png",i));
+      c1->Print(Form("FigsWeight/wweight2d_fvtxs3_zvtx%d_clus_phi_IR_run%d.png",i,run));
 
     }
 
   fout->Write();
   fout->Close();
+
+  file->Close();
 
   delete c1;
 
