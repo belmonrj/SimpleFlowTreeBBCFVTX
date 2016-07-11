@@ -134,6 +134,27 @@ void flatten(int runNumber, int rp_recal_pass)
       ntp_event_chain->Add(filename);
     }
 
+  // ---
+
+  TFile *phi_weight_file = TFile::Open(Form("SpecialProjects/WeightFiles/weight2d_run%d.root", runNumber)); // COME BACK HERE AND HAVE A LOOK
+  if (!phi_weight_file)
+    {
+      cout << "ERROR could not open phi weight file: " << endl;
+      return;
+    }
+
+  TH1D* th1d_fvtxs_phi_weight[10][5];
+  for ( int i = 0; i < 10; ++i )
+    {
+      th1d_fvtxs_phi_weight[i][0] = (TH1D*)phi_weight_file->Get(Form("th1d_weight_fvtxs_zvtx%d_clus_phi_IR",i)); // COME BACK HERE AND HAVE A LOOK
+      th1d_fvtxs_phi_weight[i][1] = (TH1D*)phi_weight_file->Get(Form("th1d_weight_fvtxs0_zvtx%d_clus_phi_IR",i)); // COME BACK HERE AND HAVE A LOOK
+      th1d_fvtxs_phi_weight[i][2] = (TH1D*)phi_weight_file->Get(Form("th1d_weight_fvtxs1_zvtx%d_clus_phi_IR",i)); // COME BACK HERE AND HAVE A LOOK
+      th1d_fvtxs_phi_weight[i][3] = (TH1D*)phi_weight_file->Get(Form("th1d_weight_fvtxs2_zvtx%d_clus_phi_IR",i)); // COME BACK HERE AND HAVE A LOOK
+      th1d_fvtxs_phi_weight[i][4] = (TH1D*)phi_weight_file->Get(Form("th1d_weight_fvtxs3_zvtx%d_clus_phi_IR",i)); // COME BACK HERE AND HAVE A LOOK
+    }
+
+
+  // ---
 
   cout << "Initalizing PMT positions for the BBC" << endl;
 
@@ -828,22 +849,25 @@ void flatten(int runNumber, int rp_recal_pass)
               // --------------------------------------
 
               float phi = TMath::ATan2(fvtx_y,fvtx_x);
+              int ibbcz2 = ibbcz/2;
+              int phi_bin = th1d_fvtxs_phi_weight[ibbcz2][fvtx_layer+1]->FindBin(phi); // COME BACK HERE AND HAVE A LOOK
+              float fvtx_weight = th1d_fvtxs_phi_weight[ibbcz2][fvtx_layer+1]->GetBinContent(phi_bin);
 
               // --- south side
               if ( d_FVTX_z[iclus] < 0 )
                 {
-                  fvtxs_qx2[fvtx_layer+1] += TMath::Cos(2*phi);
-                  fvtxs_qy2[fvtx_layer+1] += TMath::Sin(2*phi);
-                  fvtxs_qx3[fvtx_layer+1] += TMath::Cos(3*phi);
-                  fvtxs_qy3[fvtx_layer+1] += TMath::Sin(3*phi);
+                  fvtxs_qx2[fvtx_layer+1] += fvtx_weight * TMath::Cos(2*phi);
+                  fvtxs_qy2[fvtx_layer+1] += fvtx_weight * TMath::Sin(2*phi);
+                  fvtxs_qx3[fvtx_layer+1] += fvtx_weight * TMath::Cos(3*phi);
+                  fvtxs_qy3[fvtx_layer+1] += fvtx_weight * TMath::Sin(3*phi);
 
-                  fvtxs_qx2[0] += TMath::Cos(2*phi);
-                  fvtxs_qy2[0] += TMath::Sin(2*phi);
-                  fvtxs_qx3[0] += TMath::Cos(3*phi);
-                  fvtxs_qy3[0] += TMath::Sin(3*phi);
+                  fvtxs_qx2[0] += fvtx_weight * TMath::Cos(2*phi);
+                  fvtxs_qy2[0] += fvtx_weight * TMath::Sin(2*phi);
+                  fvtxs_qx3[0] += fvtx_weight * TMath::Cos(3*phi);
+                  fvtxs_qy3[0] += fvtx_weight * TMath::Sin(3*phi);
 
-                  fvtxs_qw[fvtx_layer+1] ++;
-                  fvtxs_qw[0] ++;
+                  fvtxs_qw[fvtx_layer+1] += fvtx_weight;
+                  fvtxs_qw[0] += fvtx_weight;
 
                   th1d_fvtxs_clus_phi->Fill(phi);
                   if ( fvtx_layer == 0 ) th1d_fvtxs0_clus_phi->Fill(phi);
@@ -1214,7 +1238,7 @@ void flatten(int runNumber, int rp_recal_pass)
         }
 
 
-      if ( fvtx_north_psi2_docalib < -999 || fvtx_south_psi2_docalib < -999 || bbc_south_psi2_docalib < -999 )
+      if ( verbosity > 0 && ( fvtx_north_psi2_docalib < -999 || fvtx_south_psi2_docalib < -999 || bbc_south_psi2_docalib < -999 ) )
         {
           cout << "POSSIBLE ISSUE WITH EVENT PLANES!!!  ONE OR MORE IS -9999" << endl;
           cout << "BBC south event plane " << bbc_south_psi2_docalib << endl;
