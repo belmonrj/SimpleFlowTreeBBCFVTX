@@ -268,6 +268,30 @@ void flatten(int runNumber, int passNumber)
   TH1D* th1d_fvtxn2_clus_phi = new TH1D("th1d_fvtxn2_clus_phi","",50,-pi,pi);
   TH1D* th1d_fvtxn3_clus_phi = new TH1D("th1d_fvtxn3_clus_phi","",50,-pi,pi);
 
+  TH2D* th2d_fvtxs_clus_xy = new TH2D("th2d_fvtxs_clus_xy","",40,-20,20,40,-20,20);
+  TH2D* th2d_fvtxs0_clus_xy = new TH2D("th2d_fvtxs0_clus_xy","",40,-20,20,40,-20,20);
+  TH2D* th2d_fvtxs1_clus_xy = new TH2D("th2d_fvtxs1_clus_xy","",40,-20,20,40,-20,20);
+  TH2D* th2d_fvtxs2_clus_xy = new TH2D("th2d_fvtxs2_clus_xy","",40,-20,20,40,-20,20);
+  TH2D* th2d_fvtxs3_clus_xy = new TH2D("th2d_fvtxs3_clus_xy","",40,-20,20,40,-20,20);
+
+  TH2D* th2d_fvtxn_clus_xy = new TH2D("th2d_fvtxn_clus_xy","",40,-20,20,40,-20,20);
+  TH2D* th2d_fvtxn0_clus_xy = new TH2D("th2d_fvtxn0_clus_xy","",40,-20,20,40,-20,20);
+  TH2D* th2d_fvtxn1_clus_xy = new TH2D("th2d_fvtxn1_clus_xy","",40,-20,20,40,-20,20);
+  TH2D* th2d_fvtxn2_clus_xy = new TH2D("th2d_fvtxn2_clus_xy","",40,-20,20,40,-20,20);
+  TH2D* th2d_fvtxn3_clus_xy = new TH2D("th2d_fvtxn3_clus_xy","",40,-20,20,40,-20,20);
+
+  TH2D* th2d_fvtxs_clus_phieta = new TH2D("th2d_fvtxs_clus_phieta","",50,-pi,pi,60,-3.5,-0.5);
+  TH2D* th2d_fvtxs0_clus_phieta = new TH2D("th2d_fvtxs0_clus_phieta","",50,-pi,pi,60,-3.5,-0.5);
+  TH2D* th2d_fvtxs1_clus_phieta = new TH2D("th2d_fvtxs1_clus_phieta","",50,-pi,pi,60,-3.5,-0.5);
+  TH2D* th2d_fvtxs2_clus_phieta = new TH2D("th2d_fvtxs2_clus_phieta","",50,-pi,pi,60,-3.5,-0.5);
+  TH2D* th2d_fvtxs3_clus_phieta = new TH2D("th2d_fvtxs3_clus_phieta","",50,-pi,pi,60,-3.5,-0.5);
+
+  TH2D* th2d_fvtxn_clus_phieta = new TH2D("th2d_fvtxn_clus_phieta","",50,-pi,pi,60,0.5,3.5);
+  TH2D* th2d_fvtxn0_clus_phieta = new TH2D("th2d_fvtxn0_clus_phieta","",50,-pi,pi,60,0.5,3.5);
+  TH2D* th2d_fvtxn1_clus_phieta = new TH2D("th2d_fvtxn1_clus_phieta","",50,-pi,pi,60,0.5,3.5);
+  TH2D* th2d_fvtxn2_clus_phieta = new TH2D("th2d_fvtxn2_clus_phieta","",50,-pi,pi,60,0.5,3.5);
+  TH2D* th2d_fvtxn3_clus_phieta = new TH2D("th2d_fvtxn3_clus_phieta","",50,-pi,pi,60,0.5,3.5);
+
   // --- BOAR = before offset and rotation
   TH1D* th1d_fvtxs_clus_phi_BOAR = new TH1D("th1d_fvtxs_clus_phi_BOAR","",50,-pi,pi);
   TH1D* th1d_fvtxs0_clus_phi_BOAR = new TH1D("th1d_fvtxs0_clus_phi_BOAR","",50,-pi,pi);
@@ -282,12 +306,112 @@ void flatten(int runNumber, int passNumber)
   TH1D* th1d_fvtxs2_clus_phi_IR = new TH1D("th1d_fvtxs2_clus_phi_IR","",50,-pi,pi);
   TH1D* th1d_fvtxs3_clus_phi_IR = new TH1D("th1d_fvtxs3_clus_phi_IR","",50,-pi,pi);
 
+  TH1D* th1d_fvtxn_clus_phi_IR = new TH1D("th1d_fvtxn_clus_phi_IR","",50,-pi,pi);
+  TH1D* th1d_fvtxn0_clus_phi_IR = new TH1D("th1d_fvtxn0_clus_phi_IR","",50,-pi,pi);
+  TH1D* th1d_fvtxn1_clus_phi_IR = new TH1D("th1d_fvtxn1_clus_phi_IR","",50,-pi,pi);
+  TH1D* th1d_fvtxn2_clus_phi_IR = new TH1D("th1d_fvtxn2_clus_phi_IR","",50,-pi,pi);
+  TH1D* th1d_fvtxn3_clus_phi_IR = new TH1D("th1d_fvtxn3_clus_phi_IR","",50,-pi,pi);
+
+  TH2D* th2d_fvtxs_clus_xy_IR = new TH2D("th2d_fvtxs_clus_xy_IR","",40,-20,20,40,-20,20);
+  TH2D* th2d_fvtxs0_clus_xy_IR = new TH2D("th2d_fvtxs0_clus_xy_IR","",40,-20,20,40,-20,20);
+  TH2D* th2d_fvtxs1_clus_xy_IR = new TH2D("th2d_fvtxs1_clus_xy_IR","",40,-20,20,40,-20,20);
+  TH2D* th2d_fvtxs2_clus_xy_IR = new TH2D("th2d_fvtxs2_clus_xy_IR","",40,-20,20,40,-20,20);
+  TH2D* th2d_fvtxs3_clus_xy_IR = new TH2D("th2d_fvtxs3_clus_xy_IR","",40,-20,20,40,-20,20);
+
+  TH2D* th2d_fvtxn_clus_xy_IR = new TH2D("th2d_fvtxn_clus_xy_IR","",40,-20,20,40,-20,20);
+  TH2D* th2d_fvtxn0_clus_xy_IR = new TH2D("th2d_fvtxn0_clus_xy_IR","",40,-20,20,40,-20,20);
+  TH2D* th2d_fvtxn1_clus_xy_IR = new TH2D("th2d_fvtxn1_clus_xy_IR","",40,-20,20,40,-20,20);
+  TH2D* th2d_fvtxn2_clus_xy_IR = new TH2D("th2d_fvtxn2_clus_xy_IR","",40,-20,20,40,-20,20);
+  TH2D* th2d_fvtxn3_clus_xy_IR = new TH2D("th2d_fvtxn3_clus_xy_IR","",40,-20,20,40,-20,20);
+
+  TH2D* th2d_fvtxs_clus_phieta_IR = new TH2D("th2d_fvtxs_clus_phieta_IR","",50,-pi,pi,60,-3.5,-0.5);
+  TH2D* th2d_fvtxs0_clus_phieta_IR = new TH2D("th2d_fvtxs0_clus_phieta_IR","",50,-pi,pi,60,-3.5,-0.5);
+  TH2D* th2d_fvtxs1_clus_phieta_IR = new TH2D("th2d_fvtxs1_clus_phieta_IR","",50,-pi,pi,60,-3.5,-0.5);
+  TH2D* th2d_fvtxs2_clus_phieta_IR = new TH2D("th2d_fvtxs2_clus_phieta_IR","",50,-pi,pi,60,-3.5,-0.5);
+  TH2D* th2d_fvtxs3_clus_phieta_IR = new TH2D("th2d_fvtxs3_clus_phieta_IR","",50,-pi,pi,60,-3.5,-0.5);
+
+  TH2D* th2d_fvtxn_clus_phieta_IR = new TH2D("th2d_fvtxn_clus_phieta_IR","",50,-pi,pi,60,0.5,3.5);
+  TH2D* th2d_fvtxn0_clus_phieta_IR = new TH2D("th2d_fvtxn0_clus_phieta_IR","",50,-pi,pi,60,0.5,3.5);
+  TH2D* th2d_fvtxn1_clus_phieta_IR = new TH2D("th2d_fvtxn1_clus_phieta_IR","",50,-pi,pi,60,0.5,3.5);
+  TH2D* th2d_fvtxn2_clus_phieta_IR = new TH2D("th2d_fvtxn2_clus_phieta_IR","",50,-pi,pi,60,0.5,3.5);
+  TH2D* th2d_fvtxn3_clus_phieta_IR = new TH2D("th2d_fvtxn3_clus_phieta_IR","",50,-pi,pi,60,0.5,3.5);
+
   // --- OR = outside radius
   TH1D* th1d_fvtxs_clus_phi_OR = new TH1D("th1d_fvtxs_clus_phi_OR","",50,-pi,pi);
   TH1D* th1d_fvtxs0_clus_phi_OR = new TH1D("th1d_fvtxs0_clus_phi_OR","",50,-pi,pi);
   TH1D* th1d_fvtxs1_clus_phi_OR = new TH1D("th1d_fvtxs1_clus_phi_OR","",50,-pi,pi);
   TH1D* th1d_fvtxs2_clus_phi_OR = new TH1D("th1d_fvtxs2_clus_phi_OR","",50,-pi,pi);
   TH1D* th1d_fvtxs3_clus_phi_OR = new TH1D("th1d_fvtxs3_clus_phi_OR","",50,-pi,pi);
+
+  TH1D* th1d_fvtxn_clus_phi_OR = new TH1D("th1d_fvtxn_clus_phi_OR","",50,-pi,pi);
+  TH1D* th1d_fvtxn0_clus_phi_OR = new TH1D("th1d_fvtxn0_clus_phi_OR","",50,-pi,pi);
+  TH1D* th1d_fvtxn1_clus_phi_OR = new TH1D("th1d_fvtxn1_clus_phi_OR","",50,-pi,pi);
+  TH1D* th1d_fvtxn2_clus_phi_OR = new TH1D("th1d_fvtxn2_clus_phi_OR","",50,-pi,pi);
+  TH1D* th1d_fvtxn3_clus_phi_OR = new TH1D("th1d_fvtxn3_clus_phi_OR","",50,-pi,pi);
+
+  TH2D* th2d_fvtxs_clus_xy_OR = new TH2D("th2d_fvtxs_clus_xy_OR","",40,-20,20,40,-20,20);
+  TH2D* th2d_fvtxs0_clus_xy_OR = new TH2D("th2d_fvtxs0_clus_xy_OR","",40,-20,20,40,-20,20);
+  TH2D* th2d_fvtxs1_clus_xy_OR = new TH2D("th2d_fvtxs1_clus_xy_OR","",40,-20,20,40,-20,20);
+  TH2D* th2d_fvtxs2_clus_xy_OR = new TH2D("th2d_fvtxs2_clus_xy_OR","",40,-20,20,40,-20,20);
+  TH2D* th2d_fvtxs3_clus_xy_OR = new TH2D("th2d_fvtxs3_clus_xy_OR","",40,-20,20,40,-20,20);
+
+  TH2D* th2d_fvtxn_clus_xy_OR = new TH2D("th2d_fvtxn_clus_xy_OR","",40,-20,20,40,-20,20);
+  TH2D* th2d_fvtxn0_clus_xy_OR = new TH2D("th2d_fvtxn0_clus_xy_OR","",40,-20,20,40,-20,20);
+  TH2D* th2d_fvtxn1_clus_xy_OR = new TH2D("th2d_fvtxn1_clus_xy_OR","",40,-20,20,40,-20,20);
+  TH2D* th2d_fvtxn2_clus_xy_OR = new TH2D("th2d_fvtxn2_clus_xy_OR","",40,-20,20,40,-20,20);
+  TH2D* th2d_fvtxn3_clus_xy_OR = new TH2D("th2d_fvtxn3_clus_xy_OR","",40,-20,20,40,-20,20);
+
+  TH2D* th2d_fvtxs_clus_phieta_OR = new TH2D("th2d_fvtxs_clus_phieta_OR","",50,-pi,pi,60,-3.5,-0.5);
+  TH2D* th2d_fvtxs0_clus_phieta_OR = new TH2D("th2d_fvtxs0_clus_phieta_OR","",50,-pi,pi,60,-3.5,-0.5);
+  TH2D* th2d_fvtxs1_clus_phieta_OR = new TH2D("th2d_fvtxs1_clus_phieta_OR","",50,-pi,pi,60,-3.5,-0.5);
+  TH2D* th2d_fvtxs2_clus_phieta_OR = new TH2D("th2d_fvtxs2_clus_phieta_OR","",50,-pi,pi,60,-3.5,-0.5);
+  TH2D* th2d_fvtxs3_clus_phieta_OR = new TH2D("th2d_fvtxs3_clus_phieta_OR","",50,-pi,pi,60,-3.5,-0.5);
+
+  TH2D* th2d_fvtxn_clus_phieta_OR = new TH2D("th2d_fvtxn_clus_phieta_OR","",50,-pi,pi,60,0.5,3.5);
+  TH2D* th2d_fvtxn0_clus_phieta_OR = new TH2D("th2d_fvtxn0_clus_phieta_OR","",50,-pi,pi,60,0.5,3.5);
+  TH2D* th2d_fvtxn1_clus_phieta_OR = new TH2D("th2d_fvtxn1_clus_phieta_OR","",50,-pi,pi,60,0.5,3.5);
+  TH2D* th2d_fvtxn2_clus_phieta_OR = new TH2D("th2d_fvtxn2_clus_phieta_OR","",50,-pi,pi,60,0.5,3.5);
+  TH2D* th2d_fvtxn3_clus_phieta_OR = new TH2D("th2d_fvtxn3_clus_phieta_OR","",50,-pi,pi,60,0.5,3.5);
+
+  // ---
+
+  TH2D* th2d_fvtxs_clus_phi = new TH2D("th2d_fvtxs_clus_phi","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxs0_clus_phi = new TH2D("th2d_fvtxs0_clus_phi","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxs1_clus_phi = new TH2D("th2d_fvtxs1_clus_phi","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxs2_clus_phi = new TH2D("th2d_fvtxs2_clus_phi","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxs3_clus_phi = new TH2D("th2d_fvtxs3_clus_phi","",20,-10.0,10.0,50,-pi,pi);
+
+  TH2D* th2d_fvtxs_clus_phi_IR = new TH2D("th2d_fvtxs_clus_phi_IR","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxs0_clus_phi_IR = new TH2D("th2d_fvtxs0_clus_phi_IR","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxs1_clus_phi_IR = new TH2D("th2d_fvtxs1_clus_phi_IR","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxs2_clus_phi_IR = new TH2D("th2d_fvtxs2_clus_phi_IR","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxs3_clus_phi_IR = new TH2D("th2d_fvtxs3_clus_phi_IR","",20,-10.0,10.0,50,-pi,pi);
+
+  TH2D* th2d_fvtxs_clus_phi_OR = new TH2D("th2d_fvtxs_clus_phi_OR","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxs0_clus_phi_OR = new TH2D("th2d_fvtxs0_clus_phi_OR","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxs1_clus_phi_OR = new TH2D("th2d_fvtxs1_clus_phi_OR","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxs2_clus_phi_OR = new TH2D("th2d_fvtxs2_clus_phi_OR","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxs3_clus_phi_OR = new TH2D("th2d_fvtxs3_clus_phi_OR","",20,-10.0,10.0,50,-pi,pi);
+
+  TH2D* th2d_fvtxn_clus_phi = new TH2D("th2d_fvtxn_clus_phi","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxn0_clus_phi = new TH2D("th2d_fvtxn0_clus_phi","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxn1_clus_phi = new TH2D("th2d_fvtxn1_clus_phi","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxn2_clus_phi = new TH2D("th2d_fvtxn2_clus_phi","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxn3_clus_phi = new TH2D("th2d_fvtxn3_clus_phi","",20,-10.0,10.0,50,-pi,pi);
+
+  TH2D* th2d_fvtxn_clus_phi_IR = new TH2D("th2d_fvtxn_clus_phi_IR","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxn0_clus_phi_IR = new TH2D("th2d_fvtxn0_clus_phi_IR","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxn1_clus_phi_IR = new TH2D("th2d_fvtxn1_clus_phi_IR","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxn2_clus_phi_IR = new TH2D("th2d_fvtxn2_clus_phi_IR","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxn3_clus_phi_IR = new TH2D("th2d_fvtxn3_clus_phi_IR","",20,-10.0,10.0,50,-pi,pi);
+
+  TH2D* th2d_fvtxn_clus_phi_OR = new TH2D("th2d_fvtxn_clus_phi_OR","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxn0_clus_phi_OR = new TH2D("th2d_fvtxn0_clus_phi_OR","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxn1_clus_phi_OR = new TH2D("th2d_fvtxn1_clus_phi_OR","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxn2_clus_phi_OR = new TH2D("th2d_fvtxn2_clus_phi_OR","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxn3_clus_phi_OR = new TH2D("th2d_fvtxn3_clus_phi_OR","",20,-10.0,10.0,50,-pi,pi);
+
+  // ---
 
   TH1D* th1d_FVTX_nclus = new TH1D("th1d_FVTX_nclus","",200,-0.5,1999.5);
   TH1D* th1d_FVTX_nclus_IR = new TH1D("th1d_FVTX_nclus_IR","",200,-0.5,1999.5);
@@ -306,23 +430,6 @@ void flatten(int runNumber, int passNumber)
   TH1D* th1d_FVTXN_nclus_OR = new TH1D("th1d_FVTXN_nclus_OR","",200,-0.5,1999.5);
 
 
-  TH2D* th2d_fvtxs_clus_phi = new TH2D("th2d_fvtxs_clus_phi","",10,-10.0,10.0,50,-pi,pi);
-  TH2D* th2d_fvtxs0_clus_phi = new TH2D("th2d_fvtxs0_clus_phi","",10,-10.0,10.0,50,-pi,pi);
-  TH2D* th2d_fvtxs1_clus_phi = new TH2D("th2d_fvtxs1_clus_phi","",10,-10.0,10.0,50,-pi,pi);
-  TH2D* th2d_fvtxs2_clus_phi = new TH2D("th2d_fvtxs2_clus_phi","",10,-10.0,10.0,50,-pi,pi);
-  TH2D* th2d_fvtxs3_clus_phi = new TH2D("th2d_fvtxs3_clus_phi","",10,-10.0,10.0,50,-pi,pi);
-
-  TH2D* th2d_fvtxs_clus_phi_IR = new TH2D("th2d_fvtxs_clus_phi_IR","",10,-10.0,10.0,50,-pi,pi);
-  TH2D* th2d_fvtxs0_clus_phi_IR = new TH2D("th2d_fvtxs0_clus_phi_IR","",10,-10.0,10.0,50,-pi,pi);
-  TH2D* th2d_fvtxs1_clus_phi_IR = new TH2D("th2d_fvtxs1_clus_phi_IR","",10,-10.0,10.0,50,-pi,pi);
-  TH2D* th2d_fvtxs2_clus_phi_IR = new TH2D("th2d_fvtxs2_clus_phi_IR","",10,-10.0,10.0,50,-pi,pi);
-  TH2D* th2d_fvtxs3_clus_phi_IR = new TH2D("th2d_fvtxs3_clus_phi_IR","",10,-10.0,10.0,50,-pi,pi);
-
-  TH2D* th2d_fvtxs_clus_phi_OR = new TH2D("th2d_fvtxs_clus_phi_OR","",10,-10.0,10.0,50,-pi,pi);
-  TH2D* th2d_fvtxs0_clus_phi_OR = new TH2D("th2d_fvtxs0_clus_phi_OR","",10,-10.0,10.0,50,-pi,pi);
-  TH2D* th2d_fvtxs1_clus_phi_OR = new TH2D("th2d_fvtxs1_clus_phi_OR","",10,-10.0,10.0,50,-pi,pi);
-  TH2D* th2d_fvtxs2_clus_phi_OR = new TH2D("th2d_fvtxs2_clus_phi_OR","",10,-10.0,10.0,50,-pi,pi);
-  TH2D* th2d_fvtxs3_clus_phi_OR = new TH2D("th2d_fvtxs3_clus_phi_OR","",10,-10.0,10.0,50,-pi,pi);
 
 
   // ---
@@ -488,7 +595,7 @@ void flatten(int runNumber, int passNumber)
       float vtx_y = 0.02;
 
       bool inside_radius = true;
-      if ( pow(eventfvtx_x-vtx_x,2.0) +  pow(eventfvtx_y-vtx_y,2.0) >= 0.15 ) inside_radius = false;
+      if ( sqrt(pow(eventfvtx_x-vtx_x,2.0) +  pow(eventfvtx_y-vtx_y,2.0)) >= 0.15 ) inside_radius = false;
 
 
       // -------------
@@ -681,6 +788,16 @@ void flatten(int runNumber, int passNumber)
                       if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_phi_IR->Fill(vtx_z,phi);
                       if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_phi_IR->Fill(vtx_z,phi);
                       if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_phi_IR->Fill(vtx_z,phi);
+                      th2d_fvtxs_clus_xy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_xy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_xy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_xy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_xy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      th2d_fvtxs_clus_phieta_IR->Fill(phi,fvtx_eta);
+                      if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_phieta_IR->Fill(phi,fvtx_eta);
+                      if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_phieta_IR->Fill(phi,fvtx_eta);
+                      if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_phieta_IR->Fill(phi,fvtx_eta);
+                      if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_phieta_IR->Fill(phi,fvtx_eta);
                     }
                   else
                     {
@@ -694,6 +811,16 @@ void flatten(int runNumber, int passNumber)
                       if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_phi_OR->Fill(vtx_z,phi);
                       if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_phi_OR->Fill(vtx_z,phi);
                       if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_phi_OR->Fill(vtx_z,phi);
+                      th2d_fvtxs_clus_xy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_xy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_xy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_xy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_xy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      th2d_fvtxs_clus_phieta_OR->Fill(phi,fvtx_eta);
+                      if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_phieta_OR->Fill(phi,fvtx_eta);
+                      if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_phieta_OR->Fill(phi,fvtx_eta);
+                      if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_phieta_OR->Fill(phi,fvtx_eta);
+                      if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_phieta_OR->Fill(phi,fvtx_eta);
                     }
 
                   th1d_fvtxs_clus_phi->Fill(phi);
@@ -706,6 +833,16 @@ void flatten(int runNumber, int passNumber)
                   if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_phi->Fill(vtx_z,phi);
                   if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_phi->Fill(vtx_z,phi);
                   if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_phi->Fill(vtx_z,phi);
+                  th2d_fvtxs_clus_xy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                  if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_xy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                  if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_xy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                  if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_xy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                  if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_xy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                  th2d_fvtxs_clus_phieta->Fill(phi,fvtx_eta);
+                  if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_phieta->Fill(phi,fvtx_eta);
+                  if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_phieta->Fill(phi,fvtx_eta);
+                  if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_phieta->Fill(phi,fvtx_eta);
+                  if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_phieta->Fill(phi,fvtx_eta);
 
                 } // check on south
 
@@ -725,11 +862,74 @@ void flatten(int runNumber, int passNumber)
                   fvtxn_qw[fvtx_layer+1] ++;
                   fvtxn_qw[0] ++;
 
+                  if ( inside_radius )
+                    {
+                      th1d_fvtxn_clus_phi_IR->Fill(phi);
+                      if ( fvtx_layer == 0 ) th1d_fvtxn0_clus_phi_IR->Fill(phi);
+                      if ( fvtx_layer == 1 ) th1d_fvtxn1_clus_phi_IR->Fill(phi);
+                      if ( fvtx_layer == 2 ) th1d_fvtxn2_clus_phi_IR->Fill(phi);
+                      if ( fvtx_layer == 3 ) th1d_fvtxn3_clus_phi_IR->Fill(phi);
+                      th2d_fvtxn_clus_phi_IR->Fill(vtx_z,phi);
+                      if ( fvtx_layer == 0 ) th2d_fvtxn0_clus_phi_IR->Fill(vtx_z,phi);
+                      if ( fvtx_layer == 1 ) th2d_fvtxn1_clus_phi_IR->Fill(vtx_z,phi);
+                      if ( fvtx_layer == 2 ) th2d_fvtxn2_clus_phi_IR->Fill(vtx_z,phi);
+                      if ( fvtx_layer == 3 ) th2d_fvtxn3_clus_phi_IR->Fill(vtx_z,phi);
+                      th2d_fvtxn_clus_xy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      if ( fvtx_layer == 0 ) th2d_fvtxn0_clus_xy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      if ( fvtx_layer == 1 ) th2d_fvtxn1_clus_xy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      if ( fvtx_layer == 2 ) th2d_fvtxn2_clus_xy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      if ( fvtx_layer == 3 ) th2d_fvtxn3_clus_xy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      th2d_fvtxn_clus_phieta_IR->Fill(phi,fvtx_eta);
+                      if ( fvtx_layer == 0 ) th2d_fvtxn0_clus_phieta_IR->Fill(phi,fvtx_eta);
+                      if ( fvtx_layer == 1 ) th2d_fvtxn1_clus_phieta_IR->Fill(phi,fvtx_eta);
+                      if ( fvtx_layer == 2 ) th2d_fvtxn2_clus_phieta_IR->Fill(phi,fvtx_eta);
+                      if ( fvtx_layer == 3 ) th2d_fvtxn3_clus_phieta_IR->Fill(phi,fvtx_eta);
+                    }
+                  else
+                    {
+                      th1d_fvtxn_clus_phi_OR->Fill(phi);
+                      if ( fvtx_layer == 0 ) th1d_fvtxn0_clus_phi_OR->Fill(phi);
+                      if ( fvtx_layer == 1 ) th1d_fvtxn1_clus_phi_OR->Fill(phi);
+                      if ( fvtx_layer == 2 ) th1d_fvtxn2_clus_phi_OR->Fill(phi);
+                      if ( fvtx_layer == 3 ) th1d_fvtxn3_clus_phi_OR->Fill(phi);
+                      th2d_fvtxn_clus_phi_OR->Fill(vtx_z,phi);
+                      if ( fvtx_layer == 0 ) th2d_fvtxn0_clus_phi_OR->Fill(vtx_z,phi);
+                      if ( fvtx_layer == 1 ) th2d_fvtxn1_clus_phi_OR->Fill(vtx_z,phi);
+                      if ( fvtx_layer == 2 ) th2d_fvtxn2_clus_phi_OR->Fill(vtx_z,phi);
+                      if ( fvtx_layer == 3 ) th2d_fvtxn3_clus_phi_OR->Fill(vtx_z,phi);
+                      th2d_fvtxn_clus_xy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      if ( fvtx_layer == 0 ) th2d_fvtxn0_clus_xy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      if ( fvtx_layer == 1 ) th2d_fvtxn1_clus_xy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      if ( fvtx_layer == 2 ) th2d_fvtxn2_clus_xy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      if ( fvtx_layer == 3 ) th2d_fvtxn3_clus_xy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      th2d_fvtxn_clus_phieta_OR->Fill(phi,fvtx_eta);
+                      if ( fvtx_layer == 0 ) th2d_fvtxn0_clus_phieta_OR->Fill(phi,fvtx_eta);
+                      if ( fvtx_layer == 1 ) th2d_fvtxn1_clus_phieta_OR->Fill(phi,fvtx_eta);
+                      if ( fvtx_layer == 2 ) th2d_fvtxn2_clus_phieta_OR->Fill(phi,fvtx_eta);
+                      if ( fvtx_layer == 3 ) th2d_fvtxn3_clus_phieta_OR->Fill(phi,fvtx_eta);
+                    }
+
                   th1d_fvtxn_clus_phi->Fill(phi);
                   if ( fvtx_layer == 0 ) th1d_fvtxn0_clus_phi->Fill(phi);
                   if ( fvtx_layer == 1 ) th1d_fvtxn1_clus_phi->Fill(phi);
                   if ( fvtx_layer == 2 ) th1d_fvtxn2_clus_phi->Fill(phi);
                   if ( fvtx_layer == 3 ) th1d_fvtxn3_clus_phi->Fill(phi);
+                  th2d_fvtxn_clus_phi->Fill(vtx_z,phi);
+                  if ( fvtx_layer == 0 ) th2d_fvtxn0_clus_phi->Fill(vtx_z,phi);
+                  if ( fvtx_layer == 1 ) th2d_fvtxn1_clus_phi->Fill(vtx_z,phi);
+                  if ( fvtx_layer == 2 ) th2d_fvtxn2_clus_phi->Fill(vtx_z,phi);
+                  if ( fvtx_layer == 3 ) th2d_fvtxn3_clus_phi->Fill(vtx_z,phi);
+                  th2d_fvtxn_clus_xy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                  if ( fvtx_layer == 0 ) th2d_fvtxn0_clus_xy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                  if ( fvtx_layer == 1 ) th2d_fvtxn1_clus_xy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                  if ( fvtx_layer == 2 ) th2d_fvtxn2_clus_xy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                  if ( fvtx_layer == 3 ) th2d_fvtxn3_clus_xy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                  th2d_fvtxn_clus_phieta->Fill(phi,fvtx_eta);
+                  if ( fvtx_layer == 0 ) th2d_fvtxn0_clus_phieta->Fill(phi,fvtx_eta);
+                  if ( fvtx_layer == 1 ) th2d_fvtxn1_clus_phieta->Fill(phi,fvtx_eta);
+                  if ( fvtx_layer == 2 ) th2d_fvtxn2_clus_phieta->Fill(phi,fvtx_eta);
+                  if ( fvtx_layer == 3 ) th2d_fvtxn3_clus_phieta->Fill(phi,fvtx_eta);
+
                 } // check on north
 
             } // loop over cluster
