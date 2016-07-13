@@ -667,13 +667,13 @@ void flatten(int runNumber, int rp_recal_pass)
       //   }
 
       // make sure bin number doesn't exceed number of bins
-      int ibbcz = NZPS*(ZVTX+10)/20;
-      if ( ibbcz < 0 || ibbcz >= NZPS )
+      int izvtx = NZPS*(ZVTX+10)/20;
+      if ( izvtx < 0 || izvtx >= NZPS )
         {
           cout << "z vertex bin count problem!!!!" << endl;
           cout << "bbcz = " << d_bbcz << endl;
           cout << "fvtx_z = " << eventfvtx_z << endl;
-          cout << "bin number is " << ibbcz << endl;
+          cout << "bin number is " << izvtx << endl;
           continue;
         }
 
@@ -692,6 +692,13 @@ void flatten(int runNumber, int rp_recal_pass)
       if ( eventfvtx_z > -999 ) vtx_z = eventfvtx_z;
       float vtx_x = x_off + atan(beam_angle)*vtx_z;
       float vtx_y = 0.02;
+
+      // --- radius cut using FVTX coordinates
+      if ( sqrt(pow(eventfvtx_x-vtx_x,2.0) +  pow(eventfvtx_y-vtx_y,2.0)) >= 0.15 )
+        {
+          if ( verbosity > 0 ) cout << "rejecting event due to radius cut" << endl;
+          continue;
+        }
 
       // -------------
       // --- BBC stuff
@@ -849,9 +856,9 @@ void flatten(int runNumber, int rp_recal_pass)
               // --------------------------------------
 
               float phi = TMath::ATan2(fvtx_y,fvtx_x);
-              int ibbcz2 = ibbcz/2;
-              int phi_bin = th1d_fvtxs_phi_weight[ibbcz2][fvtx_layer+1]->FindBin(phi); // COME BACK HERE AND HAVE A LOOK
-              float fvtx_weight = th1d_fvtxs_phi_weight[ibbcz2][fvtx_layer+1]->GetBinContent(phi_bin);
+              int izvtx2 = izvtx/2;
+              int phi_bin = th1d_fvtxs_phi_weight[izvtx2][fvtx_layer+1]->FindBin(phi); // COME BACK HERE AND HAVE A LOOK
+              float fvtx_weight = th1d_fvtxs_phi_weight[izvtx2][fvtx_layer+1]->GetBinContent(phi_bin);
 
               // --- south side
               if ( d_FVTX_z[iclus] < 0 )
@@ -1055,7 +1062,7 @@ void flatten(int runNumber, int rp_recal_pass)
                   //float psi = atan2(sumxy[ih][id][1],sumxy[ih][id][0])/2.0;
                   float psi = atan2(sumxy[ih][id][1],sumxy[ih][id][0])/float(ih+1);
                   if ( DIAG ) cout<<"RAW: for id: "<<id<<" psi: "<<psi<<endl;
-                  psi_bf[ic][ih][id]->Fill(ibbcz,psi);
+                  psi_bf[ic][ih][id]->Fill(izvtx,psi);
                 }
             }
         }
@@ -1071,7 +1078,7 @@ void flatten(int runNumber, int rp_recal_pass)
               if (sumxy[ih][id][2]>0.0)
                 {
                   sumxy[ih][id][3]=atan2(sumxy[ih][id][1],sumxy[ih][id][0])/(ih+1.0);
-                  if (rp_recal_pass>0) dis[icent][ih][id]->Fill(ibbcz,sumxy[ih][id][3]*(ih+1.0));
+                  if (rp_recal_pass>0) dis[icent][ih][id]->Fill(izvtx,sumxy[ih][id][3]*(ih+1.0));
                 }
               if (sumxy[ih][id][2]>0.0) // check on weight (x,y,w,psi)
                 {
@@ -1081,23 +1088,23 @@ void flatten(int runNumber, int rp_recal_pass)
                       //if(ih==1 && id==0 && ib==0 && sumxy[ih][id][ib]>1) cout<<sumxy[ih][id][ib]<<endl;
                       if (rp_recal_pass>0)
                         {
-                          ave[icent][ibbcz][ih][id]->Fill(ib+0.0,sumxy[ih][id][ib]);
+                          ave[icent][izvtx][ih][id]->Fill(ib+0.0,sumxy[ih][id][ib]);
                           if(id==0 && DIAG) cout<<"filled ave: "<<ih<<" "<<id<<" "<<ib<<" with: "<<sumxy[ih][id][ib]<<endl;
-                          if(ib==0) qx[icent][ih][id]->Fill(ibbcz,sumxy[ih][id][0]);
-                          if(ib==1) qy[icent][ih][id]->Fill(ibbcz,sumxy[ih][id][1]);
+                          if(ib==0) qx[icent][ih][id]->Fill(izvtx,sumxy[ih][id][0]);
+                          if(ib==1) qy[icent][ih][id]->Fill(izvtx,sumxy[ih][id][1]);
                         } // pass > 0
                       float sxy=sumxy[ih][id][ib];
-                      float mxy=mean[icent][ibbcz][ih][id][ib]; // for recentering qx and qy
-                      float wxy=widt[icent][ibbcz][ih][id][ib]; // for recentering qx and qy
+                      float mxy=mean[icent][izvtx][ih][id][ib]; // for recentering qx and qy
+                      float wxy=widt[icent][izvtx][ih][id][ib]; // for recentering qx and qy
 
-                      //if(icent==0 && ibbcz==0 && ih==1 && id==0) cout<<ib<<" "<<sxy<<" "<<mxy<<" "<<wxy<<endl;
+                      //if(icent==0 && izvtx==0 && ih==1 && id==0) cout<<ib<<" "<<sxy<<" "<<mxy<<" "<<wxy<<endl;
                       sumxy[ih][id][ib]=(sxy-mxy)/wxy; // recentered by mean and renormalized to width
                       if (rp_recal_pass>0)
                         {
-                          ave[icent][ibbcz][ih][id]->Fill(ib+2.0,sumxy[ih][id][ib]);  // ib+2 to avoid overlap
+                          ave[icent][izvtx][ih][id]->Fill(ib+2.0,sumxy[ih][id][ib]);  // ib+2 to avoid overlap
                           if(id==0 && DIAG) cout<<"filled ave2: "<<ih<<" "<<id<<" "<<ib<<" with: "<<sumxy[ih][id][ib]<<endl;
-                          if(ib==0) qx[icent][ih][id]->Fill(ibbcz+NZPS,sumxy[ih][id][0]);
-                          if(ib==1) qy[icent][ih][id]->Fill(ibbcz+NZPS,sumxy[ih][id][1]);
+                          if(ib==0) qx[icent][ih][id]->Fill(izvtx+NZPS,sumxy[ih][id][0]);
+                          if(ib==1) qy[icent][ih][id]->Fill(izvtx+NZPS,sumxy[ih][id][1]);
                         } // pass > 0
                     } // if weight > 0
 
@@ -1105,7 +1112,7 @@ void flatten(int runNumber, int rp_recal_pass)
                   if (rp_recal_pass>0)
                     {
                       // fill histogram with psi calculated with recenter q vectors
-                      dis[icent][ih][id]->Fill(ibbcz+NZPS,sumxy[ih][id][3]*(ih+1.0));
+                      dis[icent][ih][id]->Fill(izvtx+NZPS,sumxy[ih][id][3]*(ih+1.0));
                     }
 
                   float psi=sumxy[ih][id][3]*(ih+1.0);
@@ -1117,11 +1124,11 @@ void flatten(int runNumber, int rp_recal_pass)
                       float cc=cos((io+1.0)*psi);
                       float ss=sin((io+1.0)*psi);
                       // first set of fourier components of psi
-                      if (rp_recal_pass>0) flt[icent][ibbcz][ih][id]->Fill(io+0.0,cc);
-                      if (rp_recal_pass>0) flt[icent][ibbcz][ih][id]->Fill(io+NORD,ss);
+                      if (rp_recal_pass>0) flt[icent][izvtx][ih][id]->Fill(io+0.0,cc);
+                      if (rp_recal_pass>0) flt[icent][izvtx][ih][id]->Fill(io+NORD,ss);
                       // --- four means fourier
-                      float aa=four[icent][ibbcz][ih][id][0][io]; // mean cos
-                      float bb=four[icent][ibbcz][ih][id][1][io]; // mean sin
+                      float aa=four[icent][izvtx][ih][id][0][io]; // mean cos
+                      float bb=four[icent][izvtx][ih][id][1][io]; // mean sin
                       // dp is offset to psi, aa and bb are zero in first pass, non zero later
                       dp+=(aa*ss-bb*cc)*2.0/(io+1.0); // ( trig identity cos(A+B) = cosAsinB - cosBsinA )
                     } // orders
@@ -1133,11 +1140,11 @@ void flatten(int runNumber, int rp_recal_pass)
                       float cc=cos((io+1.0)*psi);
                       float ss=sin((io+1.0)*psi);
                       // --- fourier components of modified psi
-                      if (rp_recal_pass>0) flt[icent][ibbcz][ih][id]->Fill(io+NORD*2.0,cc);
-                      if (rp_recal_pass>0) flt[icent][ibbcz][ih][id]->Fill(io+NORD*3.0,ss);
+                      if (rp_recal_pass>0) flt[icent][izvtx][ih][id]->Fill(io+NORD*2.0,cc);
+                      if (rp_recal_pass>0) flt[icent][izvtx][ih][id]->Fill(io+NORD*3.0,ss);
                     }
                   sumxy[ih][id][3]=psi/(ih+1.0);
-                  if (rp_recal_pass>0) dis[icent][ih][id]->Fill(ibbcz+NZPS*2.0,sumxy[ih][id][3]*(ih+1.0));
+                  if (rp_recal_pass>0) dis[icent][ih][id]->Fill(izvtx+NZPS*2.0,sumxy[ih][id][3]*(ih+1.0));
                 } // end if weight > 0
               else
                 {
@@ -1154,7 +1161,7 @@ void flatten(int runNumber, int rp_recal_pass)
             {
               if(sumxy[ih][id][2]>0)
                 {
-                  psi_af[ic][ih][id]->Fill(ibbcz,sumxy[ih][id][3]);
+                  psi_af[ic][ih][id]->Fill(izvtx,sumxy[ih][id][3]);
                   if ( DIAG ) cout<<"CORR: for id: "<<id<<" psi: "<<sumxy[ih][id][3]<<endl;
                 }
             }
