@@ -268,17 +268,17 @@ void flatten(int runNumber, int passNumber)
   TH1D* th1d_fvtxn2_clus_phi = new TH1D("th1d_fvtxn2_clus_phi","",50,-pi,pi);
   TH1D* th1d_fvtxn3_clus_phi = new TH1D("th1d_fvtxn3_clus_phi","",50,-pi,pi);
 
-  TH2D* th2d_fvtxs_clus_xy = new TH2D("th2d_fvtxs_clus_xy","",40,-20,20,40,-20,20);
-  TH2D* th2d_fvtxs0_clus_xy = new TH2D("th2d_fvtxs0_clus_xy","",40,-20,20,40,-20,20);
-  TH2D* th2d_fvtxs1_clus_xy = new TH2D("th2d_fvtxs1_clus_xy","",40,-20,20,40,-20,20);
-  TH2D* th2d_fvtxs2_clus_xy = new TH2D("th2d_fvtxs2_clus_xy","",40,-20,20,40,-20,20);
-  TH2D* th2d_fvtxs3_clus_xy = new TH2D("th2d_fvtxs3_clus_xy","",40,-20,20,40,-20,20);
+  TH2D* th2d_fvtxs_clus_xy = new TH2D("th2d_fvtxs_clus_xy","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxs0_clus_xy = new TH2D("th2d_fvtxs0_clus_xy","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxs1_clus_xy = new TH2D("th2d_fvtxs1_clus_xy","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxs2_clus_xy = new TH2D("th2d_fvtxs2_clus_xy","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxs3_clus_xy = new TH2D("th2d_fvtxs3_clus_xy","",200,-20,20,200,-20,20);
 
-  TH2D* th2d_fvtxn_clus_xy = new TH2D("th2d_fvtxn_clus_xy","",40,-20,20,40,-20,20);
-  TH2D* th2d_fvtxn0_clus_xy = new TH2D("th2d_fvtxn0_clus_xy","",40,-20,20,40,-20,20);
-  TH2D* th2d_fvtxn1_clus_xy = new TH2D("th2d_fvtxn1_clus_xy","",40,-20,20,40,-20,20);
-  TH2D* th2d_fvtxn2_clus_xy = new TH2D("th2d_fvtxn2_clus_xy","",40,-20,20,40,-20,20);
-  TH2D* th2d_fvtxn3_clus_xy = new TH2D("th2d_fvtxn3_clus_xy","",40,-20,20,40,-20,20);
+  TH2D* th2d_fvtxn_clus_xy = new TH2D("th2d_fvtxn_clus_xy","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxn0_clus_xy = new TH2D("th2d_fvtxn0_clus_xy","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxn1_clus_xy = new TH2D("th2d_fvtxn1_clus_xy","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxn2_clus_xy = new TH2D("th2d_fvtxn2_clus_xy","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxn3_clus_xy = new TH2D("th2d_fvtxn3_clus_xy","",200,-20,20,200,-20,20);
 
   TH2D* th2d_fvtxs_clus_phieta = new TH2D("th2d_fvtxs_clus_phieta","",50,-pi,pi,60,-3.5,-0.5);
   TH2D* th2d_fvtxs0_clus_phieta = new TH2D("th2d_fvtxs0_clus_phieta","",50,-pi,pi,60,-3.5,-0.5);
@@ -312,17 +312,17 @@ void flatten(int runNumber, int passNumber)
   TH1D* th1d_fvtxn2_clus_phi_IR = new TH1D("th1d_fvtxn2_clus_phi_IR","",50,-pi,pi);
   TH1D* th1d_fvtxn3_clus_phi_IR = new TH1D("th1d_fvtxn3_clus_phi_IR","",50,-pi,pi);
 
-  TH2D* th2d_fvtxs_clus_xy_IR = new TH2D("th2d_fvtxs_clus_xy_IR","",40,-20,20,40,-20,20);
-  TH2D* th2d_fvtxs0_clus_xy_IR = new TH2D("th2d_fvtxs0_clus_xy_IR","",40,-20,20,40,-20,20);
-  TH2D* th2d_fvtxs1_clus_xy_IR = new TH2D("th2d_fvtxs1_clus_xy_IR","",40,-20,20,40,-20,20);
-  TH2D* th2d_fvtxs2_clus_xy_IR = new TH2D("th2d_fvtxs2_clus_xy_IR","",40,-20,20,40,-20,20);
-  TH2D* th2d_fvtxs3_clus_xy_IR = new TH2D("th2d_fvtxs3_clus_xy_IR","",40,-20,20,40,-20,20);
+  TH2D* th2d_fvtxs_clus_xy_IR = new TH2D("th2d_fvtxs_clus_xy_IR","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxs0_clus_xy_IR = new TH2D("th2d_fvtxs0_clus_xy_IR","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxs1_clus_xy_IR = new TH2D("th2d_fvtxs1_clus_xy_IR","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxs2_clus_xy_IR = new TH2D("th2d_fvtxs2_clus_xy_IR","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxs3_clus_xy_IR = new TH2D("th2d_fvtxs3_clus_xy_IR","",200,-20,20,200,-20,20);
 
-  TH2D* th2d_fvtxn_clus_xy_IR = new TH2D("th2d_fvtxn_clus_xy_IR","",40,-20,20,40,-20,20);
-  TH2D* th2d_fvtxn0_clus_xy_IR = new TH2D("th2d_fvtxn0_clus_xy_IR","",40,-20,20,40,-20,20);
-  TH2D* th2d_fvtxn1_clus_xy_IR = new TH2D("th2d_fvtxn1_clus_xy_IR","",40,-20,20,40,-20,20);
-  TH2D* th2d_fvtxn2_clus_xy_IR = new TH2D("th2d_fvtxn2_clus_xy_IR","",40,-20,20,40,-20,20);
-  TH2D* th2d_fvtxn3_clus_xy_IR = new TH2D("th2d_fvtxn3_clus_xy_IR","",40,-20,20,40,-20,20);
+  TH2D* th2d_fvtxn_clus_xy_IR = new TH2D("th2d_fvtxn_clus_xy_IR","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxn0_clus_xy_IR = new TH2D("th2d_fvtxn0_clus_xy_IR","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxn1_clus_xy_IR = new TH2D("th2d_fvtxn1_clus_xy_IR","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxn2_clus_xy_IR = new TH2D("th2d_fvtxn2_clus_xy_IR","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxn3_clus_xy_IR = new TH2D("th2d_fvtxn3_clus_xy_IR","",200,-20,20,200,-20,20);
 
   TH2D* th2d_fvtxs_clus_phieta_IR = new TH2D("th2d_fvtxs_clus_phieta_IR","",50,-pi,pi,60,-3.5,-0.5);
   TH2D* th2d_fvtxs0_clus_phieta_IR = new TH2D("th2d_fvtxs0_clus_phieta_IR","",50,-pi,pi,60,-3.5,-0.5);
@@ -349,17 +349,17 @@ void flatten(int runNumber, int passNumber)
   TH1D* th1d_fvtxn2_clus_phi_OR = new TH1D("th1d_fvtxn2_clus_phi_OR","",50,-pi,pi);
   TH1D* th1d_fvtxn3_clus_phi_OR = new TH1D("th1d_fvtxn3_clus_phi_OR","",50,-pi,pi);
 
-  TH2D* th2d_fvtxs_clus_xy_OR = new TH2D("th2d_fvtxs_clus_xy_OR","",40,-20,20,40,-20,20);
-  TH2D* th2d_fvtxs0_clus_xy_OR = new TH2D("th2d_fvtxs0_clus_xy_OR","",40,-20,20,40,-20,20);
-  TH2D* th2d_fvtxs1_clus_xy_OR = new TH2D("th2d_fvtxs1_clus_xy_OR","",40,-20,20,40,-20,20);
-  TH2D* th2d_fvtxs2_clus_xy_OR = new TH2D("th2d_fvtxs2_clus_xy_OR","",40,-20,20,40,-20,20);
-  TH2D* th2d_fvtxs3_clus_xy_OR = new TH2D("th2d_fvtxs3_clus_xy_OR","",40,-20,20,40,-20,20);
+  TH2D* th2d_fvtxs_clus_xy_OR = new TH2D("th2d_fvtxs_clus_xy_OR","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxs0_clus_xy_OR = new TH2D("th2d_fvtxs0_clus_xy_OR","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxs1_clus_xy_OR = new TH2D("th2d_fvtxs1_clus_xy_OR","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxs2_clus_xy_OR = new TH2D("th2d_fvtxs2_clus_xy_OR","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxs3_clus_xy_OR = new TH2D("th2d_fvtxs3_clus_xy_OR","",200,-20,20,200,-20,20);
 
-  TH2D* th2d_fvtxn_clus_xy_OR = new TH2D("th2d_fvtxn_clus_xy_OR","",40,-20,20,40,-20,20);
-  TH2D* th2d_fvtxn0_clus_xy_OR = new TH2D("th2d_fvtxn0_clus_xy_OR","",40,-20,20,40,-20,20);
-  TH2D* th2d_fvtxn1_clus_xy_OR = new TH2D("th2d_fvtxn1_clus_xy_OR","",40,-20,20,40,-20,20);
-  TH2D* th2d_fvtxn2_clus_xy_OR = new TH2D("th2d_fvtxn2_clus_xy_OR","",40,-20,20,40,-20,20);
-  TH2D* th2d_fvtxn3_clus_xy_OR = new TH2D("th2d_fvtxn3_clus_xy_OR","",40,-20,20,40,-20,20);
+  TH2D* th2d_fvtxn_clus_xy_OR = new TH2D("th2d_fvtxn_clus_xy_OR","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxn0_clus_xy_OR = new TH2D("th2d_fvtxn0_clus_xy_OR","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxn1_clus_xy_OR = new TH2D("th2d_fvtxn1_clus_xy_OR","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxn2_clus_xy_OR = new TH2D("th2d_fvtxn2_clus_xy_OR","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxn3_clus_xy_OR = new TH2D("th2d_fvtxn3_clus_xy_OR","",200,-20,20,200,-20,20);
 
   TH2D* th2d_fvtxs_clus_phieta_OR = new TH2D("th2d_fvtxs_clus_phieta_OR","",50,-pi,pi,60,-3.5,-0.5);
   TH2D* th2d_fvtxs0_clus_phieta_OR = new TH2D("th2d_fvtxs0_clus_phieta_OR","",50,-pi,pi,60,-3.5,-0.5);
