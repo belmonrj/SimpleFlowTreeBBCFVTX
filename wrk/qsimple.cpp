@@ -280,6 +280,18 @@ void flatten(int runNumber, int passNumber)
   TH2D* th2d_fvtxn2_clus_xy = new TH2D("th2d_fvtxn2_clus_xy","",200,-20,20,200,-20,20);
   TH2D* th2d_fvtxn3_clus_xy = new TH2D("th2d_fvtxn3_clus_xy","",200,-20,20,200,-20,20);
 
+  TH2D* th2d_fvtxs_clus_periphxy = new TH2D("th2d_fvtxs_clus_periphxy","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxs0_clus_periphxy = new TH2D("th2d_fvtxs0_clus_periphxy","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxs1_clus_periphxy = new TH2D("th2d_fvtxs1_clus_periphxy","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxs2_clus_periphxy = new TH2D("th2d_fvtxs2_clus_periphxy","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxs3_clus_periphxy = new TH2D("th2d_fvtxs3_clus_periphxy","",200,-20,20,200,-20,20);
+
+  TH2D* th2d_fvtxn_clus_periphxy = new TH2D("th2d_fvtxn_clus_periphxy","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxn0_clus_periphxy = new TH2D("th2d_fvtxn0_clus_periphxy","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxn1_clus_periphxy = new TH2D("th2d_fvtxn1_clus_periphxy","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxn2_clus_periphxy = new TH2D("th2d_fvtxn2_clus_periphxy","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxn3_clus_periphxy = new TH2D("th2d_fvtxn3_clus_periphxy","",200,-20,20,200,-20,20);
+
   TH2D* th2d_fvtxs_clus_phieta = new TH2D("th2d_fvtxs_clus_phieta","",50,-pi,pi,60,-3.5,-0.5);
   TH2D* th2d_fvtxs0_clus_phieta = new TH2D("th2d_fvtxs0_clus_phieta","",50,-pi,pi,60,-3.5,-0.5);
   TH2D* th2d_fvtxs1_clus_phieta = new TH2D("th2d_fvtxs1_clus_phieta","",50,-pi,pi,60,-3.5,-0.5);
@@ -324,6 +336,18 @@ void flatten(int runNumber, int passNumber)
   TH2D* th2d_fvtxn2_clus_xy_IR = new TH2D("th2d_fvtxn2_clus_xy_IR","",200,-20,20,200,-20,20);
   TH2D* th2d_fvtxn3_clus_xy_IR = new TH2D("th2d_fvtxn3_clus_xy_IR","",200,-20,20,200,-20,20);
 
+  TH2D* th2d_fvtxs_clus_periphxy_IR = new TH2D("th2d_fvtxs_clus_periphxy_IR","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxs0_clus_periphxy_IR = new TH2D("th2d_fvtxs0_clus_periphxy_IR","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxs1_clus_periphxy_IR = new TH2D("th2d_fvtxs1_clus_periphxy_IR","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxs2_clus_periphxy_IR = new TH2D("th2d_fvtxs2_clus_periphxy_IR","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxs3_clus_periphxy_IR = new TH2D("th2d_fvtxs3_clus_periphxy_IR","",200,-20,20,200,-20,20);
+
+  TH2D* th2d_fvtxn_clus_periphxy_IR = new TH2D("th2d_fvtxn_clus_periphxy_IR","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxn0_clus_periphxy_IR = new TH2D("th2d_fvtxn0_clus_periphxy_IR","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxn1_clus_periphxy_IR = new TH2D("th2d_fvtxn1_clus_periphxy_IR","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxn2_clus_periphxy_IR = new TH2D("th2d_fvtxn2_clus_periphxy_IR","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxn3_clus_periphxy_IR = new TH2D("th2d_fvtxn3_clus_periphxy_IR","",200,-20,20,200,-20,20);
+
   TH2D* th2d_fvtxs_clus_phieta_IR = new TH2D("th2d_fvtxs_clus_phieta_IR","",50,-pi,pi,60,-3.5,-0.5);
   TH2D* th2d_fvtxs0_clus_phieta_IR = new TH2D("th2d_fvtxs0_clus_phieta_IR","",50,-pi,pi,60,-3.5,-0.5);
   TH2D* th2d_fvtxs1_clus_phieta_IR = new TH2D("th2d_fvtxs1_clus_phieta_IR","",50,-pi,pi,60,-3.5,-0.5);
@@ -360,6 +384,18 @@ void flatten(int runNumber, int passNumber)
   TH2D* th2d_fvtxn1_clus_xy_OR = new TH2D("th2d_fvtxn1_clus_xy_OR","",200,-20,20,200,-20,20);
   TH2D* th2d_fvtxn2_clus_xy_OR = new TH2D("th2d_fvtxn2_clus_xy_OR","",200,-20,20,200,-20,20);
   TH2D* th2d_fvtxn3_clus_xy_OR = new TH2D("th2d_fvtxn3_clus_xy_OR","",200,-20,20,200,-20,20);
+
+  TH2D* th2d_fvtxs_clus_periphxy_OR = new TH2D("th2d_fvtxs_clus_periphxy_OR","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxs0_clus_periphxy_OR = new TH2D("th2d_fvtxs0_clus_periphxy_OR","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxs1_clus_periphxy_OR = new TH2D("th2d_fvtxs1_clus_periphxy_OR","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxs2_clus_periphxy_OR = new TH2D("th2d_fvtxs2_clus_periphxy_OR","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxs3_clus_periphxy_OR = new TH2D("th2d_fvtxs3_clus_periphxy_OR","",200,-20,20,200,-20,20);
+
+  TH2D* th2d_fvtxn_clus_periphxy_OR = new TH2D("th2d_fvtxn_clus_periphxy_OR","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxn0_clus_periphxy_OR = new TH2D("th2d_fvtxn0_clus_periphxy_OR","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxn1_clus_periphxy_OR = new TH2D("th2d_fvtxn1_clus_periphxy_OR","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxn2_clus_periphxy_OR = new TH2D("th2d_fvtxn2_clus_periphxy_OR","",200,-20,20,200,-20,20);
+  TH2D* th2d_fvtxn3_clus_periphxy_OR = new TH2D("th2d_fvtxn3_clus_periphxy_OR","",200,-20,20,200,-20,20);
 
   TH2D* th2d_fvtxs_clus_phieta_OR = new TH2D("th2d_fvtxs_clus_phieta_OR","",50,-pi,pi,60,-3.5,-0.5);
   TH2D* th2d_fvtxs0_clus_phieta_OR = new TH2D("th2d_fvtxs0_clus_phieta_OR","",50,-pi,pi,60,-3.5,-0.5);
@@ -645,23 +681,28 @@ void flatten(int runNumber, int passNumber)
 
       // --- do centrality cut here!!!
 
+      bool is_central = false;
       if ( centrality > -999 )
         {
-          if ( runNumber >= 454744 && runNumber <= 455639 && centrality > 5  ) continue; // dAu 200 GeV
-          if ( runNumber >= 455792 && runNumber <= 456283 && centrality > 10 ) continue; // dAu 62 GeV
-          if ( runNumber >= 456652 && runNumber <= 457298 && centrality > 20 ) continue; // dAu 20 GeV
-          if ( runNumber >= 457634 && runNumber <= 458167 && centrality > 20 ) continue; // dAu 39 GeV
+          if ( runNumber >= 454744 && runNumber <= 455639 && centrality <= 5  ) is_central = true; // dAu 200 GeV
+          if ( runNumber >= 455792 && runNumber <= 456283 && centrality <= 10 ) is_central = true; // dAu 62 GeV
+          if ( runNumber >= 456652 && runNumber <= 457298 && centrality <= 20 ) is_central = true; // dAu 20 GeV
+          if ( runNumber >= 457634 && runNumber <= 458167 && centrality <= 20 ) is_central = true; // dAu 39 GeV
         }
       else
         {
           //cout << "centrality undefined, cutting on bbc charge" << endl;
           // --- revise these numbers as needed
-          if ( runNumber >= 454744 && runNumber <= 455639 && bbc_qw < 60.0 ) continue; // dAu 200 GeV
-          if ( runNumber >= 455792 && runNumber <= 456283 && bbc_qw < 40.0 ) continue; // dAu 62 GeV
-          if ( runNumber >= 456652 && runNumber <= 457298 && bbc_qw < 25.0 ) continue; // dAu 20 GeV
-          if ( runNumber >= 457634 && runNumber <= 458167 && bbc_qw < 30.0 ) continue; // dAu 39 GeV
+          if ( runNumber >= 454744 && runNumber <= 455639 && bbc_qw > 60.0 ) is_central = true; // dAu 200 GeV
+          if ( runNumber >= 455792 && runNumber <= 456283 && bbc_qw > 40.0 ) is_central = true; // dAu 62 GeV
+          if ( runNumber >= 456652 && runNumber <= 457298 && bbc_qw > 25.0 ) is_central = true; // dAu 20 GeV
+          if ( runNumber >= 457634 && runNumber <= 458167 && bbc_qw > 30.0 ) is_central = true; // dAu 39 GeV
           ++bad_cent_counter;
         }
+
+      bool is_peripheral = false;
+      if ( centrality > 50 ) is_peripheral = true;
+      else if ( centrality < 0 && bbc_qw < 10.0 ) is_peripheral = true;
 
       if ( say_event )
         {
@@ -770,79 +811,107 @@ void flatten(int runNumber, int passNumber)
                   fvtxs_qw[fvtx_layer+1] ++;
                   fvtxs_qw[0] ++;
 
-                  th1d_fvtxs_clus_phi_BOAR->Fill(phib);
-                  if ( fvtx_layer == 0 ) th1d_fvtxs0_clus_phi_BOAR->Fill(phib);
-                  if ( fvtx_layer == 1 ) th1d_fvtxs1_clus_phi_BOAR->Fill(phib);
-                  if ( fvtx_layer == 2 ) th1d_fvtxs2_clus_phi_BOAR->Fill(phib);
-                  if ( fvtx_layer == 3 ) th1d_fvtxs3_clus_phi_BOAR->Fill(phib);
-
-                  if ( inside_radius )
+                  if ( is_central )
                     {
-                      th1d_fvtxs_clus_phi_IR->Fill(phi);
-                      if ( fvtx_layer == 0 ) th1d_fvtxs0_clus_phi_IR->Fill(phi);
-                      if ( fvtx_layer == 1 ) th1d_fvtxs1_clus_phi_IR->Fill(phi);
-                      if ( fvtx_layer == 2 ) th1d_fvtxs2_clus_phi_IR->Fill(phi);
-                      if ( fvtx_layer == 3 ) th1d_fvtxs3_clus_phi_IR->Fill(phi);
-                      th2d_fvtxs_clus_phi_IR->Fill(vtx_z,phi);
-                      if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_phi_IR->Fill(vtx_z,phi);
-                      if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_phi_IR->Fill(vtx_z,phi);
-                      if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_phi_IR->Fill(vtx_z,phi);
-                      if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_phi_IR->Fill(vtx_z,phi);
-                      th2d_fvtxs_clus_xy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
-                      if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_xy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
-                      if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_xy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
-                      if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_xy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
-                      if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_xy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
-                      th2d_fvtxs_clus_phieta_IR->Fill(phi,fvtx_eta);
-                      if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_phieta_IR->Fill(phi,fvtx_eta);
-                      if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_phieta_IR->Fill(phi,fvtx_eta);
-                      if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_phieta_IR->Fill(phi,fvtx_eta);
-                      if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_phieta_IR->Fill(phi,fvtx_eta);
-                    }
-                  else
-                    {
-                      th1d_fvtxs_clus_phi_OR->Fill(phi);
-                      if ( fvtx_layer == 0 ) th1d_fvtxs0_clus_phi_OR->Fill(phi);
-                      if ( fvtx_layer == 1 ) th1d_fvtxs1_clus_phi_OR->Fill(phi);
-                      if ( fvtx_layer == 2 ) th1d_fvtxs2_clus_phi_OR->Fill(phi);
-                      if ( fvtx_layer == 3 ) th1d_fvtxs3_clus_phi_OR->Fill(phi);
-                      th2d_fvtxs_clus_phi_OR->Fill(vtx_z,phi);
-                      if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_phi_OR->Fill(vtx_z,phi);
-                      if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_phi_OR->Fill(vtx_z,phi);
-                      if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_phi_OR->Fill(vtx_z,phi);
-                      if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_phi_OR->Fill(vtx_z,phi);
-                      th2d_fvtxs_clus_xy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
-                      if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_xy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
-                      if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_xy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
-                      if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_xy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
-                      if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_xy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
-                      th2d_fvtxs_clus_phieta_OR->Fill(phi,fvtx_eta);
-                      if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_phieta_OR->Fill(phi,fvtx_eta);
-                      if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_phieta_OR->Fill(phi,fvtx_eta);
-                      if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_phieta_OR->Fill(phi,fvtx_eta);
-                      if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_phieta_OR->Fill(phi,fvtx_eta);
-                    }
+                      th1d_fvtxs_clus_phi_BOAR->Fill(phib);
+                      if ( fvtx_layer == 0 ) th1d_fvtxs0_clus_phi_BOAR->Fill(phib);
+                      if ( fvtx_layer == 1 ) th1d_fvtxs1_clus_phi_BOAR->Fill(phib);
+                      if ( fvtx_layer == 2 ) th1d_fvtxs2_clus_phi_BOAR->Fill(phib);
+                      if ( fvtx_layer == 3 ) th1d_fvtxs3_clus_phi_BOAR->Fill(phib);
 
-                  th1d_fvtxs_clus_phi->Fill(phi);
-                  if ( fvtx_layer == 0 ) th1d_fvtxs0_clus_phi->Fill(phi);
-                  if ( fvtx_layer == 1 ) th1d_fvtxs1_clus_phi->Fill(phi);
-                  if ( fvtx_layer == 2 ) th1d_fvtxs2_clus_phi->Fill(phi);
-                  if ( fvtx_layer == 3 ) th1d_fvtxs3_clus_phi->Fill(phi);
-                  th2d_fvtxs_clus_phi->Fill(vtx_z,phi);
-                  if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_phi->Fill(vtx_z,phi);
-                  if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_phi->Fill(vtx_z,phi);
-                  if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_phi->Fill(vtx_z,phi);
-                  if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_phi->Fill(vtx_z,phi);
-                  th2d_fvtxs_clus_xy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
-                  if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_xy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
-                  if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_xy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
-                  if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_xy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
-                  if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_xy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
-                  th2d_fvtxs_clus_phieta->Fill(phi,fvtx_eta);
-                  if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_phieta->Fill(phi,fvtx_eta);
-                  if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_phieta->Fill(phi,fvtx_eta);
-                  if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_phieta->Fill(phi,fvtx_eta);
-                  if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_phieta->Fill(phi,fvtx_eta);
+                      if ( inside_radius )
+                        {
+                          th1d_fvtxs_clus_phi_IR->Fill(phi);
+                          if ( fvtx_layer == 0 ) th1d_fvtxs0_clus_phi_IR->Fill(phi);
+                          if ( fvtx_layer == 1 ) th1d_fvtxs1_clus_phi_IR->Fill(phi);
+                          if ( fvtx_layer == 2 ) th1d_fvtxs2_clus_phi_IR->Fill(phi);
+                          if ( fvtx_layer == 3 ) th1d_fvtxs3_clus_phi_IR->Fill(phi);
+                          th2d_fvtxs_clus_phi_IR->Fill(vtx_z,phi);
+                          if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_phi_IR->Fill(vtx_z,phi);
+                          if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_phi_IR->Fill(vtx_z,phi);
+                          if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_phi_IR->Fill(vtx_z,phi);
+                          if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_phi_IR->Fill(vtx_z,phi);
+                          th2d_fvtxs_clus_xy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_xy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_xy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_xy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_xy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          th2d_fvtxs_clus_phieta_IR->Fill(phi,fvtx_eta);
+                          if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_phieta_IR->Fill(phi,fvtx_eta);
+                          if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_phieta_IR->Fill(phi,fvtx_eta);
+                          if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_phieta_IR->Fill(phi,fvtx_eta);
+                          if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_phieta_IR->Fill(phi,fvtx_eta);
+                        }
+                      else
+                        {
+                          th1d_fvtxs_clus_phi_OR->Fill(phi);
+                          if ( fvtx_layer == 0 ) th1d_fvtxs0_clus_phi_OR->Fill(phi);
+                          if ( fvtx_layer == 1 ) th1d_fvtxs1_clus_phi_OR->Fill(phi);
+                          if ( fvtx_layer == 2 ) th1d_fvtxs2_clus_phi_OR->Fill(phi);
+                          if ( fvtx_layer == 3 ) th1d_fvtxs3_clus_phi_OR->Fill(phi);
+                          th2d_fvtxs_clus_phi_OR->Fill(vtx_z,phi);
+                          if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_phi_OR->Fill(vtx_z,phi);
+                          if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_phi_OR->Fill(vtx_z,phi);
+                          if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_phi_OR->Fill(vtx_z,phi);
+                          if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_phi_OR->Fill(vtx_z,phi);
+                          th2d_fvtxs_clus_xy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_xy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_xy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_xy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_xy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          th2d_fvtxs_clus_phieta_OR->Fill(phi,fvtx_eta);
+                          if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_phieta_OR->Fill(phi,fvtx_eta);
+                          if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_phieta_OR->Fill(phi,fvtx_eta);
+                          if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_phieta_OR->Fill(phi,fvtx_eta);
+                          if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_phieta_OR->Fill(phi,fvtx_eta);
+                        }
+
+                      th1d_fvtxs_clus_phi->Fill(phi);
+                      if ( fvtx_layer == 0 ) th1d_fvtxs0_clus_phi->Fill(phi);
+                      if ( fvtx_layer == 1 ) th1d_fvtxs1_clus_phi->Fill(phi);
+                      if ( fvtx_layer == 2 ) th1d_fvtxs2_clus_phi->Fill(phi);
+                      if ( fvtx_layer == 3 ) th1d_fvtxs3_clus_phi->Fill(phi);
+                      th2d_fvtxs_clus_phi->Fill(vtx_z,phi);
+                      if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_phi->Fill(vtx_z,phi);
+                      if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_phi->Fill(vtx_z,phi);
+                      if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_phi->Fill(vtx_z,phi);
+                      if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_phi->Fill(vtx_z,phi);
+                      th2d_fvtxs_clus_xy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_xy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_xy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_xy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_xy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      th2d_fvtxs_clus_phieta->Fill(phi,fvtx_eta);
+                      if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_phieta->Fill(phi,fvtx_eta);
+                      if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_phieta->Fill(phi,fvtx_eta);
+                      if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_phieta->Fill(phi,fvtx_eta);
+                      if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_phieta->Fill(phi,fvtx_eta);
+                    } // check on central
+
+                  if ( is_peripheral )
+                    {
+                      if ( inside_radius )
+                        {
+                          th2d_fvtxs_clus_periphxy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_periphxy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_periphxy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_periphxy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_periphxy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                        }
+                      else
+                        {
+                          th2d_fvtxs_clus_periphxy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_periphxy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_periphxy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_periphxy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_periphxy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                        }
+                      th2d_fvtxs_clus_periphxy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_periphxy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_periphxy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_periphxy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_periphxy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                    } // check on peripheral
 
                 } // check on south
 
@@ -862,73 +931,101 @@ void flatten(int runNumber, int passNumber)
                   fvtxn_qw[fvtx_layer+1] ++;
                   fvtxn_qw[0] ++;
 
-                  if ( inside_radius )
+                  if ( is_central )
                     {
-                      th1d_fvtxn_clus_phi_IR->Fill(phi);
-                      if ( fvtx_layer == 0 ) th1d_fvtxn0_clus_phi_IR->Fill(phi);
-                      if ( fvtx_layer == 1 ) th1d_fvtxn1_clus_phi_IR->Fill(phi);
-                      if ( fvtx_layer == 2 ) th1d_fvtxn2_clus_phi_IR->Fill(phi);
-                      if ( fvtx_layer == 3 ) th1d_fvtxn3_clus_phi_IR->Fill(phi);
-                      th2d_fvtxn_clus_phi_IR->Fill(vtx_z,phi);
-                      if ( fvtx_layer == 0 ) th2d_fvtxn0_clus_phi_IR->Fill(vtx_z,phi);
-                      if ( fvtx_layer == 1 ) th2d_fvtxn1_clus_phi_IR->Fill(vtx_z,phi);
-                      if ( fvtx_layer == 2 ) th2d_fvtxn2_clus_phi_IR->Fill(vtx_z,phi);
-                      if ( fvtx_layer == 3 ) th2d_fvtxn3_clus_phi_IR->Fill(vtx_z,phi);
-                      th2d_fvtxn_clus_xy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
-                      if ( fvtx_layer == 0 ) th2d_fvtxn0_clus_xy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
-                      if ( fvtx_layer == 1 ) th2d_fvtxn1_clus_xy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
-                      if ( fvtx_layer == 2 ) th2d_fvtxn2_clus_xy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
-                      if ( fvtx_layer == 3 ) th2d_fvtxn3_clus_xy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
-                      th2d_fvtxn_clus_phieta_IR->Fill(phi,fvtx_eta);
-                      if ( fvtx_layer == 0 ) th2d_fvtxn0_clus_phieta_IR->Fill(phi,fvtx_eta);
-                      if ( fvtx_layer == 1 ) th2d_fvtxn1_clus_phieta_IR->Fill(phi,fvtx_eta);
-                      if ( fvtx_layer == 2 ) th2d_fvtxn2_clus_phieta_IR->Fill(phi,fvtx_eta);
-                      if ( fvtx_layer == 3 ) th2d_fvtxn3_clus_phieta_IR->Fill(phi,fvtx_eta);
-                    }
-                  else
-                    {
-                      th1d_fvtxn_clus_phi_OR->Fill(phi);
-                      if ( fvtx_layer == 0 ) th1d_fvtxn0_clus_phi_OR->Fill(phi);
-                      if ( fvtx_layer == 1 ) th1d_fvtxn1_clus_phi_OR->Fill(phi);
-                      if ( fvtx_layer == 2 ) th1d_fvtxn2_clus_phi_OR->Fill(phi);
-                      if ( fvtx_layer == 3 ) th1d_fvtxn3_clus_phi_OR->Fill(phi);
-                      th2d_fvtxn_clus_phi_OR->Fill(vtx_z,phi);
-                      if ( fvtx_layer == 0 ) th2d_fvtxn0_clus_phi_OR->Fill(vtx_z,phi);
-                      if ( fvtx_layer == 1 ) th2d_fvtxn1_clus_phi_OR->Fill(vtx_z,phi);
-                      if ( fvtx_layer == 2 ) th2d_fvtxn2_clus_phi_OR->Fill(vtx_z,phi);
-                      if ( fvtx_layer == 3 ) th2d_fvtxn3_clus_phi_OR->Fill(vtx_z,phi);
-                      th2d_fvtxn_clus_xy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
-                      if ( fvtx_layer == 0 ) th2d_fvtxn0_clus_xy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
-                      if ( fvtx_layer == 1 ) th2d_fvtxn1_clus_xy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
-                      if ( fvtx_layer == 2 ) th2d_fvtxn2_clus_xy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
-                      if ( fvtx_layer == 3 ) th2d_fvtxn3_clus_xy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
-                      th2d_fvtxn_clus_phieta_OR->Fill(phi,fvtx_eta);
-                      if ( fvtx_layer == 0 ) th2d_fvtxn0_clus_phieta_OR->Fill(phi,fvtx_eta);
-                      if ( fvtx_layer == 1 ) th2d_fvtxn1_clus_phieta_OR->Fill(phi,fvtx_eta);
-                      if ( fvtx_layer == 2 ) th2d_fvtxn2_clus_phieta_OR->Fill(phi,fvtx_eta);
-                      if ( fvtx_layer == 3 ) th2d_fvtxn3_clus_phieta_OR->Fill(phi,fvtx_eta);
-                    }
+                      if ( inside_radius )
+                        {
+                          th1d_fvtxn_clus_phi_IR->Fill(phi);
+                          if ( fvtx_layer == 0 ) th1d_fvtxn0_clus_phi_IR->Fill(phi);
+                          if ( fvtx_layer == 1 ) th1d_fvtxn1_clus_phi_IR->Fill(phi);
+                          if ( fvtx_layer == 2 ) th1d_fvtxn2_clus_phi_IR->Fill(phi);
+                          if ( fvtx_layer == 3 ) th1d_fvtxn3_clus_phi_IR->Fill(phi);
+                          th2d_fvtxn_clus_phi_IR->Fill(vtx_z,phi);
+                          if ( fvtx_layer == 0 ) th2d_fvtxn0_clus_phi_IR->Fill(vtx_z,phi);
+                          if ( fvtx_layer == 1 ) th2d_fvtxn1_clus_phi_IR->Fill(vtx_z,phi);
+                          if ( fvtx_layer == 2 ) th2d_fvtxn2_clus_phi_IR->Fill(vtx_z,phi);
+                          if ( fvtx_layer == 3 ) th2d_fvtxn3_clus_phi_IR->Fill(vtx_z,phi);
+                          th2d_fvtxn_clus_xy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          if ( fvtx_layer == 0 ) th2d_fvtxn0_clus_xy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          if ( fvtx_layer == 1 ) th2d_fvtxn1_clus_xy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          if ( fvtx_layer == 2 ) th2d_fvtxn2_clus_xy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          if ( fvtx_layer == 3 ) th2d_fvtxn3_clus_xy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          th2d_fvtxn_clus_phieta_IR->Fill(phi,fvtx_eta);
+                          if ( fvtx_layer == 0 ) th2d_fvtxn0_clus_phieta_IR->Fill(phi,fvtx_eta);
+                          if ( fvtx_layer == 1 ) th2d_fvtxn1_clus_phieta_IR->Fill(phi,fvtx_eta);
+                          if ( fvtx_layer == 2 ) th2d_fvtxn2_clus_phieta_IR->Fill(phi,fvtx_eta);
+                          if ( fvtx_layer == 3 ) th2d_fvtxn3_clus_phieta_IR->Fill(phi,fvtx_eta);
+                        }
+                      else
+                        {
+                          th1d_fvtxn_clus_phi_OR->Fill(phi);
+                          if ( fvtx_layer == 0 ) th1d_fvtxn0_clus_phi_OR->Fill(phi);
+                          if ( fvtx_layer == 1 ) th1d_fvtxn1_clus_phi_OR->Fill(phi);
+                          if ( fvtx_layer == 2 ) th1d_fvtxn2_clus_phi_OR->Fill(phi);
+                          if ( fvtx_layer == 3 ) th1d_fvtxn3_clus_phi_OR->Fill(phi);
+                          th2d_fvtxn_clus_phi_OR->Fill(vtx_z,phi);
+                          if ( fvtx_layer == 0 ) th2d_fvtxn0_clus_phi_OR->Fill(vtx_z,phi);
+                          if ( fvtx_layer == 1 ) th2d_fvtxn1_clus_phi_OR->Fill(vtx_z,phi);
+                          if ( fvtx_layer == 2 ) th2d_fvtxn2_clus_phi_OR->Fill(vtx_z,phi);
+                          if ( fvtx_layer == 3 ) th2d_fvtxn3_clus_phi_OR->Fill(vtx_z,phi);
+                          th2d_fvtxn_clus_xy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          if ( fvtx_layer == 0 ) th2d_fvtxn0_clus_xy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          if ( fvtx_layer == 1 ) th2d_fvtxn1_clus_xy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          if ( fvtx_layer == 2 ) th2d_fvtxn2_clus_xy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          if ( fvtx_layer == 3 ) th2d_fvtxn3_clus_xy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          th2d_fvtxn_clus_phieta_OR->Fill(phi,fvtx_eta);
+                          if ( fvtx_layer == 0 ) th2d_fvtxn0_clus_phieta_OR->Fill(phi,fvtx_eta);
+                          if ( fvtx_layer == 1 ) th2d_fvtxn1_clus_phieta_OR->Fill(phi,fvtx_eta);
+                          if ( fvtx_layer == 2 ) th2d_fvtxn2_clus_phieta_OR->Fill(phi,fvtx_eta);
+                          if ( fvtx_layer == 3 ) th2d_fvtxn3_clus_phieta_OR->Fill(phi,fvtx_eta);
+                        }
 
-                  th1d_fvtxn_clus_phi->Fill(phi);
-                  if ( fvtx_layer == 0 ) th1d_fvtxn0_clus_phi->Fill(phi);
-                  if ( fvtx_layer == 1 ) th1d_fvtxn1_clus_phi->Fill(phi);
-                  if ( fvtx_layer == 2 ) th1d_fvtxn2_clus_phi->Fill(phi);
-                  if ( fvtx_layer == 3 ) th1d_fvtxn3_clus_phi->Fill(phi);
-                  th2d_fvtxn_clus_phi->Fill(vtx_z,phi);
-                  if ( fvtx_layer == 0 ) th2d_fvtxn0_clus_phi->Fill(vtx_z,phi);
-                  if ( fvtx_layer == 1 ) th2d_fvtxn1_clus_phi->Fill(vtx_z,phi);
-                  if ( fvtx_layer == 2 ) th2d_fvtxn2_clus_phi->Fill(vtx_z,phi);
-                  if ( fvtx_layer == 3 ) th2d_fvtxn3_clus_phi->Fill(vtx_z,phi);
-                  th2d_fvtxn_clus_xy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
-                  if ( fvtx_layer == 0 ) th2d_fvtxn0_clus_xy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
-                  if ( fvtx_layer == 1 ) th2d_fvtxn1_clus_xy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
-                  if ( fvtx_layer == 2 ) th2d_fvtxn2_clus_xy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
-                  if ( fvtx_layer == 3 ) th2d_fvtxn3_clus_xy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
-                  th2d_fvtxn_clus_phieta->Fill(phi,fvtx_eta);
-                  if ( fvtx_layer == 0 ) th2d_fvtxn0_clus_phieta->Fill(phi,fvtx_eta);
-                  if ( fvtx_layer == 1 ) th2d_fvtxn1_clus_phieta->Fill(phi,fvtx_eta);
-                  if ( fvtx_layer == 2 ) th2d_fvtxn2_clus_phieta->Fill(phi,fvtx_eta);
-                  if ( fvtx_layer == 3 ) th2d_fvtxn3_clus_phieta->Fill(phi,fvtx_eta);
+                      th1d_fvtxn_clus_phi->Fill(phi);
+                      if ( fvtx_layer == 0 ) th1d_fvtxn0_clus_phi->Fill(phi);
+                      if ( fvtx_layer == 1 ) th1d_fvtxn1_clus_phi->Fill(phi);
+                      if ( fvtx_layer == 2 ) th1d_fvtxn2_clus_phi->Fill(phi);
+                      if ( fvtx_layer == 3 ) th1d_fvtxn3_clus_phi->Fill(phi);
+                      th2d_fvtxn_clus_phi->Fill(vtx_z,phi);
+                      if ( fvtx_layer == 0 ) th2d_fvtxn0_clus_phi->Fill(vtx_z,phi);
+                      if ( fvtx_layer == 1 ) th2d_fvtxn1_clus_phi->Fill(vtx_z,phi);
+                      if ( fvtx_layer == 2 ) th2d_fvtxn2_clus_phi->Fill(vtx_z,phi);
+                      if ( fvtx_layer == 3 ) th2d_fvtxn3_clus_phi->Fill(vtx_z,phi);
+                      th2d_fvtxn_clus_xy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      if ( fvtx_layer == 0 ) th2d_fvtxn0_clus_xy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      if ( fvtx_layer == 1 ) th2d_fvtxn1_clus_xy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      if ( fvtx_layer == 2 ) th2d_fvtxn2_clus_xy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      if ( fvtx_layer == 3 ) th2d_fvtxn3_clus_xy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      th2d_fvtxn_clus_phieta->Fill(phi,fvtx_eta);
+                      if ( fvtx_layer == 0 ) th2d_fvtxn0_clus_phieta->Fill(phi,fvtx_eta);
+                      if ( fvtx_layer == 1 ) th2d_fvtxn1_clus_phieta->Fill(phi,fvtx_eta);
+                      if ( fvtx_layer == 2 ) th2d_fvtxn2_clus_phieta->Fill(phi,fvtx_eta);
+                      if ( fvtx_layer == 3 ) th2d_fvtxn3_clus_phieta->Fill(phi,fvtx_eta);
+                    } // check on central
+
+                  if ( is_peripheral )
+                    {
+                      if ( inside_radius )
+                        {
+                          th2d_fvtxn_clus_periphxy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          if ( fvtx_layer == 0 ) th2d_fvtxn0_clus_periphxy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          if ( fvtx_layer == 1 ) th2d_fvtxn1_clus_periphxy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          if ( fvtx_layer == 2 ) th2d_fvtxn2_clus_periphxy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          if ( fvtx_layer == 3 ) th2d_fvtxn3_clus_periphxy_IR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                        }
+                      else
+                        {
+                          th2d_fvtxn_clus_periphxy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          if ( fvtx_layer == 0 ) th2d_fvtxn0_clus_periphxy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          if ( fvtx_layer == 1 ) th2d_fvtxn1_clus_periphxy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          if ( fvtx_layer == 2 ) th2d_fvtxn2_clus_periphxy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                          if ( fvtx_layer == 3 ) th2d_fvtxn3_clus_periphxy_OR->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                        }
+                      th2d_fvtxn_clus_periphxy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      if ( fvtx_layer == 0 ) th2d_fvtxn0_clus_periphxy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      if ( fvtx_layer == 1 ) th2d_fvtxn1_clus_periphxy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      if ( fvtx_layer == 2 ) th2d_fvtxn2_clus_periphxy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                      if ( fvtx_layer == 3 ) th2d_fvtxn3_clus_periphxy->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
+                    } // check on peripheral
 
                 } // check on north
 
