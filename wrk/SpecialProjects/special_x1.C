@@ -1,5 +1,6 @@
 void takerun(int);
 void takeenergy(int);
+void takefile(TFile*, int);
 
 void compgb();
 void compE();
@@ -13,250 +14,36 @@ void special_x1()
   // compE();
   //return;
 
-  // takerun(456652);
+  takerun(456652);
   // takerun(456943);
   // takerun(457013);
   // takerun(457298);
 
   takeenergy(20);
-  //  takeenergy(39);
-  //  takeenergy(62);
+  // takeenergy(39);
+  // takeenergy(62);
 
 }
+
 
 void takerun(int run)
 {
-
-  TCanvas* c1 = new TCanvas("c1","");
-
   TFile* file = TFile::Open(Form("RootFiles/svrb_run%d_pass0.root",run));
-
-  TH1D* th1d_counter = (TH1D*)file->Get("th1d_FVTX_nclus");
-  TH1D* th1d_counter_IR = (TH1D*)file->Get("th1d_FVTX_nclus_IR");
-  TH1D* th1d_counter_OR = (TH1D*)file->Get("th1d_FVTX_nclus_OR");
-  int nevents = th1d_counter->GetEntries();
-  int nevents_IR = th1d_counter_IR->GetEntries();
-  int nevents_OR = th1d_counter_OR->GetEntries();
-
-  TH1D* th1d_fvtxs_clus_phi = (TH1D*)file->Get("th1d_fvtxs_clus_phi");
-  TH1D* th1d_fvtxs_clus_phi_IR = (TH1D*)file->Get("th1d_fvtxs_clus_phi_IR");
-  TH1D* th1d_fvtxs_clus_phi_OR = (TH1D*)file->Get("th1d_fvtxs_clus_phi_OR");
-  th1d_fvtxs_clus_phi->Scale(1.0/nevents);
-  th1d_fvtxs_clus_phi_IR->Scale(1.0/nevents_IR);
-  th1d_fvtxs_clus_phi_OR->Scale(1.0/nevents_OR);
-  th1d_fvtxs_clus_phi->SetMinimum(0);
-  th1d_fvtxs_clus_phi->SetLineColor(kBlack);
-  th1d_fvtxs_clus_phi->Draw();
-  th1d_fvtxs_clus_phi_OR->SetLineColor(kRed);
-  th1d_fvtxs_clus_phi_OR->Draw("same");
-  th1d_fvtxs_clus_phi_IR->SetLineColor(kBlue);
-  th1d_fvtxs_clus_phi_IR->Draw("same");
-  TLegend* leg = new TLegend(0.18,0.68,0.38,0.88);
-  leg->SetFillStyle(0);
-  leg->SetTextSize(0.045);
-  leg->AddEntry(th1d_fvtxs_clus_phi,"all","l");
-  leg->AddEntry(th1d_fvtxs_clus_phi_IR,"inside radius","l");
-  leg->AddEntry(th1d_fvtxs_clus_phi_OR,"outside radius","l");
-  leg->Draw();
-  c1->Print(Form("FigsPhi/radiuscut_fvtxs_clus_phi_run%d.png",run));
-  c1->Print(Form("FigsPhi/radiuscut_fvtxs_clus_phi_run%d.pdf",run));
-
-  // ---
-
-  TH1D* th1d_fvtxs0_clus_phi = (TH1D*)file->Get("th1d_fvtxs0_clus_phi");
-  TH1D* th1d_fvtxs0_clus_phi_IR = (TH1D*)file->Get("th1d_fvtxs0_clus_phi_IR");
-  TH1D* th1d_fvtxs0_clus_phi_OR = (TH1D*)file->Get("th1d_fvtxs0_clus_phi_OR");
-  th1d_fvtxs0_clus_phi->Scale(1.0/nevents);
-  th1d_fvtxs0_clus_phi_IR->Scale(1.0/nevents_IR);
-  th1d_fvtxs0_clus_phi_OR->Scale(1.0/nevents_OR);
-  th1d_fvtxs0_clus_phi->SetMinimum(0);
-  th1d_fvtxs0_clus_phi->SetLineColor(kBlack);
-  th1d_fvtxs0_clus_phi->Draw();
-  th1d_fvtxs0_clus_phi_OR->SetLineColor(kRed);
-  th1d_fvtxs0_clus_phi_OR->Draw("same");
-  th1d_fvtxs0_clus_phi_IR->SetLineColor(kBlue);
-  th1d_fvtxs0_clus_phi_IR->Draw("same");
-  leg->Draw();
-  c1->Print(Form("FigsPhi/radiuscut_fvtxs0_clus_phi_run%d.png",run));
-  c1->Print(Form("FigsPhi/radiuscut_fvtxs0_clus_phi_run%d.pdf",run));
-
-  // ---
-
-  TH1D* th1d_fvtxs1_clus_phi = (TH1D*)file->Get("th1d_fvtxs1_clus_phi");
-  TH1D* th1d_fvtxs1_clus_phi_IR = (TH1D*)file->Get("th1d_fvtxs1_clus_phi_IR");
-  TH1D* th1d_fvtxs1_clus_phi_OR = (TH1D*)file->Get("th1d_fvtxs1_clus_phi_OR");
-  th1d_fvtxs1_clus_phi->Scale(1.0/nevents);
-  th1d_fvtxs1_clus_phi_IR->Scale(1.0/nevents_IR);
-  th1d_fvtxs1_clus_phi_OR->Scale(1.0/nevents_OR);
-  th1d_fvtxs1_clus_phi->SetMinimum(0);
-  th1d_fvtxs1_clus_phi->SetLineColor(kBlack);
-  th1d_fvtxs1_clus_phi->Draw();
-  th1d_fvtxs1_clus_phi_OR->SetLineColor(kRed);
-  th1d_fvtxs1_clus_phi_OR->Draw("same");
-  th1d_fvtxs1_clus_phi_IR->SetLineColor(kBlue);
-  th1d_fvtxs1_clus_phi_IR->Draw("same");
-  leg->Draw();
-  c1->Print(Form("FigsPhi/radiuscut_fvtxs1_clus_phi_run%d.png",run));
-  c1->Print(Form("FigsPhi/radiuscut_fvtxs1_clus_phi_run%d.pdf",run));
-
-  // ---
-
-  TH1D* th1d_fvtxs2_clus_phi = (TH1D*)file->Get("th1d_fvtxs2_clus_phi");
-  TH1D* th1d_fvtxs2_clus_phi_IR = (TH1D*)file->Get("th1d_fvtxs2_clus_phi_IR");
-  TH1D* th1d_fvtxs2_clus_phi_OR = (TH1D*)file->Get("th1d_fvtxs2_clus_phi_OR");
-  th1d_fvtxs2_clus_phi->Scale(1.0/nevents);
-  th1d_fvtxs2_clus_phi_IR->Scale(1.0/nevents_IR);
-  th1d_fvtxs2_clus_phi_OR->Scale(1.0/nevents_OR);
-  th1d_fvtxs2_clus_phi->SetMinimum(0);
-  th1d_fvtxs2_clus_phi->SetLineColor(kBlack);
-  th1d_fvtxs2_clus_phi->Draw();
-  th1d_fvtxs2_clus_phi_OR->SetLineColor(kRed);
-  th1d_fvtxs2_clus_phi_OR->Draw("same");
-  th1d_fvtxs2_clus_phi_IR->SetLineColor(kBlue);
-  th1d_fvtxs2_clus_phi_IR->Draw("same");
-  leg->Draw();
-  c1->Print(Form("FigsPhi/radiuscut_fvtxs2_clus_phi_run%d.png",run));
-  c1->Print(Form("FigsPhi/radiuscut_fvtxs2_clus_phi_run%d.pdf",run));
-
-  // ---
-
-  TH1D* th1d_fvtxs3_clus_phi = (TH1D*)file->Get("th1d_fvtxs3_clus_phi");
-  TH1D* th1d_fvtxs3_clus_phi_IR = (TH1D*)file->Get("th1d_fvtxs3_clus_phi_IR");
-  TH1D* th1d_fvtxs3_clus_phi_OR = (TH1D*)file->Get("th1d_fvtxs3_clus_phi_OR");
-  th1d_fvtxs3_clus_phi->Scale(1.0/nevents);
-  th1d_fvtxs3_clus_phi_IR->Scale(1.0/nevents_IR);
-  th1d_fvtxs3_clus_phi_OR->Scale(1.0/nevents_OR);
-  th1d_fvtxs3_clus_phi->SetMinimum(0);
-  th1d_fvtxs3_clus_phi->SetLineColor(kBlack);
-  th1d_fvtxs3_clus_phi->Draw();
-  th1d_fvtxs3_clus_phi_OR->SetLineColor(kRed);
-  th1d_fvtxs3_clus_phi_OR->Draw("same");
-  th1d_fvtxs3_clus_phi_IR->SetLineColor(kBlue);
-  th1d_fvtxs3_clus_phi_IR->Draw("same");
-  leg->Draw();
-  c1->Print(Form("FigsPhi/radiuscut_fvtxs3_clus_phi_run%d.png",run));
-  c1->Print(Form("FigsPhi/radiuscut_fvtxs3_clus_phi_run%d.pdf",run));
-
-
-
-  // ---
-  // --- come back here for north
-
-  TH1D* th1d_fvtxn_clus_phi = (TH1D*)file->Get("th1d_fvtxn_clus_phi");
-  TH1D* th1d_fvtxn_clus_phi_IR = (TH1D*)file->Get("th1d_fvtxn_clus_phi_IR");
-  TH1D* th1d_fvtxn_clus_phi_OR = (TH1D*)file->Get("th1d_fvtxn_clus_phi_OR");
-  th1d_fvtxn_clus_phi->Scale(1.0/nevents);
-  th1d_fvtxn_clus_phi_IR->Scale(1.0/nevents_IR);
-  th1d_fvtxn_clus_phi_OR->Scale(1.0/nevents_OR);
-  th1d_fvtxn_clus_phi->SetMinimum(0);
-  th1d_fvtxn_clus_phi->SetLineColor(kBlack);
-  th1d_fvtxn_clus_phi->Draw();
-  th1d_fvtxn_clus_phi_OR->SetLineColor(kRed);
-  th1d_fvtxn_clus_phi_OR->Draw("same");
-  th1d_fvtxn_clus_phi_IR->SetLineColor(kBlue);
-  th1d_fvtxn_clus_phi_IR->Draw("same");
-  TLegend* leg = new TLegend(0.18,0.68,0.38,0.88);
-  leg->SetFillStyle(0);
-  leg->SetTextSize(0.045);
-  leg->AddEntry(th1d_fvtxn_clus_phi,"all","l");
-  leg->AddEntry(th1d_fvtxn_clus_phi_IR,"inside radius","l");
-  leg->AddEntry(th1d_fvtxn_clus_phi_OR,"outside radius","l");
-  leg->Draw();
-  c1->Print(Form("FigsPhi/radiuscut_fvtxn_clus_phi_run%d.png",run));
-  c1->Print(Form("FigsPhi/radiuscut_fvtxn_clus_phi_run%d.pdf",run));
-
-  // ---
-
-  TH1D* th1d_fvtxn0_clus_phi = (TH1D*)file->Get("th1d_fvtxn0_clus_phi");
-  TH1D* th1d_fvtxn0_clus_phi_IR = (TH1D*)file->Get("th1d_fvtxn0_clus_phi_IR");
-  TH1D* th1d_fvtxn0_clus_phi_OR = (TH1D*)file->Get("th1d_fvtxn0_clus_phi_OR");
-  th1d_fvtxn0_clus_phi->Scale(1.0/nevents);
-  th1d_fvtxn0_clus_phi_IR->Scale(1.0/nevents_IR);
-  th1d_fvtxn0_clus_phi_OR->Scale(1.0/nevents_OR);
-  th1d_fvtxn0_clus_phi->SetMinimum(0);
-  th1d_fvtxn0_clus_phi->SetLineColor(kBlack);
-  th1d_fvtxn0_clus_phi->Draw();
-  th1d_fvtxn0_clus_phi_OR->SetLineColor(kRed);
-  th1d_fvtxn0_clus_phi_OR->Draw("same");
-  th1d_fvtxn0_clus_phi_IR->SetLineColor(kBlue);
-  th1d_fvtxn0_clus_phi_IR->Draw("same");
-  leg->Draw();
-  c1->Print(Form("FigsPhi/radiuscut_fvtxn0_clus_phi_run%d.png",run));
-  c1->Print(Form("FigsPhi/radiuscut_fvtxn0_clus_phi_run%d.pdf",run));
-
-  // ---
-
-  TH1D* th1d_fvtxn1_clus_phi = (TH1D*)file->Get("th1d_fvtxn1_clus_phi");
-  TH1D* th1d_fvtxn1_clus_phi_IR = (TH1D*)file->Get("th1d_fvtxn1_clus_phi_IR");
-  TH1D* th1d_fvtxn1_clus_phi_OR = (TH1D*)file->Get("th1d_fvtxn1_clus_phi_OR");
-  th1d_fvtxn1_clus_phi->Scale(1.0/nevents);
-  th1d_fvtxn1_clus_phi_IR->Scale(1.0/nevents_IR);
-  th1d_fvtxn1_clus_phi_OR->Scale(1.0/nevents_OR);
-  th1d_fvtxn1_clus_phi->SetMinimum(0);
-  th1d_fvtxn1_clus_phi->SetLineColor(kBlack);
-  th1d_fvtxn1_clus_phi->Draw();
-  th1d_fvtxn1_clus_phi_OR->SetLineColor(kRed);
-  th1d_fvtxn1_clus_phi_OR->Draw("same");
-  th1d_fvtxn1_clus_phi_IR->SetLineColor(kBlue);
-  th1d_fvtxn1_clus_phi_IR->Draw("same");
-  leg->Draw();
-  c1->Print(Form("FigsPhi/radiuscut_fvtxn1_clus_phi_run%d.png",run));
-  c1->Print(Form("FigsPhi/radiuscut_fvtxn1_clus_phi_run%d.pdf",run));
-
-  // ---
-
-  TH1D* th1d_fvtxn2_clus_phi = (TH1D*)file->Get("th1d_fvtxn2_clus_phi");
-  TH1D* th1d_fvtxn2_clus_phi_IR = (TH1D*)file->Get("th1d_fvtxn2_clus_phi_IR");
-  TH1D* th1d_fvtxn2_clus_phi_OR = (TH1D*)file->Get("th1d_fvtxn2_clus_phi_OR");
-  th1d_fvtxn2_clus_phi->Scale(1.0/nevents);
-  th1d_fvtxn2_clus_phi_IR->Scale(1.0/nevents_IR);
-  th1d_fvtxn2_clus_phi_OR->Scale(1.0/nevents_OR);
-  th1d_fvtxn2_clus_phi->SetMinimum(0);
-  th1d_fvtxn2_clus_phi->SetLineColor(kBlack);
-  th1d_fvtxn2_clus_phi->Draw();
-  th1d_fvtxn2_clus_phi_OR->SetLineColor(kRed);
-  th1d_fvtxn2_clus_phi_OR->Draw("same");
-  th1d_fvtxn2_clus_phi_IR->SetLineColor(kBlue);
-  th1d_fvtxn2_clus_phi_IR->Draw("same");
-  leg->Draw();
-  c1->Print(Form("FigsPhi/radiuscut_fvtxn2_clus_phi_run%d.png",run));
-  c1->Print(Form("FigsPhi/radiuscut_fvtxn2_clus_phi_run%d.pdf",run));
-
-  // ---
-
-  TH1D* th1d_fvtxn3_clus_phi = (TH1D*)file->Get("th1d_fvtxn3_clus_phi");
-  TH1D* th1d_fvtxn3_clus_phi_IR = (TH1D*)file->Get("th1d_fvtxn3_clus_phi_IR");
-  TH1D* th1d_fvtxn3_clus_phi_OR = (TH1D*)file->Get("th1d_fvtxn3_clus_phi_OR");
-  th1d_fvtxn3_clus_phi->Scale(1.0/nevents);
-  th1d_fvtxn3_clus_phi_IR->Scale(1.0/nevents_IR);
-  th1d_fvtxn3_clus_phi_OR->Scale(1.0/nevents_OR);
-  th1d_fvtxn3_clus_phi->SetMinimum(0);
-  th1d_fvtxn3_clus_phi->SetLineColor(kBlack);
-  th1d_fvtxn3_clus_phi->Draw();
-  th1d_fvtxn3_clus_phi_OR->SetLineColor(kRed);
-  th1d_fvtxn3_clus_phi_OR->Draw("same");
-  th1d_fvtxn3_clus_phi_IR->SetLineColor(kBlue);
-  th1d_fvtxn3_clus_phi_IR->Draw("same");
-  leg->Draw();
-  c1->Print(Form("FigsPhi/radiuscut_fvtxn3_clus_phi_run%d.png",run));
-  c1->Print(Form("FigsPhi/radiuscut_fvtxn3_clus_phi_run%d.pdf",run));
-
-
-
-
-
-  delete c1;
-
+  takefile(file,run);
 }
-
 
 
 void takeenergy(int energy)
 {
+  TFile* file = TFile::Open(Form("RootFiles/sum%d.root",energy));
+  takefile(file,energy);
+}
+
+
+void takefile(TFile* file, int handle)
+{
 
   TCanvas* c1 = new TCanvas("c1","");
-
-  TFile* file = TFile::Open(Form("RootFiles/sum%d.root",energy));
 
   TH1D* th1d_counter = (TH1D*)file->Get("th1d_FVTX_nclus");
   TH1D* th1d_counter_IR = (TH1D*)file->Get("th1d_FVTX_nclus_IR");
@@ -294,8 +81,8 @@ void takeenergy(int energy)
   leg->AddEntry(th1d_fvtxs_clus_phi_IR,"inside radius","l");
   leg->AddEntry(th1d_fvtxs_clus_phi_NCIR,"inside radius and cluster cut","l");
   leg->Draw();
-  c1->Print(Form("FigsPhi/radiuscut_fvtxs_clus_phi_energy%d.png",energy));
-  c1->Print(Form("FigsPhi/radiuscut_fvtxs_clus_phi_energy%d.pdf",energy));
+  c1->Print(Form("FigsPhi/radiuscut_fvtxs_clus_phi_%d.png",handle));
+  c1->Print(Form("FigsPhi/radiuscut_fvtxs_clus_phi_%d.pdf",handle));
 
   // ---
 
@@ -316,8 +103,8 @@ void takeenergy(int energy)
   th1d_fvtxs0_clus_phi_IR->SetLineColor(kBlue);
   th1d_fvtxs0_clus_phi_IR->Draw("same");
   leg->Draw();
-  c1->Print(Form("FigsPhi/radiuscut_fvtxs0_clus_phi_energy%d.png",energy));
-  c1->Print(Form("FigsPhi/radiuscut_fvtxs0_clus_phi_energy%d.pdf",energy));
+  c1->Print(Form("FigsPhi/radiuscut_fvtxs0_clus_phi_%d.png",handle));
+  c1->Print(Form("FigsPhi/radiuscut_fvtxs0_clus_phi_%d.pdf",handle));
 
   // ---
 
@@ -338,8 +125,8 @@ void takeenergy(int energy)
   th1d_fvtxs1_clus_phi_IR->SetLineColor(kBlue);
   th1d_fvtxs1_clus_phi_IR->Draw("same");
   leg->Draw();
-  c1->Print(Form("FigsPhi/radiuscut_fvtxs1_clus_phi_energy%d.png",energy));
-  c1->Print(Form("FigsPhi/radiuscut_fvtxs1_clus_phi_energy%d.pdf",energy));
+  c1->Print(Form("FigsPhi/radiuscut_fvtxs1_clus_phi_%d.png",handle));
+  c1->Print(Form("FigsPhi/radiuscut_fvtxs1_clus_phi_%d.pdf",handle));
 
   // ---
 
@@ -360,8 +147,8 @@ void takeenergy(int energy)
   th1d_fvtxs2_clus_phi_IR->SetLineColor(kBlue);
   th1d_fvtxs2_clus_phi_IR->Draw("same");
   leg->Draw();
-  c1->Print(Form("FigsPhi/radiuscut_fvtxs2_clus_phi_energy%d.png",energy));
-  c1->Print(Form("FigsPhi/radiuscut_fvtxs2_clus_phi_energy%d.pdf",energy));
+  c1->Print(Form("FigsPhi/radiuscut_fvtxs2_clus_phi_%d.png",handle));
+  c1->Print(Form("FigsPhi/radiuscut_fvtxs2_clus_phi_%d.pdf",handle));
 
   // ---
 
@@ -382,8 +169,8 @@ void takeenergy(int energy)
   th1d_fvtxs3_clus_phi_IR->SetLineColor(kBlue);
   th1d_fvtxs3_clus_phi_IR->Draw("same");
   leg->Draw();
-  c1->Print(Form("FigsPhi/radiuscut_fvtxs3_clus_phi_energy%d.png",energy));
-  c1->Print(Form("FigsPhi/radiuscut_fvtxs3_clus_phi_energy%d.pdf",energy));
+  c1->Print(Form("FigsPhi/radiuscut_fvtxs3_clus_phi_%d.png",handle));
+  c1->Print(Form("FigsPhi/radiuscut_fvtxs3_clus_phi_%d.pdf",handle));
 
 
 
@@ -413,8 +200,8 @@ void takeenergy(int energy)
   leg->AddEntry(th1d_fvtxn_clus_phi_IR,"inside radius","l");
   leg->AddEntry(th1d_fvtxn_clus_phi_NCIR,"outside radius","l");
   leg->Draw();
-  c1->Print(Form("FigsPhi/radiuscut_fvtxn_clus_phi_energy%d.png",energy));
-  c1->Print(Form("FigsPhi/radiuscut_fvtxn_clus_phi_energy%d.pdf",energy));
+  c1->Print(Form("FigsPhi/radiuscut_fvtxn_clus_phi_%d.png",handle));
+  c1->Print(Form("FigsPhi/radiuscut_fvtxn_clus_phi_%d.pdf",handle));
 
   // ---
 
@@ -435,8 +222,8 @@ void takeenergy(int energy)
   th1d_fvtxn0_clus_phi_IR->SetLineColor(kBlue);
   th1d_fvtxn0_clus_phi_IR->Draw("same");
   leg->Draw();
-  c1->Print(Form("FigsPhi/radiuscut_fvtxn0_clus_phi_energy%d.png",energy));
-  c1->Print(Form("FigsPhi/radiuscut_fvtxn0_clus_phi_energy%d.pdf",energy));
+  c1->Print(Form("FigsPhi/radiuscut_fvtxn0_clus_phi_%d.png",handle));
+  c1->Print(Form("FigsPhi/radiuscut_fvtxn0_clus_phi_%d.pdf",handle));
 
   // ---
 
@@ -457,8 +244,8 @@ void takeenergy(int energy)
   th1d_fvtxn1_clus_phi_IR->SetLineColor(kBlue);
   th1d_fvtxn1_clus_phi_IR->Draw("same");
   leg->Draw();
-  c1->Print(Form("FigsPhi/radiuscut_fvtxn1_clus_phi_energy%d.png",energy));
-  c1->Print(Form("FigsPhi/radiuscut_fvtxn1_clus_phi_energy%d.pdf",energy));
+  c1->Print(Form("FigsPhi/radiuscut_fvtxn1_clus_phi_%d.png",handle));
+  c1->Print(Form("FigsPhi/radiuscut_fvtxn1_clus_phi_%d.pdf",handle));
 
   // ---
 
@@ -479,8 +266,8 @@ void takeenergy(int energy)
   th1d_fvtxn2_clus_phi_IR->SetLineColor(kBlue);
   th1d_fvtxn2_clus_phi_IR->Draw("same");
   leg->Draw();
-  c1->Print(Form("FigsPhi/radiuscut_fvtxn2_clus_phi_energy%d.png",energy));
-  c1->Print(Form("FigsPhi/radiuscut_fvtxn2_clus_phi_energy%d.pdf",energy));
+  c1->Print(Form("FigsPhi/radiuscut_fvtxn2_clus_phi_%d.png",handle));
+  c1->Print(Form("FigsPhi/radiuscut_fvtxn2_clus_phi_%d.pdf",handle));
 
   // ---
 
@@ -501,8 +288,8 @@ void takeenergy(int energy)
   th1d_fvtxn3_clus_phi_IR->SetLineColor(kBlue);
   th1d_fvtxn3_clus_phi_IR->Draw("same");
   leg->Draw();
-  c1->Print(Form("FigsPhi/radiuscut_fvtxn3_clus_phi_energy%d.png",energy));
-  c1->Print(Form("FigsPhi/radiuscut_fvtxn3_clus_phi_energy%d.pdf",energy));
+  c1->Print(Form("FigsPhi/radiuscut_fvtxn3_clus_phi_%d.png",handle));
+  c1->Print(Form("FigsPhi/radiuscut_fvtxn3_clus_phi_%d.pdf",handle));
 
 
 
@@ -525,11 +312,11 @@ void takeenergy(int energy)
   th2d_fvtxs_clus_xy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxs_clus_xy_IR->GetYaxis()->SetTitle("cluster y (cm)");
   c2->SetLogz(0);
-  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_xy_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_xy_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_xy_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_xy_%d.pdf",handle));
   c2->SetLogz(1);
-  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_xylog_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_xylog_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_xylog_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_xylog_%d.pdf",handle));
 
   TH2D* th2d_fvtxs0_clus_xy = (TH2D*)file->Get("th2d_fvtxs0_clus_xy");
   TH2D* th2d_fvtxs0_clus_xy_IR = (TH2D*)file->Get("th2d_fvtxs0_clus_xy_IR");
@@ -542,11 +329,11 @@ void takeenergy(int energy)
   th2d_fvtxs0_clus_xy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxs0_clus_xy_IR->GetYaxis()->SetTitle("cluster y (cm)");
   c2->SetLogz(0);
-  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_xy_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_xy_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_xy_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_xy_%d.pdf",handle));
   c2->SetLogz(1);
-  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_xylog_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_xylog_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_xylog_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_xylog_%d.pdf",handle));
 
   TH2D* th2d_fvtxs1_clus_xy = (TH2D*)file->Get("th2d_fvtxs1_clus_xy");
   TH2D* th2d_fvtxs1_clus_xy_IR = (TH2D*)file->Get("th2d_fvtxs1_clus_xy_IR");
@@ -559,11 +346,11 @@ void takeenergy(int energy)
   th2d_fvtxs1_clus_xy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxs1_clus_xy_IR->GetYaxis()->SetTitle("cluster y (cm)");
   c2->SetLogz(0);
-  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_xy_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_xy_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_xy_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_xy_%d.pdf",handle));
   c2->SetLogz(1);
-  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_xylog_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_xylog_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_xylog_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_xylog_%d.pdf",handle));
 
   TH2D* th2d_fvtxs2_clus_xy = (TH2D*)file->Get("th2d_fvtxs2_clus_xy");
   TH2D* th2d_fvtxs2_clus_xy_IR = (TH2D*)file->Get("th2d_fvtxs2_clus_xy_IR");
@@ -576,11 +363,11 @@ void takeenergy(int energy)
   th2d_fvtxs2_clus_xy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxs2_clus_xy_IR->GetYaxis()->SetTitle("cluster y (cm)");
   c2->SetLogz(0);
-  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_xy_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_xy_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_xy_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_xy_%d.pdf",handle));
   c2->SetLogz(1);
-  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_xylog_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_xylog_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_xylog_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_xylog_%d.pdf",handle));
 
   TH2D* th2d_fvtxs3_clus_xy = (TH2D*)file->Get("th2d_fvtxs3_clus_xy");
   TH2D* th2d_fvtxs3_clus_xy_IR = (TH2D*)file->Get("th2d_fvtxs3_clus_xy_IR");
@@ -593,11 +380,11 @@ void takeenergy(int energy)
   th2d_fvtxs3_clus_xy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxs3_clus_xy_IR->GetYaxis()->SetTitle("cluster y (cm)");
   c2->SetLogz(0);
-  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_xy_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_xy_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_xy_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_xy_%d.pdf",handle));
   c2->SetLogz(1);
-  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_xylog_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_xylog_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_xylog_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_xylog_%d.pdf",handle));
 
   // ---
 
@@ -612,11 +399,11 @@ void takeenergy(int energy)
   th2d_fvtxn_clus_xy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxn_clus_xy_IR->GetYaxis()->SetTitle("cluster y (cm)");
   c2->SetLogz(0);
-  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_xy_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_xy_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_xy_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_xy_%d.pdf",handle));
   c2->SetLogz(1);
-  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_xylog_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_xylog_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_xylog_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_xylog_%d.pdf",handle));
 
   TH2D* th2d_fvtxn0_clus_xy = (TH2D*)file->Get("th2d_fvtxn0_clus_xy");
   TH2D* th2d_fvtxn0_clus_xy_IR = (TH2D*)file->Get("th2d_fvtxn0_clus_xy_IR");
@@ -629,11 +416,11 @@ void takeenergy(int energy)
   th2d_fvtxn0_clus_xy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxn0_clus_xy_IR->GetYaxis()->SetTitle("cluster y (cm)");
   c2->SetLogz(0);
-  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_xy_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_xy_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_xy_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_xy_%d.pdf",handle));
   c2->SetLogz(1);
-  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_xylog_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_xylog_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_xylog_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_xylog_%d.pdf",handle));
 
   TH2D* th2d_fvtxn1_clus_xy = (TH2D*)file->Get("th2d_fvtxn1_clus_xy");
   TH2D* th2d_fvtxn1_clus_xy_IR = (TH2D*)file->Get("th2d_fvtxn1_clus_xy_IR");
@@ -646,11 +433,11 @@ void takeenergy(int energy)
   th2d_fvtxn1_clus_xy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxn1_clus_xy_IR->GetYaxis()->SetTitle("cluster y (cm)");
   c2->SetLogz(0);
-  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_xy_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_xy_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_xy_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_xy_%d.pdf",handle));
   c2->SetLogz(1);
-  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_xylog_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_xylog_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_xylog_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_xylog_%d.pdf",handle));
 
   TH2D* th2d_fvtxn2_clus_xy = (TH2D*)file->Get("th2d_fvtxn2_clus_xy");
   TH2D* th2d_fvtxn2_clus_xy_IR = (TH2D*)file->Get("th2d_fvtxn2_clus_xy_IR");
@@ -663,11 +450,11 @@ void takeenergy(int energy)
   th2d_fvtxn2_clus_xy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxn2_clus_xy_IR->GetYaxis()->SetTitle("cluster y (cm)");
   c2->SetLogz(0);
-  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_xy_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_xy_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_xy_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_xy_%d.pdf",handle));
   c2->SetLogz(1);
-  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_xylog_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_xylog_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_xylog_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_xylog_%d.pdf",handle));
 
   TH2D* th2d_fvtxn3_clus_xy = (TH2D*)file->Get("th2d_fvtxn3_clus_xy");
   TH2D* th2d_fvtxn3_clus_xy_IR = (TH2D*)file->Get("th2d_fvtxn3_clus_xy_IR");
@@ -680,11 +467,11 @@ void takeenergy(int energy)
   th2d_fvtxn3_clus_xy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxn3_clus_xy_IR->GetYaxis()->SetTitle("cluster y (cm)");
   c2->SetLogz(0);
-  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_xy_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_xy_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_xy_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_xy_%d.pdf",handle));
   c2->SetLogz(1);
-  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_xylog_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_xylog_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_xylog_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_xylog_%d.pdf",handle));
 
   // --- come back here for periph
 
@@ -699,11 +486,11 @@ void takeenergy(int energy)
   th2d_fvtxs_clus_periphxy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxs_clus_periphxy_IR->GetYaxis()->SetTitle("cluster y (cm)");
   c2->SetLogz(0);
-  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_periphxy_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_periphxy_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_periphxy_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_periphxy_%d.pdf",handle));
   c2->SetLogz(1);
-  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_periphxylog_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_periphxylog_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_periphxylog_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_periphxylog_%d.pdf",handle));
 
   TH2D* th2d_fvtxs0_clus_periphxy = (TH2D*)file->Get("th2d_fvtxs0_clus_periphxy");
   TH2D* th2d_fvtxs0_clus_periphxy_IR = (TH2D*)file->Get("th2d_fvtxs0_clus_periphxy_IR");
@@ -716,11 +503,11 @@ void takeenergy(int energy)
   th2d_fvtxs0_clus_periphxy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxs0_clus_periphxy_IR->GetYaxis()->SetTitle("cluster y (cm)");
   c2->SetLogz(0);
-  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_periphxy_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_periphxy_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_periphxy_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_periphxy_%d.pdf",handle));
   c2->SetLogz(1);
-  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_periphxylog_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_periphxylog_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_periphxylog_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_periphxylog_%d.pdf",handle));
 
   TH2D* th2d_fvtxs1_clus_periphxy = (TH2D*)file->Get("th2d_fvtxs1_clus_periphxy");
   TH2D* th2d_fvtxs1_clus_periphxy_IR = (TH2D*)file->Get("th2d_fvtxs1_clus_periphxy_IR");
@@ -733,11 +520,11 @@ void takeenergy(int energy)
   th2d_fvtxs1_clus_periphxy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxs1_clus_periphxy_IR->GetYaxis()->SetTitle("cluster y (cm)");
   c2->SetLogz(0);
-  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_periphxy_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_periphxy_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_periphxy_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_periphxy_%d.pdf",handle));
   c2->SetLogz(1);
-  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_periphxylog_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_periphxylog_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_periphxylog_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_periphxylog_%d.pdf",handle));
 
   TH2D* th2d_fvtxs2_clus_periphxy = (TH2D*)file->Get("th2d_fvtxs2_clus_periphxy");
   TH2D* th2d_fvtxs2_clus_periphxy_IR = (TH2D*)file->Get("th2d_fvtxs2_clus_periphxy_IR");
@@ -750,11 +537,11 @@ void takeenergy(int energy)
   th2d_fvtxs2_clus_periphxy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxs2_clus_periphxy_IR->GetYaxis()->SetTitle("cluster y (cm)");
   c2->SetLogz(0);
-  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_periphxy_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_periphxy_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_periphxy_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_periphxy_%d.pdf",handle));
   c2->SetLogz(1);
-  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_periphxylog_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_periphxylog_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_periphxylog_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_periphxylog_%d.pdf",handle));
 
   TH2D* th2d_fvtxs3_clus_periphxy = (TH2D*)file->Get("th2d_fvtxs3_clus_periphxy");
   TH2D* th2d_fvtxs3_clus_periphxy_IR = (TH2D*)file->Get("th2d_fvtxs3_clus_periphxy_IR");
@@ -767,11 +554,11 @@ void takeenergy(int energy)
   th2d_fvtxs3_clus_periphxy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxs3_clus_periphxy_IR->GetYaxis()->SetTitle("cluster y (cm)");
   c2->SetLogz(0);
-  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_periphxy_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_periphxy_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_periphxy_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_periphxy_%d.pdf",handle));
   c2->SetLogz(1);
-  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_periphxylog_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_periphxylog_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_periphxylog_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_periphxylog_%d.pdf",handle));
 
   // ---
 
@@ -786,11 +573,11 @@ void takeenergy(int energy)
   th2d_fvtxn_clus_periphxy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxn_clus_periphxy_IR->GetYaxis()->SetTitle("cluster y (cm)");
   c2->SetLogz(0);
-  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_periphxy_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_periphxy_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_periphxy_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_periphxy_%d.pdf",handle));
   c2->SetLogz(1);
-  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_periphxylog_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_periphxylog_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_periphxylog_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_periphxylog_%d.pdf",handle));
 
   TH2D* th2d_fvtxn0_clus_periphxy = (TH2D*)file->Get("th2d_fvtxn0_clus_periphxy");
   TH2D* th2d_fvtxn0_clus_periphxy_IR = (TH2D*)file->Get("th2d_fvtxn0_clus_periphxy_IR");
@@ -803,11 +590,11 @@ void takeenergy(int energy)
   th2d_fvtxn0_clus_periphxy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxn0_clus_periphxy_IR->GetYaxis()->SetTitle("cluster y (cm)");
   c2->SetLogz(0);
-  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_periphxy_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_periphxy_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_periphxy_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_periphxy_%d.pdf",handle));
   c2->SetLogz(1);
-  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_periphxylog_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_periphxylog_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_periphxylog_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_periphxylog_%d.pdf",handle));
 
   TH2D* th2d_fvtxn1_clus_periphxy = (TH2D*)file->Get("th2d_fvtxn1_clus_periphxy");
   TH2D* th2d_fvtxn1_clus_periphxy_IR = (TH2D*)file->Get("th2d_fvtxn1_clus_periphxy_IR");
@@ -820,11 +607,11 @@ void takeenergy(int energy)
   th2d_fvtxn1_clus_periphxy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxn1_clus_periphxy_IR->GetYaxis()->SetTitle("cluster y (cm)");
   c2->SetLogz(0);
-  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_periphxy_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_periphxy_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_periphxy_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_periphxy_%d.pdf",handle));
   c2->SetLogz(1);
-  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_periphxylog_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_periphxylog_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_periphxylog_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_periphxylog_%d.pdf",handle));
 
   TH2D* th2d_fvtxn2_clus_periphxy = (TH2D*)file->Get("th2d_fvtxn2_clus_periphxy");
   TH2D* th2d_fvtxn2_clus_periphxy_IR = (TH2D*)file->Get("th2d_fvtxn2_clus_periphxy_IR");
@@ -837,11 +624,11 @@ void takeenergy(int energy)
   th2d_fvtxn2_clus_periphxy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxn2_clus_periphxy_IR->GetYaxis()->SetTitle("cluster y (cm)");
   c2->SetLogz(0);
-  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_periphxy_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_periphxy_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_periphxy_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_periphxy_%d.pdf",handle));
   c2->SetLogz(1);
-  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_periphxylog_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_periphxylog_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_periphxylog_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_periphxylog_%d.pdf",handle));
 
   TH2D* th2d_fvtxn3_clus_periphxy = (TH2D*)file->Get("th2d_fvtxn3_clus_periphxy");
   TH2D* th2d_fvtxn3_clus_periphxy_IR = (TH2D*)file->Get("th2d_fvtxn3_clus_periphxy_IR");
@@ -854,11 +641,11 @@ void takeenergy(int energy)
   th2d_fvtxn3_clus_periphxy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxn3_clus_periphxy_IR->GetYaxis()->SetTitle("cluster y (cm)");
   c2->SetLogz(0);
-  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_periphxy_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_periphxy_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_periphxy_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_periphxy_%d.pdf",handle));
   c2->SetLogz(1);
-  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_periphxylog_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_periphxylog_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_periphxylog_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_periphxylog_%d.pdf",handle));
 
 
 
@@ -871,11 +658,11 @@ void takeenergy(int energy)
   th2d_fvtxs_clus_xy_NCIR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxs_clus_xy_NCIR->GetYaxis()->SetTitle("cluster y (cm)");
   c2->SetLogz(0);
-  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_xy_NCIR_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_xy_NCIR_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_xy_NCIR_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_xy_NCIR_%d.pdf",handle));
   c2->SetLogz(1);
-  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_xylog_NCIR_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_xylog_NCIR_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_xylog_NCIR_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_xylog_NCIR_%d.pdf",handle));
 
   TH2D* th2d_fvtxs0_clus_xy_NCIR = (TH2D*)file->Get("th2d_fvtxs0_clus_xy_NCIR");
   th2d_fvtxs0_clus_xy_NCIR->Scale(1.0/nevents_NCIR);
@@ -884,11 +671,11 @@ void takeenergy(int energy)
   th2d_fvtxs0_clus_xy_NCIR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxs0_clus_xy_NCIR->GetYaxis()->SetTitle("cluster y (cm)");
   c2->SetLogz(0);
-  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_xy_NCIR_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_xy_NCIR_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_xy_NCIR_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_xy_NCIR_%d.pdf",handle));
   c2->SetLogz(1);
-  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_xylog_NCIR_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_xylog_NCIR_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_xylog_NCIR_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_xylog_NCIR_%d.pdf",handle));
 
   TH2D* th2d_fvtxs1_clus_xy_NCIR = (TH2D*)file->Get("th2d_fvtxs1_clus_xy_NCIR");
   th2d_fvtxs1_clus_xy_NCIR->Scale(1.0/nevents_NCIR);
@@ -897,11 +684,11 @@ void takeenergy(int energy)
   th2d_fvtxs1_clus_xy_NCIR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxs1_clus_xy_NCIR->GetYaxis()->SetTitle("cluster y (cm)");
   c2->SetLogz(0);
-  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_xy_NCIR_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_xy_NCIR_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_xy_NCIR_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_xy_NCIR_%d.pdf",handle));
   c2->SetLogz(1);
-  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_xylog_NCIR_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_xylog_NCIR_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_xylog_NCIR_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_xylog_NCIR_%d.pdf",handle));
 
   TH2D* th2d_fvtxs2_clus_xy_NCIR = (TH2D*)file->Get("th2d_fvtxs2_clus_xy_NCIR");
   th2d_fvtxs2_clus_xy_NCIR->Scale(1.0/nevents_NCIR);
@@ -910,11 +697,11 @@ void takeenergy(int energy)
   th2d_fvtxs2_clus_xy_NCIR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxs2_clus_xy_NCIR->GetYaxis()->SetTitle("cluster y (cm)");
   c2->SetLogz(0);
-  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_xy_NCIR_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_xy_NCIR_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_xy_NCIR_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_xy_NCIR_%d.pdf",handle));
   c2->SetLogz(1);
-  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_xylog_NCIR_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_xylog_NCIR_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_xylog_NCIR_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_xylog_NCIR_%d.pdf",handle));
 
   TH2D* th2d_fvtxs3_clus_xy_NCIR = (TH2D*)file->Get("th2d_fvtxs3_clus_xy_NCIR");
   th2d_fvtxs3_clus_xy_NCIR->Scale(1.0/nevents_NCIR);
@@ -923,11 +710,11 @@ void takeenergy(int energy)
   th2d_fvtxs3_clus_xy_NCIR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxs3_clus_xy_NCIR->GetYaxis()->SetTitle("cluster y (cm)");
   c2->SetLogz(0);
-  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_xy_NCIR_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_xy_NCIR_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_xy_NCIR_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_xy_NCIR_%d.pdf",handle));
   c2->SetLogz(1);
-  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_xylog_NCIR_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_xylog_NCIR_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_xylog_NCIR_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_xylog_NCIR_%d.pdf",handle));
 
   // ---
 
@@ -938,11 +725,11 @@ void takeenergy(int energy)
   th2d_fvtxn_clus_xy_NCIR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxn_clus_xy_NCIR->GetYaxis()->SetTitle("cluster y (cm)");
   c2->SetLogz(0);
-  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_xy_NCIR_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_xy_NCIR_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_xy_NCIR_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_xy_NCIR_%d.pdf",handle));
   c2->SetLogz(1);
-  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_xylog_NCIR_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_xylog_NCIR_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_xylog_NCIR_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_xylog_NCIR_%d.pdf",handle));
 
   TH2D* th2d_fvtxn0_clus_xy_NCIR = (TH2D*)file->Get("th2d_fvtxn0_clus_xy_NCIR");
   th2d_fvtxn0_clus_xy_NCIR->Scale(1.0/nevents_NCIR);
@@ -951,11 +738,11 @@ void takeenergy(int energy)
   th2d_fvtxn0_clus_xy_NCIR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxn0_clus_xy_NCIR->GetYaxis()->SetTitle("cluster y (cm)");
   c2->SetLogz(0);
-  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_xy_NCIR_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_xy_NCIR_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_xy_NCIR_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_xy_NCIR_%d.pdf",handle));
   c2->SetLogz(1);
-  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_xylog_NCIR_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_xylog_NCIR_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_xylog_NCIR_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_xylog_NCIR_%d.pdf",handle));
 
   TH2D* th2d_fvtxn1_clus_xy_NCIR = (TH2D*)file->Get("th2d_fvtxn1_clus_xy_NCIR");
   th2d_fvtxn1_clus_xy_NCIR->Scale(1.0/nevents_NCIR);
@@ -964,11 +751,11 @@ void takeenergy(int energy)
   th2d_fvtxn1_clus_xy_NCIR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxn1_clus_xy_NCIR->GetYaxis()->SetTitle("cluster y (cm)");
   c2->SetLogz(0);
-  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_xy_NCIR_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_xy_NCIR_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_xy_NCIR_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_xy_NCIR_%d.pdf",handle));
   c2->SetLogz(1);
-  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_xylog_NCIR_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_xylog_NCIR_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_xylog_NCIR_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_xylog_NCIR_%d.pdf",handle));
 
   TH2D* th2d_fvtxn2_clus_xy_NCIR = (TH2D*)file->Get("th2d_fvtxn2_clus_xy_NCIR");
   th2d_fvtxn2_clus_xy_NCIR->Scale(1.0/nevents_NCIR);
@@ -977,11 +764,11 @@ void takeenergy(int energy)
   th2d_fvtxn2_clus_xy_NCIR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxn2_clus_xy_NCIR->GetYaxis()->SetTitle("cluster y (cm)");
   c2->SetLogz(0);
-  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_xy_NCIR_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_xy_NCIR_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_xy_NCIR_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_xy_NCIR_%d.pdf",handle));
   c2->SetLogz(1);
-  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_xylog_NCIR_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_xylog_NCIR_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_xylog_NCIR_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_xylog_NCIR_%d.pdf",handle));
 
   TH2D* th2d_fvtxn3_clus_xy_NCIR = (TH2D*)file->Get("th2d_fvtxn3_clus_xy_NCIR");
   th2d_fvtxn3_clus_xy_NCIR->Scale(1.0/nevents_NCIR);
@@ -990,11 +777,11 @@ void takeenergy(int energy)
   th2d_fvtxn3_clus_xy_NCIR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxn3_clus_xy_NCIR->GetYaxis()->SetTitle("cluster y (cm)");
   c2->SetLogz(0);
-  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_xy_NCIR_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_xy_NCIR_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_xy_NCIR_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_xy_NCIR_%d.pdf",handle));
   c2->SetLogz(1);
-  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_xylog_NCIR_energy%d.png",energy));
-  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_xylog_NCIR_energy%d.pdf",energy));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_xylog_NCIR_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_xylog_NCIR_%d.pdf",handle));
 
 
 
@@ -1013,11 +800,11 @@ void takeenergy(int energy)
   th2d_fvtxs_clus_phieta_OR->Scale(1.0/nevents_OR);
   th2d_fvtxs_clus_phieta_IR->Draw("colz");
   c1->SetLogz(0);
-  c1->Print(Form("FigsPhi/plot2d_fvtxs_clus_phieta_energy%d.png",energy));
-  c1->Print(Form("FigsPhi/plot2d_fvtxs_clus_phieta_energy%d.pdf",energy));
+  c1->Print(Form("FigsPhi/plot2d_fvtxs_clus_phieta_%d.png",handle));
+  c1->Print(Form("FigsPhi/plot2d_fvtxs_clus_phieta_%d.pdf",handle));
   c1->SetLogz(1);
-  c1->Print(Form("FigsPhi/plot2d_fvtxs_clus_phietalog_energy%d.png",energy));
-  c1->Print(Form("FigsPhi/plot2d_fvtxs_clus_phietalog_energy%d.pdf",energy));
+  c1->Print(Form("FigsPhi/plot2d_fvtxs_clus_phietalog_%d.png",handle));
+  c1->Print(Form("FigsPhi/plot2d_fvtxs_clus_phietalog_%d.pdf",handle));
 
   TH2D* th2d_fvtxs0_clus_phieta = (TH2D*)file->Get("th2d_fvtxs0_clus_phieta");
   TH2D* th2d_fvtxs0_clus_phieta_IR = (TH2D*)file->Get("th2d_fvtxs0_clus_phieta_IR");
@@ -1027,11 +814,11 @@ void takeenergy(int energy)
   th2d_fvtxs0_clus_phieta_OR->Scale(1.0/nevents_OR);
   th2d_fvtxs0_clus_phieta_IR->Draw("colz");
   c1->SetLogz(0);
-  c1->Print(Form("FigsPhi/plot2d_fvtxs0_clus_phieta_energy%d.png",energy));
-  c1->Print(Form("FigsPhi/plot2d_fvtxs0_clus_phieta_energy%d.pdf",energy));
+  c1->Print(Form("FigsPhi/plot2d_fvtxs0_clus_phieta_%d.png",handle));
+  c1->Print(Form("FigsPhi/plot2d_fvtxs0_clus_phieta_%d.pdf",handle));
   c1->SetLogz(1);
-  c1->Print(Form("FigsPhi/plot2d_fvtxs0_clus_phietalog_energy%d.png",energy));
-  c1->Print(Form("FigsPhi/plot2d_fvtxs0_clus_phietalog_energy%d.pdf",energy));
+  c1->Print(Form("FigsPhi/plot2d_fvtxs0_clus_phietalog_%d.png",handle));
+  c1->Print(Form("FigsPhi/plot2d_fvtxs0_clus_phietalog_%d.pdf",handle));
 
   TH2D* th2d_fvtxs1_clus_phieta = (TH2D*)file->Get("th2d_fvtxs1_clus_phieta");
   TH2D* th2d_fvtxs1_clus_phieta_IR = (TH2D*)file->Get("th2d_fvtxs1_clus_phieta_IR");
@@ -1041,11 +828,11 @@ void takeenergy(int energy)
   th2d_fvtxs1_clus_phieta_OR->Scale(1.0/nevents_OR);
   th2d_fvtxs1_clus_phieta_IR->Draw("colz");
   c1->SetLogz(0);
-  c1->Print(Form("FigsPhi/plot2d_fvtxs1_clus_phieta_energy%d.png",energy));
-  c1->Print(Form("FigsPhi/plot2d_fvtxs1_clus_phieta_energy%d.pdf",energy));
+  c1->Print(Form("FigsPhi/plot2d_fvtxs1_clus_phieta_%d.png",handle));
+  c1->Print(Form("FigsPhi/plot2d_fvtxs1_clus_phieta_%d.pdf",handle));
   c1->SetLogz(1);
-  c1->Print(Form("FigsPhi/plot2d_fvtxs1_clus_phietalog_energy%d.png",energy));
-  c1->Print(Form("FigsPhi/plot2d_fvtxs1_clus_phietalog_energy%d.pdf",energy));
+  c1->Print(Form("FigsPhi/plot2d_fvtxs1_clus_phietalog_%d.png",handle));
+  c1->Print(Form("FigsPhi/plot2d_fvtxs1_clus_phietalog_%d.pdf",handle));
 
   TH2D* th2d_fvtxs2_clus_phieta = (TH2D*)file->Get("th2d_fvtxs2_clus_phieta");
   TH2D* th2d_fvtxs2_clus_phieta_IR = (TH2D*)file->Get("th2d_fvtxs2_clus_phieta_IR");
@@ -1055,11 +842,11 @@ void takeenergy(int energy)
   th2d_fvtxs2_clus_phieta_OR->Scale(1.0/nevents_OR);
   th2d_fvtxs2_clus_phieta_IR->Draw("colz");
   c1->SetLogz(0);
-  c1->Print(Form("FigsPhi/plot2d_fvtxs2_clus_phieta_energy%d.png",energy));
-  c1->Print(Form("FigsPhi/plot2d_fvtxs2_clus_phieta_energy%d.pdf",energy));
+  c1->Print(Form("FigsPhi/plot2d_fvtxs2_clus_phieta_%d.png",handle));
+  c1->Print(Form("FigsPhi/plot2d_fvtxs2_clus_phieta_%d.pdf",handle));
   c1->SetLogz(1);
-  c1->Print(Form("FigsPhi/plot2d_fvtxs2_clus_phietalog_energy%d.png",energy));
-  c1->Print(Form("FigsPhi/plot2d_fvtxs2_clus_phietalog_energy%d.pdf",energy));
+  c1->Print(Form("FigsPhi/plot2d_fvtxs2_clus_phietalog_%d.png",handle));
+  c1->Print(Form("FigsPhi/plot2d_fvtxs2_clus_phietalog_%d.pdf",handle));
 
   TH2D* th2d_fvtxs3_clus_phieta = (TH2D*)file->Get("th2d_fvtxs3_clus_phieta");
   TH2D* th2d_fvtxs3_clus_phieta_IR = (TH2D*)file->Get("th2d_fvtxs3_clus_phieta_IR");
@@ -1069,11 +856,11 @@ void takeenergy(int energy)
   th2d_fvtxs3_clus_phieta_OR->Scale(1.0/nevents_OR);
   th2d_fvtxs3_clus_phieta_IR->Draw("colz");
   c1->SetLogz(0);
-  c1->Print(Form("FigsPhi/plot2d_fvtxs3_clus_phieta_energy%d.png",energy));
-  c1->Print(Form("FigsPhi/plot2d_fvtxs3_clus_phieta_energy%d.pdf",energy));
+  c1->Print(Form("FigsPhi/plot2d_fvtxs3_clus_phieta_%d.png",handle));
+  c1->Print(Form("FigsPhi/plot2d_fvtxs3_clus_phieta_%d.pdf",handle));
   c1->SetLogz(1);
-  c1->Print(Form("FigsPhi/plot2d_fvtxs3_clus_phietalog_energy%d.png",energy));
-  c1->Print(Form("FigsPhi/plot2d_fvtxs3_clus_phietalog_energy%d.pdf",energy));
+  c1->Print(Form("FigsPhi/plot2d_fvtxs3_clus_phietalog_%d.png",handle));
+  c1->Print(Form("FigsPhi/plot2d_fvtxs3_clus_phietalog_%d.pdf",handle));
 
   // ---
 
@@ -1085,11 +872,11 @@ void takeenergy(int energy)
   th2d_fvtxn_clus_phieta_OR->Scale(1.0/nevents_OR);
   th2d_fvtxn_clus_phieta_IR->Draw("colz");
   c1->SetLogz(0);
-  c1->Print(Form("FigsPhi/plot2d_fvtxn_clus_phieta_energy%d.png",energy));
-  c1->Print(Form("FigsPhi/plot2d_fvtxn_clus_phieta_energy%d.pdf",energy));
+  c1->Print(Form("FigsPhi/plot2d_fvtxn_clus_phieta_%d.png",handle));
+  c1->Print(Form("FigsPhi/plot2d_fvtxn_clus_phieta_%d.pdf",handle));
   c1->SetLogz(1);
-  c1->Print(Form("FigsPhi/plot2d_fvtxn_clus_phietalog_energy%d.png",energy));
-  c1->Print(Form("FigsPhi/plot2d_fvtxn_clus_phietalog_energy%d.pdf",energy));
+  c1->Print(Form("FigsPhi/plot2d_fvtxn_clus_phietalog_%d.png",handle));
+  c1->Print(Form("FigsPhi/plot2d_fvtxn_clus_phietalog_%d.pdf",handle));
 
   TH2D* th2d_fvtxn0_clus_phieta = (TH2D*)file->Get("th2d_fvtxn0_clus_phieta");
   TH2D* th2d_fvtxn0_clus_phieta_IR = (TH2D*)file->Get("th2d_fvtxn0_clus_phieta_IR");
@@ -1099,11 +886,11 @@ void takeenergy(int energy)
   th2d_fvtxn0_clus_phieta_OR->Scale(1.0/nevents_OR);
   th2d_fvtxn0_clus_phieta_IR->Draw("colz");
   c1->SetLogz(0);
-  c1->Print(Form("FigsPhi/plot2d_fvtxn0_clus_phieta_energy%d.png",energy));
-  c1->Print(Form("FigsPhi/plot2d_fvtxn0_clus_phieta_energy%d.pdf",energy));
+  c1->Print(Form("FigsPhi/plot2d_fvtxn0_clus_phieta_%d.png",handle));
+  c1->Print(Form("FigsPhi/plot2d_fvtxn0_clus_phieta_%d.pdf",handle));
   c1->SetLogz(1);
-  c1->Print(Form("FigsPhi/plot2d_fvtxn0_clus_phietalog_energy%d.png",energy));
-  c1->Print(Form("FigsPhi/plot2d_fvtxn0_clus_phietalog_energy%d.pdf",energy));
+  c1->Print(Form("FigsPhi/plot2d_fvtxn0_clus_phietalog_%d.png",handle));
+  c1->Print(Form("FigsPhi/plot2d_fvtxn0_clus_phietalog_%d.pdf",handle));
 
   TH2D* th2d_fvtxn1_clus_phieta = (TH2D*)file->Get("th2d_fvtxn1_clus_phieta");
   TH2D* th2d_fvtxn1_clus_phieta_IR = (TH2D*)file->Get("th2d_fvtxn1_clus_phieta_IR");
@@ -1113,11 +900,11 @@ void takeenergy(int energy)
   th2d_fvtxn1_clus_phieta_OR->Scale(1.0/nevents_OR);
   th2d_fvtxn1_clus_phieta_IR->Draw("colz");
   c1->SetLogz(0);
-  c1->Print(Form("FigsPhi/plot2d_fvtxn1_clus_phieta_energy%d.png",energy));
-  c1->Print(Form("FigsPhi/plot2d_fvtxn1_clus_phieta_energy%d.pdf",energy));
+  c1->Print(Form("FigsPhi/plot2d_fvtxn1_clus_phieta_%d.png",handle));
+  c1->Print(Form("FigsPhi/plot2d_fvtxn1_clus_phieta_%d.pdf",handle));
   c1->SetLogz(1);
-  c1->Print(Form("FigsPhi/plot2d_fvtxn1_clus_phietalog_energy%d.png",energy));
-  c1->Print(Form("FigsPhi/plot2d_fvtxn1_clus_phietalog_energy%d.pdf",energy));
+  c1->Print(Form("FigsPhi/plot2d_fvtxn1_clus_phietalog_%d.png",handle));
+  c1->Print(Form("FigsPhi/plot2d_fvtxn1_clus_phietalog_%d.pdf",handle));
 
   TH2D* th2d_fvtxn2_clus_phieta = (TH2D*)file->Get("th2d_fvtxn2_clus_phieta");
   TH2D* th2d_fvtxn2_clus_phieta_IR = (TH2D*)file->Get("th2d_fvtxn2_clus_phieta_IR");
@@ -1127,11 +914,11 @@ void takeenergy(int energy)
   th2d_fvtxn2_clus_phieta_OR->Scale(1.0/nevents_OR);
   th2d_fvtxn2_clus_phieta_IR->Draw("colz");
   c1->SetLogz(0);
-  c1->Print(Form("FigsPhi/plot2d_fvtxn2_clus_phieta_energy%d.png",energy));
-  c1->Print(Form("FigsPhi/plot2d_fvtxn2_clus_phieta_energy%d.pdf",energy));
+  c1->Print(Form("FigsPhi/plot2d_fvtxn2_clus_phieta_%d.png",handle));
+  c1->Print(Form("FigsPhi/plot2d_fvtxn2_clus_phieta_%d.pdf",handle));
   c1->SetLogz(1);
-  c1->Print(Form("FigsPhi/plot2d_fvtxn2_clus_phietalog_energy%d.png",energy));
-  c1->Print(Form("FigsPhi/plot2d_fvtxn2_clus_phietalog_energy%d.pdf",energy));
+  c1->Print(Form("FigsPhi/plot2d_fvtxn2_clus_phietalog_%d.png",handle));
+  c1->Print(Form("FigsPhi/plot2d_fvtxn2_clus_phietalog_%d.pdf",handle));
 
   TH2D* th2d_fvtxn3_clus_phieta = (TH2D*)file->Get("th2d_fvtxn3_clus_phieta");
   TH2D* th2d_fvtxn3_clus_phieta_IR = (TH2D*)file->Get("th2d_fvtxn3_clus_phieta_IR");
@@ -1141,15 +928,16 @@ void takeenergy(int energy)
   th2d_fvtxn3_clus_phieta_OR->Scale(1.0/nevents_OR);
   th2d_fvtxn3_clus_phieta_IR->Draw("colz");
   c1->SetLogz(0);
-  c1->Print(Form("FigsPhi/plot2d_fvtxn3_clus_phieta_energy%d.png",energy));
-  c1->Print(Form("FigsPhi/plot2d_fvtxn3_clus_phieta_energy%d.pdf",energy));
+  c1->Print(Form("FigsPhi/plot2d_fvtxn3_clus_phieta_%d.png",handle));
+  c1->Print(Form("FigsPhi/plot2d_fvtxn3_clus_phieta_%d.pdf",handle));
   c1->SetLogz(1);
-  c1->Print(Form("FigsPhi/plot2d_fvtxn3_clus_phietalog_energy%d.png",energy));
-  c1->Print(Form("FigsPhi/plot2d_fvtxn3_clus_phietalog_energy%d.pdf",energy));
+  c1->Print(Form("FigsPhi/plot2d_fvtxn3_clus_phietalog_%d.png",handle));
+  c1->Print(Form("FigsPhi/plot2d_fvtxn3_clus_phietalog_%d.pdf",handle));
 
 
 
   delete c1;
+  delete c2;
 
 }
 
