@@ -14,14 +14,14 @@ void special_x1()
   // compE();
   //return;
 
-  takerun(456652);
+  // takerun(456652);
   // takerun(456943);
   // takerun(457013);
   // takerun(457298);
 
   takeenergy(20);
-  // takeenergy(39);
-  // takeenergy(62);
+  takeenergy(39);
+  takeenergy(62);
 
 }
 
@@ -311,6 +311,22 @@ void takefile(TFile* file, int handle)
   th2d_fvtxs_clus_xy_IR->SetTitle("FVTX South, All Layers");
   th2d_fvtxs_clus_xy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxs_clus_xy_IR->GetYaxis()->SetTitle("cluster y (cm)");
+  TEllipse circlecutA1(0.0,0.0,5.2,5.2,180,60);
+  circlecutA1.SetFillStyle(0);
+  circlecutA1.SetLineWidth(2);
+  TEllipse circlecutA2(0.0,0.0,9.2,9.2,119,112);
+  circlecutA2.SetFillStyle(0);
+  circlecutA2.SetLineWidth(2);
+  TEllipse circlecutA3(0.0,0.0,5.2,5.2,200,60);
+  circlecutA3.SetFillStyle(0);
+  circlecutA3.SetLineWidth(2);
+  TEllipse circlecutA4(0.0,0.0,5.2,5.2,20,-20);
+  circlecutA4.SetFillStyle(0);
+  circlecutA4.SetLineWidth(2);
+  circlecutA1.Draw();
+  circlecutA2.Draw();
+  circlecutA3.Draw();
+  circlecutA4.Draw();
   c2->SetLogz(0);
   c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_xy_%d.png",handle));
   c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_xy_%d.pdf",handle));
@@ -325,9 +341,12 @@ void takefile(TFile* file, int handle)
   th2d_fvtxs0_clus_xy_IR->Scale(1.0/nevents_IR);
   th2d_fvtxs0_clus_xy_OR->Scale(1.0/nevents_OR);
   th2d_fvtxs0_clus_xy_IR->Draw("colz");
+
   th2d_fvtxs0_clus_xy_IR->SetTitle("FVTX South, Layer 0");
   th2d_fvtxs0_clus_xy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxs0_clus_xy_IR->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA1.Draw();
+  circlecutA2.Draw();
   c2->SetLogz(0);
   c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_xy_%d.png",handle));
   c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_xy_%d.pdf",handle));
@@ -345,6 +364,7 @@ void takefile(TFile* file, int handle)
   th2d_fvtxs1_clus_xy_IR->SetTitle("FVTX South, Layer 1");
   th2d_fvtxs1_clus_xy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxs1_clus_xy_IR->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA1.Draw();
   c2->SetLogz(0);
   c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_xy_%d.png",handle));
   c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_xy_%d.pdf",handle));
@@ -362,6 +382,7 @@ void takefile(TFile* file, int handle)
   th2d_fvtxs2_clus_xy_IR->SetTitle("FVTX South, Layer 2");
   th2d_fvtxs2_clus_xy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxs2_clus_xy_IR->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA1.Draw();
   c2->SetLogz(0);
   c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_xy_%d.png",handle));
   c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_xy_%d.pdf",handle));
@@ -379,6 +400,8 @@ void takefile(TFile* file, int handle)
   th2d_fvtxs3_clus_xy_IR->SetTitle("FVTX South, Layer 3");
   th2d_fvtxs3_clus_xy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxs3_clus_xy_IR->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA3.Draw();
+  circlecutA4.Draw();
   c2->SetLogz(0);
   c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_xy_%d.png",handle));
   c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_xy_%d.pdf",handle));
@@ -398,6 +421,23 @@ void takefile(TFile* file, int handle)
   th2d_fvtxn_clus_xy_IR->SetTitle("FVTX North, All Layers");
   th2d_fvtxn_clus_xy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxn_clus_xy_IR->GetYaxis()->SetTitle("cluster y (cm)");
+  TEllipse circlecutA5(0.0,0.0,5.2,5.2,170,90);
+  circlecutA5.SetFillStyle(0);
+  circlecutA5.SetLineWidth(2);
+  TEllipse circlecutA6(0.0,0.0,5.2,5.2,170,60);
+  circlecutA6.SetFillStyle(0);
+  circlecutA6.SetLineWidth(2);
+  TEllipse circlecutA7(0.0,0.0,17.0,17.0,163,156);
+  circlecutA7.SetFillStyle(0);
+  circlecutA7.SetLineWidth(2);
+  TEllipse circlecutA8(0.0,0.0,17.0,17.0,196,194);
+  circlecutA8.SetFillStyle(0);
+  circlecutA8.SetLineWidth(2);
+  //circlecutA3.Draw();
+  circlecutA5.Draw();
+  circlecutA6.Draw();
+  circlecutA7.Draw();
+  circlecutA8.Draw();
   c2->SetLogz(0);
   c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_xy_%d.png",handle));
   c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_xy_%d.pdf",handle));
@@ -415,6 +455,7 @@ void takefile(TFile* file, int handle)
   th2d_fvtxn0_clus_xy_IR->SetTitle("FVTX North, Layer 0");
   th2d_fvtxn0_clus_xy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxn0_clus_xy_IR->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA5.Draw();
   c2->SetLogz(0);
   c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_xy_%d.png",handle));
   c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_xy_%d.pdf",handle));
@@ -432,6 +473,7 @@ void takefile(TFile* file, int handle)
   th2d_fvtxn1_clus_xy_IR->SetTitle("FVTX North, Layer 1");
   th2d_fvtxn1_clus_xy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxn1_clus_xy_IR->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA5.Draw();
   c2->SetLogz(0);
   c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_xy_%d.png",handle));
   c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_xy_%d.pdf",handle));
@@ -449,6 +491,7 @@ void takefile(TFile* file, int handle)
   th2d_fvtxn2_clus_xy_IR->SetTitle("FVTX North, Layer 2");
   th2d_fvtxn2_clus_xy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxn2_clus_xy_IR->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA5.Draw();
   c2->SetLogz(0);
   c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_xy_%d.png",handle));
   c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_xy_%d.pdf",handle));
@@ -466,6 +509,9 @@ void takefile(TFile* file, int handle)
   th2d_fvtxn3_clus_xy_IR->SetTitle("FVTX North, Layer 3");
   th2d_fvtxn3_clus_xy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxn3_clus_xy_IR->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA6.Draw();
+  circlecutA7.Draw();
+  circlecutA8.Draw();
   c2->SetLogz(0);
   c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_xy_%d.png",handle));
   c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_xy_%d.pdf",handle));
@@ -485,6 +531,10 @@ void takefile(TFile* file, int handle)
   th2d_fvtxs_clus_periphxy_IR->SetTitle("FVTX South, All Layers");
   th2d_fvtxs_clus_periphxy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxs_clus_periphxy_IR->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA1.Draw();
+  circlecutA2.Draw();
+  circlecutA3.Draw();
+  circlecutA4.Draw();
   c2->SetLogz(0);
   c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_periphxy_%d.png",handle));
   c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_periphxy_%d.pdf",handle));
@@ -502,6 +552,8 @@ void takefile(TFile* file, int handle)
   th2d_fvtxs0_clus_periphxy_IR->SetTitle("FVTX South, Layer 0");
   th2d_fvtxs0_clus_periphxy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxs0_clus_periphxy_IR->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA1.Draw();
+  circlecutA2.Draw();
   c2->SetLogz(0);
   c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_periphxy_%d.png",handle));
   c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_periphxy_%d.pdf",handle));
@@ -519,6 +571,7 @@ void takefile(TFile* file, int handle)
   th2d_fvtxs1_clus_periphxy_IR->SetTitle("FVTX South, Layer 1");
   th2d_fvtxs1_clus_periphxy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxs1_clus_periphxy_IR->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA1.Draw();
   c2->SetLogz(0);
   c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_periphxy_%d.png",handle));
   c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_periphxy_%d.pdf",handle));
@@ -536,6 +589,7 @@ void takefile(TFile* file, int handle)
   th2d_fvtxs2_clus_periphxy_IR->SetTitle("FVTX South, Layer 2");
   th2d_fvtxs2_clus_periphxy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxs2_clus_periphxy_IR->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA1.Draw();
   c2->SetLogz(0);
   c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_periphxy_%d.png",handle));
   c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_periphxy_%d.pdf",handle));
@@ -553,6 +607,8 @@ void takefile(TFile* file, int handle)
   th2d_fvtxs3_clus_periphxy_IR->SetTitle("FVTX South, Layer 3");
   th2d_fvtxs3_clus_periphxy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxs3_clus_periphxy_IR->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA3.Draw();
+  circlecutA4.Draw();
   c2->SetLogz(0);
   c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_periphxy_%d.png",handle));
   c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_periphxy_%d.pdf",handle));
@@ -572,6 +628,10 @@ void takefile(TFile* file, int handle)
   th2d_fvtxn_clus_periphxy_IR->SetTitle("FVTX North, All Layers");
   th2d_fvtxn_clus_periphxy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxn_clus_periphxy_IR->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA5.Draw();
+  circlecutA6.Draw();
+  circlecutA7.Draw();
+  circlecutA8.Draw();
   c2->SetLogz(0);
   c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_periphxy_%d.png",handle));
   c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_periphxy_%d.pdf",handle));
@@ -589,6 +649,7 @@ void takefile(TFile* file, int handle)
   th2d_fvtxn0_clus_periphxy_IR->SetTitle("FVTX North, Layer 0");
   th2d_fvtxn0_clus_periphxy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxn0_clus_periphxy_IR->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA5.Draw();
   c2->SetLogz(0);
   c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_periphxy_%d.png",handle));
   c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_periphxy_%d.pdf",handle));
@@ -606,6 +667,7 @@ void takefile(TFile* file, int handle)
   th2d_fvtxn1_clus_periphxy_IR->SetTitle("FVTX North, Layer 1");
   th2d_fvtxn1_clus_periphxy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxn1_clus_periphxy_IR->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA5.Draw();
   c2->SetLogz(0);
   c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_periphxy_%d.png",handle));
   c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_periphxy_%d.pdf",handle));
@@ -623,6 +685,7 @@ void takefile(TFile* file, int handle)
   th2d_fvtxn2_clus_periphxy_IR->SetTitle("FVTX North, Layer 2");
   th2d_fvtxn2_clus_periphxy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxn2_clus_periphxy_IR->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA5.Draw();
   c2->SetLogz(0);
   c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_periphxy_%d.png",handle));
   c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_periphxy_%d.pdf",handle));
@@ -640,6 +703,9 @@ void takefile(TFile* file, int handle)
   th2d_fvtxn3_clus_periphxy_IR->SetTitle("FVTX North, Layer 3");
   th2d_fvtxn3_clus_periphxy_IR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxn3_clus_periphxy_IR->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA6.Draw();
+  circlecutA7.Draw();
+  circlecutA8.Draw();
   c2->SetLogz(0);
   c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_periphxy_%d.png",handle));
   c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_periphxy_%d.pdf",handle));
@@ -657,6 +723,10 @@ void takefile(TFile* file, int handle)
   th2d_fvtxs_clus_xy_NCIR->SetTitle("FVTX South, All Layers");
   th2d_fvtxs_clus_xy_NCIR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxs_clus_xy_NCIR->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA1.Draw();
+  circlecutA2.Draw();
+  circlecutA3.Draw();
+  circlecutA4.Draw();
   c2->SetLogz(0);
   c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_xy_NCIR_%d.png",handle));
   c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_xy_NCIR_%d.pdf",handle));
@@ -670,6 +740,8 @@ void takefile(TFile* file, int handle)
   th2d_fvtxs0_clus_xy_NCIR->SetTitle("FVTX South, Layer 0");
   th2d_fvtxs0_clus_xy_NCIR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxs0_clus_xy_NCIR->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA1.Draw();
+  circlecutA2.Draw();
   c2->SetLogz(0);
   c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_xy_NCIR_%d.png",handle));
   c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_xy_NCIR_%d.pdf",handle));
@@ -683,6 +755,7 @@ void takefile(TFile* file, int handle)
   th2d_fvtxs1_clus_xy_NCIR->SetTitle("FVTX South, Layer 1");
   th2d_fvtxs1_clus_xy_NCIR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxs1_clus_xy_NCIR->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA1.Draw();
   c2->SetLogz(0);
   c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_xy_NCIR_%d.png",handle));
   c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_xy_NCIR_%d.pdf",handle));
@@ -696,6 +769,7 @@ void takefile(TFile* file, int handle)
   th2d_fvtxs2_clus_xy_NCIR->SetTitle("FVTX South, Layer 2");
   th2d_fvtxs2_clus_xy_NCIR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxs2_clus_xy_NCIR->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA1.Draw();
   c2->SetLogz(0);
   c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_xy_NCIR_%d.png",handle));
   c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_xy_NCIR_%d.pdf",handle));
@@ -709,6 +783,8 @@ void takefile(TFile* file, int handle)
   th2d_fvtxs3_clus_xy_NCIR->SetTitle("FVTX South, Layer 3");
   th2d_fvtxs3_clus_xy_NCIR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxs3_clus_xy_NCIR->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA3.Draw();
+  circlecutA4.Draw();
   c2->SetLogz(0);
   c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_xy_NCIR_%d.png",handle));
   c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_xy_NCIR_%d.pdf",handle));
@@ -724,6 +800,10 @@ void takefile(TFile* file, int handle)
   th2d_fvtxn_clus_xy_NCIR->SetTitle("FVTX North, All Layers");
   th2d_fvtxn_clus_xy_NCIR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxn_clus_xy_NCIR->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA5.Draw();
+  circlecutA6.Draw();
+  circlecutA7.Draw();
+  circlecutA8.Draw();
   c2->SetLogz(0);
   c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_xy_NCIR_%d.png",handle));
   c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_xy_NCIR_%d.pdf",handle));
@@ -737,6 +817,7 @@ void takefile(TFile* file, int handle)
   th2d_fvtxn0_clus_xy_NCIR->SetTitle("FVTX North, Layer 0");
   th2d_fvtxn0_clus_xy_NCIR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxn0_clus_xy_NCIR->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA5.Draw();
   c2->SetLogz(0);
   c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_xy_NCIR_%d.png",handle));
   c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_xy_NCIR_%d.pdf",handle));
@@ -750,6 +831,7 @@ void takefile(TFile* file, int handle)
   th2d_fvtxn1_clus_xy_NCIR->SetTitle("FVTX North, Layer 1");
   th2d_fvtxn1_clus_xy_NCIR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxn1_clus_xy_NCIR->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA5.Draw();
   c2->SetLogz(0);
   c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_xy_NCIR_%d.png",handle));
   c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_xy_NCIR_%d.pdf",handle));
@@ -763,6 +845,7 @@ void takefile(TFile* file, int handle)
   th2d_fvtxn2_clus_xy_NCIR->SetTitle("FVTX North, Layer 2");
   th2d_fvtxn2_clus_xy_NCIR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxn2_clus_xy_NCIR->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA5.Draw();
   c2->SetLogz(0);
   c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_xy_NCIR_%d.png",handle));
   c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_xy_NCIR_%d.pdf",handle));
@@ -776,6 +859,9 @@ void takefile(TFile* file, int handle)
   th2d_fvtxn3_clus_xy_NCIR->SetTitle("FVTX North, Layer 3");
   th2d_fvtxn3_clus_xy_NCIR->GetXaxis()->SetTitle("cluster x (cm)");
   th2d_fvtxn3_clus_xy_NCIR->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA6.Draw();
+  circlecutA7.Draw();
+  circlecutA8.Draw();
   c2->SetLogz(0);
   c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_xy_NCIR_%d.png",handle));
   c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_xy_NCIR_%d.pdf",handle));
