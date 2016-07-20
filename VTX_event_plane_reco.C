@@ -135,6 +135,8 @@ int VTX_event_plane_reco::Init(PHCompositeNode *topNode)
           _ntp_event -> Branch("d_FVTX_x",&d_FVTX_x,"d_FVTX_x[d_nFVTX_clus]/F");
           _ntp_event -> Branch("d_FVTX_y",&d_FVTX_y,"d_FVTX_y[d_nFVTX_clus]/F");
           _ntp_event -> Branch("d_FVTX_z",&d_FVTX_z,"d_FVTX_z[d_nFVTX_clus]/F");
+          _ntp_event -> Branch("d_nFVTXN_clus",&d_nFVTXN_clus,"d_nFVTXN_clus/I");
+          _ntp_event -> Branch("d_nFVTXS_clus",&d_nFVTXS_clus,"d_nFVTXS_clus/I");
         }
       _ntp_event -> Branch("d_ntrk",&d_ntrk,"d_ntrk/I");
       _ntp_event -> Branch("d_cntpx",&d_cntpx,"d_cntpx[d_ntrk]/F");
@@ -802,6 +804,8 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
     }
 
 
+  int nfvtx_raw_clus = 0;
+  int nfvtxn_raw_clus = 0;
   int nfvtxs_raw_clus = 0;
   if ( fvtx_coord_map )
     {
@@ -829,14 +833,18 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
           d_FVTX_x[nfvtxs_raw_clus] = fvtx_x;
           d_FVTX_y[nfvtxs_raw_clus] = fvtx_y;
           d_FVTX_z[nfvtxs_raw_clus] = fvtx_z;
-          nfvtxs_raw_clus++;
+          ++nfvtx_raw_clus;
+          if ( fvtx_z > 0 ) ++nfvtxn_raw_clus;
+          if ( fvtx_z < 0 ) ++nfvtxs_raw_clus;
           //cout<<"fvtx_eta: "<<fvtx_eta<<endl;
           //} // south
 
         } // while loop over iterator
     } // check on fvtx_coord_map
 
-  d_nFVTX_clus = nfvtxs_raw_clus;
+  d_nFVTX_clus = nfvtx_raw_clus;
+  d_nFVTXN_clus = nfvtxn_raw_clus;
+  d_nFVTXS_clus = nfvtxs_raw_clus;
   //cout<<"nfvtxs_raw_clus: "<<nfvtxs_raw_clus <<endl;
 
   //---------------------------------------------------------//

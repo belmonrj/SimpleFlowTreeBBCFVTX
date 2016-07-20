@@ -165,6 +165,8 @@ class VTX_event_plane_reco: public SubsysReco
   float d_Qw[9]; // weight for q-vector (not harmonic dependent? but the option is available)
   float d_BBC_charge[64]; // charge from each bbc tube for South side only (for asymmetric collision systems)
   int   d_nFVTX_clus;
+  int   d_nFVTXN_clus;
+  int   d_nFVTXS_clus;
   float d_FVTX_x[N_FVTX_CLUSTER_MAX];
   float d_FVTX_y[N_FVTX_CLUSTER_MAX];
   float d_FVTX_z[N_FVTX_CLUSTER_MAX];
