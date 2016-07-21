@@ -136,6 +136,7 @@ class VTX_event_plane_reco: public SubsysReco
   //ntp event variables
   int event;
   float centrality;
+  int npc1;
   unsigned int trigger_scaled;
   unsigned int trigger_live;
   float bbc_qn;

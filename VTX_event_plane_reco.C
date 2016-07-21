@@ -116,6 +116,7 @@ int VTX_event_plane_reco::Init(PHCompositeNode *topNode)
       _ntp_event -> Branch("event",&event,"event/F");
       _ntp_event -> Branch("bbc_z",&bbc_z,"bbc_z/F");
       _ntp_event -> Branch("centrality",&centrality,"centrality/F");
+      _ntp_event -> Branch("npc1",&npc1,"npc1/I");
       _ntp_event -> Branch("trigger_scaled",&trigger_scaled,"trigger_scaled/i");
       _ntp_event -> Branch("trigger_live",&trigger_live,"trigger_live/i");
       _ntp_event -> Branch("d_Qx",&d_Qx,"d_Qx[9]/F");
@@ -128,7 +129,11 @@ int VTX_event_plane_reco::Init(PHCompositeNode *topNode)
       _ntp_event -> Branch("fvtx_y",&FVTX_Y,"fvtx_y/F");
       _ntp_event -> Branch("fvtx_z",&FVTX_Z,"fvtx_z/F");
       if(_write_bbc)
-        _ntp_event -> Branch("d_BBC_charge",&d_BBC_charge,"d_BBC_charge[64]/F");
+        {
+          _ntp_event -> Branch("bbc_qn",&bbc_qn,"bbc_qn/F");
+          _ntp_event -> Branch("bbc_qs",&bbc_qs,"bbc_qs/F");
+          _ntp_event -> Branch("d_BBC_charge",&d_BBC_charge,"d_BBC_charge[64]/F");
+        }
       if(_write_fvtx_clusters)
         {
           _ntp_event -> Branch("d_nFVTX_clus",&d_nFVTX_clus,"d_nFVTX_clus/I");
@@ -159,8 +164,6 @@ int VTX_event_plane_reco::Init(PHCompositeNode *topNode)
           _ntp_event -> Branch("vtx_x",&vtx_x,"vtx_x/F");
           _ntp_event -> Branch("vtx_y",&vtx_y,"vtx_y/F");
           //          _ntp_event -> Branch("centrality",&centrality,"centrality/F");
-          _ntp_event -> Branch("bbc_qn",&bbc_qn,"bbc_qn/F");
-          _ntp_event -> Branch("bbc_qs",&bbc_qs,"bbc_qs/F");
           _ntp_event -> Branch("eventok",&eventok,"eventok/I");
           _ntp_event -> Branch("trackID",&trackID,"trackID[nsegments]/I");
           _ntp_event -> Branch("charge",&charge,"charge[nsegments]/I");
@@ -246,6 +249,7 @@ int VTX_event_plane_reco::ResetEvent(PHCompositeNode *topNode)
 
   event         = -9999;
   centrality    = -9999;
+  npc1          = -9999;
   trigger_scaled = -9999;
   trigger_live   = -9999;
   bbc_qn        = -9999;
@@ -502,6 +506,7 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
   centrality  = global->getCentrality();
   bbc_qn      = global->getBbcChargeN();
   bbc_qs      = global->getBbcChargeS();
+  npc1        = global->getNumberPC1Hits();
   event = evthead->get_EvtSequence();
   trigger_scaled = triggers->get_lvl1_trigscaled();
   trigger_live = triggers->get_lvl1_triglive();
