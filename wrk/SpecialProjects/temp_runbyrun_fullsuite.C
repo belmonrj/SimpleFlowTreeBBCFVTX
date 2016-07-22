@@ -25,10 +25,10 @@ void temp_runbyrun_fullsuite()
   // makeplots(39,3);
   // makeplots(39,42);
 
-  //  makemult(200);
-  //makemult(62);
+  // makemult(200);
+  // makemult(62);
   makemult(20);
-  //  makemult(39);
+  makemult(39);
 
 }
 
@@ -634,14 +634,16 @@ void makemult(int energy)
   c1->Print(Form("FigsOther/mult_runbyrun_energy%d_rejects_IR.pdf",energy));
 
   int runj;
-  double ratio[84];
-  ifstream finj("runratio.dat");
-  for ( int i = 0; i < 84; ++i )
+  double* ratio = new double[counter];
+  ifstream finj((const char*)Form("runratio_%d.dat",energy));
+  for ( int i = 0; i < counter-1; ++i )
     {
       finj >> runj >> ratio[i];
+      //if ( ratio[i] > 30.0 || array_FVTXS[i] > 200.0 ) cout << runj << " " << runn[i] << " " << array_FVTXS[i] << " " << ratio[i] << endl;
       //if ( ratio[i] > 30.0 ) cout << runj << " " << runn[i] << " " << array_FVTXS[i] << " " << ratio[i] << endl;
       cout << runj << " " << runn[i] << " " << array_FVTXS[i] << " " << ratio[i] << endl;
     }
+  cout << "counter is " << counter << endl;
 
   TGraph* tgj = new TGraph(84,array_FVTXS,ratio);
   tgj->SetMarkerColor(kBlack);
@@ -649,9 +651,33 @@ void makemult(int energy)
   tgj->Draw("ap");
   tgj->GetXaxis()->SetTitle("FVTXS mean mult");
   tgj->GetYaxis()->SetTitle("ratio of triggers");
-
+  if ( energy == 20 )
+    {
+      TLine line1(0.0,30.0,200.0,30.0);
+      line1.SetLineStyle(2);
+      line1.Draw();
+      TLine line2(200.0,0.0,200.0,30.0);
+      line2.SetLineStyle(2);
+      line2.Draw();
+    }
+  if ( energy == 39 )
+    {
+      TLine line1(0.0,6.0,151.0,6.0);
+      line1.SetLineStyle(2);
+      line1.Draw();
+      TLine line2(151.0,0.0,151.0,6.0);
+      line2.SetLineStyle(2);
+      line2.Draw();
+    }
   c1->Print(Form("FigsOther/mult_runbyrun_energy%d_ratioj.png",energy));
   c1->Print(Form("FigsOther/mult_runbyrun_energy%d_ratioj.pdf",energy));
+  if ( energy == 20 )
+    {
+      tgj->GetXaxis()->SetLimits(0,200);
+      tgj->SetMaximum(30);
+      c1->Print(Form("FigsOther/mult_runbyrun_energy%d_ratioj_zoom.png",energy));
+      c1->Print(Form("FigsOther/mult_runbyrun_energy%d_ratioj_zoom.pdf",energy));
+    }
 
   delete c1;
 
