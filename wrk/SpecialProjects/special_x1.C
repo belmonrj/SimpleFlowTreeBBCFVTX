@@ -14,14 +14,22 @@ void special_x1()
   // compE();
   //return;
 
-  // takerun(456652);
-  // takerun(456943);
-  // takerun(457013);
-  // takerun(457298);
+  // takeenergy(20);
+  // takeenergy(39);
+  // takeenergy(62);
 
-  takeenergy(20);
-  takeenergy(39);
-  takeenergy(62);
+  ifstream fin;
+  int run;
+  fin.open("list_20.short");
+  while ( fin >> run )
+    {
+      if ( run < 457103 ) continue;
+      takerun(run);
+    }
+  fin.close();
+  fin.open("list_39.short");
+  while ( fin >> run ) takerun(run);
+  fin.close();
 
 }
 
@@ -42,6 +50,12 @@ void takeenergy(int energy)
 
 void takefile(TFile* file, int handle)
 {
+
+  if ( !file )
+    {
+      cout << "YOU'RE GONNA DIE" << endl;
+      return;
+    }
 
   TCanvas* c1 = new TCanvas("c1","");
 
@@ -193,12 +207,12 @@ void takefile(TFile* file, int handle)
   th1d_fvtxn_clus_phi_NCIR->Draw("same");
   th1d_fvtxn_clus_phi_IR->SetLineColor(kBlue);
   th1d_fvtxn_clus_phi_IR->Draw("same");
-  TLegend* leg = new TLegend(0.18,0.68,0.38,0.88);
-  leg->SetFillStyle(0);
-  leg->SetTextSize(0.045);
-  leg->AddEntry(th1d_fvtxn_clus_phi,"all","l");
-  leg->AddEntry(th1d_fvtxn_clus_phi_IR,"inside radius","l");
-  leg->AddEntry(th1d_fvtxn_clus_phi_NCIR,"outside radius","l");
+  // TLegend* leg = new TLegend(0.18,0.68,0.38,0.88);
+  // leg->SetFillStyle(0);
+  // leg->SetTextSize(0.045);
+  // leg->AddEntry(th1d_fvtxn_clus_phi,"all","l");
+  // leg->AddEntry(th1d_fvtxn_clus_phi_IR,"inside radius","l");
+  // leg->AddEntry(th1d_fvtxn_clus_phi_NCIR,"outside radius","l");
   leg->Draw();
   c1->Print(Form("FigsPhi/radiuscut_fvtxn_clus_phi_%d.png",handle));
   c1->Print(Form("FigsPhi/radiuscut_fvtxn_clus_phi_%d.pdf",handle));
