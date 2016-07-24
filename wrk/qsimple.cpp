@@ -161,7 +161,9 @@ void flatten(int runNumber, int passNumber)
   //tree variables
   float        event;
   float        d_bbcz;    // bbcz
-  float        centrality; // float because of dumb mistake in tree code :(
+  float        centrality; // integer but stored as float in PHGlobal etc
+  float        bbc_qn;
+  float        bbc_qs;
   unsigned int trigger_scaled;
   unsigned int trigger_live;
   float        bc_x;
@@ -175,7 +177,10 @@ void flatten(int runNumber, int passNumber)
   float        d_Qw[9];
   float        d_BBC_charge[64];
 
+  int          npc1;
   int          d_nFVTX_clus;
+  int          d_nFVTXN_clus;
+  int          d_nFVTXS_clus;
   float        d_FVTX_x[max_nf];
   float        d_FVTX_y[max_nf];
   float        d_FVTX_z[max_nf];
@@ -189,6 +194,9 @@ void flatten(int runNumber, int passNumber)
   TBranch* b_event;   //!
   TBranch* b_bbc_z;   //!
   TBranch* b_centrality;   //!
+  TBranch* b_bbc_qn;   //!
+  TBranch* b_bbc_qs;   //!
+  TBranch* b_npc1;   //!
   TBranch* b_trigger_scaled;   //!
   TBranch* b_trigger_live;   //!
   TBranch* b_d_Qx;   //!
@@ -202,6 +210,8 @@ void flatten(int runNumber, int passNumber)
   TBranch* b_fvtx_z;   //!
   TBranch* b_d_BBC_charge;   //!
   TBranch* b_d_nFVTX_clus;   //!
+  TBranch* b_d_nFVTXN_clus;   //!
+  TBranch* b_d_nFVTXS_clus;   //!
   TBranch* b_d_FVTX_x;   //!
   TBranch* b_d_FVTX_y;   //!
   TBranch* b_d_FVTX_z;   //!
@@ -216,6 +226,9 @@ void flatten(int runNumber, int passNumber)
 
   ntp_event_chain->SetBranchAddress("bbc_z",&d_bbcz,&b_bbc_z);
   ntp_event_chain->SetBranchAddress("centrality",&centrality,&b_centrality);
+  ntp_event_chain->SetBranchAddress("bbc_qn",&bbc_qn,&b_bbc_qn);
+  ntp_event_chain->SetBranchAddress("bbc_qs",&bbc_qs,&b_bbc_qs);
+  ntp_event_chain->SetBranchAddress("npc1",&npc1,&b_npc1);
   ntp_event_chain->SetBranchAddress("event",&event,&b_event);
   ntp_event_chain->SetBranchAddress("trigger_scaled",&trigger_scaled,&b_trigger_scaled);
   ntp_event_chain->SetBranchAddress("trigger_live",&trigger_live,&b_trigger_live);
@@ -233,6 +246,8 @@ void flatten(int runNumber, int passNumber)
   ntp_event_chain->SetBranchAddress("d_Qw",d_Qw,&b_d_Qw);
 
   ntp_event_chain->SetBranchAddress("d_nFVTX_clus",&d_nFVTX_clus,&b_d_nFVTX_clus);
+  ntp_event_chain->SetBranchAddress("d_nFVTXN_clus",&d_nFVTXN_clus,&b_d_nFVTXN_clus);
+  ntp_event_chain->SetBranchAddress("d_nFVTXS_clus",&d_nFVTXS_clus,&b_d_nFVTXS_clus);
   ntp_event_chain->SetBranchAddress("d_FVTX_x",d_FVTX_x,&b_d_FVTX_x);
   ntp_event_chain->SetBranchAddress("d_FVTX_y",d_FVTX_y,&b_d_FVTX_y);
   ntp_event_chain->SetBranchAddress("d_FVTX_z",d_FVTX_z,&b_d_FVTX_z);
@@ -597,8 +612,19 @@ void flatten(int runNumber, int passNumber)
   TH1D* th1d_FVTXS_nclus_NC = new TH1D("th1d_FVTXS_nclus_NC","",200,-0.5,1999.5);
   TH1D* th1d_FVTXN_nclus_NC = new TH1D("th1d_FVTXN_nclus_NC","",200,-0.5,1999.5);
 
+  // ---
 
+  TH2D* th2d_corr_bbcqn_bbcqs = new TH2D("th2d_corr_bbcqn_bbcqs","",200,0,200,200,0,200);
+  TH2D* th2d_corr_bbcqs_fvtxs = new TH2D("th2d_corr_bbcqs_fvtxs","",200,0,200,2000,-0.5,1999.5);
+  TH2D* th2d_corr_bbcqn_fvtxn = new TH2D("th2d_corr_bbcqn_fvtxn","",200,0,200,2000,-0.5,1999.5);
+  TH2D* th2d_corr_bbcqn_fvtxs = new TH2D("th2d_corr_bbcqn_fvtxs","",200,0,200,2000,-0.5,1999.5);
+  TH2D* th2d_corr_bbcqs_fvtxn = new TH2D("th2d_corr_bbcqs_fvtxn","",200,0,200,2000,-0.5,1999.5);
+  TH2D* th2d_corr_fvtxn_fvtxs = new TH2D("th2d_corr_fvtxn_fvtxs","",2000,-0.5,1999.5,2000,-0.5,1999.5);
 
+  TH2D* th2d_corr_npc1_bbcqn = new TH2D("th2d_corr_npc1_bbcqn","",100,-0.5,99.5,200,0,200);
+  TH2D* th2d_corr_npc1_bbcqs = new TH2D("th2d_corr_npc1_bbcqs","",100,-0.5,99.5,200,0,200);
+  TH2D* th2d_corr_npc1_fvtxn = new TH2D("th2d_corr_npc1_fvtxn","",100,-0.5,99.5,2000,-0.5,1999.5);
+  TH2D* th2d_corr_npc1_fvtxs = new TH2D("th2d_corr_npc1_fvtxs","",100,-0.5,99.5,2000,-0.5,1999.5);
 
   // ---
 
@@ -668,9 +694,12 @@ void flatten(int runNumber, int passNumber)
   int bad_vertex_counter = 0;
   int bad_radius_counter = 0;
   int bad_nc_counter = 0;
+  int vertex_inner_counter = 0;
+  int vertex_outer_counter = 0;
 
   Long64_t cluster_counter = 0;
   Long64_t gapcut_counter = 0;
+  Long64_t innercluster_counter = 0;
 
   cout << "starting loop over events in the tree" << endl;
   int nentries = ntp_event_chain->GetEntries();
@@ -749,6 +778,22 @@ void flatten(int runNumber, int passNumber)
 
       // ---------------------------------------------------------------------------------------
 
+      // --- look at these correlations prior to centrality cut
+
+      th2d_corr_bbcqn_bbcqs->Fill(bbc_qn,bbc_qs);
+      th2d_corr_bbcqs_fvtxs->Fill(bbc_qs,d_nFVTXS_clus);
+      th2d_corr_bbcqn_fvtxn->Fill(bbc_qn,d_nFVTXN_clus);
+      th2d_corr_bbcqn_fvtxs->Fill(bbc_qn,d_nFVTXS_clus);
+      th2d_corr_bbcqs_fvtxn->Fill(bbc_qs,d_nFVTXN_clus);
+      th2d_corr_fvtxn_fvtxs->Fill(d_nFVTXN_clus,d_nFVTXS_clus);
+
+      th2d_corr_npc1_bbcqn->Fill(npc1,bbc_qn);
+      th2d_corr_npc1_bbcqs->Fill(npc1,bbc_qs);
+      th2d_corr_npc1_fvtxn->Fill(npc1,d_nFVTXN_clus);
+      th2d_corr_npc1_fvtxs->Fill(npc1,d_nFVTXS_clus);
+
+      // ---------------------------------------------------------------------------------------
+
       //------------------------------------------------------------//
       //                Calculating Event Planes                    //
       //------------------------------------------------------------//
@@ -766,6 +811,8 @@ void flatten(int runNumber, int passNumber)
       bool inside_radius = true;
       if ( sqrt(pow(eventfvtx_x-vtx_x,2.0) +  pow(eventfvtx_y-vtx_y,2.0)) >= 0.15 ) inside_radius = false;
 
+      if ( fabs(vtx_z) < 5.0 ) ++vertex_inner_counter;
+      else ++vertex_outer_counter;
 
       // -------------
       // --- BBCS stuff
@@ -844,7 +891,8 @@ void flatten(int runNumber, int passNumber)
         }
 
       // --- NEED NORTH AND SOUTH SEPARATE!!!
-      bool is_goodnc = ( d_nFVTX_clus < 300 );
+      //bool is_goodnc = ( d_nFVTX_clus < 300 );
+      bool is_goodnc = ( d_nFVTXN_clus < 100 && d_nFVTXS_clus < 200 );
       if ( !is_goodnc ) ++bad_nc_counter;
 
       //cout << "HELLO HERE I AM" << endl;
@@ -904,7 +952,6 @@ void flatten(int runNumber, int passNumber)
               double fvtx_r = sqrt(pow(fvtx_x,2.0)+pow(fvtx_y,2.0));
               double fvtx_the = atan2(fvtx_r,fvtx_z);
               double fvtx_eta = -log(tan(0.5*fvtx_the));
-
               // --- determine layer based on cluster z
               int fvtx_layer = get_fvtx_layer(d_FVTX_z[iclus]); // raw z to get layer
 
@@ -926,6 +973,8 @@ void flatten(int runNumber, int passNumber)
                   ++gapcut_counter;
                   continue;
                 }
+              double fvtx_rb = sqrt(pow(d_FVTX_x[iclus],2.0)+pow(d_FVTX_y[iclus],2.0));
+              if ( fvtx_rb < 5.2 ) ++innercluster_counter;
               // --------------------------------------
 
               float phib = TMath::ATan2(d_FVTX_y[iclus],d_FVTX_x[iclus]);
@@ -1459,7 +1508,9 @@ void flatten(int runNumber, int passNumber)
   cout << "Events with bad number of clusters = " << bad_nc_counter << " (" << (float)bad_nc_counter/(float)event_counter << ")" << endl;
   //cout << "Events with vertex disagreement = " << bad_vertex_counter << " (" << (float)bad_vertex_counter/(float)event_counter << ")" << endl;
   cout << "Events with outside fvtx radius = " << bad_radius_counter << " (" << (float)bad_radius_counter/(float)event_counter << ")" << endl;
+  cout << "Events with vertex outer/inner = " << vertex_outer_counter << "/" << vertex_inner_counter << " (" << (float)vertex_outer_counter/(float)vertex_inner_counter << ")" << endl;
   cout << "Gap cuts applied " << gapcut_counter << "/" << cluster_counter << " (" << (float)gapcut_counter/(float)cluster_counter << ")" << endl;
+  cout << "Ratio of inner/all clusters " << innercluster_counter << "/" << cluster_counter << " (" << (float)innercluster_counter/(float)cluster_counter << ")" << endl;
 
   cout << "tf_histo_inn " << tf_histo_inn << endl;
   cout << "tf_histo_out " << tf_histo_out << endl;
