@@ -835,9 +835,9 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
               cout<<"butting against the max fvtx cluster size " << nfvtxs_raw_clus << "/" << N_FVTX_CLUSTER_MAX << ", breaking"<<endl;
               break;
             }
-          d_FVTX_x[nfvtxs_raw_clus] = fvtx_x;
-          d_FVTX_y[nfvtxs_raw_clus] = fvtx_y;
-          d_FVTX_z[nfvtxs_raw_clus] = fvtx_z;
+          d_FVTX_x[nfvtx_raw_clus] = fvtx_x;
+          d_FVTX_y[nfvtx_raw_clus] = fvtx_y;
+          d_FVTX_z[nfvtx_raw_clus] = fvtx_z;
           ++nfvtx_raw_clus;
           if ( fvtx_z > 0 ) ++nfvtxn_raw_clus;
           if ( fvtx_z < 0 ) ++nfvtxs_raw_clus;
