@@ -936,6 +936,12 @@ void flatten(int runNumber, int passNumber)
         } // loop over layers
 
 
+      if ( d_nFVTX_clus >= 4000 )
+        {
+          cout << "YOU'RE GONNA DIE event number " << ievt << " n fvtx clus " << d_nFVTX_clus << " " << d_nFVTXN_clus << " " << d_nFVTXS_clus << " " << endl;
+          continue;
+        }
+
       if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Looping over FVTX cluster" << endl;
       if ( fvtx_clusters )
         {
