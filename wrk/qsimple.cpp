@@ -626,6 +626,9 @@ void flatten(int runNumber, int passNumber)
   TH2D* th2d_corr_npc1_fvtxn = new TH2D("th2d_corr_npc1_fvtxn","",100,-0.5,99.5,2000,-0.5,1999.5);
   TH2D* th2d_corr_npc1_fvtxs = new TH2D("th2d_corr_npc1_fvtxs","",100,-0.5,99.5,2000,-0.5,1999.5);
 
+  TH1D* th1d_cluster_ratio = new TH1D("th1d_cluster_ratio","",100,0,1);
+  TProfile* tp1f_cluster_ratio = new TProfile("tp1f_cluster_ratio","",2000,-0.1,1999.5,0,1,"");
+
   // ---
 
   // --- q-vectors vs z for selected centrality
@@ -942,6 +945,7 @@ void flatten(int runNumber, int passNumber)
           continue;
         }
 
+      int innercluster_counter_event = 0;
       if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Looping over FVTX cluster" << endl;
       if ( fvtx_clusters )
         {
@@ -980,7 +984,11 @@ void flatten(int runNumber, int passNumber)
                   continue;
                 }
               double fvtx_rb = sqrt(pow(d_FVTX_x[iclus],2.0)+pow(d_FVTX_y[iclus],2.0));
-              if ( fvtx_rb < 5.2 ) ++innercluster_counter;
+              if ( fvtx_rb < 5.2 )
+                {
+                  ++innercluster_counter_event;
+                  ++innercluster_counter;
+                }
               // --------------------------------------
 
               float phib = TMath::ATan2(d_FVTX_y[iclus],d_FVTX_x[iclus]);
@@ -1350,6 +1358,10 @@ void flatten(int runNumber, int passNumber)
             } // loop over cluster
 
         } // check on clusters
+
+      float cluster_ratio_event = (float)innercluster_counter_event/(float)d_nFVTX_clus;
+      th1d_cluster_ratio->Fill(cluster_ratio_event);
+      tp1f_cluster_ratio->Fill(d_nFVTX_clus,cluster_ratio_event);
 
       th1d_BBC_charge->Fill(bbc_qw);
       th1d_FVTX_nclus->Fill(d_nFVTX_clus);
