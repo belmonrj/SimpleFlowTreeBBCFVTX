@@ -18,6 +18,11 @@ void special_x1()
   // takeenergy(39);
   // takeenergy(62);
 
+  takerun(456655);
+  takerun(457298);
+
+  return;
+
   ifstream fin;
   int run;
   fin.open("list_20.short");
@@ -61,12 +66,18 @@ void takefile(TFile* file, int handle)
 
   TH1D* th1d_counter = (TH1D*)file->Get("th1d_FVTX_nclus");
   TH1D* th1d_counter_IR = (TH1D*)file->Get("th1d_FVTX_nclus_IR");
-  TH1D* th1d_counter_NCIR = (TH1D*)file->Get("th1d_FVTX_nclus_NCIR");
   TH1D* th1d_counter_OR = (TH1D*)file->Get("th1d_FVTX_nclus_OR");
+  TH1D* th1d_counter_NCIR = (TH1D*)file->Get("th1d_FVTX_nclus_NCIR");
+  TH1D* th1d_counter_NC = (TH1D*)file->Get("th1d_FVTX_nclus_NC");
+  TH1D* th1d_counter_GC = (TH1D*)file->Get("th1d_FVTX_nclus_GC");
+  TH1D* th1d_counter_BC = (TH1D*)file->Get("th1d_FVTX_nclus_BC");
   int nevents = th1d_counter->GetEntries();
   int nevents_IR = th1d_counter_IR->GetEntries();
-  int nevents_NCIR = th1d_counter_NCIR->GetEntries();
   int nevents_OR = th1d_counter_OR->GetEntries();
+  int nevents_NCIR = th1d_counter_NCIR->GetEntries();
+  int nevents_NC = th1d_counter_NC->GetEntries();
+  int nevents_GC = th1d_counter_GC->GetEntries();
+  int nevents_BC = th1d_counter_BC->GetEntries();
 
   cout << nevents << endl;
   cout << nevents_IR << endl;
@@ -885,10 +896,509 @@ void takefile(TFile* file, int handle)
 
 
 
-  c1->cd();
+  // --- come back here for NC
+
+  TH2D* th2d_fvtxs_clus_xy_NC = (TH2D*)file->Get("th2d_fvtxs_clus_xy_NC");
+  th2d_fvtxs_clus_xy_NC->Scale(1.0/nevents_NC);
+  th2d_fvtxs_clus_xy_NC->Draw("colz");
+  th2d_fvtxs_clus_xy_NC->SetTitle("FVTX South, All Layers");
+  th2d_fvtxs_clus_xy_NC->GetXaxis()->SetTitle("cluster x (cm)");
+  th2d_fvtxs_clus_xy_NC->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA1.Draw();
+  circlecutA2.Draw();
+  circlecutA3.Draw();
+  circlecutA4.Draw();
+  c2->SetLogz(0);
+  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_xy_NC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_xy_NC_%d.pdf",handle));
+  c2->SetLogz(1);
+  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_xylog_NC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_xylog_NC_%d.pdf",handle));
+
+  TH2D* th2d_fvtxs0_clus_xy_NC = (TH2D*)file->Get("th2d_fvtxs0_clus_xy_NC");
+  th2d_fvtxs0_clus_xy_NC->Scale(1.0/nevents_NC);
+  th2d_fvtxs0_clus_xy_NC->Draw("colz");
+  th2d_fvtxs0_clus_xy_NC->SetTitle("FVTX South, Layer 0");
+  th2d_fvtxs0_clus_xy_NC->GetXaxis()->SetTitle("cluster x (cm)");
+  th2d_fvtxs0_clus_xy_NC->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA1.Draw();
+  circlecutA2.Draw();
+  c2->SetLogz(0);
+  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_xy_NC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_xy_NC_%d.pdf",handle));
+  c2->SetLogz(1);
+  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_xylog_NC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_xylog_NC_%d.pdf",handle));
+
+  TH2D* th2d_fvtxs1_clus_xy_NC = (TH2D*)file->Get("th2d_fvtxs1_clus_xy_NC");
+  th2d_fvtxs1_clus_xy_NC->Scale(1.0/nevents_NC);
+  th2d_fvtxs1_clus_xy_NC->Draw("colz");
+  th2d_fvtxs1_clus_xy_NC->SetTitle("FVTX South, Layer 1");
+  th2d_fvtxs1_clus_xy_NC->GetXaxis()->SetTitle("cluster x (cm)");
+  th2d_fvtxs1_clus_xy_NC->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA1.Draw();
+  c2->SetLogz(0);
+  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_xy_NC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_xy_NC_%d.pdf",handle));
+  c2->SetLogz(1);
+  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_xylog_NC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_xylog_NC_%d.pdf",handle));
+
+  TH2D* th2d_fvtxs2_clus_xy_NC = (TH2D*)file->Get("th2d_fvtxs2_clus_xy_NC");
+  th2d_fvtxs2_clus_xy_NC->Scale(1.0/nevents_NC);
+  th2d_fvtxs2_clus_xy_NC->Draw("colz");
+  th2d_fvtxs2_clus_xy_NC->SetTitle("FVTX South, Layer 2");
+  th2d_fvtxs2_clus_xy_NC->GetXaxis()->SetTitle("cluster x (cm)");
+  th2d_fvtxs2_clus_xy_NC->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA1.Draw();
+  c2->SetLogz(0);
+  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_xy_NC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_xy_NC_%d.pdf",handle));
+  c2->SetLogz(1);
+  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_xylog_NC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_xylog_NC_%d.pdf",handle));
+
+  TH2D* th2d_fvtxs3_clus_xy_NC = (TH2D*)file->Get("th2d_fvtxs3_clus_xy_NC");
+  th2d_fvtxs3_clus_xy_NC->Scale(1.0/nevents_NC);
+  th2d_fvtxs3_clus_xy_NC->Draw("colz");
+  th2d_fvtxs3_clus_xy_NC->SetTitle("FVTX South, Layer 3");
+  th2d_fvtxs3_clus_xy_NC->GetXaxis()->SetTitle("cluster x (cm)");
+  th2d_fvtxs3_clus_xy_NC->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA3.Draw();
+  circlecutA4.Draw();
+  c2->SetLogz(0);
+  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_xy_NC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_xy_NC_%d.pdf",handle));
+  c2->SetLogz(1);
+  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_xylog_NC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_xylog_NC_%d.pdf",handle));
 
   // ---
+
+  TH2D* th2d_fvtxn_clus_xy_NC = (TH2D*)file->Get("th2d_fvtxn_clus_xy_NC");
+  th2d_fvtxn_clus_xy_NC->Scale(1.0/nevents_NC);
+  th2d_fvtxn_clus_xy_NC->Draw("colz");
+  th2d_fvtxn_clus_xy_NC->SetTitle("FVTX North, All Layers");
+  th2d_fvtxn_clus_xy_NC->GetXaxis()->SetTitle("cluster x (cm)");
+  th2d_fvtxn_clus_xy_NC->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA5.Draw();
+  circlecutA6.Draw();
+  circlecutA7.Draw();
+  circlecutA8.Draw();
+  c2->SetLogz(0);
+  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_xy_NC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_xy_NC_%d.pdf",handle));
+  c2->SetLogz(1);
+  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_xylog_NC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_xylog_NC_%d.pdf",handle));
+
+  TH2D* th2d_fvtxn0_clus_xy_NC = (TH2D*)file->Get("th2d_fvtxn0_clus_xy_NC");
+  th2d_fvtxn0_clus_xy_NC->Scale(1.0/nevents_NC);
+  th2d_fvtxn0_clus_xy_NC->Draw("colz");
+  th2d_fvtxn0_clus_xy_NC->SetTitle("FVTX North, Layer 0");
+  th2d_fvtxn0_clus_xy_NC->GetXaxis()->SetTitle("cluster x (cm)");
+  th2d_fvtxn0_clus_xy_NC->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA5.Draw();
+  c2->SetLogz(0);
+  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_xy_NC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_xy_NC_%d.pdf",handle));
+  c2->SetLogz(1);
+  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_xylog_NC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_xylog_NC_%d.pdf",handle));
+
+  TH2D* th2d_fvtxn1_clus_xy_NC = (TH2D*)file->Get("th2d_fvtxn1_clus_xy_NC");
+  th2d_fvtxn1_clus_xy_NC->Scale(1.0/nevents_NC);
+  th2d_fvtxn1_clus_xy_NC->Draw("colz");
+  th2d_fvtxn1_clus_xy_NC->SetTitle("FVTX North, Layer 1");
+  th2d_fvtxn1_clus_xy_NC->GetXaxis()->SetTitle("cluster x (cm)");
+  th2d_fvtxn1_clus_xy_NC->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA5.Draw();
+  c2->SetLogz(0);
+  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_xy_NC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_xy_NC_%d.pdf",handle));
+  c2->SetLogz(1);
+  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_xylog_NC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_xylog_NC_%d.pdf",handle));
+
+  TH2D* th2d_fvtxn2_clus_xy_NC = (TH2D*)file->Get("th2d_fvtxn2_clus_xy_NC");
+  th2d_fvtxn2_clus_xy_NC->Scale(1.0/nevents_NC);
+  th2d_fvtxn2_clus_xy_NC->Draw("colz");
+  th2d_fvtxn2_clus_xy_NC->SetTitle("FVTX North, Layer 2");
+  th2d_fvtxn2_clus_xy_NC->GetXaxis()->SetTitle("cluster x (cm)");
+  th2d_fvtxn2_clus_xy_NC->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA5.Draw();
+  c2->SetLogz(0);
+  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_xy_NC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_xy_NC_%d.pdf",handle));
+  c2->SetLogz(1);
+  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_xylog_NC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_xylog_NC_%d.pdf",handle));
+
+  TH2D* th2d_fvtxn3_clus_xy_NC = (TH2D*)file->Get("th2d_fvtxn3_clus_xy_NC");
+  th2d_fvtxn3_clus_xy_NC->Scale(1.0/nevents_NC);
+  th2d_fvtxn3_clus_xy_NC->Draw("colz");
+  th2d_fvtxn3_clus_xy_NC->SetTitle("FVTX North, Layer 3");
+  th2d_fvtxn3_clus_xy_NC->GetXaxis()->SetTitle("cluster x (cm)");
+  th2d_fvtxn3_clus_xy_NC->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA6.Draw();
+  circlecutA7.Draw();
+  circlecutA8.Draw();
+  c2->SetLogz(0);
+  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_xy_NC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_xy_NC_%d.pdf",handle));
+  c2->SetLogz(1);
+  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_xylog_NC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_xylog_NC_%d.pdf",handle));
+
+
+
+  // --- come back here for GC
+
+  TH2D* th2d_fvtxs_clus_xy_GC = (TH2D*)file->Get("th2d_fvtxs_clus_xy_GC");
+  th2d_fvtxs_clus_xy_GC->Scale(1.0/nevents_GC);
+  th2d_fvtxs_clus_xy_GC->Draw("colz");
+  th2d_fvtxs_clus_xy_GC->SetTitle("FVTX South, All Layers");
+  th2d_fvtxs_clus_xy_GC->GetXaxis()->SetTitle("cluster x (cm)");
+  th2d_fvtxs_clus_xy_GC->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA1.Draw();
+  circlecutA2.Draw();
+  circlecutA3.Draw();
+  circlecutA4.Draw();
+  c2->SetLogz(0);
+  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_xy_GC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_xy_GC_%d.pdf",handle));
+  c2->SetLogz(1);
+  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_xylog_GC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_xylog_GC_%d.pdf",handle));
+
+  TH2D* th2d_fvtxs0_clus_xy_GC = (TH2D*)file->Get("th2d_fvtxs0_clus_xy_GC");
+  th2d_fvtxs0_clus_xy_GC->Scale(1.0/nevents_GC);
+  th2d_fvtxs0_clus_xy_GC->Draw("colz");
+  th2d_fvtxs0_clus_xy_GC->SetTitle("FVTX South, Layer 0");
+  th2d_fvtxs0_clus_xy_GC->GetXaxis()->SetTitle("cluster x (cm)");
+  th2d_fvtxs0_clus_xy_GC->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA1.Draw();
+  circlecutA2.Draw();
+  c2->SetLogz(0);
+  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_xy_GC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_xy_GC_%d.pdf",handle));
+  c2->SetLogz(1);
+  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_xylog_GC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_xylog_GC_%d.pdf",handle));
+
+  TH2D* th2d_fvtxs1_clus_xy_GC = (TH2D*)file->Get("th2d_fvtxs1_clus_xy_GC");
+  th2d_fvtxs1_clus_xy_GC->Scale(1.0/nevents_GC);
+  th2d_fvtxs1_clus_xy_GC->Draw("colz");
+  th2d_fvtxs1_clus_xy_GC->SetTitle("FVTX South, Layer 1");
+  th2d_fvtxs1_clus_xy_GC->GetXaxis()->SetTitle("cluster x (cm)");
+  th2d_fvtxs1_clus_xy_GC->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA1.Draw();
+  c2->SetLogz(0);
+  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_xy_GC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_xy_GC_%d.pdf",handle));
+  c2->SetLogz(1);
+  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_xylog_GC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_xylog_GC_%d.pdf",handle));
+
+  TH2D* th2d_fvtxs2_clus_xy_GC = (TH2D*)file->Get("th2d_fvtxs2_clus_xy_GC");
+  th2d_fvtxs2_clus_xy_GC->Scale(1.0/nevents_GC);
+  th2d_fvtxs2_clus_xy_GC->Draw("colz");
+  th2d_fvtxs2_clus_xy_GC->SetTitle("FVTX South, Layer 2");
+  th2d_fvtxs2_clus_xy_GC->GetXaxis()->SetTitle("cluster x (cm)");
+  th2d_fvtxs2_clus_xy_GC->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA1.Draw();
+  c2->SetLogz(0);
+  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_xy_GC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_xy_GC_%d.pdf",handle));
+  c2->SetLogz(1);
+  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_xylog_GC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_xylog_GC_%d.pdf",handle));
+
+  TH2D* th2d_fvtxs3_clus_xy_GC = (TH2D*)file->Get("th2d_fvtxs3_clus_xy_GC");
+  th2d_fvtxs3_clus_xy_GC->Scale(1.0/nevents_GC);
+  th2d_fvtxs3_clus_xy_GC->Draw("colz");
+  th2d_fvtxs3_clus_xy_GC->SetTitle("FVTX South, Layer 3");
+  th2d_fvtxs3_clus_xy_GC->GetXaxis()->SetTitle("cluster x (cm)");
+  th2d_fvtxs3_clus_xy_GC->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA3.Draw();
+  circlecutA4.Draw();
+  c2->SetLogz(0);
+  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_xy_GC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_xy_GC_%d.pdf",handle));
+  c2->SetLogz(1);
+  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_xylog_GC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_xylog_GC_%d.pdf",handle));
+
+  // ---
+
+  TH2D* th2d_fvtxn_clus_xy_GC = (TH2D*)file->Get("th2d_fvtxn_clus_xy_GC");
+  th2d_fvtxn_clus_xy_GC->Scale(1.0/nevents_GC);
+  th2d_fvtxn_clus_xy_GC->Draw("colz");
+  th2d_fvtxn_clus_xy_GC->SetTitle("FVTX North, All Layers");
+  th2d_fvtxn_clus_xy_GC->GetXaxis()->SetTitle("cluster x (cm)");
+  th2d_fvtxn_clus_xy_GC->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA5.Draw();
+  circlecutA6.Draw();
+  circlecutA7.Draw();
+  circlecutA8.Draw();
+  c2->SetLogz(0);
+  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_xy_GC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_xy_GC_%d.pdf",handle));
+  c2->SetLogz(1);
+  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_xylog_GC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_xylog_GC_%d.pdf",handle));
+
+  TH2D* th2d_fvtxn0_clus_xy_GC = (TH2D*)file->Get("th2d_fvtxn0_clus_xy_GC");
+  th2d_fvtxn0_clus_xy_GC->Scale(1.0/nevents_GC);
+  th2d_fvtxn0_clus_xy_GC->Draw("colz");
+  th2d_fvtxn0_clus_xy_GC->SetTitle("FVTX North, Layer 0");
+  th2d_fvtxn0_clus_xy_GC->GetXaxis()->SetTitle("cluster x (cm)");
+  th2d_fvtxn0_clus_xy_GC->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA5.Draw();
+  c2->SetLogz(0);
+  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_xy_GC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_xy_GC_%d.pdf",handle));
+  c2->SetLogz(1);
+  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_xylog_GC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_xylog_GC_%d.pdf",handle));
+
+  TH2D* th2d_fvtxn1_clus_xy_GC = (TH2D*)file->Get("th2d_fvtxn1_clus_xy_GC");
+  th2d_fvtxn1_clus_xy_GC->Scale(1.0/nevents_GC);
+  th2d_fvtxn1_clus_xy_GC->Draw("colz");
+  th2d_fvtxn1_clus_xy_GC->SetTitle("FVTX North, Layer 1");
+  th2d_fvtxn1_clus_xy_GC->GetXaxis()->SetTitle("cluster x (cm)");
+  th2d_fvtxn1_clus_xy_GC->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA5.Draw();
+  c2->SetLogz(0);
+  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_xy_GC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_xy_GC_%d.pdf",handle));
+  c2->SetLogz(1);
+  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_xylog_GC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_xylog_GC_%d.pdf",handle));
+
+  TH2D* th2d_fvtxn2_clus_xy_GC = (TH2D*)file->Get("th2d_fvtxn2_clus_xy_GC");
+  th2d_fvtxn2_clus_xy_GC->Scale(1.0/nevents_GC);
+  th2d_fvtxn2_clus_xy_GC->Draw("colz");
+  th2d_fvtxn2_clus_xy_GC->SetTitle("FVTX North, Layer 2");
+  th2d_fvtxn2_clus_xy_GC->GetXaxis()->SetTitle("cluster x (cm)");
+  th2d_fvtxn2_clus_xy_GC->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA5.Draw();
+  c2->SetLogz(0);
+  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_xy_GC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_xy_GC_%d.pdf",handle));
+  c2->SetLogz(1);
+  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_xylog_GC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_xylog_GC_%d.pdf",handle));
+
+  TH2D* th2d_fvtxn3_clus_xy_GC = (TH2D*)file->Get("th2d_fvtxn3_clus_xy_GC");
+  th2d_fvtxn3_clus_xy_GC->Scale(1.0/nevents_GC);
+  th2d_fvtxn3_clus_xy_GC->Draw("colz");
+  th2d_fvtxn3_clus_xy_GC->SetTitle("FVTX North, Layer 3");
+  th2d_fvtxn3_clus_xy_GC->GetXaxis()->SetTitle("cluster x (cm)");
+  th2d_fvtxn3_clus_xy_GC->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA6.Draw();
+  circlecutA7.Draw();
+  circlecutA8.Draw();
+  c2->SetLogz(0);
+  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_xy_GC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_xy_GC_%d.pdf",handle));
+  c2->SetLogz(1);
+  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_xylog_GC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_xylog_GC_%d.pdf",handle));
+
+
+
+  // --- come back here for BC
+
+  TH2D* th2d_fvtxs_clus_xy_BC = (TH2D*)file->Get("th2d_fvtxs_clus_xy_BC");
+  th2d_fvtxs_clus_xy_BC->Scale(1.0/nevents_BC);
+  th2d_fvtxs_clus_xy_BC->Draw("colz");
+  th2d_fvtxs_clus_xy_BC->SetTitle("FVTX South, All Layers");
+  th2d_fvtxs_clus_xy_BC->GetXaxis()->SetTitle("cluster x (cm)");
+  th2d_fvtxs_clus_xy_BC->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA1.Draw();
+  circlecutA2.Draw();
+  circlecutA3.Draw();
+  circlecutA4.Draw();
+  c2->SetLogz(0);
+  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_xy_BC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_xy_BC_%d.pdf",handle));
+  c2->SetLogz(1);
+  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_xylog_BC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs_clus_xylog_BC_%d.pdf",handle));
+
+  TH2D* th2d_fvtxs0_clus_xy_BC = (TH2D*)file->Get("th2d_fvtxs0_clus_xy_BC");
+  th2d_fvtxs0_clus_xy_BC->Scale(1.0/nevents_BC);
+  th2d_fvtxs0_clus_xy_BC->Draw("colz");
+  th2d_fvtxs0_clus_xy_BC->SetTitle("FVTX South, Layer 0");
+  th2d_fvtxs0_clus_xy_BC->GetXaxis()->SetTitle("cluster x (cm)");
+  th2d_fvtxs0_clus_xy_BC->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA1.Draw();
+  circlecutA2.Draw();
+  c2->SetLogz(0);
+  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_xy_BC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_xy_BC_%d.pdf",handle));
+  c2->SetLogz(1);
+  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_xylog_BC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs0_clus_xylog_BC_%d.pdf",handle));
+
+  TH2D* th2d_fvtxs1_clus_xy_BC = (TH2D*)file->Get("th2d_fvtxs1_clus_xy_BC");
+  th2d_fvtxs1_clus_xy_BC->Scale(1.0/nevents_BC);
+  th2d_fvtxs1_clus_xy_BC->Draw("colz");
+  th2d_fvtxs1_clus_xy_BC->SetTitle("FVTX South, Layer 1");
+  th2d_fvtxs1_clus_xy_BC->GetXaxis()->SetTitle("cluster x (cm)");
+  th2d_fvtxs1_clus_xy_BC->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA1.Draw();
+  c2->SetLogz(0);
+  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_xy_BC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_xy_BC_%d.pdf",handle));
+  c2->SetLogz(1);
+  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_xylog_BC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs1_clus_xylog_BC_%d.pdf",handle));
+
+  TH2D* th2d_fvtxs2_clus_xy_BC = (TH2D*)file->Get("th2d_fvtxs2_clus_xy_BC");
+  th2d_fvtxs2_clus_xy_BC->Scale(1.0/nevents_BC);
+  th2d_fvtxs2_clus_xy_BC->Draw("colz");
+  th2d_fvtxs2_clus_xy_BC->SetTitle("FVTX South, Layer 2");
+  th2d_fvtxs2_clus_xy_BC->GetXaxis()->SetTitle("cluster x (cm)");
+  th2d_fvtxs2_clus_xy_BC->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA1.Draw();
+  c2->SetLogz(0);
+  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_xy_BC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_xy_BC_%d.pdf",handle));
+  c2->SetLogz(1);
+  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_xylog_BC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs2_clus_xylog_BC_%d.pdf",handle));
+
+  TH2D* th2d_fvtxs3_clus_xy_BC = (TH2D*)file->Get("th2d_fvtxs3_clus_xy_BC");
+  th2d_fvtxs3_clus_xy_BC->Scale(1.0/nevents_BC);
+  th2d_fvtxs3_clus_xy_BC->Draw("colz");
+  th2d_fvtxs3_clus_xy_BC->SetTitle("FVTX South, Layer 3");
+  th2d_fvtxs3_clus_xy_BC->GetXaxis()->SetTitle("cluster x (cm)");
+  th2d_fvtxs3_clus_xy_BC->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA3.Draw();
+  circlecutA4.Draw();
+  c2->SetLogz(0);
+  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_xy_BC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_xy_BC_%d.pdf",handle));
+  c2->SetLogz(1);
+  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_xylog_BC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxs3_clus_xylog_BC_%d.pdf",handle));
+
+  // ---
+
+  TH2D* th2d_fvtxn_clus_xy_BC = (TH2D*)file->Get("th2d_fvtxn_clus_xy_BC");
+  th2d_fvtxn_clus_xy_BC->Scale(1.0/nevents_BC);
+  th2d_fvtxn_clus_xy_BC->Draw("colz");
+  th2d_fvtxn_clus_xy_BC->SetTitle("FVTX North, All Layers");
+  th2d_fvtxn_clus_xy_BC->GetXaxis()->SetTitle("cluster x (cm)");
+  th2d_fvtxn_clus_xy_BC->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA5.Draw();
+  circlecutA6.Draw();
+  circlecutA7.Draw();
+  circlecutA8.Draw();
+  c2->SetLogz(0);
+  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_xy_BC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_xy_BC_%d.pdf",handle));
+  c2->SetLogz(1);
+  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_xylog_BC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn_clus_xylog_BC_%d.pdf",handle));
+
+  TH2D* th2d_fvtxn0_clus_xy_BC = (TH2D*)file->Get("th2d_fvtxn0_clus_xy_BC");
+  th2d_fvtxn0_clus_xy_BC->Scale(1.0/nevents_BC);
+  th2d_fvtxn0_clus_xy_BC->Draw("colz");
+  th2d_fvtxn0_clus_xy_BC->SetTitle("FVTX North, Layer 0");
+  th2d_fvtxn0_clus_xy_BC->GetXaxis()->SetTitle("cluster x (cm)");
+  th2d_fvtxn0_clus_xy_BC->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA5.Draw();
+  c2->SetLogz(0);
+  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_xy_BC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_xy_BC_%d.pdf",handle));
+  c2->SetLogz(1);
+  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_xylog_BC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn0_clus_xylog_BC_%d.pdf",handle));
+
+  TH2D* th2d_fvtxn1_clus_xy_BC = (TH2D*)file->Get("th2d_fvtxn1_clus_xy_BC");
+  th2d_fvtxn1_clus_xy_BC->Scale(1.0/nevents_BC);
+  th2d_fvtxn1_clus_xy_BC->Draw("colz");
+  th2d_fvtxn1_clus_xy_BC->SetTitle("FVTX North, Layer 1");
+  th2d_fvtxn1_clus_xy_BC->GetXaxis()->SetTitle("cluster x (cm)");
+  th2d_fvtxn1_clus_xy_BC->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA5.Draw();
+  c2->SetLogz(0);
+  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_xy_BC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_xy_BC_%d.pdf",handle));
+  c2->SetLogz(1);
+  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_xylog_BC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn1_clus_xylog_BC_%d.pdf",handle));
+
+  TH2D* th2d_fvtxn2_clus_xy_BC = (TH2D*)file->Get("th2d_fvtxn2_clus_xy_BC");
+  th2d_fvtxn2_clus_xy_BC->Scale(1.0/nevents_BC);
+  th2d_fvtxn2_clus_xy_BC->Draw("colz");
+  th2d_fvtxn2_clus_xy_BC->SetTitle("FVTX North, Layer 2");
+  th2d_fvtxn2_clus_xy_BC->GetXaxis()->SetTitle("cluster x (cm)");
+  th2d_fvtxn2_clus_xy_BC->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA5.Draw();
+  c2->SetLogz(0);
+  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_xy_BC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_xy_BC_%d.pdf",handle));
+  c2->SetLogz(1);
+  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_xylog_BC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn2_clus_xylog_BC_%d.pdf",handle));
+
+  TH2D* th2d_fvtxn3_clus_xy_BC = (TH2D*)file->Get("th2d_fvtxn3_clus_xy_BC");
+  th2d_fvtxn3_clus_xy_BC->Scale(1.0/nevents_BC);
+  th2d_fvtxn3_clus_xy_BC->Draw("colz");
+  th2d_fvtxn3_clus_xy_BC->SetTitle("FVTX North, Layer 3");
+  th2d_fvtxn3_clus_xy_BC->GetXaxis()->SetTitle("cluster x (cm)");
+  th2d_fvtxn3_clus_xy_BC->GetYaxis()->SetTitle("cluster y (cm)");
+  circlecutA6.Draw();
+  circlecutA7.Draw();
+  circlecutA8.Draw();
+  c2->SetLogz(0);
+  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_xy_BC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_xy_BC_%d.pdf",handle));
+  c2->SetLogz(1);
+  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_xylog_BC_%d.png",handle));
+  c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_xylog_BC_%d.pdf",handle));
+
+
+
+  c1->cd();
+
+  //  c1->cd();
+  // ---
   // --- come back here for phieta
+  // ---
+
+
+  TH1D* th1d_cluster_ratio = (TH1D*)file->Get("th1d_cluster_ratio");
+  TH1D* th1d_cluster_ratio_GC = (TH1D*)file->Get("th1d_cluster_ratio_GC");
+  TH1D* th1d_cluster_ratio_BC = (TH1D*)file->Get("th1d_cluster_ratio_BC");
+  th1d_cluster_ratio->Scale(1.0/nevents);
+  th1d_cluster_ratio_GC->Scale(1.0/nevents_GC);
+  th1d_cluster_ratio_BC->Scale(1.0/nevents_BC);
+  th1d_cluster_ratio->SetLineColor(kBlack);
+  th1d_cluster_ratio_GC->SetLineColor(kBlue);
+  th1d_cluster_ratio_BC->SetLineColor(kRed);
+  th1d_cluster_ratio_GC->Draw();
+  th1d_cluster_ratio_GC->GetXaxis()->SetTitle("Ratio of clusters inside 5.2 cm/all");
+  th1d_cluster_ratio_GC->GetYaxis()->SetTitle("Normalized counts");
+  th1d_cluster_ratio->Draw("same");
+  th1d_cluster_ratio_BC->Draw("same");
+  TLegend* legg = new TLegend(0.68,0.68,0.88,0.88);
+  legg->AddEntry(th1d_cluster_ratio,"all events","l");
+  legg->AddEntry(th1d_cluster_ratio_GC,"good cluster cut","l");
+  legg->AddEntry(th1d_cluster_ratio_BC,"!good cluster cut","l");
+  legg->SetTextSize(0.05);
+  legg->Draw();
+  c1->Print(Form("FigsOther/plot1d_clusterratio_%d.png",handle));
+  c1->Print(Form("FigsOther/plot1d_clusterratio_%d.pdf",handle));
+  delete legg;
+
+
+  // ---
+  // ---
   // ---
 
 
