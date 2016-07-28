@@ -3,7 +3,11 @@ void getstuff(int, int, double&, double&, double&, double&, double&, double&, do
 void getmult(int, double&, double&, double&, double&, double&, double&);
 
 void makeplots(int, int);
+
 void makemult(int);
+
+void someratios(int);
+
 
 
 void temp_runbyrun_fullsuite()
@@ -25,12 +29,78 @@ void temp_runbyrun_fullsuite()
   // makeplots(39,3);
   // makeplots(39,42);
 
+  // someratios(200);
+  // someratios(62);
+  someratios(20);
+  someratios(39);
+
   // makemult(200);
   // makemult(62);
-  makemult(20);
-  makemult(39);
+  // makemult(20);
+  // makemult(39);
 
 }
+
+
+
+void someratios(int energy)
+{
+
+  TCanvas* c1 = new TCanvas("c1","");
+
+  ifstream fin((const char*)Form("runbyrun_fromlogfiles_%d.dat",energy));
+  int run[115];
+  int counter = 0;
+  float index[115];
+  float cratio[115];
+  float vratio[115];
+  float eratio[115];
+  while ( fin >> run[counter] >> cratio[counter] >> vratio[counter] >> eratio[counter] )
+    {
+      index[counter] = counter + 0.5;
+      eratio[counter] = 1 - eratio[counter];
+      ++counter;
+    }
+
+  TGraph* tg_cratio = new TGraph(counter,index,cratio);
+  TGraph* tg_vratio = new TGraph(counter,index,vratio);
+  TGraph* tg_eratio = new TGraph(counter,index,eratio);
+
+  tg_cratio->SetMarkerStyle(kOpenCircle);
+  tg_vratio->SetMarkerStyle(kOpenSquare);
+  tg_eratio->SetMarkerStyle(kOpenCross);
+
+  tg_cratio->SetMarkerColor(kBlack);
+  tg_vratio->SetMarkerColor(kBlue);
+  tg_eratio->SetMarkerColor(kRed);
+
+  tg_cratio->Draw("ap");
+  tg_vratio->Draw("p");
+  tg_eratio->Draw("p");
+  c1->Print(Form("FigsOther/ratios_runbyrun_fromlogfiles_%d.png",energy));
+  c1->Print(Form("FigsOther/ratios_runbyrun_fromlogfiles_%d.pdf",energy));
+
+  tg_cratio->Draw("ap");
+  c1->Print(Form("FigsOther/ratio_cluster_runbyrun_fromlogfiles_%d.png",energy));
+  c1->Print(Form("FigsOther/ratio_cluster_runbyrun_fromlogfiles_%d.pdf",energy));
+
+  tg_vratio->Draw("ap");
+  c1->Print(Form("FigsOther/ratio_vertex_runbyrun_fromlogfiles_%d.png",energy));
+  c1->Print(Form("FigsOther/ratio_vertex_runbyrun_fromlogfiles_%d.pdf",energy));
+
+  tg_eratio->Draw("ap");
+  c1->Print(Form("FigsOther/ratio_pass_runbyrun_fromlogfiles_%d.png",energy));
+  c1->Print(Form("FigsOther/ratio_pass_runbyrun_fromlogfiles_%d.pdf",energy));
+
+  tg_eratio->Draw("ap");
+  tg_vratio->Draw("p");
+  c1->Print(Form("FigsOther/ratio_vertexandpass_runbyrun_fromlogfiles_%d.png",energy));
+  c1->Print(Form("FigsOther/ratio_vertexandpass_runbyrun_fromlogfiles_%d.pdf",energy));
+
+  delete c1;
+
+}
+
 
 
 void makeplots(int energy, int harmonic)
