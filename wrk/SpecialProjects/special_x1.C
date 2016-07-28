@@ -1362,6 +1362,7 @@ void takefile(TFile* file, int handle)
   c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_xylog_BC_%d.png",handle));
   c2->Print(Form("FigsPhi/plot2d_fvtxn3_clus_xylog_BC_%d.pdf",handle));
 
+  delete c2;
 
 
   c1->cd();
@@ -1383,7 +1384,7 @@ void takefile(TFile* file, int handle)
   th1d_cluster_ratio_BC->SetLineColor(kRed);
   th1d_cluster_ratio_GC->Draw();
   th1d_cluster_ratio_GC->GetXaxis()->SetTitle("Ratio of clusters inside 5.2 cm/all");
-  th1d_cluster_ratio_GC->GetYaxis()->SetTitle("Normalized counts");
+  //th1d_cluster_ratio_GC->GetYaxis()->SetTitle("Normalized counts");
   th1d_cluster_ratio->Draw("same");
   th1d_cluster_ratio_BC->Draw("same");
   TLegend* legg = new TLegend(0.68,0.68,0.88,0.88);
@@ -1394,13 +1395,102 @@ void takefile(TFile* file, int handle)
   legg->Draw();
   c1->Print(Form("FigsOther/plot1d_clusterratio_%d.png",handle));
   c1->Print(Form("FigsOther/plot1d_clusterratio_%d.pdf",handle));
+
+  TH1D* th1d_scluster_ratio = (TH1D*)file->Get("th1d_scluster_ratio");
+  TH1D* th1d_scluster_ratio_GC = (TH1D*)file->Get("th1d_scluster_ratio_GC");
+  TH1D* th1d_scluster_ratio_BC = (TH1D*)file->Get("th1d_scluster_ratio_BC");
+  th1d_scluster_ratio->Scale(1.0/nevents);
+  th1d_scluster_ratio_GC->Scale(1.0/nevents_GC);
+  th1d_scluster_ratio_BC->Scale(1.0/nevents_BC);
+  th1d_scluster_ratio->SetLineColor(kBlack);
+  th1d_scluster_ratio_GC->SetLineColor(kBlue);
+  th1d_scluster_ratio_BC->SetLineColor(kRed);
+  th1d_scluster_ratio_GC->Draw();
+  th1d_scluster_ratio_GC->GetXaxis()->SetTitle("Ratio of clusters inside 5.2 cm/all");
+  //th1d_scluster_ratio_GC->GetYaxis()->SetTitle("Normalized counts");
+  th1d_scluster_ratio->Draw("same");
+  th1d_scluster_ratio_BC->Draw("same");
+  legg->Draw();
+  c1->Print(Form("FigsOther/plot1d_sclusterratio_%d.png",handle));
+  c1->Print(Form("FigsOther/plot1d_sclusterratio_%d.pdf",handle));
+
+  TH1D* th1d_ncluster_ratio = (TH1D*)file->Get("th1d_ncluster_ratio");
+  TH1D* th1d_ncluster_ratio_GC = (TH1D*)file->Get("th1d_ncluster_ratio_GC");
+  TH1D* th1d_ncluster_ratio_BC = (TH1D*)file->Get("th1d_ncluster_ratio_BC");
+  th1d_ncluster_ratio->Scale(1.0/nevents);
+  th1d_ncluster_ratio_GC->Scale(1.0/nevents_GC);
+  th1d_ncluster_ratio_BC->Scale(1.0/nevents_BC);
+  th1d_ncluster_ratio->SetLineColor(kBlack);
+  th1d_ncluster_ratio_GC->SetLineColor(kBlue);
+  th1d_ncluster_ratio_BC->SetLineColor(kRed);
+  th1d_ncluster_ratio_GC->Draw();
+  th1d_ncluster_ratio_GC->GetXaxis()->SetTitle("Ratio of clusters inside 5.2 cm/all");
+  //th1d_ncluster_ratio_GC->GetYaxis()->SetTitle("Normalized counts");
+  th1d_ncluster_ratio->Draw("same");
+  th1d_ncluster_ratio_BC->Draw("same");
+  legg->Draw();
+  c1->Print(Form("FigsOther/plot1d_nclusterratio_%d.png",handle));
+  c1->Print(Form("FigsOther/plot1d_nclusterratio_%d.pdf",handle));
+
+
+
+  // ---
+  // ---
+  // ---
+  th1d_cluster_ratio->Scale(nevents);
+  th1d_cluster_ratio_GC->Scale(nevents_GC);
+  th1d_cluster_ratio_BC->Scale(nevents_BC);
+  th1d_scluster_ratio->Scale(nevents);
+  th1d_scluster_ratio_GC->Scale(nevents_GC);
+  th1d_scluster_ratio_BC->Scale(nevents_BC);
+  th1d_ncluster_ratio->Scale(nevents);
+  th1d_ncluster_ratio_GC->Scale(nevents_GC);
+  th1d_ncluster_ratio_BC->Scale(nevents_BC);
+
+  TCanvas* c3 = new TCanvas("c3","",1000,1000);
+  c3->cd();
+  c3->Divide(2,2);
+  c3->cd(1);
+  TLatex tex;
+  tex.SetNDC();
+  th2d_fvtxs_clus_xy_GC->Draw("colz");
+  tex.DrawLatex(0.6,0.18,"good cluster cut");
+  c3->cd(2);
+  th2d_fvtxs_clus_xy_BC->Draw("colz");
+  tex.DrawLatex(0.6,0.18,"!good cluster cut");
+  c3->cd(3);
+  th1d_scluster_ratio->Draw();
+  th1d_scluster_ratio_GC->Draw("same");
+  th1d_scluster_ratio_BC->Draw("same");
+  if ( legg ) delete legg;
+  legg = new TLegend(0.55,0.72,0.88,0.88);
+  legg->AddEntry(th1d_ncluster_ratio,"all events","l");
+  legg->AddEntry(th1d_ncluster_ratio_GC,"good cluster cut","l");
+  legg->AddEntry(th1d_ncluster_ratio_BC,"!good cluster cut","l");
+  legg->SetTextSize(0.04);
+  legg->SetFillStyle(0);
+  legg->Draw();
+  c3->Print(Form("FigsOther/plot3d_scluster_and_ratio_%d.png",handle));
+  c3->Print(Form("FigsOther/plot3d_scluster_and_ratio_%d.pdf",handle));
+  c3->cd(1);
+  th2d_fvtxn_clus_xy_GC->Draw("colz");
+  tex.DrawLatex(0.6,0.18,"good cluster cut");
+  c3->cd(2);
+  th2d_fvtxn_clus_xy_BC->Draw("colz");
+  tex.DrawLatex(0.6,0.18,"!good cluster cut");
+  c3->cd(3);
+  th1d_ncluster_ratio->Draw();
+  th1d_ncluster_ratio_GC->Draw("same");
+  th1d_ncluster_ratio_BC->Draw("same");
+  legg->Draw();
+  c3->Print(Form("FigsOther/plot3d_ncluster_and_ratio_%d.png",handle));
+  c3->Print(Form("FigsOther/plot3d_ncluster_and_ratio_%d.pdf",handle));
+  delete c3;
   delete legg;
-
-
   // ---
   // ---
   // ---
-
+  c1->cd();
 
   TH2D* th2d_fvtxs_clus_phieta = (TH2D*)file->Get("th2d_fvtxs_clus_phieta");
   TH2D* th2d_fvtxs_clus_phieta_IR = (TH2D*)file->Get("th2d_fvtxs_clus_phieta_IR");
@@ -1547,7 +1637,6 @@ void takefile(TFile* file, int handle)
 
 
   delete c1;
-  delete c2;
 
 }
 
