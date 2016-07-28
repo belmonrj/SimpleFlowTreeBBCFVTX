@@ -693,6 +693,20 @@ void flatten(int runNumber, int passNumber)
   TProfile* tp1f_cluster_ratio_GC = new TProfile("tp1f_cluster_ratio_GC","",2000,-0.1,1999.5,0,1,"");
   TProfile* tp1f_cluster_ratio_BC = new TProfile("tp1f_cluster_ratio_BC","",2000,-0.1,1999.5,0,1,"");
 
+  TH1D* th1d_scluster_ratio = new TH1D("th1d_scluster_ratio","",100,0,1);
+  TH1D* th1d_scluster_ratio_GC = new TH1D("th1d_scluster_ratio_GC","",100,0,1);
+  TH1D* th1d_scluster_ratio_BC = new TH1D("th1d_scluster_ratio_BC","",100,0,1);
+  TProfile* tp1f_scluster_ratio = new TProfile("tp1f_scluster_ratio","",2000,-0.1,1999.5,0,1,"");
+  TProfile* tp1f_scluster_ratio_GC = new TProfile("tp1f_scluster_ratio_GC","",2000,-0.1,1999.5,0,1,"");
+  TProfile* tp1f_scluster_ratio_BC = new TProfile("tp1f_scluster_ratio_BC","",2000,-0.1,1999.5,0,1,"");
+
+  TH1D* th1d_ncluster_ratio = new TH1D("th1d_ncluster_ratio","",100,0,1);
+  TH1D* th1d_ncluster_ratio_GC = new TH1D("th1d_ncluster_ratio_GC","",100,0,1);
+  TH1D* th1d_ncluster_ratio_BC = new TH1D("th1d_ncluster_ratio_BC","",100,0,1);
+  TProfile* tp1f_ncluster_ratio = new TProfile("tp1f_ncluster_ratio","",2000,-0.1,1999.5,0,1,"");
+  TProfile* tp1f_ncluster_ratio_GC = new TProfile("tp1f_ncluster_ratio_GC","",2000,-0.1,1999.5,0,1,"");
+  TProfile* tp1f_ncluster_ratio_BC = new TProfile("tp1f_ncluster_ratio_BC","",2000,-0.1,1999.5,0,1,"");
+
   // ---
 
   // --- q-vectors vs z for selected centrality
@@ -962,7 +976,7 @@ void flatten(int runNumber, int passNumber)
       bool is_goodnc = ( d_nFVTXN_clus < 100 && d_nFVTXS_clus < 200 );
       if ( !is_goodnc ) ++bad_nc_counter;
 
-      bool is_okaync = ( d_nFVTXN_clus < 300 && d_nFVTXS_clus < 300 );
+      bool is_okaync = ( d_nFVTX_clus < 300 );
 
       //cout << "HELLO HERE I AM" << endl;
 
@@ -1012,6 +1026,8 @@ void flatten(int runNumber, int passNumber)
         }
 
       int innercluster_counter_event = 0;
+      int innercluster_counter_event_south = 0;
+      int innercluster_counter_event_north = 0;
       if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Looping over FVTX cluster" << endl;
       if ( fvtx_clusters )
         {
@@ -1053,6 +1069,8 @@ void flatten(int runNumber, int passNumber)
               if ( fvtx_rb < 5.2 )
                 {
                   ++innercluster_counter_event;
+                  if ( d_FVTX_z[iclus] < 0 ) ++innercluster_counter_event_south;
+                  if ( d_FVTX_z[iclus] > 0 ) ++innercluster_counter_event_north;
                   ++innercluster_counter;
                 }
               // --------------------------------------
@@ -1484,6 +1502,22 @@ void flatten(int runNumber, int passNumber)
       tp1f_cluster_ratio->Fill(d_nFVTX_clus,cluster_ratio_event);
       if ( is_okaync ) tp1f_cluster_ratio_GC->Fill(d_nFVTX_clus,cluster_ratio_event);
       else tp1f_cluster_ratio_BC->Fill(d_nFVTX_clus,cluster_ratio_event);
+
+      float scluster_ratio_event = (float)innercluster_counter_event_south/(float)d_nFVTXS_clus;
+      th1d_scluster_ratio->Fill(scluster_ratio_event);
+      if ( is_okaync ) th1d_scluster_ratio_GC->Fill(scluster_ratio_event);
+      else th1d_scluster_ratio_BC->Fill(scluster_ratio_event);
+      tp1f_scluster_ratio->Fill(d_nFVTX_clus,scluster_ratio_event);
+      if ( is_okaync ) tp1f_scluster_ratio_GC->Fill(d_nFVTX_clus,scluster_ratio_event);
+      else tp1f_scluster_ratio_BC->Fill(d_nFVTX_clus,scluster_ratio_event);
+
+      float ncluster_ratio_event = (float)innercluster_counter_event_north/(float)d_nFVTXN_clus;
+      th1d_ncluster_ratio->Fill(ncluster_ratio_event);
+      if ( is_okaync ) th1d_ncluster_ratio_GC->Fill(ncluster_ratio_event);
+      else th1d_ncluster_ratio_BC->Fill(ncluster_ratio_event);
+      tp1f_ncluster_ratio->Fill(d_nFVTX_clus,ncluster_ratio_event);
+      if ( is_okaync ) tp1f_ncluster_ratio_GC->Fill(d_nFVTX_clus,ncluster_ratio_event);
+      else tp1f_ncluster_ratio_BC->Fill(d_nFVTX_clus,ncluster_ratio_event);
 
       th1d_BBC_charge->Fill(bbc_qw);
       th1d_FVTX_nclus->Fill(d_nFVTX_clus);
