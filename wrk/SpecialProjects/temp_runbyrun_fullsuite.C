@@ -8,6 +8,8 @@ void makemult(int);
 
 void someratios(int);
 
+void someplots(int);
+
 
 
 void temp_runbyrun_fullsuite()
@@ -34,10 +36,77 @@ void temp_runbyrun_fullsuite()
   someratios(20);
   someratios(39);
 
+  // someplots(200);
+  // someplots(62);
+  someplots(20);
+  someplots(39);
+
   // makemult(200);
   // makemult(62);
   // makemult(20);
   // makemult(39);
+
+}
+
+
+
+void someplots(int energy)
+{
+
+  TCanvas* c1 = new TCanvas("c1","");
+
+  ifstream fin((const char*)Form("list_%d.short",energy));
+  int run;
+  while ( fin >> run )
+    {
+      TFile* file = TFile::Open(Form("RootFiles/svrb_run%d_pass0.root",run));
+
+      TH2D* th2d_corr_bbcqn_bbcqs = (TH2D*)file->Get("th2d_corr_bbcqn_bbcqs");
+      TH2D* th2d_corr_bbcqs_fvtxs = (TH2D*)file->Get("th2d_corr_bbcqs_fvtxs");
+      TH2D* th2d_corr_bbcqn_fvtxn = (TH2D*)file->Get("th2d_corr_bbcqn_fvtxn");
+      TH2D* th2d_corr_bbcqn_fvtxs = (TH2D*)file->Get("th2d_corr_bbcqn_fvtxs");
+      TH2D* th2d_corr_bbcqs_fvtxn = (TH2D*)file->Get("th2d_corr_bbcqs_fvtxn");
+      TH2D* th2d_corr_fvtxn_fvtxs = (TH2D*)file->Get("th2d_corr_fvtxn_fvtxs");
+
+      TH2D* th2d_corr_npc1_bbcqn = (TH2D*)file->Get("th2d_corr_npc1_bbcqn");
+      TH2D* th2d_corr_npc1_bbcqs = (TH2D*)file->Get("th2d_corr_npc1_bbcqs");
+      TH2D* th2d_corr_npc1_fvtxn = (TH2D*)file->Get("th2d_corr_npc1_fvtxn");
+      TH2D* th2d_corr_npc1_fvtxs = (TH2D*)file->Get("th2d_corr_npc1_fvtxs");
+
+      th2d_corr_bbcqn_bbcqs->Draw("colz");
+      c1->Print(Form("FigsOther/plot2dcorr_bbcqn_bbcqs_%d.png",run));
+      c1->Print(Form("FigsOther/plot2dcorr_bbcqn_bbcqs_%d.pdf",run));
+      th2d_corr_bbcqs_fvtxs->Draw("colz");
+      c1->Print(Form("FigsOther/plot2dcorr_bbcqs_fvtxs_%d.png",run));
+      c1->Print(Form("FigsOther/plot2dcorr_bbcqs_fvtxs_%d.pdf",run));
+      th2d_corr_bbcqn_fvtxn->Draw("colz");
+      c1->Print(Form("FigsOther/plot2dcorr_bbcqn_fvtxn_%d.png",run));
+      c1->Print(Form("FigsOther/plot2dcorr_bbcqn_fvtxn_%d.pdf",run));
+      th2d_corr_bbcqn_fvtxs->Draw("colz");
+      c1->Print(Form("FigsOther/plot2dcorr_bbcqn_fvtxs_%d.png",run));
+      c1->Print(Form("FigsOther/plot2dcorr_bbcqn_fvtxs_%d.pdf",run));
+      th2d_corr_bbcqs_fvtxn->Draw("colz");
+      c1->Print(Form("FigsOther/plot2dcorr_bbcqs_fvtxn_%d.png",run));
+      c1->Print(Form("FigsOther/plot2dcorr_bbcqs_fvtxn_%d.pdf",run));
+      th2d_corr_fvtxn_fvtxs->Draw("colz");
+      c1->Print(Form("FigsOther/plot2dcorr_fvtxn_fvtxs_%d.png",run));
+      c1->Print(Form("FigsOther/plot2dcorr_fvtxn_fvtxs_%d.pdf",run));
+
+      th2d_corr_npc1_bbcqn->Draw("colz");
+      c1->Print(Form("FigsOther/plot2dcorr_npc1_bbcqn_%d.png",run));
+      c1->Print(Form("FigsOther/plot2dcorr_npc1_bbcqn_%d.pdf",run));
+      th2d_corr_npc1_bbcqs->Draw("colz");
+      c1->Print(Form("FigsOther/plot2dcorr_npc1_bbcqs_%d.png",run));
+      c1->Print(Form("FigsOther/plot2dcorr_npc1_bbcqs_%d.pdf",run));
+      th2d_corr_npc1_fvtxn->Draw("colz");
+      c1->Print(Form("FigsOther/plot2dcorr_npc1_fvtxn_%d.png",run));
+      c1->Print(Form("FigsOther/plot2dcorr_npc1_fvtxn_%d.pdf",run));
+      th2d_corr_npc1_fvtxs->Draw("colz");
+      c1->Print(Form("FigsOther/plot2dcorr_npc1_fvtxs_%d.png",run));
+      c1->Print(Form("FigsOther/plot2dcorr_npc1_fvtxs_%d.pdf",run));
+
+      file->Close();
+    }
 
 }
 
