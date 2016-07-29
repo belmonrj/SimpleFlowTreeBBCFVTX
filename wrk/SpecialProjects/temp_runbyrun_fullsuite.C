@@ -74,9 +74,27 @@ void someratios(int energy)
   tg_vratio->SetMarkerColor(kBlue);
   tg_eratio->SetMarkerColor(kRed);
 
+  tg_cratio->GetXaxis()->SetLimits(-1,counter);
+  tg_vratio->GetXaxis()->SetLimits(-1,counter);
+  tg_eratio->GetXaxis()->SetLimits(-1,counter);
+
+  tg_cratio->SetMaximum(1.0);
+  tg_vratio->SetMaximum(1.0);
+  tg_eratio->SetMaximum(1.0);
+
+  tg_cratio->SetMinimum(0.0);
+  tg_vratio->SetMinimum(0.0);
+  tg_eratio->SetMinimum(0.0);
+
   tg_cratio->Draw("ap");
   tg_vratio->Draw("p");
   tg_eratio->Draw("p");
+  TLegend* leg3 = new TLegend(0.48,0.18,0.88,0.38);
+  leg3->AddEntry(tg_cratio,"Ratio of clusters within 5.2 cm","p");
+  leg3->AddEntry(tg_vratio,"Ratio of events with vertex outside/inside 5 cm","p");
+  leg3->AddEntry(tg_eratio,"Ratio of events passing cluster cut","p");
+  leg3->SetFillStyle(0);
+  leg3->Draw();
   c1->Print(Form("FigsOther/ratios_runbyrun_fromlogfiles_%d.png",energy));
   c1->Print(Form("FigsOther/ratios_runbyrun_fromlogfiles_%d.pdf",energy));
 
@@ -94,10 +112,18 @@ void someratios(int energy)
 
   tg_eratio->Draw("ap");
   tg_vratio->Draw("p");
+  TLegend* leg2 = new TLegend(0.48,0.18,0.88,0.38);
+  leg2->AddEntry(tg_vratio,"Ratio of events with vertex outside/inside 5 cm","p");
+  leg2->AddEntry(tg_eratio,"Ratio of events passing cluster cut","p");
+  leg2->SetFillStyle(0);
+  leg2->Draw();
   c1->Print(Form("FigsOther/ratio_vertexandpass_runbyrun_fromlogfiles_%d.png",energy));
   c1->Print(Form("FigsOther/ratio_vertexandpass_runbyrun_fromlogfiles_%d.pdf",energy));
 
   delete c1;
+
+  delete leg3;
+  delete leg2;
 
 }
 
