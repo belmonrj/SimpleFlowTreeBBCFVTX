@@ -38,8 +38,8 @@ void temp_runbyrun_fullsuite()
 
   // someplots(200);
   // someplots(62);
-  someplots(20);
-  someplots(39);
+  // someplots(20);
+  // someplots(39);
 
   // makemult(200);
   // makemult(62);
@@ -54,12 +54,18 @@ void someplots(int energy)
 {
 
   TCanvas* c1 = new TCanvas("c1","");
+  //c1->SetLogz();
 
   ifstream fin((const char*)Form("list_%d.short",energy));
   int run;
   while ( fin >> run )
     {
       TFile* file = TFile::Open(Form("RootFiles/svrb_run%d_pass0.root",run));
+      if ( !file )
+        {
+          cout << "YOU'RE GONNA DIE" << endl;
+          continue;
+        }
 
       TH2D* th2d_corr_bbcqn_bbcqs = (TH2D*)file->Get("th2d_corr_bbcqn_bbcqs");
       TH2D* th2d_corr_bbcqs_fvtxs = (TH2D*)file->Get("th2d_corr_bbcqs_fvtxs");
@@ -73,35 +79,68 @@ void someplots(int energy)
       TH2D* th2d_corr_npc1_fvtxn = (TH2D*)file->Get("th2d_corr_npc1_fvtxn");
       TH2D* th2d_corr_npc1_fvtxs = (TH2D*)file->Get("th2d_corr_npc1_fvtxs");
 
+      int nevents = th2d_corr_bbcqn_bbcqs->GetEntries();
+      if ( nevents < 1 ) nevents = 1;
+
       th2d_corr_bbcqn_bbcqs->Draw("colz");
+      th2d_corr_bbcqn_bbcqs->Scale(1.0/nevents);
+      th2d_corr_bbcqn_bbcqs->GetXaxis()->SetTitle("BBC North charge");
+      th2d_corr_bbcqn_bbcqs->GetYaxis()->SetTitle("BBC South charge");
       c1->Print(Form("FigsOther/plot2dcorr_bbcqn_bbcqs_%d.png",run));
       c1->Print(Form("FigsOther/plot2dcorr_bbcqn_bbcqs_%d.pdf",run));
       th2d_corr_bbcqs_fvtxs->Draw("colz");
+      th2d_corr_bbcqs_fvtxs->Scale(1.0/nevents);
+      th2d_corr_bbcqs_fvtxs->GetXaxis()->SetTitle("BBC South charge");
+      th2d_corr_bbcqs_fvtxs->GetYaxis()->SetTitle("FVTX South cluster multiplicity");
       c1->Print(Form("FigsOther/plot2dcorr_bbcqs_fvtxs_%d.png",run));
       c1->Print(Form("FigsOther/plot2dcorr_bbcqs_fvtxs_%d.pdf",run));
       th2d_corr_bbcqn_fvtxn->Draw("colz");
+      th2d_corr_bbcqn_fvtxn->Scale(1.0/nevents);
+      th2d_corr_bbcqn_fvtxn->GetXaxis()->SetTitle("BBC North charge");
+      th2d_corr_bbcqn_fvtxn->GetYaxis()->SetTitle("FVTX North cluster multiplicity");
       c1->Print(Form("FigsOther/plot2dcorr_bbcqn_fvtxn_%d.png",run));
       c1->Print(Form("FigsOther/plot2dcorr_bbcqn_fvtxn_%d.pdf",run));
       th2d_corr_bbcqn_fvtxs->Draw("colz");
+      th2d_corr_bbcqn_fvtxs->Scale(1.0/nevents);
+      th2d_corr_bbcqn_fvtxs->GetXaxis()->SetTitle("BBC North charge");
+      th2d_corr_bbcqn_fvtxs->GetYaxis()->SetTitle("FVTX South cluster multiplicity");
       c1->Print(Form("FigsOther/plot2dcorr_bbcqn_fvtxs_%d.png",run));
       c1->Print(Form("FigsOther/plot2dcorr_bbcqn_fvtxs_%d.pdf",run));
       th2d_corr_bbcqs_fvtxn->Draw("colz");
+      th2d_corr_bbcqs_fvtxn->Scale(1.0/nevents);
+      th2d_corr_bbcqs_fvtxn->GetXaxis()->SetTitle("BBC South charge");
+      th2d_corr_bbcqs_fvtxn->GetYaxis()->SetTitle("FVTX North cluster multiplicity");
       c1->Print(Form("FigsOther/plot2dcorr_bbcqs_fvtxn_%d.png",run));
       c1->Print(Form("FigsOther/plot2dcorr_bbcqs_fvtxn_%d.pdf",run));
       th2d_corr_fvtxn_fvtxs->Draw("colz");
+      th2d_corr_fvtxn_fvtxs->Scale(1.0/nevents);
+      th2d_corr_fvtxn_fvtxs->GetXaxis()->SetTitle("FVTX North cluster multiplicity");
+      th2d_corr_fvtxn_fvtxs->GetYaxis()->SetTitle("FVTX South cluster multiplicity");
       c1->Print(Form("FigsOther/plot2dcorr_fvtxn_fvtxs_%d.png",run));
       c1->Print(Form("FigsOther/plot2dcorr_fvtxn_fvtxs_%d.pdf",run));
 
       th2d_corr_npc1_bbcqn->Draw("colz");
+      th2d_corr_npc1_bbcqn->Scale(1.0/nevents);
+      th2d_corr_npc1_bbcqn->GetXaxis()->SetTitle("PC1 cluster multiplicity");
+      th2d_corr_npc1_bbcqn->GetYaxis()->SetTitle("BBC North charge");
       c1->Print(Form("FigsOther/plot2dcorr_npc1_bbcqn_%d.png",run));
       c1->Print(Form("FigsOther/plot2dcorr_npc1_bbcqn_%d.pdf",run));
       th2d_corr_npc1_bbcqs->Draw("colz");
+      th2d_corr_npc1_bbcqs->Scale(1.0/nevents);
+      th2d_corr_npc1_bbcqs->GetXaxis()->SetTitle("PC1 cluster multiplicity");
+      th2d_corr_npc1_bbcqs->GetYaxis()->SetTitle("BBC South charge");
       c1->Print(Form("FigsOther/plot2dcorr_npc1_bbcqs_%d.png",run));
       c1->Print(Form("FigsOther/plot2dcorr_npc1_bbcqs_%d.pdf",run));
       th2d_corr_npc1_fvtxn->Draw("colz");
+      th2d_corr_npc1_fvtxn->Scale(1.0/nevents);
+      th2d_corr_npc1_fvtxn->GetXaxis()->SetTitle("PC1 cluster multiplicity");
+      th2d_corr_npc1_fvtxn->GetYaxis()->SetTitle("FVTX North cluster multiplicity");
       c1->Print(Form("FigsOther/plot2dcorr_npc1_fvtxn_%d.png",run));
       c1->Print(Form("FigsOther/plot2dcorr_npc1_fvtxn_%d.pdf",run));
       th2d_corr_npc1_fvtxs->Draw("colz");
+      th2d_corr_npc1_fvtxs->Scale(1.0/nevents);
+      th2d_corr_npc1_fvtxs->GetXaxis()->SetTitle("PC1 cluster multiplicity");
+      th2d_corr_npc1_fvtxs->GetYaxis()->SetTitle("FVTX South cluster multiplicity");
       c1->Print(Form("FigsOther/plot2dcorr_npc1_fvtxs_%d.png",run));
       c1->Print(Form("FigsOther/plot2dcorr_npc1_fvtxs_%d.pdf",run));
 
