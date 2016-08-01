@@ -516,7 +516,10 @@ void flatten(int runNumber, int rp_recal_pass)
   float        d_Qw[9];
   float        d_BBC_charge[64];
 
+  int          npc1;
   int          d_nFVTX_clus;
+  int          d_nFVTXN_clus;
+  int          d_nFVTXS_clus;
   float        d_FVTX_x[max_nf];
   float        d_FVTX_y[max_nf];
   float        d_FVTX_z[max_nf];
@@ -543,6 +546,9 @@ void flatten(int runNumber, int rp_recal_pass)
   TBranch* b_fvtx_z;   //!
   TBranch* b_d_BBC_charge;   //!
   TBranch* b_d_nFVTX_clus;   //!
+  TBranch* b_d_nFVTXN_clus;   //!
+  TBranch* b_d_nFVTXS_clus;   //!
+  TBranch* b_npc1;   //!
   TBranch* b_d_FVTX_x;   //!
   TBranch* b_d_FVTX_y;   //!
   TBranch* b_d_FVTX_z;   //!
@@ -557,6 +563,7 @@ void flatten(int runNumber, int rp_recal_pass)
 
   ntp_event_chain->SetBranchAddress("bbc_z",&d_bbcz,&b_bbc_z);
   ntp_event_chain->SetBranchAddress("centrality",&centrality,&b_centrality);
+  ntp_event_chain->SetBranchAddress("npc1",&npc1,&b_npc1);
   ntp_event_chain->SetBranchAddress("event",&event,&b_event);
   ntp_event_chain->SetBranchAddress("trigger_scaled",&trigger_scaled,&b_trigger_scaled);
   ntp_event_chain->SetBranchAddress("trigger_live",&trigger_live,&b_trigger_live);
@@ -574,6 +581,8 @@ void flatten(int runNumber, int rp_recal_pass)
   ntp_event_chain->SetBranchAddress("d_Qw",d_Qw,&b_d_Qw);
 
   ntp_event_chain->SetBranchAddress("d_nFVTX_clus",&d_nFVTX_clus,&b_d_nFVTX_clus);
+  ntp_event_chain->SetBranchAddress("d_nFVTXN_clus",&d_nFVTXN_clus,&b_d_nFVTXN_clus);
+  ntp_event_chain->SetBranchAddress("d_nFVTXS_clus",&d_nFVTXS_clus,&b_d_nFVTXS_clus);
   ntp_event_chain->SetBranchAddress("d_FVTX_x",d_FVTX_x,&b_d_FVTX_x);
   ntp_event_chain->SetBranchAddress("d_FVTX_y",d_FVTX_y,&b_d_FVTX_y);
   ntp_event_chain->SetBranchAddress("d_FVTX_z",d_FVTX_z,&b_d_FVTX_z);
@@ -674,6 +683,23 @@ void flatten(int runNumber, int rp_recal_pass)
           cout << "bbcz = " << d_bbcz << endl;
           cout << "fvtx_z = " << eventfvtx_z << endl;
           cout << "bin number is " << izvtx << endl;
+          continue;
+        }
+
+      int toomanyclusters = 9999;
+      // --- Run16dAu200
+      if ( runNumber >= 454774 && runNumber <= 455639 ) toomanyclusters = 1000;
+      // --- Run16dAu62
+      if ( runNumber >= 455792 && runNumber <= 456283 ) toomanyclusters = 1000;
+      // --- Run16dAu20
+      if ( runNumber >= 456652 && runNumber <= 457298 ) toomanyclusters = 500;
+      // --- Run16dAu39
+      if ( runNumber >= 457634 && runNumber <= 458167 ) toomanyclusters = 300;
+
+      bool is_okaync = ( d_nFVTX_clus < toomanyclusters );
+      if ( !is_okaync )
+        {
+          if ( verbosity > 0 ) cout << "too many clusters" << endl;
           continue;
         }
 
