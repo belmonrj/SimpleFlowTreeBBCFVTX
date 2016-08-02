@@ -40,13 +40,13 @@ void doit(int handle)
 
   if ( handle <= 200 ) tp1f_os_bbcs_v2_both->SetTitle(Form("d+Au #sqrt{s_{NN}} = %d GeV",handle));
   tp1f_os_bbcs_v2_both->GetXaxis()->SetTitle("p_{T} (GeV/c)");
-  tp1f_os_bbcs_v2_both->GetYaxis()->SetTitle("v_{2}{2}");
-  tp1f_os_bbcs_v2_both->GetYaxis()->SetTitleOffset(1.5);
+  tp1f_os_bbcs_v2_both->GetYaxis()->SetTitle("uncorrected v_{2}{EP}");
+  tp1f_os_bbcs_v2_both->GetYaxis()->SetTitleOffset(1.4);
 
   if ( handle <= 200 ) hv2_bbcs->SetTitle(Form("d+Au #sqrt{s_{NN}} = %d GeV",handle));
   hv2_bbcs->GetXaxis()->SetTitle("p_{T} (GeV/c)");
-  hv2_bbcs->GetYaxis()->SetTitle("v_{2}{2}");
-  hv2_bbcs->GetYaxis()->SetTitleOffset(1.5);
+  hv2_bbcs->GetYaxis()->SetTitle("uncorrected v_{2}{EP}");
+  hv2_bbcs->GetYaxis()->SetTitleOffset(1.4);
 
   hv2_bbcs->SetLineColor(kBlack);
   hv2_bbcs->Draw();
@@ -72,13 +72,13 @@ void doit(int handle)
 
   if ( handle <= 200 ) tp1f_os_fvtxs_v2_both->SetTitle(Form("d+Au #sqrt{s_{NN}} = %d GeV",handle));
   tp1f_os_fvtxs_v2_both->GetXaxis()->SetTitle("p_{T} (GeV/c)");
-  tp1f_os_fvtxs_v2_both->GetYaxis()->SetTitle("v_{2}{2}");
-  tp1f_os_fvtxs_v2_both->GetYaxis()->SetTitleOffset(1.5);
+  tp1f_os_fvtxs_v2_both->GetYaxis()->SetTitle("uncorrected v_{2}{EP}");
+  tp1f_os_fvtxs_v2_both->GetYaxis()->SetTitleOffset(1.4);
 
   if ( handle <= 200 ) hv2_fvtxs->SetTitle(Form("d+Au #sqrt{s_{NN}} = %d GeV",handle));
   hv2_fvtxs->GetXaxis()->SetTitle("p_{T} (GeV/c)");
-  hv2_fvtxs->GetYaxis()->SetTitle("v_{2}{2}");
-  hv2_fvtxs->GetYaxis()->SetTitleOffset(1.5);
+  hv2_fvtxs->GetYaxis()->SetTitle("uncorrected v_{2}{EP}");
+  hv2_fvtxs->GetYaxis()->SetTitleOffset(1.4);
 
   hv2_fvtxs->SetLineColor(kBlack);
   hv2_fvtxs->Draw();
