@@ -140,6 +140,97 @@ void doit(int handle)
 
   // ---
 
+  // -------------------------------------------------
+  // --- different method of estimating reference flow
+  // -------------------------------------------------
+
+  // --- note that the bbcs-fvtxn correlation is so weak in the lower energies that this method might not work
+
+  TProfile* tp1f_os_bbcsfvtxs_c22 = (TProfile*)file->Get("os_bbcsfvtxs_c22");
+  TProfile* tp1f_os_bbcsfvtxn_c22 = (TProfile*)file->Get("os_bbcsfvtxn_c22");
+  TProfile* tp1f_os_fvtxsfvtxn_c22 = (TProfile*)file->Get("os_fvtxsfvtxn_c22");
+
+  double os_bbcsfvtxs_c22_raw = tp1f_os_bbcsfvtxs_c22->GetBinContent(1);
+  double os_bbcsfvtxn_c22_raw = tp1f_os_bbcsfvtxn_c22->GetBinContent(1);
+  double os_fvtxsfvtxn_c22_raw = tp1f_os_fvtxsfvtxn_c22->GetBinContent(1);
+
+  double os_newref_c22_bbcs = (os_bbcsfvtxs_c22_raw*os_bbcsfvtxn_c22_raw)/os_fvtxsfvtxn_c22_raw;
+  double os_newref_c22_fvtxs = (os_bbcsfvtxs_c22_raw*os_fvtxsfvtxn_c22_raw)/os_bbcsfvtxn_c22_raw;
+  double os_newref_c22_fvtxn = (os_bbcsfvtxn_c22_raw*os_fvtxsfvtxn_c22_raw)/os_bbcsfvtxs_c22_raw;
+
+  if ( os_newref_c22_bbcs < 0 ) cout << "YOU'RE GONNA DIE" << endl;
+  if ( os_newref_c22_fvtxs < 0 ) cout << "YOU'RE GONNA DIE" << endl;
+  if ( os_newref_c22_fvtxn < 0 ) cout << "YOU'RE GONNA DIE" << endl;
+
+  double os_newref_v22_bbcs =  sqrt(fabs(os_newref_c22_bbcs));
+  double os_newref_v22_fvtxs = sqrt(fabs(os_newref_c22_fvtxs));
+  double os_newref_v22_fvtxn = sqrt(fabs(os_newref_c22_fvtxn));
+
+  cout << os_newref_v22_bbcs << endl;
+  cout << os_newref_v22_fvtxs << endl;
+  cout << os_newref_v22_fvtxn << endl;
+
+  // --- rescale to remove the old v2 and apply the new v2
+  th1d_os_bbcs_d22_both_corr->Scale(os_bbcs_v22_corr/os_newref_v22_bbcs);
+  th1d_os_fvtxs_d22_both_corr->Scale(os_fvtxs_v22_corr/os_newref_v22_fvtxs);
+  th1d_os_fvtxn_d22_both_corr->Scale(os_fvtxn_v22_corr/os_newref_v22_fvtxn);
+
+  th1d_os_bbcs_d22_both_corr->Draw();
+  c1->Print(Form("FigsTwo/newref_os_bbcs_v22_%d.png",handle));
+  c1->Print(Form("FigsTwo/newref_os_bbcs_v22_%d.pdf",handle));
+
+  th1d_os_fvtxs_d22_both_corr->Draw();
+  c1->Print(Form("FigsTwo/newref_os_fvtxs_v22_%d.png",handle));
+  c1->Print(Form("FigsTwo/newref_os_fvtxs_v22_%d.pdf",handle));
+
+  th1d_os_fvtxn_d22_both_corr->Draw();
+  c1->Print(Form("FigsTwo/newref_os_fvtxn_v22_%d.png",handle));
+  c1->Print(Form("FigsTwo/newref_os_fvtxn_v22_%d.pdf",handle));
+
+  // ---
+
+  // --------------------------------------------------------------------------------------------
+  // --- 3 component differential flow scalar product (makes me contemplate 3 particle cumulants)
+  // --------------------------------------------------------------------------------------------
+
+  TH1D* th1d_os_bbcsfvtxs_v22_3csp = (TH1D*)th1d_os_bbcs_d22_both_corr->Clone();
+  TH1D* th1d_os_bbcsfvtxn_v22_3csp = (TH1D*)th1d_os_bbcs_d22_both_corr->Clone();
+  TH1D* th1d_os_fvtxsfvtxn_v22_3csp = (TH1D*)th1d_os_bbcs_d22_both_corr->Clone();
+
+  int nbins = th1d_os_bbcsfvtxs_v22_3csp->GetNbinsX();
+  for ( int i = 0; i < nbins; ++i )
+    {
+      double d22_bbcs = th1d_os_bbcs_d22_both->GetBinContent(i+1);
+      double d22_fvtxs = th1d_os_fvtxs_d22_both->GetBinContent(i+1);
+      double d22_fvtxn = th1d_os_fvtxn_d22_both->GetBinContent(i+1);
+
+      double answer_bbcsfvtxs = (d22_bbcs*d22_fvtxs)/os_bbcsfvtxs_c22_raw;
+      double answer_bbcsfvtxn = (d22_bbcs*d22_fvtxn)/os_bbcsfvtxn_c22_raw;
+      double answer_fvtxsfvtxn = (d22_fvtxs*d22_fvtxs)/os_fvtxsfvtxn_c22_raw;
+
+      if ( answer_bbcsfvtxs != answer_bbcsfvtxs ) answer_bbcsfvtxs = 0;
+      if ( answer_bbcsfvtxn != answer_bbcsfvtxn ) answer_bbcsfvtxn = 0;
+      if ( answer_fvtxsfvtxn != answer_fvtxsfvtxn ) answer_fvtxsfvtxn = 0;
+
+      th1d_os_bbcsfvtxs_v22_3csp->SetBinContent(i+1,answer_bbcsfvtxs);
+      th1d_os_bbcsfvtxn_v22_3csp->SetBinContent(i+1,answer_bbcsfvtxn);
+      th1d_os_fvtxsfvtxn_v22_3csp->SetBinContent(i+1,answer_fvtxsfvtxn);
+    }
+
+  th1d_os_bbcsfvtxs_v22_3csp->Draw();
+  c1->Print(Form("FigsTwo/threesp_os_bbcsfvtxs_v22_%d.png",handle));
+  c1->Print(Form("FigsTwo/threesp_os_bbcsfvtxs_v22_%d.pdf",handle));
+
+  th1d_os_bbcsfvtxn_v22_3csp->Draw();
+  c1->Print(Form("FigsTwo/threesp_os_bbcsfvtxn_v22_%d.png",handle));
+  c1->Print(Form("FigsTwo/threesp_os_bbcsfvtxn_v22_%d.pdf",handle));
+
+  th1d_os_fvtxsfvtxn_v22_3csp->Draw();
+  c1->Print(Form("FigsTwo/threesp_os_fvtxsfvtxn_v22_%d.png",handle));
+  c1->Print(Form("FigsTwo/threesp_os_fvtxsfvtxn_v22_%d.pdf",handle));
+
+  // ---
+
   delete c1;
 
 }

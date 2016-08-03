@@ -696,6 +696,13 @@ void flatten(int runNumber, int rp_recal_pass)
   TProfile* os_fvtxs_cos32 = new TProfile(Form("os_fvtxs_cos32"),Form("os_fvtxs_cos32"),1, -0.5, 0.5, -1.1, 1.1);
   TProfile* os_fvtxn_cos32 = new TProfile(Form("os_fvtxn_cos32"),Form("os_fvtxn_cos32"),1, -0.5, 0.5, -1.1, 1.1);
 
+  TProfile* os_bbcsfvtxs_c22 = new TProfile(Form("os_bbcsfvtxs_c22"),Form("os_bbcsfvtxs_c22"),1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_bbcsfvtxs_c32 = new TProfile(Form("os_bbcsfvtxs_c32"),Form("os_bbcsfvtxs_c32"),1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_bbcsfvtxn_c22 = new TProfile(Form("os_bbcsfvtxn_c22"),Form("os_bbcsfvtxn_c22"),1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_bbcsfvtxn_c32 = new TProfile(Form("os_bbcsfvtxn_c32"),Form("os_bbcsfvtxn_c32"),1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxsfvtxn_c22 = new TProfile(Form("os_fvtxsfvtxn_c22"),Form("os_fvtxsfvtxn_c22"),1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxsfvtxn_c32 = new TProfile(Form("os_fvtxsfvtxn_c32"),Form("os_fvtxsfvtxn_c32"),1, -0.5, 0.5, -1.1, 1.1);
+
   TH1D* os_bbcs_1dPsi2 = new TH1D(Form("os_bbcs_1dPsi2"),Form("os_bbcs_1dPsi2"),220,-4.1,4.1); // weird binning from elsewhere, leave the same to match
   TH1D* os_bbcs_1dPsi3 = new TH1D(Form("os_bbcs_1dPsi3"),Form("os_bbcs_1dPsi3"),220,-4.1,4.1); // weird binning from elsewhere, leave the same to match
   TH1D* os_fvtxs_1dPsi2 = new TH1D(Form("os_fvtxs_1dPsi2"),Form("os_fvtxs_1dPsi2"),200,-4.1,4.1); // weird binning from elsewhere, leave the same to match
@@ -1528,6 +1535,23 @@ void flatten(int runNumber, int rp_recal_pass)
       os_fvtxn_1dPsi2->Fill(os_fvtxn_psi2);
       os_fvtxn_1dPsi3->Fill(os_fvtxn_psi3);
 
+      // --- have a look at some different correlations
+
+      // --- bbcs-fvtxs
+      float os_bbcfvtxs_qq2 = ( (os_bbc_qx2*os_fvtxs_qx2) + (os_bbc_qy2*os_fvtxs_qy2) ) / ( os_bbc_qw*os_fvtxs_qw );
+      float os_bbcfvtxs_qq3 = ( (os_bbc_qx3*os_fvtxs_qx3) + (os_bbc_qy3*os_fvtxs_qy3) ) / ( os_bbc_qw*os_fvtxs_qw );
+      os_bbcsfvtxs_c22->Fill(0.0,os_bbcfvtxs_qq2);
+      os_bbcsfvtxs_c32->Fill(0.0,os_bbcfvtxs_qq3);
+      // --- bbcs-fvtxn
+      float os_bbcfvtxn_qq2 = ( (os_bbc_qx2*os_fvtxn_qx2) + (os_bbc_qy2*os_fvtxn_qy2) ) / ( os_bbc_qw*os_fvtxn_qw );
+      float os_bbcfvtxn_qq3 = ( (os_bbc_qx3*os_fvtxn_qx3) + (os_bbc_qy3*os_fvtxn_qy3) ) / ( os_bbc_qw*os_fvtxn_qw );
+      os_bbcsfvtxn_c22->Fill(0.0,os_bbcfvtxn_qq2);
+      os_bbcsfvtxn_c32->Fill(0.0,os_bbcfvtxn_qq3);
+      // --- fvtxs-fvtxn
+      float os_fvtxsfvtxn_qq2 = ( (os_fvtxs_qx2*os_fvtxn_qx2) + (os_fvtxs_qy2*os_fvtxn_qy2) ) / ( os_fvtxs_qw*os_fvtxn_qw );
+      float os_fvtxsfvtxn_qq3 = ( (os_fvtxs_qx3*os_fvtxn_qx3) + (os_fvtxs_qy3*os_fvtxn_qy3) ) / ( os_fvtxs_qw*os_fvtxn_qw );
+      os_fvtxsfvtxn_c22->Fill(0.0,os_fvtxsfvtxn_qq2);
+      os_fvtxsfvtxn_c32->Fill(0.0,os_fvtxsfvtxn_qq3);
 
       // --- looks like these are already done above
       float bbc_psi2 = (sumxy[1][0][2]>0)?sumxy[1][0][3]:-9999.9;
@@ -2570,6 +2594,13 @@ void flatten(int runNumber, int rp_recal_pass)
       os_fvtxn_v3_east->Write();
       os_fvtxn_v3_both->Write();
 
+      os_bbcsfvtxs_c22->Write();
+      os_bbcsfvtxs_c32->Write();
+      os_bbcsfvtxn_c22->Write();
+      os_bbcsfvtxn_c32->Write();
+      os_fvtxsfvtxn_c22->Write();
+      os_fvtxsfvtxn_c32->Write();
+
       // ---
 
       mData1->Close();
@@ -2964,6 +2995,13 @@ void flatten(int runNumber, int rp_recal_pass)
   delete os_fvtxn_v3_west;
   delete os_fvtxn_v3_east;
   delete os_fvtxn_v3_both;
+
+  delete os_bbcsfvtxs_c22;
+  delete os_bbcsfvtxs_c32;
+  delete os_bbcsfvtxn_c22;
+  delete os_bbcsfvtxn_c32;
+  delete os_fvtxsfvtxn_c22;
+  delete os_fvtxsfvtxn_c32;
 
 
 
