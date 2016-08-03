@@ -73,6 +73,9 @@ int get_fvtx_layer(float);
 void initialize_pmt_position();
 int get_pmt_layer(int);
 void flatten(int, int);
+float calc4_event(float, float, float, float, float);
+float calc4_track_flag(float, float, float, float, float, float, float, float, float, bool);
+
 
 using namespace std;
 
@@ -206,8 +209,8 @@ void flatten(int runNumber, int rp_recal_pass)
   TH2D     *psi_af[NMUL][NHAR][NDET];
 
   // flattening parameters read in from file
-  float    mean[NMUL][NZPS][NHAR][NDET][2]; // mean of Psi distribution
-  float    widt[NMUL][NZPS][NHAR][NDET][2]; // width of Psi distribution
+  float    mean[NMUL][NZPS][NHAR][NDET][2]; // mean of Psi distribution (???)
+  float    widt[NMUL][NZPS][NHAR][NDET][2]; // width of Psi distribution (???)
   float    four[NMUL][NZPS][NHAR][NDET][2][NORD]; // ?
 
   // ---
@@ -734,6 +737,25 @@ void flatten(int runNumber, int rp_recal_pass)
   TProfile* os_fvtxn_v3_east = new TProfile(Form("os_fvtxn_v3_east"),Form("os_fvtxn_v3_east"),15, 0.0, 3.0, -1.1, 1.1);
   TProfile* os_fvtxn_v3_both = new TProfile(Form("os_fvtxn_v3_both"),Form("os_fvtxn_v3_both"),15, 0.0, 3.0, -1.1, 1.1);
 
+  TProfile* os_bbcs_c24 = new TProfile(Form("os_bbcs_c24"),Form("os_bbcs_c24"),1,-0.5,0.5,-1.1,1.1);
+  TProfile* os_fvtxs_c24 = new TProfile(Form("os_fvtxs_c24"),Form("os_fvtxs_c24"),1,-0.5,0.5,-1.1,1.1);
+  TProfile* os_fvtxn_c24 = new TProfile(Form("os_fvtxn_c24"),Form("os_fvtxn_c24"),1,-0.5,0.5,-1.1,1.1);
+  TProfile* os_bbcs_c24_vs_cent = new TProfile(Form("os_bbcs_c24_vs_cent"),Form("os_bbcs_c24_vs_cent"),101,-0.5,100.5,-1.1,1.1);
+  TProfile* os_fvtxs_c24_vs_cent = new TProfile(Form("os_fvtxs_c24_vs_cent"),Form("os_fvtxs_c24_vs_cent"),101,-0.5,100.5,-1.1,1.1);
+  TProfile* os_fvtxn_c24_vs_cent = new TProfile(Form("os_fvtxn_c24_vs_cent"),Form("os_fvtxn_c24_vs_cent"),101,-0.5,100.5,-1.1,1.1);
+  TProfile* os_bbcs_c24_vs_bbcqs = new TProfile(Form("os_bbcs_c24_vs_bbcqs"),Form("os_bbcs_c24_vs_bbcqs"),200,0,200,-1.1,1.1);
+  TProfile* os_fvtxs_c24_vs_bbcqs = new TProfile(Form("os_fvtxs_c24_vs_bbcqs"),Form("os_fvtxs_c24_vs_bbcqs"),200,0,200,-1.1,1.1);
+  TProfile* os_fvtxn_c24_vs_bbcqs = new TProfile(Form("os_fvtxn_c24_vs_bbcqs"),Form("os_fvtxn_c24_vs_bbcqs"),200,0,200,-1.1,1.1);
+  TProfile* os_bbcs_c24_vs_nfvtxs = new TProfile(Form("os_bbcs_c24_vs_nfvtxs"),Form("os_bbcs_c24_vs_nfvtxs"),1000,-0.5,999.5,-1.1,1.1);
+  TProfile* os_fvtxs_c24_vs_nfvtxs = new TProfile(Form("os_fvtxs_c24_vs_nfvtxs"),Form("os_fvtxs_c24_vs_nfvtxs"),1000,-0.5,999.5,-1.1,1.1);
+  TProfile* os_fvtxn_c24_vs_nfvtxs = new TProfile(Form("os_fvtxn_c24_vs_nfvtxs"),Form("os_fvtxn_c24_vs_nfvtxs"),1000,-0.5,999.5,-1.1,1.1);
+  TProfile* os_bbcs_d24_in_both = new TProfile(Form("os_bbcs_d24_in_both"),Form("os_bbcs_d24_in_both"),15,0.0,3.0,-1.1,1.1);
+  TProfile* os_fvtxs_d24_in_both = new TProfile(Form("os_fvtxs_d24_in_both"),Form("os_fvtxs_d24_in_both"),15,0.0,3.0,-1.1,1.1);
+  TProfile* os_fvtxn_d24_in_both = new TProfile(Form("os_fvtxn_d24_in_both"),Form("os_fvtxn_d24_in_both"),15,0.0,3.0,-1.1,1.1);
+  TProfile* os_bbcs_d24_out_both = new TProfile(Form("os_bbcs_d24_out_both"),Form("os_bbcs_d24_out_both"),15,0.0,3.0,-1.1,1.1);
+  TProfile* os_fvtxs_d24_out_both = new TProfile(Form("os_fvtxs_d24_out_both"),Form("os_fvtxs_d24_out_both"),15,0.0,3.0,-1.1,1.1);
+  TProfile* os_fvtxn_d24_out_both = new TProfile(Form("os_fvtxn_d24_out_both"),Form("os_fvtxn_d24_out_both"),15,0.0,3.0,-1.1,1.1);
+
   // ---------------------------------------------------------------------------------------------------------
 
 
@@ -749,7 +771,9 @@ void flatten(int runNumber, int rp_recal_pass)
   //tree variables
   float        event;
   float        d_bbcz;    // bbcz
-  float        centrality; // float because of dumb mistake in tree code :(
+  float        centrality; // integer but stored as float in PHGlobal etc
+  float        bbc_qn;
+  float        bbc_qs;
   unsigned int trigger_scaled;
   unsigned int trigger_live;
   float        bc_x;
@@ -780,6 +804,9 @@ void flatten(int runNumber, int rp_recal_pass)
   TBranch* b_event;   //!
   TBranch* b_bbc_z;   //!
   TBranch* b_centrality;   //!
+  TBranch* b_bbc_qn;   //!
+  TBranch* b_bbc_qs;   //!
+  TBranch* b_npc1;   //!
   TBranch* b_trigger_scaled;   //!
   TBranch* b_trigger_live;   //!
   TBranch* b_d_Qx;   //!
@@ -795,7 +822,6 @@ void flatten(int runNumber, int rp_recal_pass)
   TBranch* b_d_nFVTX_clus;   //!
   TBranch* b_d_nFVTXN_clus;   //!
   TBranch* b_d_nFVTXS_clus;   //!
-  TBranch* b_npc1;   //!
   TBranch* b_d_FVTX_x;   //!
   TBranch* b_d_FVTX_y;   //!
   TBranch* b_d_FVTX_z;   //!
@@ -810,6 +836,8 @@ void flatten(int runNumber, int rp_recal_pass)
 
   ntp_event_chain->SetBranchAddress("bbc_z",&d_bbcz,&b_bbc_z);
   ntp_event_chain->SetBranchAddress("centrality",&centrality,&b_centrality);
+  ntp_event_chain->SetBranchAddress("bbc_qn",&bbc_qn,&b_bbc_qn);
+  ntp_event_chain->SetBranchAddress("bbc_qs",&bbc_qs,&b_bbc_qs);
   ntp_event_chain->SetBranchAddress("npc1",&npc1,&b_npc1);
   ntp_event_chain->SetBranchAddress("event",&event,&b_event);
   ntp_event_chain->SetBranchAddress("trigger_scaled",&trigger_scaled,&b_trigger_scaled);
@@ -981,6 +1009,8 @@ void flatten(int runNumber, int rp_recal_pass)
       float bbc_qy2 = 0;
       float bbc_qx3 = 0;
       float bbc_qy3 = 0;
+      float bbc_qx4 = 0;
+      float bbc_qy4 = 0;
       float bbc_qw = 0;
 
       if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Looping over BBC stuff now" << endl;
@@ -1013,6 +1043,8 @@ void flatten(int runNumber, int rp_recal_pass)
               bbc_qy2 += bbc_charge*TMath::Sin(2*phi);
               bbc_qx3 += bbc_charge*TMath::Cos(3*phi);
               bbc_qy3 += bbc_charge*TMath::Sin(3*phi);
+              bbc_qx4 += bbc_charge*TMath::Cos(4*phi);
+              bbc_qy4 += bbc_charge*TMath::Sin(4*phi);
               bbc_qw += bbc_charge;
             } // loop over tubes
         } // check on tubes
@@ -1068,6 +1100,8 @@ void flatten(int runNumber, int rp_recal_pass)
       float fvtxs_qy2[5];
       float fvtxs_qx3[5];//all layers then 0 1 2 3
       float fvtxs_qy3[5];
+      float fvtxs_qx4[5];//all layers then 0 1 2 3
+      float fvtxs_qy4[5];
       float fvtxs_qw[5];
 
       for(int ilayer = 0; ilayer < 5; ilayer++)
@@ -1076,6 +1110,8 @@ void flatten(int runNumber, int rp_recal_pass)
           fvtxs_qy2[ilayer] = 0.0;
           fvtxs_qx3[ilayer] = 0.0;
           fvtxs_qy3[ilayer] = 0.0;
+          fvtxs_qx4[ilayer] = 0.0;
+          fvtxs_qy4[ilayer] = 0.0;
           fvtxs_qw[ilayer] = 0.0;
         } // loop over layers
 
@@ -1085,6 +1121,8 @@ void flatten(int runNumber, int rp_recal_pass)
       float fvtxn_qy2[5];
       float fvtxn_qx3[5];//all layers then 0 1 2 3
       float fvtxn_qy3[5];
+      float fvtxn_qx4[5];//all layers then 0 1 2 3
+      float fvtxn_qy4[5];
       float fvtxn_qw[5];
 
       for(int ilayer = 0; ilayer < 5; ilayer++)
@@ -1093,6 +1131,8 @@ void flatten(int runNumber, int rp_recal_pass)
           fvtxn_qy2[ilayer] = 0.0;
           fvtxn_qx3[ilayer] = 0.0;
           fvtxn_qy3[ilayer] = 0.0;
+          fvtxn_qx4[ilayer] = 0.0;
+          fvtxn_qy4[ilayer] = 0.0;
           fvtxn_qw[ilayer] = 0.0;
         } // loop over layers
 
@@ -1157,6 +1197,8 @@ void flatten(int runNumber, int rp_recal_pass)
                   fvtxs_qy2[0] += fvtx_weight * TMath::Sin(2*phi);
                   fvtxs_qx3[0] += fvtx_weight * TMath::Cos(3*phi);
                   fvtxs_qy3[0] += fvtx_weight * TMath::Sin(3*phi);
+                  fvtxs_qx4[0] += fvtx_weight * TMath::Cos(4*phi);
+                  fvtxs_qy4[0] += fvtx_weight * TMath::Sin(4*phi);
 
                   fvtxs_qw[fvtx_layer+1] += fvtx_weight;
                   fvtxs_qw[0] += fvtx_weight;
@@ -1180,6 +1222,8 @@ void flatten(int runNumber, int rp_recal_pass)
                   fvtxn_qy2[0] += TMath::Sin(2*phi);
                   fvtxn_qx3[0] += TMath::Cos(3*phi);
                   fvtxn_qy3[0] += TMath::Sin(3*phi);
+                  fvtxn_qx4[0] += TMath::Cos(4*phi);
+                  fvtxn_qy4[0] += TMath::Sin(4*phi);
 
                   fvtxn_qw[fvtx_layer+1] ++;
                   fvtxn_qw[0] ++;
@@ -1388,8 +1432,8 @@ void flatten(int runNumber, int rp_recal_pass)
                           if(ib==1) qy[icent][ih][id]->Fill(izvtx,sumxy[ih][id][1]);
                         } // pass > 0
                       float sxy=sumxy[ih][id][ib];
-                      float mxy=mean[icent][izvtx][ih][id][ib]; // for recentering qx and qy
-                      float wxy=widt[icent][izvtx][ih][id][ib]; // for recentering qx and qy
+                      float mxy=mean[icent][izvtx][ih][id][ib]; // for recentering qx and qy (???)
+                      float wxy=widt[icent][izvtx][ih][id][ib]; // for recentering qx and qy (???)
 
                       //if(icent==0 && izvtx==0 && ih==1 && id==0) cout<<ib<<" "<<sxy<<" "<<mxy<<" "<<wxy<<endl;
                       sumxy[ih][id][ib]=(sxy-mxy)/wxy; // recentered by mean and renormalized to width
@@ -1464,16 +1508,19 @@ void flatten(int runNumber, int rp_recal_pass)
       // ---
       // --- now going to calculate v2
       // ---
-      if(rp_recal_pass<3) continue; // don't calculate v2 except for final pass
+      if ( rp_recal_pass < 3 ) continue; // don't calculate v2 except for final pass
 
       // --- let's see if we can figure out the mean qx and qy from the flattening procedure above...
-      // --- this one? mean[icent][izvtx][ih][id][ib] // typical agreement better than 1%
-      // --- or maybe this one? sumxy[ih][id][ib] // should try...
+      // --- this one? mean[icent][izvtx][ih][id][ib] typical agreement better than 1%
+      // --- or maybe this one? sumxy[ih][id][ib] actually i think these are recentered Q-vectors, but if that's the case i could use them directly...
+      // --- adding fourth harmonic to the flattening procedure for the first time... 20160803-1702 EDT
       float os_bbc_qw = bbc_qw; // probably the same...
       float os_bbc_qx2 = mean[icent][izvtx][1][2][0];
       float os_bbc_qy2 = mean[icent][izvtx][1][2][1];
       float os_bbc_qx3 = mean[icent][izvtx][2][2][0];
       float os_bbc_qy3 = mean[icent][izvtx][2][2][1];
+      float os_bbc_qx4 = mean[icent][izvtx][3][2][0];
+      float os_bbc_qy4 = mean[icent][izvtx][3][2][1];
       os_bbcs_cos22->Fill(0.0,os_bbc_qx2);
       os_bbcs_sin22->Fill(0.0,os_bbc_qy2);
       os_bbcs_cos32->Fill(0.0,os_bbc_qx3);
@@ -1482,8 +1529,11 @@ void flatten(int runNumber, int rp_recal_pass)
       os_bbc_qy2 = bbc_qy2 - os_bbc_qw*os_bbc_qy2;
       os_bbc_qx3 = bbc_qx3 - os_bbc_qw*os_bbc_qx3;
       os_bbc_qy3 = bbc_qy3 - os_bbc_qw*os_bbc_qy3;
+      os_bbc_qx4 = bbc_qx4 - os_bbc_qw*os_bbc_qx4;
+      os_bbc_qy4 = bbc_qy4 - os_bbc_qw*os_bbc_qy4;
       float os_bbc_qq2 = ( (os_bbc_qx2*os_bbc_qx2) + (os_bbc_qy2*os_bbc_qy2) - os_bbc_qw ) / ( (os_bbc_qw*os_bbc_qw) - os_bbc_qw );
       float os_bbc_qq3 = ( (os_bbc_qx3*os_bbc_qx3) + (os_bbc_qy3*os_bbc_qy3) - os_bbc_qw ) / ( (os_bbc_qw*os_bbc_qw) - os_bbc_qw );
+      // float os_bbc_qq4 = ( (os_bbc_qx4*os_bbc_qx4) + (os_bbc_qy4*os_bbc_qy4) - os_bbc_qw ) / ( (os_bbc_qw*os_bbc_qw) - os_bbc_qw );
       os_bbcs_c22->Fill(0.0,os_bbc_qq2);
       os_bbcs_c32->Fill(0.0,os_bbc_qq3);
       float os_bbc_psi2 = atan2(os_bbc_qy2,os_bbc_qx2)/2.0;
@@ -1496,6 +1546,8 @@ void flatten(int runNumber, int rp_recal_pass)
       float os_fvtxs_qy2 = mean[icent][izvtx][1][3][1];
       float os_fvtxs_qx3 = mean[icent][izvtx][2][3][0];
       float os_fvtxs_qy3 = mean[icent][izvtx][2][3][1];
+      float os_fvtxs_qx4 = mean[icent][izvtx][3][3][0];
+      float os_fvtxs_qy4 = mean[icent][izvtx][3][3][1];
       os_fvtxs_cos22->Fill(0.0,os_fvtxs_qx2);
       os_fvtxs_sin22->Fill(0.0,os_fvtxs_qy2);
       os_fvtxs_cos32->Fill(0.0,os_fvtxs_qx3);
@@ -1504,8 +1556,11 @@ void flatten(int runNumber, int rp_recal_pass)
       os_fvtxs_qy2 = fvtxs_qy2[0] - os_fvtxs_qw*os_fvtxs_qy2;
       os_fvtxs_qx3 = fvtxs_qx3[0] - os_fvtxs_qw*os_fvtxs_qx3;
       os_fvtxs_qy3 = fvtxs_qy3[0] - os_fvtxs_qw*os_fvtxs_qy3;
+      os_fvtxs_qx4 = fvtxs_qx4[0] - os_fvtxs_qw*os_fvtxs_qx4;
+      os_fvtxs_qy4 = fvtxs_qy4[0] - os_fvtxs_qw*os_fvtxs_qy4;
       float os_fvtxs_qq2 = ( (os_fvtxs_qx2*os_fvtxs_qx2) + (os_fvtxs_qy2*os_fvtxs_qy2) - os_fvtxs_qw ) / ( (os_fvtxs_qw*os_fvtxs_qw) - os_fvtxs_qw );
       float os_fvtxs_qq3 = ( (os_fvtxs_qx3*os_fvtxs_qx3) + (os_fvtxs_qy3*os_fvtxs_qy3) - os_fvtxs_qw ) / ( (os_fvtxs_qw*os_fvtxs_qw) - os_fvtxs_qw );
+      // float os_fvtxs_qq4 = ( (os_fvtxs_qx4*os_fvtxs_qx4) + (os_fvtxs_qy4*os_fvtxs_qy4) - os_fvtxs_qw ) / ( (os_fvtxs_qw*os_fvtxs_qw) - os_fvtxs_qw );
       os_fvtxs_c22->Fill(0.0,os_fvtxs_qq2);
       os_fvtxs_c32->Fill(0.0,os_fvtxs_qq3);
       float os_fvtxs_psi2 = atan2(os_fvtxs_qy2,os_fvtxs_qx2)/2.0;
@@ -1514,10 +1569,12 @@ void flatten(int runNumber, int rp_recal_pass)
       os_fvtxs_1dPsi3->Fill(os_fvtxs_psi3);
 
       float os_fvtxn_qw = fvtxn_qw[0];
-      float os_fvtxn_qx2 = mean[icent][izvtx][1][3][0];
-      float os_fvtxn_qy2 = mean[icent][izvtx][1][3][1];
-      float os_fvtxn_qx3 = mean[icent][izvtx][2][3][0];
-      float os_fvtxn_qy3 = mean[icent][izvtx][2][3][1];
+      float os_fvtxn_qx2 = mean[icent][izvtx][1][8][0];
+      float os_fvtxn_qy2 = mean[icent][izvtx][1][8][1];
+      float os_fvtxn_qx3 = mean[icent][izvtx][2][8][0];
+      float os_fvtxn_qy3 = mean[icent][izvtx][2][8][1];
+      float os_fvtxn_qx4 = mean[icent][izvtx][3][8][0];
+      float os_fvtxn_qy4 = mean[icent][izvtx][3][8][1];
       os_fvtxn_cos22->Fill(0.0,os_fvtxn_qx2);
       os_fvtxn_sin22->Fill(0.0,os_fvtxn_qy2);
       os_fvtxn_cos32->Fill(0.0,os_fvtxn_qx3);
@@ -1526,8 +1583,11 @@ void flatten(int runNumber, int rp_recal_pass)
       os_fvtxn_qy2 = fvtxn_qy2[0] - os_fvtxn_qw*os_fvtxn_qy2;
       os_fvtxn_qx3 = fvtxn_qx3[0] - os_fvtxn_qw*os_fvtxn_qx3;
       os_fvtxn_qy3 = fvtxn_qy3[0] - os_fvtxn_qw*os_fvtxn_qy3;
+      os_fvtxn_qx4 = fvtxn_qx4[0] - os_fvtxn_qw*os_fvtxn_qx4;
+      os_fvtxn_qy4 = fvtxn_qy4[0] - os_fvtxn_qw*os_fvtxn_qy4;
       float os_fvtxn_qq2 = ( (os_fvtxn_qx2*os_fvtxn_qx2) + (os_fvtxn_qy2*os_fvtxn_qy2) - os_fvtxn_qw ) / ( (os_fvtxn_qw*os_fvtxn_qw) - os_fvtxn_qw );
       float os_fvtxn_qq3 = ( (os_fvtxn_qx3*os_fvtxn_qx3) + (os_fvtxn_qy3*os_fvtxn_qy3) - os_fvtxn_qw ) / ( (os_fvtxn_qw*os_fvtxn_qw) - os_fvtxn_qw );
+      // float os_fvtxn_qq4 = ( (os_fvtxn_qx4*os_fvtxn_qx4) + (os_fvtxn_qy4*os_fvtxn_qy4) - os_fvtxn_qw ) / ( (os_fvtxn_qw*os_fvtxn_qw) - os_fvtxn_qw );
       os_fvtxn_c22->Fill(0.0,os_fvtxn_qq2);
       os_fvtxn_c32->Fill(0.0,os_fvtxn_qq3);
       float os_fvtxn_psi2 = atan2(os_fvtxn_qy2,os_fvtxn_qx2)/2.0;
@@ -1552,6 +1612,29 @@ void flatten(int runNumber, int rp_recal_pass)
       float os_fvtxsfvtxn_qq3 = ( (os_fvtxs_qx3*os_fvtxn_qx3) + (os_fvtxs_qy3*os_fvtxn_qy3) ) / ( os_fvtxs_qw*os_fvtxn_qw );
       os_fvtxsfvtxn_c22->Fill(0.0,os_fvtxsfvtxn_qq2);
       os_fvtxsfvtxn_c32->Fill(0.0,os_fvtxsfvtxn_qq3);
+
+      // --- now have a look at some 4 particle cumulants
+
+      float os_bbc_qqqq4 = calc4_event(os_bbc_qx2,os_bbc_qy2,os_bbc_qx4,os_bbc_qy4,os_bbc_qw);
+      float os_fvtxs_qqqq4 = calc4_event(os_fvtxs_qx2,os_fvtxs_qy2,os_fvtxs_qx4,os_fvtxs_qy4,os_fvtxs_qw);
+      float os_fvtxn_qqqq4 = calc4_event(os_fvtxn_qx2,os_fvtxn_qy2,os_fvtxn_qx4,os_fvtxn_qy4,os_fvtxn_qw);
+      os_bbcs_c24->Fill(0.0,os_bbc_qqqq4);
+      os_fvtxs_c24->Fill(0.0,os_fvtxs_qqqq4);
+      os_fvtxn_c24->Fill(0.0,os_fvtxn_qqqq4);
+      os_bbcs_c24_vs_cent->Fill(centrality,os_bbc_qqqq4);
+      os_fvtxs_c24_vs_cent->Fill(centrality,os_fvtxs_qqqq4);
+      os_fvtxn_c24_vs_cent->Fill(centrality,os_fvtxn_qqqq4);
+      os_bbcs_c24_vs_bbcqs->Fill(bbc_qs,os_bbc_qqqq4);
+      os_fvtxs_c24_vs_bbcqs->Fill(bbc_qs,os_fvtxs_qqqq4);
+      os_fvtxn_c24_vs_bbcqs->Fill(bbc_qs,os_fvtxn_qqqq4);
+      os_bbcs_c24_vs_nfvtxs->Fill(d_nFVTXS_clus,os_bbc_qqqq4);
+      os_fvtxs_c24_vs_nfvtxs->Fill(d_nFVTXS_clus,os_fvtxs_qqqq4);
+      os_fvtxn_c24_vs_nfvtxs->Fill(d_nFVTXS_clus,os_fvtxn_qqqq4);
+
+
+      // --------------------------------------
+      // --- now the standard event plane stuff
+      // --------------------------------------
 
       // --- looks like these are already done above
       float bbc_psi2 = (sumxy[1][0][2]>0)?sumxy[1][0][3]:-9999.9;
@@ -1775,6 +1858,8 @@ void flatten(int runNumber, int rp_recal_pass)
               float uy2 = sin(2*phi_angle);
               float ux3 = cos(3*phi_angle);
               float uy3 = sin(3*phi_angle);
+              float ux4 = cos(4*phi_angle);
+              float uy4 = sin(4*phi_angle);
 
               float bbc_uq2 = ( (ux2*bbc_qx2) + (uy2*bbc_qy2) ) / ( bbc_qw );
               float bbc_uq3 = ( (ux3*bbc_qx3) + (uy3*bbc_qy3) ) / ( bbc_qw );
@@ -1920,6 +2005,24 @@ void flatten(int runNumber, int rp_recal_pass)
               os_fvtxn_v3_both->Fill(pt_angle,cos(3.0*(phi_angle-os_fvtxn_psi3)));
               if ( dcarm == 1 ) os_fvtxn_v3_west->Fill(pt_angle,cos(3.0*(phi_angle-os_fvtxn_psi3)));
               if ( dcarm == 0 ) os_fvtxn_v3_east->Fill(pt_angle,cos(3.0*(phi_angle-os_fvtxn_psi3)));
+
+              // --- 4 particle stuff
+
+              // --- POI is in RP because we forcibly add it
+              float bbc_d24_in = calc4_track_flag(ux2,uy2,ux4,uy4,ux2+os_bbc_qx2,uy2+os_bbc_qy2,ux4+os_bbc_qx4,uy4+os_bbc_qy4,1+os_bbc_qw,true);
+              float fvtxs_d24_in = calc4_track_flag(ux2,uy2,ux4,uy4,ux2+os_fvtxs_qx2,uy2+os_fvtxs_qy2,ux4+os_fvtxs_qx4,uy4+os_fvtxs_qy4,1+os_fvtxs_qw,true);
+              float fvtxn_d24_in = calc4_track_flag(ux2,uy2,ux4,uy4,ux2+os_fvtxn_qx2,uy2+os_fvtxn_qy2,ux4+os_fvtxn_qx4,uy4+os_fvtxn_qy4,1+os_fvtxn_qw,true);
+              os_bbcs_d24_in_both->Fill(pt_angle,bbc_d24_in);
+              os_fvtxs_d24_in_both->Fill(pt_angle,fvtxs_d24_in);
+              os_fvtxn_d24_in_both->Fill(pt_angle,fvtxn_d24_in);
+              // --- POI is not in RP, this is the natural situation because the POI and RP are in different detectors
+              float bbc_d24_out = calc4_track_flag(ux2,uy2,ux4,uy4,os_bbc_qx2,os_bbc_qy2,os_bbc_qx4,os_bbc_qy4,os_bbc_qw,false);
+              float fvtxs_d24_out = calc4_track_flag(ux2,uy2,ux4,uy4,os_fvtxs_qx2,os_fvtxs_qy2,os_fvtxs_qx4,os_fvtxs_qy4,os_fvtxs_qw,false);
+              float fvtxn_d24_out = calc4_track_flag(ux2,uy2,ux4,uy4,os_fvtxn_qx2,os_fvtxn_qy2,os_fvtxn_qx4,os_fvtxn_qy4,os_fvtxn_qw,false);
+              os_bbcs_d24_out_both->Fill(pt_angle,bbc_d24_out);
+              os_fvtxs_d24_out_both->Fill(pt_angle,fvtxs_d24_out);
+              os_fvtxn_d24_out_both->Fill(pt_angle,fvtxn_d24_out);
+
 
               //bbc angle
               if ( bbc_pmts )
@@ -2601,6 +2704,25 @@ void flatten(int runNumber, int rp_recal_pass)
       os_fvtxsfvtxn_c22->Write();
       os_fvtxsfvtxn_c32->Write();
 
+      os_bbcs_c24->Write();
+      os_fvtxs_c24->Write();
+      os_fvtxn_c24->Write();
+      os_bbcs_c24_vs_cent->Write();
+      os_fvtxs_c24_vs_cent->Write();
+      os_fvtxn_c24_vs_cent->Write();
+      os_bbcs_c24_vs_bbcqs->Write();
+      os_fvtxs_c24_vs_bbcqs->Write();
+      os_fvtxn_c24_vs_bbcqs->Write();
+      os_bbcs_c24_vs_nfvtxs->Write();
+      os_fvtxs_c24_vs_nfvtxs->Write();
+      os_fvtxn_c24_vs_nfvtxs->Write();
+      os_bbcs_d24_in_both->Write();
+      os_fvtxs_d24_in_both->Write();
+      os_fvtxn_d24_in_both->Write();
+      os_bbcs_d24_out_both->Write();
+      os_fvtxs_d24_out_both->Write();
+      os_fvtxn_d24_out_both->Write();
+
       // ---
 
       mData1->Close();
@@ -3003,6 +3125,24 @@ void flatten(int runNumber, int rp_recal_pass)
   delete os_fvtxsfvtxn_c22;
   delete os_fvtxsfvtxn_c32;
 
+  delete os_bbcs_c24;
+  delete os_fvtxs_c24;
+  delete os_fvtxn_c24;
+  delete os_bbcs_c24_vs_cent;
+  delete os_fvtxs_c24_vs_cent;
+  delete os_fvtxn_c24_vs_cent;
+  delete os_bbcs_c24_vs_bbcqs;
+  delete os_fvtxs_c24_vs_bbcqs;
+  delete os_fvtxn_c24_vs_bbcqs;
+  delete os_bbcs_c24_vs_nfvtxs;
+  delete os_fvtxs_c24_vs_nfvtxs;
+  delete os_fvtxn_c24_vs_nfvtxs;
+  delete os_bbcs_d24_in_both;
+  delete os_fvtxs_d24_in_both;
+  delete os_fvtxn_d24_in_both;
+  delete os_bbcs_d24_out_both;
+  delete os_fvtxs_d24_out_both;
+  delete os_fvtxn_d24_out_both;
 
 
   // ---
@@ -3245,3 +3385,58 @@ int get_fvtx_layer(float z)
   return -1;
 }
 
+
+float calc4_event(float Xn, float Yn, float X2n, float Y2n, float M)
+{
+
+  float Qn2 = Xn*Xn+Yn*Yn;
+  float Qn2d = Xn*Xn-Yn*Yn;
+
+  float one   = Qn2*Qn2;
+  float two   = X2n*X2n+Y2n*Y2n;
+  float three = (2*(X2n*Qn2d + 2*Y2n*Xn*Yn));
+  float four  = 2*(2*(M-2)*Qn2);
+  float five  = 2*M*(M-3);
+
+  float numerator = one + two - three - four + five;
+  float denominator = M*(M-1)*(M-2)*(M-3);
+
+  return numerator/denominator;
+
+}
+
+
+float calc4_track_flag(float xn, float yn, float x2n, float y2n, float Xn, float Yn, float X2n, float Y2n, float M, bool is_POI_in_RP)
+{
+
+  if ( is_POI_in_RP )
+    {
+      float one   = (xn*Xn + yn*Yn)*(Xn*Xn + Yn*Yn);
+      float two   = x2n*Xn*Xn - x2n*Yn*Yn + 2*y2n*Xn*Yn;
+      float three = xn*Xn*X2n + xn*Yn*Y2n - yn*(X2n*Yn - Xn*Y2n);
+      float four  = 2*M*(xn*Xn + yn*Yn);
+      float five  = 2*(Xn*Xn + Yn*Yn);
+      float six   = 7*(xn*Xn + yn*Yn);
+      float seven = xn*Xn + yn*Yn;
+      float eight = x2n*X2n + y2n*Y2n;
+      float nine = 2*(xn*Xn + yn*Yn);
+      // ---
+      float numerator = one - two - three - four - five + six - seven + eight + nine + 2*M - 6;
+      float denominator = (M-1)*(M-2)*(M-3);
+      // ---
+      return numerator/denominator;
+    }
+  else
+    {
+      float one   = (xn*Xn + yn*Yn)*(Xn*Xn + Yn*Yn);
+      float three = xn*Xn*X2n + xn*Yn*Y2n - yn*(X2n*Yn - Xn*Y2n);
+      float four  = 2*M*(xn*Xn + yn*Yn);
+      float nine = 2*(xn*Xn + yn*Yn);
+      // ---
+      float numerator = one - three - four + nine;
+      float denominator = M*(M-1)*(M-2);
+      // ---
+      return numerator/denominator;
+    }
+
+}
