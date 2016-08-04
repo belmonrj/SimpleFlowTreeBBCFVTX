@@ -3,11 +3,11 @@ void doit(int);
 void temp_2pc()
 {
 
-  doit(456652);
-  // doit(200);
-  // doit(62);
-  // doit(39);
-  // doit(20);
+  // doit(456652);
+  doit(200);
+  doit(62);
+  doit(39);
+  doit(20);
 
 }
 
@@ -204,9 +204,9 @@ void doit(int handle)
       double d22_fvtxs = th1d_os_fvtxs_d22_both->GetBinContent(i+1);
       double d22_fvtxn = th1d_os_fvtxn_d22_both->GetBinContent(i+1);
 
-      double answer_bbcsfvtxs = (d22_bbcs*d22_fvtxs)/os_bbcsfvtxs_c22_raw;
-      double answer_bbcsfvtxn = (d22_bbcs*d22_fvtxn)/os_bbcsfvtxn_c22_raw;
-      double answer_fvtxsfvtxn = (d22_fvtxs*d22_fvtxs)/os_fvtxsfvtxn_c22_raw;
+      double answer_bbcsfvtxs = sqrt((d22_bbcs*d22_fvtxs)/os_bbcsfvtxs_c22_raw);
+      double answer_bbcsfvtxn = sqrt((d22_bbcs*d22_fvtxn)/os_bbcsfvtxn_c22_raw);
+      double answer_fvtxsfvtxn = sqrt((d22_fvtxs*d22_fvtxs)/os_fvtxsfvtxn_c22_raw);
 
       if ( answer_bbcsfvtxs != answer_bbcsfvtxs ) answer_bbcsfvtxs = 0;
       if ( answer_bbcsfvtxn != answer_bbcsfvtxn ) answer_bbcsfvtxn = 0;
