@@ -27,6 +27,15 @@ void doit(int handle)
       return;
     }
 
+  ifstream finpub("ppg161.dat");
+  float pt[13], pubv2[13], epubv2[13], esyspubv2[13];
+  for ( int i = 0; i < 13; ++i )
+    {
+      finpub>>pt[i]>>pubv2[i]>>epubv2[i]>>esyspubv2[i];
+    }
+  TGraphErrors* tge_pub = new TGraphErrors(13,pt,pubv2,0,epubv2);
+  tge_pub->SetMarkerStyle(kFullCircle);
+
   // ---
   // ---
   // ---
@@ -36,17 +45,8 @@ void doit(int handle)
   // ------------
 
   TProfile* tp1f_os_bbcs_d22_both = (TProfile*)file->Get("os_bbcs_d22_both");
-  TProfile* tp1f_os_bbcs_cos22_both = (TProfile*)file->Get("os_bbcs_cos22_both");
-  TProfile* tp1f_os_bbcs_sin22_both = (TProfile*)file->Get("os_bbcs_sin22_both");
-
   TProfile* tp1f_os_bbcs_c22 = (TProfile*)file->Get("os_bbcs_c22");
-  TProfile* tp1f_os_bbcs_cos22 = (TProfile*)file->Get("os_bbcs_cos22");
-  TProfile* tp1f_os_bbcs_sin22 = (TProfile*)file->Get("os_bbcs_sin22");
-
   double os_bbcs_c22_raw = tp1f_os_bbcs_c22->GetBinContent(1);
-  double os_bbcs_cos22_raw = tp1f_os_bbcs_cos22->GetBinContent(1);
-  double os_bbcs_sin22_raw = tp1f_os_bbcs_sin22->GetBinContent(1);
-
   double os_bbcs_c22_corr = os_bbcs_c22_raw;
   if ( os_bbcs_c22_corr < 0 ) cout << "YOU'RE GONNA DIE" << endl;
   double os_bbcs_v22_corr = sqrt(fabs(os_bbcs_c22_corr));
@@ -73,17 +73,8 @@ void doit(int handle)
   // -------------
 
   TProfile* tp1f_os_fvtxs_d22_both = (TProfile*)file->Get("os_fvtxs_d22_both");
-  TProfile* tp1f_os_fvtxs_cos22_both = (TProfile*)file->Get("os_fvtxs_cos22_both");
-  TProfile* tp1f_os_fvtxs_sin22_both = (TProfile*)file->Get("os_fvtxs_sin22_both");
-
   TProfile* tp1f_os_fvtxs_c22 = (TProfile*)file->Get("os_fvtxs_c22");
-  TProfile* tp1f_os_fvtxs_cos22 = (TProfile*)file->Get("os_fvtxs_cos22");
-  TProfile* tp1f_os_fvtxs_sin22 = (TProfile*)file->Get("os_fvtxs_sin22");
-
   double os_fvtxs_c22_raw = tp1f_os_fvtxs_c22->GetBinContent(1);
-  double os_fvtxs_cos22_raw = tp1f_os_fvtxs_cos22->GetBinContent(1);
-  double os_fvtxs_sin22_raw = tp1f_os_fvtxs_sin22->GetBinContent(1);
-
   double os_fvtxs_c22_corr = os_fvtxs_c22_raw;
   if ( os_fvtxs_c22_corr < 0 ) cout << "YOU'RE GONNA DIE" << endl;
   double os_fvtxs_v22_corr = sqrt(fabs(os_fvtxs_c22_corr));
@@ -108,17 +99,8 @@ void doit(int handle)
   // -------------
 
   TProfile* tp1f_os_fvtxn_d22_both = (TProfile*)file->Get("os_fvtxn_d22_both");
-  TProfile* tp1f_os_fvtxn_cos22_both = (TProfile*)file->Get("os_fvtxn_cos22_both");
-  TProfile* tp1f_os_fvtxn_sin22_both = (TProfile*)file->Get("os_fvtxn_sin22_both");
-
   TProfile* tp1f_os_fvtxn_c22 = (TProfile*)file->Get("os_fvtxn_c22");
-  TProfile* tp1f_os_fvtxn_cos22 = (TProfile*)file->Get("os_fvtxn_cos22");
-  TProfile* tp1f_os_fvtxn_sin22 = (TProfile*)file->Get("os_fvtxn_sin22");
-
   double os_fvtxn_c22_raw = tp1f_os_fvtxn_c22->GetBinContent(1);
-  double os_fvtxn_cos22_raw = tp1f_os_fvtxn_cos22->GetBinContent(1);
-  double os_fvtxn_sin22_raw = tp1f_os_fvtxn_sin22->GetBinContent(1);
-
   double os_fvtxn_c22_corr = os_fvtxn_c22_raw;
   if ( os_fvtxn_c22_corr < 0 ) cout << "YOU'RE GONNA DIE" << endl;
   double os_fvtxn_v22_corr = sqrt(fabs(os_fvtxn_c22_corr));
@@ -228,6 +210,72 @@ void doit(int handle)
   th1d_os_fvtxsfvtxn_v22_3csp->Draw();
   c1->Print(Form("FigsTwo/threesp_os_fvtxsfvtxn_v22_%d.png",handle));
   c1->Print(Form("FigsTwo/threesp_os_fvtxsfvtxn_v22_%d.pdf",handle));
+
+  // ---
+
+  // ----------------------------
+  // --- a few simple comparisons
+  // ----------------------------
+
+  th1d_os_bbcsfvtxs_v22_3csp->SetMinimum(0);
+  th1d_os_bbcsfvtxs_v22_3csp->SetMaximum(0.2);
+  if ( handle <= 39 ) th1d_os_bbcsfvtxs_v22_3csp->SetMaximum(1.0);
+  th1d_os_bbcsfvtxs_v22_3csp->Draw();
+  th1d_os_bbcsfvtxn_v22_3csp->Draw("same");
+  th1d_os_fvtxsfvtxn_v22_3csp->Draw("same");
+  tge_pub->Draw("p");
+  th1d_os_bbcsfvtxs_v22_3csp->SetLineColor(kBlack);
+  th1d_os_bbcsfvtxn_v22_3csp->SetLineColor(kRed);
+  th1d_os_fvtxsfvtxn_v22_3csp->SetLineColor(kBlue);
+  TLegend* leg = new TLegend(0.18,0.68,0.38,0.88);
+  leg->SetHeader("double scalar product");
+  leg->AddEntry(th1d_os_bbcsfvtxs_v22_3csp,"BBCS and FVTXS","el");
+  leg->AddEntry(th1d_os_bbcsfvtxn_v22_3csp,"BBCS and FVTXN","el");
+  leg->AddEntry(th1d_os_fvtxsfvtxn_v22_3csp,"FVTXS and FVTXN","el");
+  leg->SetTextSize(0.04);
+  leg->SetFillStyle(0);
+  leg->Draw();
+  c1->Print(Form("FigsTwo/threesp_os_compare_v22_%d.png",handle));
+  c1->Print(Form("FigsTwo/threesp_os_compare_v22_%d.pdf",handle));
+
+  th1d_os_bbcs_d22_both_corr->SetMinimum(0);
+  th1d_os_bbcs_d22_both_corr->SetMaximum(0.2);
+  if ( handle <= 39 ) th1d_os_bbcs_d22_both_corr->SetMaximum(1.0);
+  th1d_os_bbcs_d22_both_corr->Draw();
+  th1d_os_fvtxs_d22_both_corr->Draw("same");
+  th1d_os_fvtxn_d22_both_corr->Draw("same");
+  tge_pub->Draw("p");
+  th1d_os_bbcs_d22_both_corr->SetLineColor(kBlack);
+  th1d_os_fvtxs_d22_both_corr->SetLineColor(kRed);
+  th1d_os_fvtxn_d22_both_corr->SetLineColor(kBlue);
+  if ( leg ) delete leg;
+  leg = new TLegend(0.18,0.68,0.38,0.88);
+  leg->SetHeader("scalar product");
+  leg->AddEntry(th1d_os_bbcs_d22_both_corr,"BBCS","el");
+  leg->AddEntry(th1d_os_fvtxs_d22_both_corr,"FVTXS","el");
+  leg->AddEntry(th1d_os_fvtxn_d22_both_corr,"FVTXN","el");
+  leg->SetTextSize(0.04);
+  leg->SetFillStyle(0);
+  leg->Draw();
+  c1->Print(Form("FigsTwo/newref_os_compare_v22_%d.png",handle));
+  c1->Print(Form("FigsTwo/newref_os_compare_v22_%d.pdf",handle));
+
+  th1d_os_bbcsfvtxs_v22_3csp->SetLineColor(kGreen+2);
+  th1d_os_bbcsfvtxs_v22_3csp->Draw();
+  th1d_os_bbcs_d22_both_corr->Draw("same");
+  th1d_os_fvtxs_d22_both_corr->Draw("same");
+  tge_pub->Draw("p");
+  if ( leg ) delete leg;
+  leg = new TLegend(0.18,0.68,0.38,0.88);
+  //leg->SetHeader("scalar product");
+  leg->AddEntry(th1d_os_bbcsfvtxs_v22_3csp,"BBCS and FVTXS","el");
+  leg->AddEntry(th1d_os_bbcs_d22_both_corr,"BBCS","el");
+  leg->AddEntry(th1d_os_fvtxs_d22_both_corr,"FVTXS","el");
+  leg->SetTextSize(0.04);
+  leg->SetFillStyle(0);
+  leg->Draw();
+  c1->Print(Form("FigsTwo/nr3c_os_compare_v22_%d.png",handle));
+  c1->Print(Form("FigsTwo/nr3c_os_compare_v22_%d.pdf",handle));
 
   // ---
 
