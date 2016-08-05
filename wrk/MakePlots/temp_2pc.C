@@ -62,7 +62,27 @@ void doit(int handle)
   if ( handle <= 200 ) th1d_os_bbcs_d22_both_corr->SetTitle(Form("d+Au #sqrt{s_{NN}} = %d GeV",handle));
   th1d_os_bbcs_d22_both_corr->GetXaxis()->SetTitle("p_{T} (GeV/c)");
   th1d_os_bbcs_d22_both_corr->GetYaxis()->SetTitle("v_{2}{2}");
+  //  th1d_os_bbcs_d22_both_corr->SetMarkerStyle(kOpenCircle);
+  th1d_os_bbcs_d22_both_corr->SetMaximum(th1d_os_bbcs_d22_both_corr->GetMaximum()*1.2);
   th1d_os_bbcs_d22_both_corr->Draw();
+  float tlx = 0.65;
+  float tly = 0.2;
+  TLatex* tlref = new TLatex(tlx,tly,Form("#sqrt{c_{2}{2}} = %.3f",os_bbcs_v22_corr));
+  tlref->SetTextSize(0.05);
+  tlref->SetNDC();
+  tlref->Draw();
+  float tlx2 = 0.17;
+  float tly2 = 0.85;
+  TLatex* tlmeth = new TLatex(tlx2,tly2,Form("scalar product with BBCS"));
+  tlmeth->SetTextSize(0.05);
+  tlmeth->SetNDC();
+  tlmeth->Draw();
+  float tlx3 = 0.17;
+  float tly3 = 0.8;
+  TLatex* tlmeth3 = new TLatex(tlx3,tly3,Form("reference flow using BBCS"));
+  tlmeth3->SetTextSize(0.05);
+  tlmeth3->SetNDC();
+  tlmeth3->Draw();
   c1->Print(Form("FigsTwo/corr_os_bbcs_v22_%d.png",handle));
   c1->Print(Form("FigsTwo/corr_os_bbcs_v22_%d.pdf",handle));
 
@@ -82,6 +102,7 @@ void doit(int handle)
 
   TH1D* th1d_os_fvtxs_d22_both = (TH1D*)tp1f_os_fvtxs_d22_both->ProjectionX();
   TH1D* th1d_os_fvtxs_d22_both_corr = (TH1D*)th1d_os_fvtxs_d22_both->Clone();
+  //  th1d_os_fvtxs_d22_both_corr->SetMarkerStyle(kOpenCircle);
   th1d_os_fvtxs_d22_both_corr->Draw();
   c1->Print(Form("FigsTwo/corr_os_fvtxs_d22_%d.png",handle));
   c1->Print(Form("FigsTwo/corr_os_fvtxs_d22_%d.pdf",handle));
@@ -90,7 +111,12 @@ void doit(int handle)
   if ( handle <= 200 ) th1d_os_fvtxs_d22_both_corr->SetTitle(Form("d+Au #sqrt{s_{NN}} = %d GeV",handle));
   th1d_os_fvtxs_d22_both_corr->GetXaxis()->SetTitle("p_{T} (GeV/c)");
   th1d_os_fvtxs_d22_both_corr->GetYaxis()->SetTitle("v_{2}{2}");
+  //  th1d_os_fvtxs_d22_both_corr->SetMarkerStyle(kOpenCircle);
+  th1d_os_fvtxs_d22_both_corr->SetMaximum(th1d_os_fvtxs_d22_both_corr->GetMaximum()*1.2);
   th1d_os_fvtxs_d22_both_corr->Draw();
+  tlref->DrawLatex(tlx,tly,Form("#sqrt{c_{2}{2}} = %.3f",os_fvtxs_v22_corr));
+  tlmeth->DrawLatex(tlx2,tly2,Form("scalar product with FVTXS"));
+  tlmeth3->DrawLatex(tlx3,tly3,Form("reference flow using FVTXS"));
   c1->Print(Form("FigsTwo/corr_os_fvtxs_v22_%d.png",handle));
   c1->Print(Form("FigsTwo/corr_os_fvtxs_v22_%d.pdf",handle));
 
@@ -108,6 +134,8 @@ void doit(int handle)
 
   TH1D* th1d_os_fvtxn_d22_both = (TH1D*)tp1f_os_fvtxn_d22_both->ProjectionX();
   TH1D* th1d_os_fvtxn_d22_both_corr = (TH1D*)th1d_os_fvtxn_d22_both->Clone();
+  //  th1d_os_fvtxn_d22_both_corr->SetMarkerStyle(kOpenCircle);
+  th1d_os_fvtxn_d22_both_corr->SetMaximum(th1d_os_fvtxn_d22_both_corr->GetMaximum()*1.2);
   th1d_os_fvtxn_d22_both_corr->Draw();
   c1->Print(Form("FigsTwo/corr_os_fvtxn_d22_%d.png",handle));
   c1->Print(Form("FigsTwo/corr_os_fvtxn_d22_%d.pdf",handle));
@@ -116,7 +144,12 @@ void doit(int handle)
   if ( handle <= 200 ) th1d_os_fvtxn_d22_both_corr->SetTitle(Form("d+Au #sqrt{s_{NN}} = %d GeV",handle));
   th1d_os_fvtxn_d22_both_corr->GetXaxis()->SetTitle("p_{T} (GeV/c)");
   th1d_os_fvtxn_d22_both_corr->GetYaxis()->SetTitle("v_{2}{2}");
+  //  th1d_os_fvtxn_d22_both_corr->SetMarkerStyle(kOpenCircle);
+  th1d_os_fvtxn_d22_both_corr->SetMaximum(th1d_os_fvtxn_d22_both_corr->GetMaximum()*1.2);
   th1d_os_fvtxn_d22_both_corr->Draw();
+  tlref->DrawLatex(tlx,tly,Form("#sqrt{c_{2}{2}} = %.3f",os_fvtxn_v22_corr));
+  tlmeth->DrawLatex(tlx2,tly2,Form("scalar product with FVTXN"));
+  tlmeth3->DrawLatex(tlx3,tly3,Form("reference flow using FVTXN"));
   c1->Print(Form("FigsTwo/corr_os_fvtxn_v22_%d.png",handle));
   c1->Print(Form("FigsTwo/corr_os_fvtxn_v22_%d.pdf",handle));
 
@@ -157,15 +190,30 @@ void doit(int handle)
   th1d_os_fvtxs_d22_both_corr->Scale(os_fvtxs_v22_corr/os_newref_v22_fvtxs);
   th1d_os_fvtxn_d22_both_corr->Scale(os_fvtxn_v22_corr/os_newref_v22_fvtxn);
 
+  //  th1d_os_bbcs_d22_both_corr->SetMarkerStyle(kOpenCircle);
+  th1d_os_bbcs_d22_both_corr->SetMaximum(th1d_os_bbcs_d22_both_corr->GetMaximum()*1.2);
   th1d_os_bbcs_d22_both_corr->Draw();
+  tlref->DrawLatex(tlx,tly,Form("#sqrt{c_{2}{2}} = %.3f",os_newref_v22_bbcs));
+  tlmeth->DrawLatex(tlx2,tly2,Form("scalar product with BBCS"));
+  tlmeth3->DrawLatex(tlx3,tly3,Form("reference flow using BBCS, FVTXS, FVTXN"));
   c1->Print(Form("FigsTwo/newref_os_bbcs_v22_%d.png",handle));
   c1->Print(Form("FigsTwo/newref_os_bbcs_v22_%d.pdf",handle));
 
+  //  th1d_os_fvtxs_d22_both_corr->SetMarkerStyle(kOpenCircle);
+  th1d_os_fvtxs_d22_both_corr->SetMaximum(th1d_os_fvtxs_d22_both_corr->GetMaximum()*1.2);
   th1d_os_fvtxs_d22_both_corr->Draw();
+  tlref->DrawLatex(tlx,tly,Form("#sqrt{c_{2}{2}} = %.3f",os_newref_v22_fvtxs));
+  tlmeth->DrawLatex(tlx2,tly2,Form("scalar product with FVTXS"));
+  tlmeth3->DrawLatex(tlx3,tly3,Form("reference flow using BBCS, FVTXS, FVTXN"));
   c1->Print(Form("FigsTwo/newref_os_fvtxs_v22_%d.png",handle));
   c1->Print(Form("FigsTwo/newref_os_fvtxs_v22_%d.pdf",handle));
 
+  //  th1d_os_fvtxn_d22_both_corr->SetMarkerStyle(kOpenCircle);
+  th1d_os_fvtxn_d22_both_corr->SetMaximum(th1d_os_fvtxn_d22_both_corr->GetMaximum()*1.2);
   th1d_os_fvtxn_d22_both_corr->Draw();
+  tlref->DrawLatex(tlx,tly,Form("#sqrt{c_{2}{2}} = %.3f",os_newref_v22_fvtxn));
+  tlmeth->DrawLatex(tlx2,tly2,Form("scalar product with FVTXN"));
+  tlmeth3->DrawLatex(tlx3,tly3,Form("reference flow using BBCS, FVTXS, FVTXN"));
   c1->Print(Form("FigsTwo/newref_os_fvtxn_v22_%d.png",handle));
   c1->Print(Form("FigsTwo/newref_os_fvtxn_v22_%d.pdf",handle));
 
@@ -199,15 +247,30 @@ void doit(int handle)
       th1d_os_fvtxsfvtxn_v22_3csp->SetBinContent(i+1,answer_fvtxsfvtxn);
     }
 
+  //  th1d_os_bbcsfvtxs_v22_3csp->SetMarkerStyle(kOpenCircle);
+  th1d_os_bbcsfvtxs_v22_3csp->SetMaximum(th1d_os_bbcsfvtxs_v22_3csp->GetBinContent(th1d_os_bbcsfvtxs_v22_3csp->GetMaximumBin())*1.2);
   th1d_os_bbcsfvtxs_v22_3csp->Draw();
+  tlref->DrawLatex(tlx,tly,Form("#sqrt{c_{2}{2}} = %.3f",sqrt(os_bbcsfvtxs_c22_raw)));
+  tlmeth->DrawLatex(tlx2,tly2,Form("double scalar product with BBCS and FVTXS"));
+  tlmeth3->DrawLatex(tlx3,tly3,Form("reference flow using BBCS and FVTXS"));
   c1->Print(Form("FigsTwo/threesp_os_bbcsfvtxs_v22_%d.png",handle));
   c1->Print(Form("FigsTwo/threesp_os_bbcsfvtxs_v22_%d.pdf",handle));
 
+  //  th1d_os_bbcsfvtxn_v22_3csp->SetMarkerStyle(kOpenCircle);
+  th1d_os_bbcsfvtxn_v22_3csp->SetMaximum(th1d_os_bbcsfvtxn_v22_3csp->GetBinContent(th1d_os_bbcsfvtxn_v22_3csp->GetMaximumBin())*1.2);
   th1d_os_bbcsfvtxn_v22_3csp->Draw();
+  tlref->DrawLatex(tlx,tly,Form("#sqrt{c_{2}{2}} = %.3f",sqrt(os_bbcsfvtxn_c22_raw)));
+  tlmeth->DrawLatex(tlx2,tly2,Form("double scalar product with BBCS and FVTXN"));
+  tlmeth3->DrawLatex(tlx3,tly3,Form("reference flow using BBCS and FVTXN"));
   c1->Print(Form("FigsTwo/threesp_os_bbcsfvtxn_v22_%d.png",handle));
   c1->Print(Form("FigsTwo/threesp_os_bbcsfvtxn_v22_%d.pdf",handle));
 
+  //  th1d_os_fvtxsfvtxn_v22_3csp->SetMarkerStyle(kOpenCircle);
+  th1d_os_fvtxsfvtxn_v22_3csp->SetMaximum(th1d_os_fvtxsfvtxn_v22_3csp->GetBinContent(th1d_os_fvtxsfvtxn_v22_3csp->GetMaximumBin())*1.2);
   th1d_os_fvtxsfvtxn_v22_3csp->Draw();
+  tlref->DrawLatex(tlx,tly,Form("#sqrt{c_{2}{2}} = %.3f",sqrt(os_fvtxsfvtxn_c22_raw)));
+  tlmeth->DrawLatex(tlx2,tly2,Form("double scalar product with FVTXS and FVTXN"));
+  tlmeth3->DrawLatex(tlx3,tly3,Form("reference flow using FVTXS and FVTXN"));
   c1->Print(Form("FigsTwo/threesp_os_fvtxsfvtxn_v22_%d.png",handle));
   c1->Print(Form("FigsTwo/threesp_os_fvtxsfvtxn_v22_%d.pdf",handle));
 
