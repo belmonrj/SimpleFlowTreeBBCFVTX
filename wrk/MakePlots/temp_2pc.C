@@ -27,14 +27,15 @@ void doit(int handle)
       return;
     }
 
-  ifstream finpub("ppg161.dat");
-  float pt[13], pubv2[13], epubv2[13], esyspubv2[13];
-  for ( int i = 0; i < 13; ++i )
+  ifstream finep((const char*)Form("v2fvtxs_%d.dat",handle));
+  float pt[15], epv2[15], eepv2[15], esysepv2[15];
+  for ( int i = 0; i < 15; ++i )
     {
-      finpub>>pt[i]>>pubv2[i]>>epubv2[i]>>esyspubv2[i];
+      finep>>pt[i]>>epv2[i]>>eepv2[i];
+      if ( epv2[i] <= 0 ) epv2[i] = -9;
     }
-  TGraphErrors* tge_pub = new TGraphErrors(13,pt,pubv2,0,epubv2);
-  tge_pub->SetMarkerStyle(kFullCircle);
+  TGraphErrors* tge_ep = new TGraphErrors(15,pt,epv2,0,eepv2);
+  tge_ep->SetMarkerStyle(kFullCircle);
 
   // ---
   // ---
@@ -49,7 +50,7 @@ void doit(int handle)
   double os_bbcs_c22_raw = tp1f_os_bbcs_c22->GetBinContent(1);
   double os_bbcs_c22_corr = os_bbcs_c22_raw;
   if ( os_bbcs_c22_corr < 0 ) cout << "YOU'RE GONNA DIE" << endl;
-  double os_bbcs_v22_corr = sqrt(fabs(os_bbcs_c22_corr));
+  double os_bbcs_v22_corr = sqrt(os_bbcs_c22_corr);
   cout << os_bbcs_v22_corr << endl;
 
   TH1D* th1d_os_bbcs_d22_both = (TH1D*)tp1f_os_bbcs_d22_both->ProjectionX();
@@ -97,7 +98,7 @@ void doit(int handle)
   double os_fvtxs_c22_raw = tp1f_os_fvtxs_c22->GetBinContent(1);
   double os_fvtxs_c22_corr = os_fvtxs_c22_raw;
   if ( os_fvtxs_c22_corr < 0 ) cout << "YOU'RE GONNA DIE" << endl;
-  double os_fvtxs_v22_corr = sqrt(fabs(os_fvtxs_c22_corr));
+  double os_fvtxs_v22_corr = sqrt(os_fvtxs_c22_corr);
   cout << os_fvtxs_v22_corr << endl;
 
   TH1D* th1d_os_fvtxs_d22_both = (TH1D*)tp1f_os_fvtxs_d22_both->ProjectionX();
@@ -129,7 +130,7 @@ void doit(int handle)
   double os_fvtxn_c22_raw = tp1f_os_fvtxn_c22->GetBinContent(1);
   double os_fvtxn_c22_corr = os_fvtxn_c22_raw;
   if ( os_fvtxn_c22_corr < 0 ) cout << "YOU'RE GONNA DIE" << endl;
-  double os_fvtxn_v22_corr = sqrt(fabs(os_fvtxn_c22_corr));
+  double os_fvtxn_v22_corr = sqrt(os_fvtxn_c22_corr);
   cout << os_fvtxn_v22_corr << endl;
 
   TH1D* th1d_os_fvtxn_d22_both = (TH1D*)tp1f_os_fvtxn_d22_both->ProjectionX();
@@ -177,9 +178,9 @@ void doit(int handle)
   if ( os_newref_c22_fvtxs < 0 ) cout << "YOU'RE GONNA DIE" << endl;
   if ( os_newref_c22_fvtxn < 0 ) cout << "YOU'RE GONNA DIE" << endl;
 
-  double os_newref_v22_bbcs =  sqrt(fabs(os_newref_c22_bbcs));
-  double os_newref_v22_fvtxs = sqrt(fabs(os_newref_c22_fvtxs));
-  double os_newref_v22_fvtxn = sqrt(fabs(os_newref_c22_fvtxn));
+  double os_newref_v22_bbcs =  sqrt(os_newref_c22_bbcs);
+  double os_newref_v22_fvtxs = sqrt(os_newref_c22_fvtxs);
+  double os_newref_v22_fvtxn = sqrt(os_newref_c22_fvtxn);
 
   cout << os_newref_v22_bbcs << endl;
   cout << os_newref_v22_fvtxs << endl;
@@ -282,11 +283,11 @@ void doit(int handle)
 
   th1d_os_bbcsfvtxs_v22_3csp->SetMinimum(0);
   th1d_os_bbcsfvtxs_v22_3csp->SetMaximum(0.2);
-  if ( handle <= 39 ) th1d_os_bbcsfvtxs_v22_3csp->SetMaximum(1.0);
+  if ( handle <= 39 ) th1d_os_bbcsfvtxs_v22_3csp->SetMaximum(0.35);
   th1d_os_bbcsfvtxs_v22_3csp->Draw();
   th1d_os_bbcsfvtxn_v22_3csp->Draw("same");
   th1d_os_fvtxsfvtxn_v22_3csp->Draw("same");
-  tge_pub->Draw("p");
+  tge_ep->Draw("p");
   th1d_os_bbcsfvtxs_v22_3csp->SetLineColor(kBlack);
   th1d_os_bbcsfvtxn_v22_3csp->SetLineColor(kRed);
   th1d_os_fvtxsfvtxn_v22_3csp->SetLineColor(kBlue);
@@ -303,11 +304,11 @@ void doit(int handle)
 
   th1d_os_bbcs_d22_both_corr->SetMinimum(0);
   th1d_os_bbcs_d22_both_corr->SetMaximum(0.2);
-  if ( handle <= 39 ) th1d_os_bbcs_d22_both_corr->SetMaximum(1.0);
+  if ( handle <= 39 ) th1d_os_bbcs_d22_both_corr->SetMaximum(0.35);
   th1d_os_bbcs_d22_both_corr->Draw();
   th1d_os_fvtxs_d22_both_corr->Draw("same");
   th1d_os_fvtxn_d22_both_corr->Draw("same");
-  tge_pub->Draw("p");
+  tge_ep->Draw("p");
   th1d_os_bbcs_d22_both_corr->SetLineColor(kBlack);
   th1d_os_fvtxs_d22_both_corr->SetLineColor(kRed);
   th1d_os_fvtxn_d22_both_corr->SetLineColor(kBlue);
@@ -327,7 +328,7 @@ void doit(int handle)
   th1d_os_bbcsfvtxs_v22_3csp->Draw();
   th1d_os_bbcs_d22_both_corr->Draw("same");
   th1d_os_fvtxs_d22_both_corr->Draw("same");
-  tge_pub->Draw("p");
+  tge_ep->Draw("p");
   if ( leg ) delete leg;
   leg = new TLegend(0.18,0.68,0.38,0.88);
   //leg->SetHeader("scalar product");
