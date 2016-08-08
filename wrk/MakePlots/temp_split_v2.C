@@ -5,8 +5,8 @@ void temp_split_v2()
 
   doenergy(200);
   doenergy(62);
-  doenergy(20);
   doenergy(39);
+  doenergy(20);
 
 }
 
@@ -62,8 +62,10 @@ void doenergy(int energy)
   // ---
 
   TProfile* hv2_fvtxs = (TProfile*)file->Get("fvtxs_v2_both_docalib");
-
   hv2_fvtxs->Scale(1.0/reso_fvtx);
+  ofstream fout((const char*)Form("v2fvtxs_%d.dat",energy));
+  for ( int i = 0; i < hv2_fvtxs->GetNbinsX(); ++i ) fout << hv2_fvtxs->GetBinCenter(i+1) << " " << hv2_fvtxs->GetBinContent(i+1) << " " << hv2_fvtxs->GetBinError(i+1) << " " << endl;
+  fout.close();
   hv2_fvtxs->Draw();
   // the 62 GeV is actually 62.4 and the 20 GeV is actually 19.6, so need to modify
   hv2_fvtxs->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = %d GeV",energy));
@@ -86,26 +88,39 @@ void doenergy(int energy)
   tge_pub->SetMarkerStyle(kFullCircle);
   tge_pub->Draw("p");
 
-  TLegend *leg = new TLegend(0.18,0.68,0.38,0.88);
+  TLegend *leg = new TLegend(0.18,0.72,0.38,0.88);
+  leg->AddEntry(tge_pub,"Run8 200 GeV (ppg161)","p");
   leg->AddEntry(hv2_fvtxs,"Run16 FVTXS","el");
-  leg->AddEntry(tge_pub,"Run8 (ppg161)","p");
-  leg->SetTextSize(0.05);
+  leg->SetTextSize(0.045);
   leg->Draw();
+  float tlx = 0.55;
+  float tly = 0.23;
+  TLatex* tlref = new TLatex(tlx,tly,Form("FVTXS Res = %.3f",reso_fvtx));
+  tlref->SetTextSize(0.05);
+  tlref->SetNDC();
+  tlref->Draw();
+  hv2_fvtxs->SetMaximum(0.17);
+  if ( energy <= 39 ) hv2_fvtxs->SetMaximum(0.35);
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v2_fvtxs.pdf",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v2_fvtxs.png",energy));
 
   TProfile* hv2_bbcs = (TProfile*)file->Get("bbcs_v2_both_docalib");
   hv2_bbcs->SetLineColor(kRed);
   hv2_bbcs->Scale(1.0/reso_bbc);
   hv2_bbcs->Draw("same");
-
   delete leg;
-
-  leg = new TLegend(0.18,0.68,0.38,0.88);
+  leg = new TLegend(0.18,0.72,0.38,0.88);
+  leg->AddEntry(tge_pub,"Run8 200 GeV (ppg161)","p");
   leg->AddEntry(hv2_fvtxs,"Run16 FVTXS","el");
   leg->AddEntry(hv2_bbcs,"Run16 BBCS","el");
-  leg->AddEntry(tge_pub,"Run8 (ppg161)","p");
-  leg->SetTextSize(0.05);
+  leg->SetTextSize(0.045);
   leg->Draw();
-
+  float tlx2 = 0.55;
+  float tly2 = 0.18;
+  TLatex* tlref2 = new TLatex(tlx2,tly2,Form("BBCS Res = %.3f",reso_bbc));
+  tlref2->SetTextSize(0.05);
+  tlref2->SetNDC();
+  tlref2->Draw();
   c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v2_fvtxsbbcs.pdf",energy));
   c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v2_fvtxsbbcs.png",energy));
 
