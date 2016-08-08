@@ -12,27 +12,30 @@ void special_x1()
 
   // compbg();
   // compE();
-  //return;
+  // return;
 
-  // takeenergy(20);
-  // takeenergy(39);
-  // takeenergy(62);
+  takeenergy(20);
+  takeenergy(39);
+  takeenergy(62);
+  takeenergy(200);
 
-  takerun(456655);
-  takerun(457298);
+  // takerun(456655);
+  // takerun(457298);
 
   return;
 
   ifstream fin;
   int run;
   fin.open("list_20.short");
-  while ( fin >> run )
-    {
-      if ( run < 457103 ) continue;
-      takerun(run);
-    }
+  while ( fin >> run ) takerun(run);
   fin.close();
   fin.open("list_39.short");
+  while ( fin >> run ) takerun(run);
+  fin.close();
+  fin.open("list_62.short");
+  while ( fin >> run ) takerun(run);
+  fin.close();
+  fin.open("list_200.short");
   while ( fin >> run ) takerun(run);
   fin.close();
 

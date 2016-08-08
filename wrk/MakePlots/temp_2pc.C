@@ -296,6 +296,7 @@ void doit(int handle)
   leg->AddEntry(th1d_os_bbcsfvtxs_v22_3csp,"BBCS and FVTXS","el");
   leg->AddEntry(th1d_os_bbcsfvtxn_v22_3csp,"BBCS and FVTXN","el");
   leg->AddEntry(th1d_os_fvtxsfvtxn_v22_3csp,"FVTXS and FVTXN","el");
+  leg->AddEntry(tge_ep,"FVTXS event plane","ep");
   leg->SetTextSize(0.04);
   leg->SetFillStyle(0);
   leg->Draw();
@@ -318,6 +319,7 @@ void doit(int handle)
   leg->AddEntry(th1d_os_bbcs_d22_both_corr,"BBCS","el");
   leg->AddEntry(th1d_os_fvtxs_d22_both_corr,"FVTXS","el");
   leg->AddEntry(th1d_os_fvtxn_d22_both_corr,"FVTXN","el");
+  leg->AddEntry(tge_ep,"FVTXS event plane","ep");
   leg->SetTextSize(0.04);
   leg->SetFillStyle(0);
   leg->Draw();
@@ -332,6 +334,7 @@ void doit(int handle)
   if ( leg ) delete leg;
   leg = new TLegend(0.18,0.68,0.38,0.88);
   //leg->SetHeader("scalar product");
+  leg->AddEntry(tge_ep,"FVTXS event plane","ep");
   leg->AddEntry(th1d_os_bbcsfvtxs_v22_3csp,"BBCS and FVTXS","el");
   leg->AddEntry(th1d_os_bbcs_d22_both_corr,"BBCS","el");
   leg->AddEntry(th1d_os_fvtxs_d22_both_corr,"FVTXS","el");
