@@ -584,6 +584,18 @@ void flatten(int runNumber, int passNumber)
   TH2D* th2d_fvtxn2_clus_phi_OR = new TH2D("th2d_fvtxn2_clus_phi_OR","",20,-10.0,10.0,50,-pi,pi);
   TH2D* th2d_fvtxn3_clus_phi_OR = new TH2D("th2d_fvtxn3_clus_phi_OR","",20,-10.0,10.0,50,-pi,pi);
 
+  TH2D* th2d_fvtxs_clus_phi_GC = new TH2D("th2d_fvtxs_clus_phi_GC","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxs0_clus_phi_GC = new TH2D("th2d_fvtxs0_clus_phi_GC","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxs1_clus_phi_GC = new TH2D("th2d_fvtxs1_clus_phi_GC","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxs2_clus_phi_GC = new TH2D("th2d_fvtxs2_clus_phi_GC","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxs3_clus_phi_GC = new TH2D("th2d_fvtxs3_clus_phi_GC","",20,-10.0,10.0,50,-pi,pi);
+
+  TH2D* th2d_fvtxn_clus_phi_GC = new TH2D("th2d_fvtxn_clus_phi_GC","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxn0_clus_phi_GC = new TH2D("th2d_fvtxn0_clus_phi_GC","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxn1_clus_phi_GC = new TH2D("th2d_fvtxn1_clus_phi_GC","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxn2_clus_phi_GC = new TH2D("th2d_fvtxn2_clus_phi_GC","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxn3_clus_phi_GC = new TH2D("th2d_fvtxn3_clus_phi_GC","",20,-10.0,10.0,50,-pi,pi);
+
   // ---
 
   TH1D* th1d_FVTX_nclus = new TH1D("th1d_FVTX_nclus","",200,-0.5,1999.5);
@@ -1132,6 +1144,11 @@ void flatten(int runNumber, int passNumber)
                           if ( fvtx_layer == 1 ) th1d_fvtxs1_clus_phi_GC->Fill(phi);
                           if ( fvtx_layer == 2 ) th1d_fvtxs2_clus_phi_GC->Fill(phi);
                           if ( fvtx_layer == 3 ) th1d_fvtxs3_clus_phi_GC->Fill(phi);
+                          th2d_fvtxs_clus_phi_GC->Fill(vtx_z,phi);
+                          if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_phi_GC->Fill(vtx_z,phi);
+                          if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_phi_GC->Fill(vtx_z,phi);
+                          if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_phi_GC->Fill(vtx_z,phi);
+                          if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_phi_GC->Fill(vtx_z,phi);
                           th2d_fvtxs_clus_xy_GC->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
                           if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_xy_GC->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
                           if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_xy_GC->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
@@ -1336,6 +1353,11 @@ void flatten(int runNumber, int passNumber)
                           if ( fvtx_layer == 1 ) th1d_fvtxn1_clus_phi_GC->Fill(phi);
                           if ( fvtx_layer == 2 ) th1d_fvtxn2_clus_phi_GC->Fill(phi);
                           if ( fvtx_layer == 3 ) th1d_fvtxn3_clus_phi_GC->Fill(phi);
+                          th2d_fvtxn_clus_phi_GC->Fill(vtx_z,phi);
+                          if ( fvtx_layer == 0 ) th2d_fvtxn0_clus_phi_GC->Fill(vtx_z,phi);
+                          if ( fvtx_layer == 1 ) th2d_fvtxn1_clus_phi_GC->Fill(vtx_z,phi);
+                          if ( fvtx_layer == 2 ) th2d_fvtxn2_clus_phi_GC->Fill(vtx_z,phi);
+                          if ( fvtx_layer == 3 ) th2d_fvtxn3_clus_phi_GC->Fill(vtx_z,phi);
                           th2d_fvtxn_clus_xy_GC->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
                           if ( fvtx_layer == 0 ) th2d_fvtxn0_clus_xy_GC->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
                           if ( fvtx_layer == 1 ) th2d_fvtxn1_clus_xy_GC->Fill(d_FVTX_x[iclus],d_FVTX_y[iclus]);
