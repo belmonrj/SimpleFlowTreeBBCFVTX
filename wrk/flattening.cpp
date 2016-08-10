@@ -149,11 +149,16 @@ void flatten(int runNumber, int rp_recal_pass)
   TH1D* th1d_fvtxs_phi_weight[10][5];
   for ( int i = 0; i < 10; ++i )
     {
-      th1d_fvtxs_phi_weight[i][0] = (TH1D*)phi_weight_file->Get(Form("th1d_weight_fvtxs_zvtx%d_clus_phi_IR",i)); // COME BACK HERE AND HAVE A LOOK
-      th1d_fvtxs_phi_weight[i][1] = (TH1D*)phi_weight_file->Get(Form("th1d_weight_fvtxs0_zvtx%d_clus_phi_IR",i)); // COME BACK HERE AND HAVE A LOOK
-      th1d_fvtxs_phi_weight[i][2] = (TH1D*)phi_weight_file->Get(Form("th1d_weight_fvtxs1_zvtx%d_clus_phi_IR",i)); // COME BACK HERE AND HAVE A LOOK
-      th1d_fvtxs_phi_weight[i][3] = (TH1D*)phi_weight_file->Get(Form("th1d_weight_fvtxs2_zvtx%d_clus_phi_IR",i)); // COME BACK HERE AND HAVE A LOOK
-      th1d_fvtxs_phi_weight[i][4] = (TH1D*)phi_weight_file->Get(Form("th1d_weight_fvtxs3_zvtx%d_clus_phi_IR",i)); // COME BACK HERE AND HAVE A LOOK
+      th1d_fvtxs_phi_weight[i][0] = (TH1D*)phi_weight_file->Get(Form("th1d_weight_fvtxs_zvtx%d_clus_phi_GC",i)); // COME BACK HERE AND HAVE A LOOK
+      th1d_fvtxs_phi_weight[i][1] = (TH1D*)phi_weight_file->Get(Form("th1d_weight_fvtxs0_zvtx%d_clus_phi_GC",i)); // COME BACK HERE AND HAVE A LOOK
+      th1d_fvtxs_phi_weight[i][2] = (TH1D*)phi_weight_file->Get(Form("th1d_weight_fvtxs1_zvtx%d_clus_phi_GC",i)); // COME BACK HERE AND HAVE A LOOK
+      th1d_fvtxs_phi_weight[i][3] = (TH1D*)phi_weight_file->Get(Form("th1d_weight_fvtxs2_zvtx%d_clus_phi_GC",i)); // COME BACK HERE AND HAVE A LOOK
+      th1d_fvtxs_phi_weight[i][4] = (TH1D*)phi_weight_file->Get(Form("th1d_weight_fvtxs3_zvtx%d_clus_phi_GC",i)); // COME BACK HERE AND HAVE A LOOK
+      cout << "memory address of th1d_fvtxs_phi_weight[i][0] is " << th1d_fvtxs_phi_weight[i][0] << endl;
+      cout << "memory address of th1d_fvtxs_phi_weight[i][1] is " << th1d_fvtxs_phi_weight[i][1] << endl;
+      cout << "memory address of th1d_fvtxs_phi_weight[i][2] is " << th1d_fvtxs_phi_weight[i][2] << endl;
+      cout << "memory address of th1d_fvtxs_phi_weight[i][3] is " << th1d_fvtxs_phi_weight[i][3] << endl;
+      cout << "memory address of th1d_fvtxs_phi_weight[i][4] is " << th1d_fvtxs_phi_weight[i][4] << endl;
     }
 
 
