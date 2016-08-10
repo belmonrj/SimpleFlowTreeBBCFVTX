@@ -139,22 +139,22 @@ void flatten(int runNumber, int rp_recal_pass)
 
   // ---
 
-  // TFile *phi_weight_file = TFile::Open(Form("SpecialProjects/WeightFiles/weight2d_run%d.root", runNumber)); // COME BACK HERE AND HAVE A LOOK
-  // if (!phi_weight_file)
-  //   {
-  //     cout << "ERROR could not open phi weight file: " << endl;
-  //     return;
-  //   }
+  TFile *phi_weight_file = TFile::Open(Form("SpecialProjects/WeightFiles/weight2d_run%d.root", runNumber)); // COME BACK HERE AND HAVE A LOOK
+  if (!phi_weight_file)
+    {
+      cout << "ERROR could not open phi weight file: " << endl;
+      return;
+    }
 
-  // TH1D* th1d_fvtxs_phi_weight[10][5];
-  // for ( int i = 0; i < 10; ++i )
-  //   {
-  //     th1d_fvtxs_phi_weight[i][0] = (TH1D*)phi_weight_file->Get(Form("th1d_weight_fvtxs_zvtx%d_clus_phi_IR",i)); // COME BACK HERE AND HAVE A LOOK
-  //     th1d_fvtxs_phi_weight[i][1] = (TH1D*)phi_weight_file->Get(Form("th1d_weight_fvtxs0_zvtx%d_clus_phi_IR",i)); // COME BACK HERE AND HAVE A LOOK
-  //     th1d_fvtxs_phi_weight[i][2] = (TH1D*)phi_weight_file->Get(Form("th1d_weight_fvtxs1_zvtx%d_clus_phi_IR",i)); // COME BACK HERE AND HAVE A LOOK
-  //     th1d_fvtxs_phi_weight[i][3] = (TH1D*)phi_weight_file->Get(Form("th1d_weight_fvtxs2_zvtx%d_clus_phi_IR",i)); // COME BACK HERE AND HAVE A LOOK
-  //     th1d_fvtxs_phi_weight[i][4] = (TH1D*)phi_weight_file->Get(Form("th1d_weight_fvtxs3_zvtx%d_clus_phi_IR",i)); // COME BACK HERE AND HAVE A LOOK
-  //   }
+  TH1D* th1d_fvtxs_phi_weight[10][5];
+  for ( int i = 0; i < 10; ++i )
+    {
+      th1d_fvtxs_phi_weight[i][0] = (TH1D*)phi_weight_file->Get(Form("th1d_weight_fvtxs_zvtx%d_clus_phi_IR",i)); // COME BACK HERE AND HAVE A LOOK
+      th1d_fvtxs_phi_weight[i][1] = (TH1D*)phi_weight_file->Get(Form("th1d_weight_fvtxs0_zvtx%d_clus_phi_IR",i)); // COME BACK HERE AND HAVE A LOOK
+      th1d_fvtxs_phi_weight[i][2] = (TH1D*)phi_weight_file->Get(Form("th1d_weight_fvtxs1_zvtx%d_clus_phi_IR",i)); // COME BACK HERE AND HAVE A LOOK
+      th1d_fvtxs_phi_weight[i][3] = (TH1D*)phi_weight_file->Get(Form("th1d_weight_fvtxs2_zvtx%d_clus_phi_IR",i)); // COME BACK HERE AND HAVE A LOOK
+      th1d_fvtxs_phi_weight[i][4] = (TH1D*)phi_weight_file->Get(Form("th1d_weight_fvtxs3_zvtx%d_clus_phi_IR",i)); // COME BACK HERE AND HAVE A LOOK
+    }
 
 
   // ---
@@ -1180,10 +1180,10 @@ void flatten(int runNumber, int rp_recal_pass)
               if ( runNumber >= 456652 && runNumber <= 458167 && FVTX_r < 5.2 ) continue;
 
               float phi = TMath::ATan2(fvtx_y,fvtx_x);
-              // int izvtx2 = izvtx/2;
-              // int phi_bin = th1d_fvtxs_phi_weight[izvtx2][fvtx_layer+1]->FindBin(phi); // COME BACK HERE AND HAVE A LOOK
-              // float fvtx_weight = th1d_fvtxs_phi_weight[izvtx2][fvtx_layer+1]->GetBinContent(phi_bin);
-              float fvtx_weight = 1.0; // don't want to use weights right now...
+              int izvtx2 = izvtx/2;
+              int phi_bin = th1d_fvtxs_phi_weight[izvtx2][fvtx_layer+1]->FindBin(phi); // COME BACK HERE AND HAVE A LOOK
+              float fvtx_weight = th1d_fvtxs_phi_weight[izvtx2][fvtx_layer+1]->GetBinContent(phi_bin);
+              //float fvtx_weight = 1.0; // don't want to use weights right now...
 
               // --- south side
               if ( d_FVTX_z[iclus] < 0 )
