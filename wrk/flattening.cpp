@@ -139,27 +139,39 @@ void flatten(int runNumber, int rp_recal_pass)
 
   // ---
 
-  TFile *phi_weight_file = TFile::Open(Form("SpecialProjects/WeightFiles/weight2d_run%d.root", runNumber)); // COME BACK HERE AND HAVE A LOOK
+  TString phiweightfile_name = Form("SpecialProjects/WeightFiles/weight2d_run%d.root", runNumber);
+  TFile* phi_weight_file = TFile::Open(phiweightfile_name); // COME BACK HERE AND HAVE A LOOK
   if (!phi_weight_file)
     {
-      cout << "ERROR could not open phi weight file: " << endl;
+      cout << "ERROR could not open phi weight file: " << phiweightfile_name.Data() << endl;
       return;
     }
 
   TH1D* th1d_fvtxs_phi_weight[10][5];
   for ( int i = 0; i < 10; ++i )
     {
-      th1d_fvtxs_phi_weight[i][0] = (TH1D*)phi_weight_file->Get(Form("th1d_weight_fvtxs_zvtx%d_clus_phi_GC",i)); // COME BACK HERE AND HAVE A LOOK
-      th1d_fvtxs_phi_weight[i][1] = (TH1D*)phi_weight_file->Get(Form("th1d_weight_fvtxs0_zvtx%d_clus_phi_GC",i)); // COME BACK HERE AND HAVE A LOOK
-      th1d_fvtxs_phi_weight[i][2] = (TH1D*)phi_weight_file->Get(Form("th1d_weight_fvtxs1_zvtx%d_clus_phi_GC",i)); // COME BACK HERE AND HAVE A LOOK
-      th1d_fvtxs_phi_weight[i][3] = (TH1D*)phi_weight_file->Get(Form("th1d_weight_fvtxs2_zvtx%d_clus_phi_GC",i)); // COME BACK HERE AND HAVE A LOOK
-      th1d_fvtxs_phi_weight[i][4] = (TH1D*)phi_weight_file->Get(Form("th1d_weight_fvtxs3_zvtx%d_clus_phi_GC",i)); // COME BACK HERE AND HAVE A LOOK
+      TString histname0 = Form("th1d_weight_fvtxs_zvtx%d_clus_phi_GC" ,i);
+      TString histname1 = Form("th1d_weight_fvtxs0_zvtx%d_clus_phi_GC",i);
+      TString histname2 = Form("th1d_weight_fvtxs1_zvtx%d_clus_phi_GC",i);
+      TString histname3 = Form("th1d_weight_fvtxs2_zvtx%d_clus_phi_GC",i);
+      TString histname4 = Form("th1d_weight_fvtxs3_zvtx%d_clus_phi_GC",i);
+      th1d_fvtxs_phi_weight[i][0] = (TH1D*)phi_weight_file->Get(histname0); // COME BACK HERE AND HAVE A LOOK
+      th1d_fvtxs_phi_weight[i][1] = (TH1D*)phi_weight_file->Get(histname1); // COME BACK HERE AND HAVE A LOOK
+      th1d_fvtxs_phi_weight[i][2] = (TH1D*)phi_weight_file->Get(histname2); // COME BACK HERE AND HAVE A LOOK
+      th1d_fvtxs_phi_weight[i][3] = (TH1D*)phi_weight_file->Get(histname3); // COME BACK HERE AND HAVE A LOOK
+      th1d_fvtxs_phi_weight[i][4] = (TH1D*)phi_weight_file->Get(histname4); // COME BACK HERE AND HAVE A LOOK
       cout << "memory address of th1d_fvtxs_phi_weight[i][0] is " << th1d_fvtxs_phi_weight[i][0] << endl;
       cout << "memory address of th1d_fvtxs_phi_weight[i][1] is " << th1d_fvtxs_phi_weight[i][1] << endl;
       cout << "memory address of th1d_fvtxs_phi_weight[i][2] is " << th1d_fvtxs_phi_weight[i][2] << endl;
       cout << "memory address of th1d_fvtxs_phi_weight[i][3] is " << th1d_fvtxs_phi_weight[i][3] << endl;
       cout << "memory address of th1d_fvtxs_phi_weight[i][4] is " << th1d_fvtxs_phi_weight[i][4] << endl;
+      cout << "name of th1d_fvtxs_phi_weight[i][0] is " << histname0.Data() << endl;
+      cout << "name of th1d_fvtxs_phi_weight[i][1] is " << histname1.Data() << endl;
+      cout << "name of th1d_fvtxs_phi_weight[i][2] is " << histname2.Data() << endl;
+      cout << "name of th1d_fvtxs_phi_weight[i][3] is " << histname3.Data() << endl;
+      cout << "name of th1d_fvtxs_phi_weight[i][4] is " << histname4.Data() << endl;
     }
+  cout << "The phi weight file read in was " << phiweightfile_name.Data() << endl;
 
 
   // ---
