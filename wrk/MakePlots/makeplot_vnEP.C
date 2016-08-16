@@ -19,7 +19,7 @@ void makeplot_vnEP()
 
 }
 
-void doenergy(int energy)
+void doenergy(int energy, int harmonic)
 {
 
   gStyle->SetOptTitle(1);
@@ -30,9 +30,9 @@ void doenergy(int energy)
 
   // ---
 
-  TProfile* tp1f_bbc_fvtxN = (TProfile*)file->Get("tp1f_reso2_BBC_FVTXN");
-  TProfile* tp1f_bbc_fvtx = (TProfile*)file->Get("tp1f_reso2_BBC_FVTX");
-  TProfile* tp1f_fvtxN_fvtx = (TProfile*)file->Get("tp1f_reso2_FVTXS_FVTXN");
+  TProfile* tp1f_bbc_fvtxN = (TProfile*)file->Get(Form("tp1f_reso%d_BBC_FVTXN",harmonic));
+  TProfile* tp1f_bbc_fvtx = (TProfile*)file->Get(Form("tp1f_reso%d_BBC_FVTX",harmonic));
+  TProfile* tp1f_fvtxN_fvtx = (TProfile*)file->Get(Form("tp1f_reso%d_FVTXS_FVTXN",harmonic));
 
   float float_bbc_fvtxN = tp1f_bbc_fvtxN->GetBinContent(1);
   float float_bbc_fvtx = tp1f_bbc_fvtx->GetBinContent(1);
@@ -52,9 +52,9 @@ void doenergy(int energy)
 
   // ---
 
-  TProfile* tp1f_bbc_cnt = (TProfile*)file->Get("tp1f_reso2_BBC_CNT");
-  TProfile* tp1f_cnt_fvtx = (TProfile*)file->Get("tp1f_reso2_CNT_FVTX");
-  TProfile* tp1f_cnt_fvtxN = (TProfile*)file->Get("tp1f_reso2_CNT_FVTXN");
+  TProfile* tp1f_bbc_cnt = (TProfile*)file->Get(Form("tp1f_reso%d_BBC_CNT",harmonic));
+  TProfile* tp1f_cnt_fvtx = (TProfile*)file->Get(Form("tp1f_reso%d_CNT_FVTX",harmonic));
+  TProfile* tp1f_cnt_fvtxN = (TProfile*)file->Get(Form("tp1f_reso%d_CNT_FVTXN",harmonic));
 
   float float_bbc_cnt = tp1f_bbc_cnt->GetBinContent(1);
   float float_cnt_fvtx = tp1f_cnt_fvtx->GetBinContent(1);
@@ -82,7 +82,7 @@ void doenergy(int energy)
 
   cout << "fvtxN resolution is " << reso_fvtxN_xb << endl;
 
-  TProfile* hvn_fvtxs = (TProfile*)file->Get("fvtxs_vn_both_docalib");
+  TProfile* hvn_fvtxs = (TProfile*)file->Get(Form("fvtxs_v%d_both_docalib",harmonic));
 
   hvn_fvtxs->Scale(1.0/reso_fvtx);
   hvn_fvtxs->Draw();
@@ -107,7 +107,7 @@ void doenergy(int energy)
   tge_pub->SetMarkerStyle(kFullCircle);
   tge_pub->Draw("p");
 
-  TProfile* hvn_bbcs = (TProfile*)file->Get("bbcs_vn_both_docalib");
+  TProfile* hvn_bbcs = (TProfile*)file->Get(Form("bbcs_v%d_both_docalib",harmonic));
   hvn_bbcs->SetLineColor(kRed);
   hvn_bbcs->Scale(1.0/reso_bbc);
   hvn_bbcs->Draw("same");
@@ -128,10 +128,10 @@ void doenergy(int energy)
   latex->SetTextSize(0.05);
   //latex->Draw();
 
-  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_vn_fvtxsbbcs.pdf",energy));
-  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_vn_fvtxsbbcs.png",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsbbcs.pdf",energy,harmonic));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsbbcs.png",energy,harmonic));
 
-  TProfile* hvn_fvtxn = (TProfile*)file->Get("fvtxn_vn_both_docalib");
+  TProfile* hvn_fvtxn = (TProfile*)file->Get(Form("fvtxn_v%d_both_docalib",harmonic));
   hvn_fvtxn->SetLineColor(kGreen+2);
   hvn_fvtxn->Scale(1.0/reso_fvtxN);
   hvn_fvtxn->Draw("same");
@@ -149,8 +149,8 @@ void doenergy(int energy)
 
   //latex->Draw();
 
-  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_vn_fvtxsnbbcs.pdf",energy));
-  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_vn_fvtxsnbbcs.png",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsnbbcs.pdf",energy,harmonic));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsnbbcs.png",energy,harmonic));
 
   hvn_fvtxn->Scale(reso_fvtxN/reso_fvtxN_fn);
   hvn_fvtxs->Scale(reso_fvtx/reso_fvtx_fn);
@@ -164,8 +164,8 @@ void doenergy(int energy)
 
   //  latex->DrawLatex(0.2,0.2,"EP resolutions calculated without CNT");
 
-  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_vn_fvtxsnbbcs_fn.pdf",energy));
-  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_vn_fvtxsnbbcs_fn.png",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsnbbcs_fn.pdf",energy,harmonic));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsnbbcs_fn.png",energy,harmonic));
 
   c1->Clear();
   hvn_fvtxs->Draw();
@@ -181,8 +181,8 @@ void doenergy(int energy)
 
   latex->Draw();
 
-  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_vn_fvtxsbbcs_fn.pdf",energy));
-  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_vn_fvtxsbbcs_fn.png",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsbbcs_fn.pdf",energy,harmonic));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsbbcs_fn.png",energy,harmonic));
 
   hvn_fvtxn->Scale(2*reso_fvtxN_fn/(reso_fvtxN_fn+reso_fvtxN));
   hvn_fvtxs->Scale(2*reso_fvtx_fn/(reso_fvtx_fn+reso_fvtx));
@@ -196,8 +196,8 @@ void doenergy(int energy)
 
   //  latex->DrawLatex(0.2,0.2,"Average of EP resolutions with and without CNT");
 
-  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_vn_fvtxsbbcs_ave.pdf",energy));
-  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_vn_fvtxsbbcs_ave.png",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsbbcs_ave.pdf",energy,harmonic));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsbbcs_ave.png",energy,harmonic));
 
   delete leg;
   hvn_fvtxn->Draw("same");
@@ -205,57 +205,11 @@ void doenergy(int energy)
 
   //latex->Draw();
 
-  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_vn_fvtxsnbbcs_ave.pdf",energy));
-  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_vn_fvtxsnbbcs_ave.png",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsnbbcs_ave.pdf",energy,harmonic));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsnbbcs_ave.png",energy,harmonic));
 
   c1->Clear();
 
-  // ---
-  // --- 4Psi2
-  // ---
-
-  TProfile* hv4_4Psi2_fvtxs = (TProfile*)file->Get("fvtxs_v4_4Psi2_both_docalib");
-
-  hv4_4Psi2_fvtxs->Scale(1.0/reso_fvtx);
-  hv4_4Psi2_fvtxs->Draw();
-  // the 62 GeV is actually 62.4 and the 20 GeV is actually 19.6, so need to modify
-  hv4_4Psi2_fvtxs->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = %d GeV",energy));
-  if ( energy == 62 ) hv4_4Psi2_fvtxs->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = 62.4 GeV"));
-  if ( energy == 20 ) hv4_4Psi2_fvtxs->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = 19.6 GeV"));
-  hv4_4Psi2_fvtxs->SetMaximum(0.05);
-  hv4_4Psi2_fvtxs->SetMinimum(-0.05);
-  hv4_4Psi2_fvtxs->GetXaxis()->SetTitle("p_{T} (GeV/c)");
-  hv4_4Psi2_fvtxs->GetYaxis()->SetTitle("v_{4}{#Psi_{2}}");
-  hv4_4Psi2_fvtxs->GetYaxis()->SetTitleOffset(1.25);
-
-  if ( leg ) delete leg;
-
-  TLegend *leg = new TLegend(0.18,0.68,0.38,0.88);
-  leg->AddEntry(hv4_4Psi2_fvtxs,"Run16 FVTXS","el");
-  leg->SetTextSize(0.05);
-  leg->Draw();
-
-  TProfile* hv4_4Psi2_bbcs = (TProfile*)file->Get("bbcs_v4_4Psi2_both_docalib");
-  hv4_4Psi2_bbcs->SetLineColor(kRed);
-  //hv4_4Psi2_bbcs->Scale(1.0/0.104519);
-  hv4_4Psi2_bbcs->Scale(1.0/reso_bbc);
-  hv4_4Psi2_bbcs->Draw("same");
-
-  delete leg;
-
-  leg = new TLegend(0.18,0.68,0.38,0.88);
-  leg->AddEntry(hv4_4Psi2_fvtxs,"Run16 FVTXS","el");
-  leg->AddEntry(hv4_4Psi2_bbcs,"Run16 BBCS","el");
-  leg->SetTextSize(0.05);
-  leg->Draw();
-
-  TLine line(0.0,0.0,3.0,0.0);
-  line.SetLineStyle(2);
-  line.SetLineWidth(2);
-  line.Draw();
-
-  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v4_4Psi2_fvtxsbbcs.pdf",energy));
-  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v4_4Psi2_fvtxsbbcs.png",energy));
 
 
 
@@ -264,7 +218,7 @@ void doenergy(int energy)
 }
 
 
-void diagnostic(int energy)
+void diagnostic(int energy, int harmonic)
 {
 
   gStyle->SetOptTitle(1);
@@ -284,9 +238,9 @@ void diagnostic(int energy)
   // --- FVTXS
   // ---------
 
-  TProfile* hvn_fvtxs_B = (TProfile*)file->Get("fvtxs_vn_both_docalib");
-  TProfile* hvn_fvtxs_E = (TProfile*)file->Get("fvtxs_vn_east_docalib");
-  TProfile* hvn_fvtxs_W = (TProfile*)file->Get("fvtxs_vn_west_docalib");
+  TProfile* hvn_fvtxs_B = (TProfile*)file->Get(Form("fvtxs_v%d_both_docalib",harmonic));
+  TProfile* hvn_fvtxs_E = (TProfile*)file->Get(Form("fvtxs_v%d_east_docalib",harmonic));
+  TProfile* hvn_fvtxs_W = (TProfile*)file->Get(Form("fvtxs_v%d_west_docalib",harmonic));
 
   hvn_fvtxs_B->SetLineColor(kBlack);
   hvn_fvtxs_E->SetLineColor(kRed);
@@ -314,15 +268,16 @@ void diagnostic(int energy)
   leg->SetTextSize(0.05);
   leg->Draw();
 
-  c1->Print(Form("FigsHarmonicCoefficient/diagnostic_fvtxs_EBW_energy%d.png",energy));
-  c1->Print(Form("FigsHarmonicCoefficient/diagnostic_fvtxs_EBW_energy%d.pdf",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/diagnostic_fvtxs_EBW_energy%d_harm%d.png",energy,harmonic));
+  c1->Print(Form("FigsHarmonicCoefficient/diagnostic_fvtxs_EBW_energy%d_harm%d.pdf",energy,harmonic));
 
 
-
-  TProfile* hvn_fvtxs0_B = (TProfile*)file->Get("fvtxs0_vn_both_docalib");
-  TProfile* hvn_fvtxs1_B = (TProfile*)file->Get("fvtxs1_vn_both_docalib");
-  TProfile* hvn_fvtxs2_B = (TProfile*)file->Get("fvtxs2_vn_both_docalib");
-  TProfile* hvn_fvtxs3_B = (TProfile*)file->Get("fvtxs3_vn_both_docalib");
+  if ( harmonic == 2 )
+  {
+  TProfile* hvn_fvtxs0_B = (TProfile*)file->Get(Form("fvtxs0_v%d_both_docalib",harmonic));
+  TProfile* hvn_fvtxs1_B = (TProfile*)file->Get(Form("fvtxs1_v%d_both_docalib",harmonic));
+  TProfile* hvn_fvtxs2_B = (TProfile*)file->Get(Form("fvtxs2_v%d_both_docalib",harmonic));
+  TProfile* hvn_fvtxs3_B = (TProfile*)file->Get(Form("fvtxs3_v%d_both_docalib",harmonic));
 
   hvn_fvtxs0_B->SetLineColor(kBlue);
   hvn_fvtxs1_B->SetLineColor(kRed);
@@ -357,18 +312,18 @@ void diagnostic(int energy)
   leg->SetTextSize(0.05);
   leg->Draw();
 
-  c1->Print(Form("FigsHarmonicCoefficient/diagnostic_fvtxsL_B_energy%d.png",energy));
-  c1->Print(Form("FigsHarmonicCoefficient/diagnostic_fvtxsL_B_energy%d.pdf",energy));
-
+  c1->Print(Form("FigsHarmonicCoefficient/diagnostic_fvtxsL_B_energy%d_harm%d.png",energy,harmonic));
+  c1->Print(Form("FigsHarmonicCoefficient/diagnostic_fvtxsL_B_energy%d_harm%d.pdf",energy,harmonic));
+  }
 
 
   // ---------
   // --- BBCS
   // ---------
 
-  TProfile* hvn_bbcs_B = (TProfile*)file->Get("bbcs_vn_both_docalib");
-  TProfile* hvn_bbcs_E = (TProfile*)file->Get("bbcs_vn_east_docalib");
-  TProfile* hvn_bbcs_W = (TProfile*)file->Get("bbcs_vn_west_docalib");
+  TProfile* hvn_bbcs_B = (TProfile*)file->Get(Form("bbcs_v%d_both_docalib",harmonic));
+  TProfile* hvn_bbcs_E = (TProfile*)file->Get(Form("bbcs_v%d_east_docalib",harmonic));
+  TProfile* hvn_bbcs_W = (TProfile*)file->Get(Form("bbcs_v%d_west_docalib",harmonic));
 
   hvn_bbcs_B->SetLineColor(kBlack);
   hvn_bbcs_E->SetLineColor(kRed);
@@ -398,8 +353,8 @@ void diagnostic(int energy)
   leg->SetTextSize(0.05);
   leg->Draw();
 
-  c1->Print(Form("FigsHarmonicCoefficient/diagnostic_bbcs_EBW_energy%d.png",energy));
-  c1->Print(Form("FigsHarmonicCoefficient/diagnostic_bbcs_EBW_energy%d.pdf",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/diagnostic_bbcs_EBW_energy%d_harm%d.png",energy,harmonic));
+  c1->Print(Form("FigsHarmonicCoefficient/diagnostic_bbcs_EBW_energy%d_harm%d.pdf",energy,harmonic));
 
 
 
@@ -407,9 +362,9 @@ void diagnostic(int energy)
   // --- FVTXN
   // ---------
 
-  TProfile* hvn_fvtxn_B = (TProfile*)file->Get("fvtxn_vn_both_docalib");
-  TProfile* hvn_fvtxn_E = (TProfile*)file->Get("fvtxn_vn_east_docalib");
-  TProfile* hvn_fvtxn_W = (TProfile*)file->Get("fvtxn_vn_west_docalib");
+  TProfile* hvn_fvtxn_B = (TProfile*)file->Get(Form("fvtxn_v%d_both_docalib",harmonic));
+  TProfile* hvn_fvtxn_E = (TProfile*)file->Get(Form("fvtxn_v%d_east_docalib",harmonic));
+  TProfile* hvn_fvtxn_W = (TProfile*)file->Get(Form("fvtxn_v%d_west_docalib",harmonic));
 
   hvn_fvtxn_B->SetLineColor(kBlack);
   hvn_fvtxn_E->SetLineColor(kRed);
@@ -438,8 +393,8 @@ void diagnostic(int energy)
   leg->SetTextSize(0.05);
   leg->Draw();
 
-  c1->Print(Form("FigsHarmonicCoefficient/diagnostic_fvtxn_EBW_energy%d.png",energy));
-  c1->Print(Form("FigsHarmonicCoefficient/diagnostic_fvtxn_EBW_energy%d.pdf",energy));
+  c1->Print(Form("FigsHarmonicCoefficient/diagnostic_fvtxn_EBW_energy%d_harm%d.png",energy,harmonic));
+  c1->Print(Form("FigsHarmonicCoefficient/diagnostic_fvtxn_EBW_energy%d_harm%d.pdf",energy,harmonic));
 
 
 
