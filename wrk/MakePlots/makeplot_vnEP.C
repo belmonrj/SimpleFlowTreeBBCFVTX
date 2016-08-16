@@ -7,14 +7,14 @@ void makeplot_vnEP()
   for ( int i = 2; i < 4; ++i )
     {
       doenergy(200,i);
-      // doenergy(62,i);
-      // doenergy(39,i);
-      // doenergy(20,i);
+      doenergy(62,i);
+      doenergy(39,i);
+      doenergy(20,i);
       // ---
       diagnostic(200,i);
-      // diagnostic(62,i);
-      // diagnostic(39,i);
-      // diagnostic(20,i);
+      diagnostic(62,i);
+      diagnostic(39,i);
+      diagnostic(20,i);
     }
 
 }
@@ -83,8 +83,10 @@ void doenergy(int energy, int harmonic)
   cout << "fvtxN resolution is " << reso_fvtxN_xb << endl;
 
   TProfile* hvn_fvtxs = (TProfile*)file->Get(Form("fvtxs_v%d_both_docalib",harmonic));
-
   hvn_fvtxs->Scale(1.0/reso_fvtx);
+  ofstream fout((const char*)Form("DataTextFiles/run16dau%d_v%dfvtxs.dat",energy,harmonic));
+  for ( int i = 0; i < hvn_fvtxs->GetNbinsX(); ++i ) fout << hvn_fvtxs->GetBinCenter(i+1) << " " << hvn_fvtxs->GetBinContent(i+1) << " " << hvn_fvtxs->GetBinError(i+1) << " " << endl;
+  fout.close();
   hvn_fvtxs->Draw();
   // the 62 GeV is actually 62.4 and the 20 GeV is actually 19.6, so need to modify
   hvn_fvtxs->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = %d GeV",energy));
