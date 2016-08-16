@@ -8,9 +8,9 @@ void makeplot_vn2pc()
   for ( int i = 2; i < 4; ++i )
     {
       doit(200,i);
-      // doit(62,i);
-      // doit(39,i);
-      // doit(20,i);
+      doit(62,i);
+      doit(39,i);
+      doit(20,i);
     }
 
 }
@@ -32,7 +32,7 @@ void doit(int handle, int harmonic)
     }
 
   ifstream finep;
-  if ( handle <= 200 ) finep.open((const char*)Form("run16dau%d_v%dfvtxs.dat",handle,harmonic));
+  if ( handle <= 200 ) finep.open((const char*)Form("DataTextFiles/run16dau%d_v%dfvtxs.dat",handle,harmonic));
   float pt[15], epv2[15], eepv2[15], esysepv2[15];
   for ( int i = 0; i < 15; ++i )
     {
