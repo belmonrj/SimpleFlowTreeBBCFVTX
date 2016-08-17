@@ -999,13 +999,13 @@ void flatten(int runNumber, int passNumber)
 
       int toomanyclusters = 9999;
       // --- Run16dAu200
-      if ( runNumber >= 454774 && runNumber <= 455639 ) toomanyclusters = 1000;
+      if ( runNumber >= 454774 && runNumber <= 455639 ) toomanyclusters = 4000;
       // --- Run16dAu62
-      if ( runNumber >= 455792 && runNumber <= 456283 ) toomanyclusters = 1000;
+      if ( runNumber >= 455792 && runNumber <= 456283 ) toomanyclusters = 4000;
       // --- Run16dAu20
-      if ( runNumber >= 456652 && runNumber <= 457298 ) toomanyclusters = 500;
+      if ( runNumber >= 456652 && runNumber <= 457298 ) toomanyclusters = 300;
       // --- Run16dAu39
-      if ( runNumber >= 457634 && runNumber <= 458167 ) toomanyclusters = 300;
+      if ( runNumber >= 457634 && runNumber <= 458167 ) toomanyclusters = 500;
 
       bool is_okaync = ( d_nFVTX_clus < toomanyclusters );
       if ( !is_okaync )
