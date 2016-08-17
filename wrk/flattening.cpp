@@ -169,7 +169,7 @@ void flatten(int runNumber, int rp_recal_pass)
             th1d_fvtxs_phi_weight[i][2] &&
             th1d_fvtxs_phi_weight[i][3] &&
             th1d_fvtxs_phi_weight[i][4];
-          if ( verbosity > -1 || ( !have_all_weight_histos ) )
+          if ( verbosity > 0 || ( !have_all_weight_histos ) )
             {
               cout << "memory address of th1d_fvtxs_phi_weight[i][0] is " << th1d_fvtxs_phi_weight[i][0] << endl;
               cout << "memory address of th1d_fvtxs_phi_weight[i][1] is " << th1d_fvtxs_phi_weight[i][1] << endl;
