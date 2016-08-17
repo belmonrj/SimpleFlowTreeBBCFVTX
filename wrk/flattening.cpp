@@ -192,8 +192,6 @@ void flatten(int runNumber, int rp_recal_pass)
         } // end for loop over vertex index
     } // check on doweights
 
-  if ( phi_weight_file ) phi_weight_file->Close();
-
   // ---
 
   cout << "Initalizing PMT positions for the BBC" << endl;
@@ -1217,10 +1215,18 @@ void flatten(int runNumber, int rp_recal_pass)
               if ( runNumber >= 456652 && runNumber <= 458167 && FVTX_r < 5.2 ) continue;
 
               float phi = TMath::ATan2(fvtx_y,fvtx_x);
-              int izvtx2 = izvtx/2;
-              int phi_bin = th1d_fvtxs_phi_weight[izvtx2][fvtx_layer+1]->FindBin(phi); // COME BACK HERE AND HAVE A LOOK
-              float fvtx_weight = th1d_fvtxs_phi_weight[izvtx2][fvtx_layer+1]->GetBinContent(phi_bin);
-              //float fvtx_weight = 1.0; // don't want to use weights right now...
+
+              float fvtx_weight = 1.0;
+              if ( doweights )
+                {
+                  if ( !th1d_fvtxs_phi_weight[izvtx][fvtx_layer+1] )
+                    {
+                      cout << "WARNING!!!  Problem with weight histograms in cluster loop..." << endl;
+                      continue;
+                    }
+                  int phi_bin = th1d_fvtxs_phi_weight[izvtx][fvtx_layer+1]->FindBin(phi); // COME BACK HERE AND HAVE A LOOK
+                  fvtx_weight = th1d_fvtxs_phi_weight[izvtx][fvtx_layer+1]->GetBinContent(phi_bin);
+                }
 
               // --- south side
               if ( d_FVTX_z[iclus] < 0 )
@@ -2771,6 +2777,10 @@ void flatten(int runNumber, int rp_recal_pass)
 
   cout<<"cleaning up"<<endl;
 
+
+
+
+
   ntp_event_chain->Delete();
   // htree->Delete();
   // f->Close();
@@ -3183,6 +3193,10 @@ void flatten(int runNumber, int rp_recal_pass)
 
 
   // ---
+
+  cout << "now attempting to close weight file" << endl;
+
+  if ( phi_weight_file ) phi_weight_file->Close();
 
 
   cout<<"end of program ana"<<endl;
