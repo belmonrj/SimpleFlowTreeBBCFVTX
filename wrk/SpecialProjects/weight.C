@@ -5,9 +5,9 @@ void weight()
 {
 
   //runweight(456652);
-  runweight2d(456652); // i have no idea why doing this first helps...
+  //runweight2d(456652); // i have no idea why doing this first helps...
 
-  return;
+  //return;
 
   int run;
   ifstream fin;
@@ -16,9 +16,17 @@ void weight()
   while ( fin >> run ) runweight2d(run);
   fin.close();
 
-  fin.open("list_39.short");
-  while ( fin >> run ) runweight2d(run);
-  fin.close();
+  // fin.open("list_39.short");
+  // while ( fin >> run ) runweight2d(run);
+  // fin.close();
+
+  // fin.open("list_62.short");
+  // while ( fin >> run ) runweight2d(run);
+  // fin.close();
+
+  // fin.open("list_200.short");
+  // while ( fin >> run ) runweight2d(run);
+  // fin.close();
 
 }
 
