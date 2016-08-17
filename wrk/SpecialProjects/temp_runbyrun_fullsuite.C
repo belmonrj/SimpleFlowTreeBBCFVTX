@@ -2,9 +2,13 @@ void getstuff(int, int, double&, double&, double&, double&, double&, double&, do
 
 void getmult(int, double&, double&, double&, double&, double&, double&);
 
+void getmult_new(int, double&, double&, double&, double&); // bbcs charge, cnt tracks, fvtx tracks, fvtx clusters
+
 void makeplots(int, int);
 
 void makemult(int);
+
+void makemult_new(int);
 
 void someratios(int);
 
@@ -14,6 +18,13 @@ void someplots(int);
 
 void temp_runbyrun_fullsuite()
 {
+
+  makemult_new(200);
+  makemult_new(62);
+  makemult_new(39);
+  makemult_new(20);
+
+  return;
 
   // makeplots(200,2);
   // makeplots(200,3);
@@ -929,5 +940,146 @@ bool getmult(int run, double& bbcs, double& fvtxs, double& fvtxn, double& ebbcs,
   efvtxn = th1d_fvtxn->GetMeanError();
 
   return true;
+
+}
+
+
+
+bool getmult_new(int run, double& bbcs_charge, double& cnt_tracks, double& fvtx_tracks, double& fvtx_clusters)
+{
+
+  if ( run <= 0 )
+    {
+      cout << "FATAL: bad run number" << endl;
+      exit(-1);
+    }
+
+  //TFile* file = TFile::Open(Form("input/hist_%d.root",run));
+  //TFile* file = TFile::Open(Form("svrb_run%d_pass0.root",run));
+  TFile* file = TFile::Open(Form("RootFiles/svrb_run%d_pass0.root",run));
+  if ( !file )
+    {
+      cout << "missing run " << run << endl;
+      return false;
+    }
+
+  TH1D* th1d_cnt = (TH1D*)file->Get("th1d_CNT_ntrk_GC");
+  TH1D* th1d_bbcs = (TH1D*)file->Get("th1d_BBC_charge_GC");
+  TH1D* th1d_fvtxc = (TH1D*)file->Get("th1d_FVTX_nclus_GC");
+  TH1D* th1d_fvtxt = (TH1D*)file->Get("th1d_FVTX_ntrk_GC");
+
+  if ( !th1d_bbcs || !th1d_cnt || !th1d_fvtxc || !th1d_fvtxt )
+    {
+      cout << "mising histograms " << run << " " << th1d_bbcs << " " << th1d_cnt << " " << th1d_fvtxc << " " << th1d_fvtxt << endl;
+      return false;
+    }
+
+  cnt_tracks = th1d_cnt->GetMean();
+  bbcs_charge = th1d_bbcs->GetMean();
+  fvtx_tracks = th1d_fvtxt->GetMean();
+  fvtx_clusters = th1d_fvtxc->GetMean();
+
+
+
+  return true;
+
+}
+
+
+
+
+void makemult_new(int energy)
+{
+
+  gStyle->SetOptTitle(0);
+
+  TCanvas* c1 = new TCanvas("c1","");
+
+  // -----------------------------------------
+  // --- first get the individual correlations
+  // -----------------------------------------
+  double runn[110]; // dumb to make it a double but need it for TGraph...
+  double index[110];
+  double
+    array_CNT[110],
+    array_BBCS[110],
+    array_FVTXC[110],
+    array_FVTXT[110];
+  int run = 0;
+  int counter = 0;
+  ifstream fin((const char*)Form("list_%d.short",energy));
+  for ( int i = 0; i < 110; ++i )
+    {
+      // cout << "energy is " << energy << endl;
+      // cout << "list name is " << (const char*)Form("list_%d.short",energy) << endl;
+      if ( fin.eof() ) break;
+      fin >> run;
+      // cout << "run is " << run << endl;
+      double temp_bbcs, temp_cnt, temp_fvtxt, temp_fvtxc;
+      index[i] = i+0.5;
+      runn[i] = run;
+      if ( !getmult_new(run,temp_bbcs,temp_cnt,temp_fvtxt,temp_fvtxc) ) continue;
+      ++counter;
+      array_CNT[i] = temp_cnt;
+      array_BBCS[i] = temp_bbcs;
+      array_FVTXC[i] = temp_fvtxc;
+      array_FVTXT[i] = temp_fvtxt;
+    }
+  fin.close();
+
+  TGraph* tg_run = new TGraph(counter,index,runn);
+  TGraph* tg_cnt = new TGraph(counter,index,array_CNT);
+  TGraph* tg_bbc = new TGraph(counter,index,array_BBCS);
+  TGraph* tg_fxc = new TGraph(counter,index,array_FVTXC);
+  TGraph* tg_fxt = new TGraph(counter,index,array_FVTXT);
+
+  TFile* fout = TFile::Open(Form("runindex_tgraphs_energy%d.root",energy),"recreate");
+  fout->cd();
+  tg_bbc->Write("tg_bbc");
+  tg_cnt->Write("tg_cnt");
+  tg_fxt->Write("tg_fxt");
+  tg_fxc->Write("tg_fxc");
+  fout->Write();
+  fout->Close();
+
+  tg_cnt->Draw("ap");
+  tg_cnt->GetXaxis()->SetLimits(-1,counter+1);
+  tg_cnt->SetMarkerStyle(kFullCircle);
+  tg_cnt->GetXaxis()->SetTitle("Run Index");
+  tg_cnt->GetYaxis()->SetTitle("CNT tracks per event");
+  c1->Print(Form("FigsRun/runindex_cnt_energy%d.png",energy));
+  c1->Print(Form("FigsRun/runindex_cnt_energy%d.pdf",energy));
+
+  tg_bbc->Draw("ap");
+  tg_bbc->GetXaxis()->SetLimits(-1,counter+1);
+  tg_bbc->SetMarkerStyle(kFullCircle);
+  tg_bbc->GetXaxis()->SetTitle("Run Index");
+  tg_bbc->GetYaxis()->SetTitle("BBCS charge");
+  c1->Print(Form("FigsRun/runindex_bbc_energy%d.png",energy));
+  c1->Print(Form("FigsRun/runindex_bbc_energy%d.pdf",energy));
+
+  tg_fxt->Draw("ap");
+  tg_fxt->GetXaxis()->SetLimits(-1,counter+1);
+  tg_fxt->SetMarkerStyle(kFullCircle);
+  tg_fxt->GetXaxis()->SetTitle("Run Index");
+  tg_fxt->GetYaxis()->SetTitle("FVTX tracks per event");
+  c1->Print(Form("FigsRun/runindex_fxt_energy%d.png",energy));
+  c1->Print(Form("FigsRun/runindex_fxt_energy%d.pdf",energy));
+
+  tg_fxc->Draw("ap");
+  tg_fxc->GetXaxis()->SetLimits(-1,counter+1);
+  tg_fxc->SetMarkerStyle(kFullCircle);
+  tg_fxc->GetXaxis()->SetTitle("Run Index");
+  tg_fxc->GetYaxis()->SetTitle("FVTX clusters per event");
+  c1->Print(Form("FigsRun/runindex_fxc_energy%d.png",energy));
+  c1->Print(Form("FigsRun/runindex_fxc_energy%d.pdf",energy));
+
+  tg_run->Draw("ap");
+  tg_run->GetXaxis()->SetLimits(-1,counter+1);
+  tg_run->SetMarkerStyle(kFullCircle);
+  tg_run->GetXaxis()->SetTitle("Run Index");
+  tg_run->GetYaxis()->SetTitle("Run Number");
+  c1->Print(Form("FigsRun/runindex_run_energy%d.png",energy));
+  c1->Print(Form("FigsRun/runindex_run_energy%d.pdf",energy));
 
 }
