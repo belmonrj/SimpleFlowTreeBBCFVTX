@@ -190,6 +190,8 @@ void flatten(int runNumber, int passNumber)
   float        d_py[max_nh];
   float        d_pz[max_nh];
 
+  int nfvtx_tracks;
+
   // List of branches
   TBranch* b_event;   //!
   TBranch* b_bbc_z;   //!
@@ -223,6 +225,7 @@ void flatten(int runNumber, int passNumber)
   TBranch* b_d_cntpx;   //!
   TBranch* b_d_cntpy;   //!
   TBranch* b_d_cntpz;   //!
+  TBranch* b_nfvtx_tracks; //!
 
   ntp_event_chain->SetBranchAddress("bbc_z",&d_bbcz,&b_bbc_z);
   ntp_event_chain->SetBranchAddress("centrality",&centrality,&b_centrality);
@@ -256,6 +259,8 @@ void flatten(int runNumber, int passNumber)
   ntp_event_chain->SetBranchAddress("d_cntpx",d_px,&b_px);
   ntp_event_chain->SetBranchAddress("d_cntpy",d_py,&b_py);
   ntp_event_chain->SetBranchAddress("d_cntpz",d_pz,&b_pz);
+
+  ntp_event_chain->SetBranchAddress("ntracklets",&nfvtx_tracks,&b_nfvtx_tracks);
 
 
 
@@ -624,12 +629,16 @@ void flatten(int runNumber, int passNumber)
   TH1D* th1d_FVTXS_nclus_NC = new TH1D("th1d_FVTXS_nclus_NC","",200,-0.5,1999.5);
   TH1D* th1d_FVTXN_nclus_NC = new TH1D("th1d_FVTXN_nclus_NC","",200,-0.5,1999.5);
 
+  TH1D* th1d_CNT_ntrk_GC = new TH1D("th1d_CNT_ntrk_GC","",50,-0.5,49.5);
   TH1D* th1d_BBC_charge_GC = new TH1D("th1d_BBC_charge_GC","",200,-0.5,199.5);
+  TH1D* th1d_FVTX_ntrk_GC = new TH1D("th1d_FVTX_ntrk_GC","",75,-0.5,74.5);
   TH1D* th1d_FVTX_nclus_GC = new TH1D("th1d_FVTX_nclus_GC","",200,-0.5,1999.5);
   TH1D* th1d_FVTXS_nclus_GC = new TH1D("th1d_FVTXS_nclus_GC","",200,-0.5,1999.5);
   TH1D* th1d_FVTXN_nclus_GC = new TH1D("th1d_FVTXN_nclus_GC","",200,-0.5,1999.5);
 
+  TH1D* th1d_CNT_ntrk_BC = new TH1D("th1d_CNT_ntrk_BC","",50,-0.5,49.5);
   TH1D* th1d_BBC_charge_BC = new TH1D("th1d_BBC_charge_BC","",200,-0.5,199.5);
+  TH1D* th1d_FVTX_ntrk_BC = new TH1D("th1d_FVTX_ntrk_BC","",75,-0.5,74.5);
   TH1D* th1d_FVTX_nclus_BC = new TH1D("th1d_FVTX_nclus_BC","",200,-0.5,1999.5);
   TH1D* th1d_FVTXS_nclus_BC = new TH1D("th1d_FVTXS_nclus_BC","",200,-0.5,1999.5);
   TH1D* th1d_FVTXN_nclus_BC = new TH1D("th1d_FVTXN_nclus_BC","",200,-0.5,1999.5);
@@ -988,7 +997,22 @@ void flatten(int runNumber, int passNumber)
       bool is_goodnc = ( d_nFVTXN_clus < 100 && d_nFVTXS_clus < 200 );
       if ( !is_goodnc ) ++bad_nc_counter;
 
-      bool is_okaync = ( d_nFVTX_clus < 300 );
+      int toomanyclusters = 9999;
+      // --- Run16dAu200
+      if ( runNumber >= 454774 && runNumber <= 455639 ) toomanyclusters = 1000;
+      // --- Run16dAu62
+      if ( runNumber >= 455792 && runNumber <= 456283 ) toomanyclusters = 1000;
+      // --- Run16dAu20
+      if ( runNumber >= 456652 && runNumber <= 457298 ) toomanyclusters = 500;
+      // --- Run16dAu39
+      if ( runNumber >= 457634 && runNumber <= 458167 ) toomanyclusters = 300;
+
+      bool is_okaync = ( d_nFVTX_clus < toomanyclusters );
+      if ( !is_okaync )
+        {
+          if ( verbosity > 0 ) cout << "too many clusters" << endl;
+          continue;
+        }
 
       //cout << "HELLO HERE I AM" << endl;
 
@@ -1577,6 +1601,7 @@ void flatten(int runNumber, int passNumber)
       if ( is_okaync )
         {
           th1d_BBC_charge_GC->Fill(bbc_qw);
+          th1d_FVTX_ntrk_GC->Fill(nfvtx_tracks);
           th1d_FVTX_nclus_GC->Fill(d_nFVTX_clus);
           th1d_FVTXS_nclus_GC->Fill(fvtxs_qw[0]);
           th1d_FVTXN_nclus_GC->Fill(fvtxn_qw[0]);
@@ -1584,12 +1609,13 @@ void flatten(int runNumber, int passNumber)
       else
         {
           th1d_BBC_charge_BC->Fill(bbc_qw);
+          th1d_FVTX_ntrk_GC->Fill(nfvtx_tracks);
           th1d_FVTX_nclus_BC->Fill(d_nFVTX_clus);
           th1d_FVTXS_nclus_BC->Fill(fvtxs_qw[0]);
           th1d_FVTXN_nclus_BC->Fill(fvtxn_qw[0]);
         }
 
-      continue; // let's just look at clusters for a little while...
+      // continue; // let's just look at clusters for a little while...
 
       // ---
 
@@ -1682,6 +1708,7 @@ void flatten(int runNumber, int passNumber)
 
       // ---
 
+      int track_counter = 0;
       if ( cnt_tracks )
         {
           for(int itrk=0; itrk< d_ntrk; itrk++)
@@ -1704,10 +1731,14 @@ void flatten(int runNumber, int passNumber)
               float pt_angle = sqrt(px*px+py*py);
 
               if ( pt_angle < 0.2 || pt_angle > 5.0 ) continue; // pt cut added 2016-06-30
-
+              ++track_counter;
             } // loop over tracks
 
         } // check on tracks
+
+      if ( is_okaync ) th1d_CNT_ntrk_GC->Fill(track_counter);
+      else th1d_CNT_ntrk_BC->Fill(track_counter);
+
 
     }//end of event
 
