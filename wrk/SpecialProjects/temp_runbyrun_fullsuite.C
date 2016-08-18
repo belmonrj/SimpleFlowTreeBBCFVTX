@@ -19,10 +19,10 @@ void someplots(int);
 void temp_runbyrun_fullsuite()
 {
 
-  makemult_new(200);
-  makemult_new(62);
-  makemult_new(39);
-  makemult_new(20);
+  // makemult_new(200);
+  // makemult_new(62);
+   makemult_new(39);
+  //  makemult_new(20);
 
   return;
 
@@ -995,41 +995,52 @@ void makemult_new(int energy)
 
   TCanvas* c1 = new TCanvas("c1","");
 
+  // ------------------------------------------------------------------------------
+  // --- these are just first guess, use additional info below to get better values
+  double cut_bbc = 0;
+  if ( energy == 200 ) cut_bbc = 68.0;
+  if ( energy == 62 )  cut_bbc = 46.0;
+  if ( energy == 39 )  cut_bbc = 25.0;
+  if ( energy == 20 )  cut_bbc = 15.0;
+  double cut_cnt = 0;
+  if ( energy == 200 ) cut_cnt = 0.70;
+  if ( energy == 62 )  cut_cnt = 0.47;
+  if ( energy == 39 )  cut_cnt = 0.32;
+  if ( energy == 20 )  cut_cnt = 0.18; // also 0.3 from above?
+  double cut_fxt = 0;
+  if ( energy == 200 ) cut_fxt = 15.0;
+  if ( energy == 62 )  cut_fxt = 11.4;
+  if ( energy == 39 )  cut_fxt =  6.0;
+  if ( energy == 20 )  cut_fxt =  5.0; // also 6.0 from above?
+  double cut_fxc = 0;
+  if ( energy == 200 ) cut_fxc = 320.0;
+  if ( energy == 62 )  cut_fxc = 210.0;
+  if ( energy == 39 )  cut_fxc = 210.0; // same as 62 GeV???
+  if ( energy == 20 )  cut_fxc = 150.0; // also 200.0 from above?
   // ---
-  double bbc_cut = 0;
-  if ( energy == 200 ) bbc_cut = 68.0;
-  if ( energy == 62 )  bbc_cut = 46.0;
-  if ( energy == 39 )  bbc_cut = 25.0;
-  if ( energy == 20 )  bbc_cut = 15.0;
-  double cnt_cut = 0;
-  if ( energy == 200 ) cnt_cut = 0.70;
-  if ( energy == 62 )  cnt_cut = 0.47;
-  if ( energy == 39 )  cnt_cut = 0.32;
-  if ( energy == 20 )  cnt_cut = 0.18; // also 0.3 from above?
-  double fxt_cut = 0;
-  if ( energy == 200 ) fxt_cut = 15.0;
-  if ( energy == 62 )  fxt_cut = 11.4;
-  if ( energy == 39 )  fxt_cut =  6.0;
-  if ( energy == 20 )  fxt_cut =  5.0; // also 6.0 from above?
-  double fxc_cut = 0;
-  if ( energy == 200 ) fxc_cut = 320.0;
-  if ( energy == 62 )  fxc_cut = 210.0;
-  if ( energy == 39 )  fxc_cut = 210.0; // same as 62 GeV???
-  if ( energy == 20 )  fxc_cut = 150.0; // also 200.0 from above?
-  // ---
-  double cnt_cut_above = 0.3;
-  double fxt_cut_above = 6.0;
-  double fxc_cut_above = 200;
+  double cut_bbc_above = 30.0;
+  double cut_cnt_above = 0.3;
+  double cut_fxt_above = 6.0;
+  double cut_fxc_above = 200;
 
   double runn[110]; // dumb to make it a double but need it for TGraph...
   double index[110];
   double
-    array_CNT[110],
-    array_BBCS[110],
-    array_FVTXC[110],
-    array_FVTXT[110];
+    array_cnt[110],
+    array_bbc[110],
+    array_fxc[110],
+    array_fxt[110];
   int run = 0;
   int counter = 0;
+  int mcounter = 0;
+  double mean_bbc = 0;
+  double mean_cnt = 0;
+  double mean_fxt = 0;
+  double mean_fxc = 0;
+  double mean2_bbc = 0;
+  double mean2_cnt = 0;
+  double mean2_fxt = 0;
+  double mean2_fxc = 0;
   ifstream fin((const char*)Form("list_%d.short",energy));
   for ( int i = 0; i < 110; ++i )
     {
@@ -1038,92 +1049,122 @@ void makemult_new(int energy)
       if ( fin.eof() ) break;
       fin >> run;
       ++counter;
-      array_CNT[i] = 0;
-      array_BBCS[i] = 0;
-      array_FVTXC[i] = 0;
-      array_FVTXT[i] = 0;
+      array_cnt[i] = 0;
+      array_bbc[i] = 0;
+      array_fxc[i] = 0;
+      array_fxt[i] = 0;
       // cout << "run is " << run << endl;
-      double temp_bbcs, temp_cnt, temp_fvtxt, temp_fvtxc;
+      double temp_bbc, temp_cnt, temp_fxt, temp_fxc;
       index[i] = i+0.5;
       runn[i] = run;
-      if ( !getmult_new(run,temp_bbcs,temp_cnt,temp_fvtxt,temp_fvtxc) ) continue;
-      array_CNT[i] = temp_cnt;
-      array_BBCS[i] = temp_bbcs;
-      array_FVTXC[i] = temp_fvtxc;
-      array_FVTXT[i] = temp_fvtxt;
-      if ( temp_cnt < cnt_cut ) cout << run << " fails cnt cut" << endl;
-      if ( temp_bbcs < bbc_cut ) cout << run << " fails bbcs cut" << endl;
-      if ( temp_fvtxc < fxc_cut ) cout << run << " fails fvtx custer cut" << endl;
-      if ( temp_fvtxt < fxt_cut ) cout << run << " fails fvtx track  cut" << endl;
-      if ( energy == 20 )
-        {
-          if ( temp_cnt > cnt_cut_above ) cout << run << " fails cnt cut from above" << endl;
-          if ( temp_fvtxc > fxc_cut_above ) cout << run << " fails fvtx custer cut from above" << endl;
-          if ( temp_fvtxt > fxt_cut_above ) cout << run << " fails fvtx track  cut from above" << endl;
-        }
+      if ( !getmult_new(run,temp_bbc,temp_cnt,temp_fxt,temp_fxc) ) continue;
+      ++mcounter;
+      array_cnt[i] = temp_cnt;
+      array_bbc[i] = temp_bbc;
+      array_fxc[i] = temp_fxc;
+      array_fxt[i] = temp_fxt;
+      mean_cnt += temp_cnt;
+      mean_bbc += temp_bbc;
+      mean_fxt += temp_fxt;
+      mean_fxc += temp_fxc;
+      mean2_cnt += temp_cnt*temp_cnt;
+      mean2_bbc += temp_bbc*temp_bbc;
+      mean2_fxt += temp_fxt*temp_fxt;
+      mean2_fxc += temp_fxc*temp_fxc;
     }
   fin.close();
 
-  TGraph* tg_run = new TGraph(counter,index,runn);
-  TGraph* tg_cnt = new TGraph(counter,index,array_CNT);
-  TGraph* tg_bbc = new TGraph(counter,index,array_BBCS);
-  TGraph* tg_fxc = new TGraph(counter,index,array_FVTXC);
-  TGraph* tg_fxt = new TGraph(counter,index,array_FVTXT);
+  mean_cnt /= mcounter;
+  mean_bbc /= mcounter;
+  mean_fxt /= mcounter;
+  mean_fxc /= mcounter;
 
-  TFile* fout = TFile::Open(Form("runindex_tgraphs_energy%d.root",energy),"recreate");
-  fout->cd();
-  tg_bbc->Write("tg_bbc");
-  tg_cnt->Write("tg_cnt");
-  tg_fxt->Write("tg_fxt");
-  tg_fxc->Write("tg_fxc");
-  fout->Write();
-  fout->Close();
+  mean2_cnt /= mcounter;
+  mean2_bbc /= mcounter;
+  mean2_fxt /= mcounter;
+  mean2_fxc /= mcounter;
+
+  double vari_bbc = mean2_bbc - mean_bbc*mean_bbc;
+  double vari_cnt = mean2_cnt - mean_cnt*mean_cnt;
+  double vari_fxt = mean2_fxt - mean_fxt*mean_fxt;
+  double vari_fxc = mean2_fxc - mean_fxc*mean_fxc;
+
+  double sigm_bbc = sqrt(vari_bbc);
+  double sigm_cnt = sqrt(vari_cnt);
+  double sigm_fxt = sqrt(vari_fxt);
+  double sigm_fxc = sqrt(vari_fxc);
+
+  cut_bbc = mean_bbc - 3*sigm_bbc;
+  cut_cnt = mean_cnt - 3*sigm_cnt;
+  cut_fxt = mean_fxt - 3*sigm_fxt;
+  cut_fxc = mean_fxc - 3*sigm_fxc;
+
+  cut_bbc_above = mean_bbc + 3*sigm_bbc;
+  cut_cnt_above = mean_cnt + 3*sigm_cnt;
+  cut_fxt_above = mean_fxt + 3*sigm_fxt;
+  cut_fxc_above = mean_fxc + 3*sigm_fxc;
+
+  // ---
+
+  TGraph* tg_run = new TGraph(counter,index,runn);
+  TGraph* tg_cnt = new TGraph(counter,index,array_cnt);
+  TGraph* tg_bbc = new TGraph(counter,index,array_bbc);
+  TGraph* tg_fxc = new TGraph(counter,index,array_fxc);
+  TGraph* tg_fxt = new TGraph(counter,index,array_fxt);
+
+  // ---
 
   TLine* line = NULL;
   TLine* aline = NULL;
 
   tg_cnt->Draw("ap");
   if ( line ) delete line;
-  line = new TLine(0,cnt_cut,counter,cnt_cut);
+  line = new TLine(0,cut_cnt,counter,cut_cnt);
   line->SetLineStyle(2);
   line->SetLineWidth(2);
   line->Draw();
   if ( aline ) delete aline;
-  aline = new TLine(0,cnt_cut_above,counter,cnt_cut_above);
+  aline = new TLine(0,cut_cnt_above,counter,cut_cnt_above);
   aline->SetLineStyle(2);
   aline->SetLineWidth(2);
-  if ( energy == 20 ) aline->Draw();
+  aline->Draw();
   tg_cnt->GetXaxis()->SetLimits(-1,counter+1);
   tg_cnt->SetMarkerStyle(kFullCircle);
   tg_cnt->GetXaxis()->SetTitle("Run Index");
-  tg_cnt->GetYaxis()->SetTitle("CNT tracks per event");
+  tg_cnt->GetYaxis()->SetTitle("cnt tracks per event");
   c1->Print(Form("FigsRun/runindex_cnt_energy%d.png",energy));
   c1->Print(Form("FigsRun/runindex_cnt_energy%d.pdf",energy));
 
   tg_bbc->Draw("ap");
   if ( line ) delete line;
-  line = new TLine(0,bbc_cut,counter,bbc_cut);
+  line = new TLine(0,cut_bbc,counter,cut_bbc);
   line->SetLineStyle(2);
   line->SetLineWidth(2);
   line->Draw();
+  line->Draw();
+  if ( aline ) delete aline;
+  aline = new TLine(0,cut_bbc_above,counter,cut_bbc_above);
+  aline->SetLineStyle(2);
+  aline->SetLineWidth(2);
+  aline->Draw();
   tg_bbc->GetXaxis()->SetLimits(-1,counter+1);
   tg_bbc->SetMarkerStyle(kFullCircle);
   tg_bbc->GetXaxis()->SetTitle("Run Index");
-  tg_bbc->GetYaxis()->SetTitle("BBCS charge");
+  tg_bbc->GetYaxis()->SetTitle("bbc charge");
   c1->Print(Form("FigsRun/runindex_bbc_energy%d.png",energy));
   c1->Print(Form("FigsRun/runindex_bbc_energy%d.pdf",energy));
 
   tg_fxt->Draw("ap");
   if ( line ) delete line;
-  line = new TLine(0,fxt_cut,counter,fxt_cut);
+  line = new TLine(0,cut_fxt,counter,cut_fxt);
   line->SetLineStyle(2);
   line->SetLineWidth(2);
   line->Draw();
   if ( aline ) delete aline;
-  aline = new TLine(0,fxt_cut_above,counter,fxt_cut_above);
+  aline = new TLine(0,cut_fxt_above,counter,cut_fxt_above);
   aline->SetLineStyle(2);
   aline->SetLineWidth(2);
-  if ( energy == 20 ) aline->Draw();
+  aline->Draw();
   tg_fxt->GetXaxis()->SetLimits(-1,counter+1);
   tg_fxt->SetMarkerStyle(kFullCircle);
   tg_fxt->GetXaxis()->SetTitle("Run Index");
@@ -1133,15 +1174,15 @@ void makemult_new(int energy)
 
   tg_fxc->Draw("ap");
   if ( line ) delete line;
-  line = new TLine(0,fxc_cut,counter,fxc_cut);
+  line = new TLine(0,cut_fxc,counter,cut_fxc);
   line->SetLineStyle(2);
   line->SetLineWidth(2);
   line->Draw();
   if ( aline ) delete aline;
-  aline = new TLine(0,fxc_cut_above,counter,fxc_cut_above);
+  aline = new TLine(0,cut_fxc_above,counter,cut_fxc_above);
   aline->SetLineStyle(2);
   aline->SetLineWidth(2);
-  if ( energy == 20 ) aline->Draw();
+  aline->Draw();
   tg_fxc->GetXaxis()->SetLimits(-1,counter+1);
   tg_fxc->SetMarkerStyle(kFullCircle);
   tg_fxc->GetXaxis()->SetTitle("Run Index");
@@ -1159,6 +1200,17 @@ void makemult_new(int energy)
 
   if ( line ) delete line;
   delete c1;
+
+
+  TFile* fout = TFile::Open(Form("runindex_tgraphs_energy%d.root",energy),"recreate");
+  fout->cd();
+  tg_bbc->Write("tg_bbc");
+  tg_cnt->Write("tg_cnt");
+  tg_fxt->Write("tg_fxt");
+  tg_fxc->Write("tg_fxc");
+  fout->Write();
+  fout->Close();
+
 
 }
 
