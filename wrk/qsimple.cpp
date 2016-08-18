@@ -109,10 +109,10 @@ void flatten(int runNumber, int passNumber)
 
 
   // char outFile1[300];
-  // sprintf(outFile1,"%s%d%s","output/svrb_",runNumber,".root");
+  // sprintf(outFile1,"%s%d%s","SpecialProjects/RootFiles/svrb_",runNumber,".root");
   TFile* tf_histo_inn = NULL;
-  if ( passNumber > 0 ) tf_histo_inn = TFile::Open(Form("svrb_run%d_pass%d.root",runNumber,passNumber-1)); // need null for pass zero
-  TFile* tf_histo_out = new TFile(Form("svrb_run%d_pass%d.root",runNumber,passNumber),"recreate");
+  if ( passNumber > 0 ) tf_histo_inn = TFile::Open(Form("SpecialProjects/RootFiles/svrb_run%d_pass%d.root",runNumber,passNumber-1)); // need null for pass zero
+  TFile* tf_histo_out = new TFile(Form("SpecialProjects/RootFiles/svrb_run%d_pass%d.root",runNumber,passNumber),"recreate");
   if ( !tf_histo_out )
     {
       cout << "FATAL ERROR: Unable to create output file!" << endl;
