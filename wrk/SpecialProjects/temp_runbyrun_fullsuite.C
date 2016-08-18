@@ -995,9 +995,32 @@ void makemult_new(int energy)
 
   TCanvas* c1 = new TCanvas("c1","");
 
-  // -----------------------------------------
-  // --- first get the individual correlations
-  // -----------------------------------------
+  // ---
+  double bbc_cut = 0;
+  if ( energy == 200 ) bbc_cut = 68.0;
+  if ( energy == 62 )  bbc_cut = 46.0;
+  if ( energy == 39 )  bbc_cut = 25.0;
+  if ( energy == 20 )  bbc_cut = 15.0;
+  double cnt_cut = 0;
+  if ( energy == 200 ) cnt_cut = 0.70;
+  if ( energy == 62 )  cnt_cut = 0.47;
+  if ( energy == 39 )  cnt_cut = 0.32;
+  if ( energy == 20 )  cnt_cut = 0.18; // also 0.3 from above?
+  double fxt_cut = 0;
+  if ( energy == 200 ) fxt_cut = 15.0;
+  if ( energy == 62 )  fxt_cut = 11.4;
+  if ( energy == 39 )  fxt_cut =  6.0;
+  if ( energy == 20 )  fxt_cut =  5.0; // also 6.0 from above?
+  double fxc_cut = 0;
+  if ( energy == 200 ) fxc_cut = 320.0;
+  if ( energy == 62 )  fxc_cut = 210.0;
+  if ( energy == 39 )  fxc_cut = 210.0; // same as 62 GeV???
+  if ( energy == 20 )  fxc_cut = 150.0; // also 200.0 from above?
+  // ---
+  double cnt_cut_above = 0.3;
+  double fxt_cut_above = 6.0;
+  double fxc_cut_above = 200;
+
   double runn[110]; // dumb to make it a double but need it for TGraph...
   double index[110];
   double
@@ -1014,12 +1037,16 @@ void makemult_new(int energy)
       // cout << "list name is " << (const char*)Form("list_%d.short",energy) << endl;
       if ( fin.eof() ) break;
       fin >> run;
+      ++counter;
+      array_CNT[i] = 0;
+      array_BBCS[i] = 0;
+      array_FVTXC[i] = 0;
+      array_FVTXT[i] = 0;
       // cout << "run is " << run << endl;
       double temp_bbcs, temp_cnt, temp_fvtxt, temp_fvtxc;
       index[i] = i+0.5;
       runn[i] = run;
       if ( !getmult_new(run,temp_bbcs,temp_cnt,temp_fvtxt,temp_fvtxc) ) continue;
-      ++counter;
       array_CNT[i] = temp_cnt;
       array_BBCS[i] = temp_bbcs;
       array_FVTXC[i] = temp_fvtxc;
@@ -1042,7 +1069,20 @@ void makemult_new(int energy)
   fout->Write();
   fout->Close();
 
+  TLine* line = NULL;
+  TLine* aline = NULL;
+
   tg_cnt->Draw("ap");
+  if ( line ) delete line;
+  line = new TLine(0,cnt_cut,counter,cnt_cut);
+  line->SetLineStyle(2);
+  line->SetLineWidth(2);
+  line->Draw();
+  if ( aline ) delete aline;
+  aline = new TLine(0,cnt_cut_above,counter,cnt_cut_above);
+  aline->SetLineStyle(2);
+  aline->SetLineWidth(2);
+  aline->Draw();
   tg_cnt->GetXaxis()->SetLimits(-1,counter+1);
   tg_cnt->SetMarkerStyle(kFullCircle);
   tg_cnt->GetXaxis()->SetTitle("Run Index");
@@ -1051,6 +1091,11 @@ void makemult_new(int energy)
   c1->Print(Form("FigsRun/runindex_cnt_energy%d.pdf",energy));
 
   tg_bbc->Draw("ap");
+  if ( line ) delete line;
+  line = new TLine(0,bbc_cut,counter,bbc_cut);
+  line->SetLineStyle(2);
+  line->SetLineWidth(2);
+  line->Draw();
   tg_bbc->GetXaxis()->SetLimits(-1,counter+1);
   tg_bbc->SetMarkerStyle(kFullCircle);
   tg_bbc->GetXaxis()->SetTitle("Run Index");
@@ -1059,6 +1104,16 @@ void makemult_new(int energy)
   c1->Print(Form("FigsRun/runindex_bbc_energy%d.pdf",energy));
 
   tg_fxt->Draw("ap");
+  if ( line ) delete line;
+  line = new TLine(0,fxt_cut,counter,fxt_cut);
+  line->SetLineStyle(2);
+  line->SetLineWidth(2);
+  line->Draw();
+  if ( aline ) delete aline;
+  aline = new TLine(0,fxt_cut_above,counter,fxt_cut_above);
+  aline->SetLineStyle(2);
+  aline->SetLineWidth(2);
+  aline->Draw();
   tg_fxt->GetXaxis()->SetLimits(-1,counter+1);
   tg_fxt->SetMarkerStyle(kFullCircle);
   tg_fxt->GetXaxis()->SetTitle("Run Index");
@@ -1067,6 +1122,16 @@ void makemult_new(int energy)
   c1->Print(Form("FigsRun/runindex_fxt_energy%d.pdf",energy));
 
   tg_fxc->Draw("ap");
+  if ( line ) delete line;
+  line = new TLine(0,fxc_cut,counter,fxc_cut);
+  line->SetLineStyle(2);
+  line->SetLineWidth(2);
+  line->Draw();
+  if ( aline ) delete aline;
+  aline = new TLine(0,fxc_cut_above,counter,fxc_cut_above);
+  aline->SetLineStyle(2);
+  aline->SetLineWidth(2);
+  aline->Draw();
   tg_fxc->GetXaxis()->SetLimits(-1,counter+1);
   tg_fxc->SetMarkerStyle(kFullCircle);
   tg_fxc->GetXaxis()->SetTitle("Run Index");
@@ -1082,4 +1147,8 @@ void makemult_new(int energy)
   c1->Print(Form("FigsRun/runindex_run_energy%d.png",energy));
   c1->Print(Form("FigsRun/runindex_run_energy%d.pdf",energy));
 
+  if ( line ) delete line;
+  delete c1;
+
 }
+
