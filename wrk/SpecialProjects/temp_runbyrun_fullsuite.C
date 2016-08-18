@@ -1051,6 +1051,16 @@ void makemult_new(int energy)
       array_BBCS[i] = temp_bbcs;
       array_FVTXC[i] = temp_fvtxc;
       array_FVTXT[i] = temp_fvtxt;
+      if ( temp_cnt < cnt_cut ) cout << run << " fails cnt cut" << endl;
+      if ( temp_bbcs < bbc_cut ) cout << run << " fails bbcs cut" << endl;
+      if ( temp_fvtxc < fxc_cut ) cout << run << " fails fvtx custer cut" << endl;
+      if ( temp_fvtxt < fxt_cut ) cout << run << " fails fvtx track  cut" << endl;
+      if ( energy == 20 )
+        {
+          if ( temp_cnt > cnt_cut_above ) cout << run << " fails cnt cut from above" << endl;
+          if ( temp_fvtxc > fxc_cut_above ) cout << run << " fails fvtx custer cut from above" << endl;
+          if ( temp_fvtxt > fxt_cut_above ) cout << run << " fails fvtx track  cut from above" << endl;
+        }
     }
   fin.close();
 
@@ -1082,7 +1092,7 @@ void makemult_new(int energy)
   aline = new TLine(0,cnt_cut_above,counter,cnt_cut_above);
   aline->SetLineStyle(2);
   aline->SetLineWidth(2);
-  aline->Draw();
+  if ( energy == 20 ) aline->Draw();
   tg_cnt->GetXaxis()->SetLimits(-1,counter+1);
   tg_cnt->SetMarkerStyle(kFullCircle);
   tg_cnt->GetXaxis()->SetTitle("Run Index");
@@ -1113,7 +1123,7 @@ void makemult_new(int energy)
   aline = new TLine(0,fxt_cut_above,counter,fxt_cut_above);
   aline->SetLineStyle(2);
   aline->SetLineWidth(2);
-  aline->Draw();
+  if ( energy == 20 ) aline->Draw();
   tg_fxt->GetXaxis()->SetLimits(-1,counter+1);
   tg_fxt->SetMarkerStyle(kFullCircle);
   tg_fxt->GetXaxis()->SetTitle("Run Index");
@@ -1131,7 +1141,7 @@ void makemult_new(int energy)
   aline = new TLine(0,fxc_cut_above,counter,fxc_cut_above);
   aline->SetLineStyle(2);
   aline->SetLineWidth(2);
-  aline->Draw();
+  if ( energy == 20 ) aline->Draw();
   tg_fxc->GetXaxis()->SetLimits(-1,counter+1);
   tg_fxc->SetMarkerStyle(kFullCircle);
   tg_fxc->GetXaxis()->SetTitle("Run Index");
