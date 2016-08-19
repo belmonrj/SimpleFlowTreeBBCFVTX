@@ -21,8 +21,8 @@ void temp_runbyrun_fullsuite()
 
   // makemult_new(200);
   // makemult_new(62);
-   makemult_new(39);
-  //  makemult_new(20);
+  makemult_new(39);
+  makemult_new(20);
 
   return;
 
@@ -454,7 +454,7 @@ void makeplots(int energy, int harmonic)
   tgeresoB_NS->Draw("p");
 
   tgeresoB_CN->GetXaxis()->SetLimits(-2,counter+1);
-  tgeresoB_CN->GetXaxis()->SetTitle("Run Index");
+  tgeresoB_CN->GetXaxis()->SetTitle("run index");
   tgeresoB_CN->GetYaxis()->SetTitle("BBCS EP resolution");
   tgeresoB_CN->SetTitle("BBCS EP resolution");
   tgeresoB_CN->SetMaximum(0.2);
@@ -505,7 +505,7 @@ void makeplots(int energy, int harmonic)
   tgeresoN_CS->Draw("p");
 
   tgeresoN_BC->GetXaxis()->SetLimits(-2,counter+1);
-  tgeresoN_BC->GetXaxis()->SetTitle("Run Index");
+  tgeresoN_BC->GetXaxis()->SetTitle("run index");
   tgeresoN_BC->GetYaxis()->SetTitle("FVTXN EP resolution");
   tgeresoN_BC->SetTitle("FVTXN EP resolution");
   tgeresoN_BC->SetMaximum(0.2);
@@ -563,7 +563,7 @@ void makeplots(int energy, int harmonic)
   tgeresoS_CN->Draw("p");
 
   tgeresoS_BC->GetXaxis()->SetLimits(-2,counter+1);
-  tgeresoS_BC->GetXaxis()->SetTitle("Run Index");
+  tgeresoS_BC->GetXaxis()->SetTitle("run index");
   tgeresoS_BC->GetYaxis()->SetTitle("FVTXS EP resolution");
   tgeresoS_BC->SetTitle("FVTXS EP resolution");
   tgeresoS_BC->SetMaximum(0.4);
@@ -726,7 +726,7 @@ void makemult(int energy)
   if ( energy == 39 ) tge_fvtxs->SetMaximum(300);
   tge_fvtxs->SetMinimum(0);
   tge_fvtxs->GetXaxis()->SetLimits(-2,counter+1);
-  tge_fvtxs->GetXaxis()->SetTitle("Run Index");
+  tge_fvtxs->GetXaxis()->SetTitle("run index");
   tge_fvtxs->GetYaxis()->SetTitle("Mean Multiplicity");
   tge_fvtxn->Draw("p");
   tge_bbcs->Draw("p");
@@ -829,7 +829,7 @@ void makemult(int energy)
   if ( energy == 39 ) tge_fvtxs->SetMaximum(300);
   tge_fvtxs->SetMinimum(0);
   tge_fvtxs->GetXaxis()->SetLimits(-2,counter+1);
-  tge_fvtxs->GetXaxis()->SetTitle("Run Index");
+  tge_fvtxs->GetXaxis()->SetTitle("run index");
   tge_fvtxs->GetYaxis()->SetTitle("Mean Multiplicity");
   tge_fvtxn->Draw("p");
   tge_bbcs->Draw("p");
@@ -1023,7 +1023,7 @@ void makemult_new(int energy)
   double cut_fxt_above = 6.0;
   double cut_fxc_above = 200;
 
-  double runn[110]; // dumb to make it a double but need it for TGraph...
+  double array_run[110]; // dumb to make it a double but need it for TGraph...
   double index[110];
   double
     array_cnt[110],
@@ -1056,7 +1056,7 @@ void makemult_new(int energy)
       // cout << "run is " << run << endl;
       double temp_bbc, temp_cnt, temp_fxt, temp_fxc;
       index[i] = i+0.5;
-      runn[i] = run;
+      array_run[i] = run;
       if ( !getmult_new(run,temp_bbc,temp_cnt,temp_fxt,temp_fxc) ) continue;
       ++mcounter;
       array_cnt[i] = temp_cnt;
@@ -1106,7 +1106,7 @@ void makemult_new(int energy)
 
   // ---
 
-  TGraph* tg_run = new TGraph(counter,index,runn);
+  TGraph* tg_run = new TGraph(counter,index,array_run);
   TGraph* tg_cnt = new TGraph(counter,index,array_cnt);
   TGraph* tg_bbc = new TGraph(counter,index,array_bbc);
   TGraph* tg_fxc = new TGraph(counter,index,array_fxc);
@@ -1116,8 +1116,11 @@ void makemult_new(int energy)
 
   TLine* line = NULL;
   TLine* aline = NULL;
+  TLine* mline = NULL;
 
   tg_cnt->Draw("ap");
+  tg_cnt->SetMinimum(0);
+  tg_cnt->SetMaximum(1.17*cut_cnt_above);
   if ( line ) delete line;
   line = new TLine(0,cut_cnt,counter,cut_cnt);
   line->SetLineStyle(2);
@@ -1128,14 +1131,21 @@ void makemult_new(int energy)
   aline->SetLineStyle(2);
   aline->SetLineWidth(2);
   aline->Draw();
+  if ( mline ) delete mline;
+  mline = new TLine(0,mean_cnt,counter,mean_cnt);
+  mline->SetLineStyle(2);
+  mline->SetLineWidth(2);
+  mline->Draw();
   tg_cnt->GetXaxis()->SetLimits(-1,counter+1);
   tg_cnt->SetMarkerStyle(kFullCircle);
-  tg_cnt->GetXaxis()->SetTitle("Run Index");
+  tg_cnt->GetXaxis()->SetTitle("run index");
   tg_cnt->GetYaxis()->SetTitle("cnt tracks per event");
   c1->Print(Form("FigsRun/runindex_cnt_energy%d.png",energy));
   c1->Print(Form("FigsRun/runindex_cnt_energy%d.pdf",energy));
 
   tg_bbc->Draw("ap");
+  tg_bbc->SetMinimum(0);
+  tg_bbc->SetMaximum(1.17*cut_bbc_above);
   if ( line ) delete line;
   line = new TLine(0,cut_bbc,counter,cut_bbc);
   line->SetLineStyle(2);
@@ -1147,14 +1157,21 @@ void makemult_new(int energy)
   aline->SetLineStyle(2);
   aline->SetLineWidth(2);
   aline->Draw();
+  if ( mline ) delete mline;
+  mline = new TLine(0,mean_bbc,counter,mean_bbc);
+  mline->SetLineStyle(2);
+  mline->SetLineWidth(2);
+  mline->Draw();
   tg_bbc->GetXaxis()->SetLimits(-1,counter+1);
   tg_bbc->SetMarkerStyle(kFullCircle);
-  tg_bbc->GetXaxis()->SetTitle("Run Index");
+  tg_bbc->GetXaxis()->SetTitle("run index");
   tg_bbc->GetYaxis()->SetTitle("bbc charge");
   c1->Print(Form("FigsRun/runindex_bbc_energy%d.png",energy));
   c1->Print(Form("FigsRun/runindex_bbc_energy%d.pdf",energy));
 
   tg_fxt->Draw("ap");
+  tg_fxt->SetMinimum(0);
+  tg_fxt->SetMaximum(1.17*cut_fxt_above);
   if ( line ) delete line;
   line = new TLine(0,cut_fxt,counter,cut_fxt);
   line->SetLineStyle(2);
@@ -1165,14 +1182,21 @@ void makemult_new(int energy)
   aline->SetLineStyle(2);
   aline->SetLineWidth(2);
   aline->Draw();
+  if ( mline ) delete mline;
+  mline = new TLine(0,mean_fxt,counter,mean_fxt);
+  mline->SetLineStyle(2);
+  mline->SetLineWidth(2);
+  mline->Draw();
   tg_fxt->GetXaxis()->SetLimits(-1,counter+1);
   tg_fxt->SetMarkerStyle(kFullCircle);
-  tg_fxt->GetXaxis()->SetTitle("Run Index");
+  tg_fxt->GetXaxis()->SetTitle("run index");
   tg_fxt->GetYaxis()->SetTitle("FVTX tracks per event");
   c1->Print(Form("FigsRun/runindex_fxt_energy%d.png",energy));
   c1->Print(Form("FigsRun/runindex_fxt_energy%d.pdf",energy));
 
   tg_fxc->Draw("ap");
+  tg_fxc->SetMinimum(0);
+  tg_fxc->SetMaximum(1.17*cut_fxc_above);
   if ( line ) delete line;
   line = new TLine(0,cut_fxc,counter,cut_fxc);
   line->SetLineStyle(2);
@@ -1183,31 +1207,161 @@ void makemult_new(int energy)
   aline->SetLineStyle(2);
   aline->SetLineWidth(2);
   aline->Draw();
+  if ( mline ) delete mline;
+  mline = new TLine(0,mean_fxc,counter,mean_fxc);
+  mline->SetLineStyle(2);
+  mline->SetLineWidth(2);
+  mline->Draw();
   tg_fxc->GetXaxis()->SetLimits(-1,counter+1);
   tg_fxc->SetMarkerStyle(kFullCircle);
-  tg_fxc->GetXaxis()->SetTitle("Run Index");
-  tg_fxc->GetYaxis()->SetTitle("FVTX clusters per event");
+  tg_fxc->GetXaxis()->SetTitle("run index");
+  tg_fxc->GetYaxis()->SetTitle("fvtx clusters per event");
   c1->Print(Form("FigsRun/runindex_fxc_energy%d.png",energy));
   c1->Print(Form("FigsRun/runindex_fxc_energy%d.pdf",energy));
 
   tg_run->Draw("ap");
   tg_run->GetXaxis()->SetLimits(-1,counter+1);
   tg_run->SetMarkerStyle(kFullCircle);
-  tg_run->GetXaxis()->SetTitle("Run Index");
-  tg_run->GetYaxis()->SetTitle("Run Number");
+  tg_run->GetXaxis()->SetTitle("run index");
+  tg_run->GetYaxis()->SetTitle("run number");
   c1->Print(Form("FigsRun/runindex_run_energy%d.png",energy));
   c1->Print(Form("FigsRun/runindex_run_energy%d.pdf",energy));
 
+  // ---
+
+  // ---
+
+  TGraph* tgr_run = new TGraph(counter,array_run,array_run);
+  TGraph* tgr_cnt = new TGraph(counter,array_run,array_cnt);
+  TGraph* tgr_bbc = new TGraph(counter,array_run,array_bbc);
+  TGraph* tgr_fxc = new TGraph(counter,array_run,array_fxc);
+  TGraph* tgr_fxt = new TGraph(counter,array_run,array_fxt);
+
+  tgr_cnt->Draw("ap");
+  tgr_cnt->SetMinimum(0);
+  tgr_cnt->SetMaximum(1.17*cut_cnt_above);
   if ( line ) delete line;
+  line = new TLine(0,cut_cnt,counter,cut_cnt);
+  line->SetLineStyle(2);
+  line->SetLineWidth(2);
+  line->Draw();
+  if ( aline ) delete aline;
+  aline = new TLine(0,cut_cnt_above,counter,cut_cnt_above);
+  aline->SetLineStyle(2);
+  aline->SetLineWidth(2);
+  aline->Draw();
+  if ( mline ) delete mline;
+  mline = new TLine(0,mean_cnt,counter,mean_cnt);
+  mline->SetLineStyle(2);
+  mline->SetLineWidth(2);
+  mline->Draw();
+  tgr_cnt->GetXaxis()->SetLimits(array_run[0]-100,array_run[counter-1]+100);
+  tgr_cnt->SetMarkerStyle(kFullCircle);
+  tgr_cnt->GetXaxis()->SetTitle("run number");
+  tgr_cnt->GetYaxis()->SetTitle("cnt tracks per event");
+  c1->Print(Form("FigsRun/run_cnt_energy%d.png",energy));
+  c1->Print(Form("FigsRun/run_cnt_energy%d.pdf",energy));
+
+  tgr_bbc->Draw("ap");
+  tgr_bbc->SetMinimum(0);
+  tgr_bbc->SetMaximum(1.17*cut_bbc_above);
+  if ( line ) delete line;
+  line = new TLine(0,cut_bbc,counter,cut_bbc);
+  line->SetLineStyle(2);
+  line->SetLineWidth(2);
+  line->Draw();
+  line->Draw();
+  if ( aline ) delete aline;
+  aline = new TLine(0,cut_bbc_above,counter,cut_bbc_above);
+  aline->SetLineStyle(2);
+  aline->SetLineWidth(2);
+  aline->Draw();
+  if ( mline ) delete mline;
+  mline = new TLine(0,mean_bbc,counter,mean_bbc);
+  mline->SetLineStyle(2);
+  mline->SetLineWidth(2);
+  mline->Draw();
+  tgr_bbc->GetXaxis()->SetLimits(array_run[0]-100,array_run[counter-1]+100);
+  tgr_bbc->SetMarkerStyle(kFullCircle);
+  tgr_bbc->GetXaxis()->SetTitle("run number");
+  tgr_bbc->GetYaxis()->SetTitle("bbc charge");
+  c1->Print(Form("FigsRun/run_bbc_energy%d.png",energy));
+  c1->Print(Form("FigsRun/run_bbc_energy%d.pdf",energy));
+
+  tgr_fxt->Draw("ap");
+  tgr_fxt->SetMinimum(0);
+  tgr_fxt->SetMaximum(1.17*cut_fxt_above);
+  if ( line ) delete line;
+  line = new TLine(0,cut_fxt,counter,cut_fxt);
+  line->SetLineStyle(2);
+  line->SetLineWidth(2);
+  line->Draw();
+  if ( aline ) delete aline;
+  aline = new TLine(0,cut_fxt_above,counter,cut_fxt_above);
+  aline->SetLineStyle(2);
+  aline->SetLineWidth(2);
+  aline->Draw();
+  if ( mline ) delete mline;
+  mline = new TLine(0,mean_fxt,counter,mean_fxt);
+  mline->SetLineStyle(2);
+  mline->SetLineWidth(2);
+  mline->Draw();
+  tgr_fxt->GetXaxis()->SetLimits(array_run[0]-100,array_run[counter-1]+100);
+  tgr_fxt->SetMarkerStyle(kFullCircle);
+  tgr_fxt->GetXaxis()->SetTitle("run number");
+  tgr_fxt->GetYaxis()->SetTitle("FVTX tracks per event");
+  c1->Print(Form("FigsRun/run_fxt_energy%d.png",energy));
+  c1->Print(Form("FigsRun/run_fxt_energy%d.pdf",energy));
+
+  tgr_fxc->Draw("ap");
+  tgr_fxc->SetMinimum(0);
+  tgr_fxc->SetMaximum(1.17*cut_fxc_above);
+  if ( line ) delete line;
+  line = new TLine(0,cut_fxc,counter,cut_fxc);
+  line->SetLineStyle(2);
+  line->SetLineWidth(2);
+  line->Draw();
+  if ( aline ) delete aline;
+  aline = new TLine(0,cut_fxc_above,counter,cut_fxc_above);
+  aline->SetLineStyle(2);
+  aline->SetLineWidth(2);
+  aline->Draw();
+  if ( mline ) delete mline;
+  mline = new TLine(0,mean_fxc,counter,mean_fxc);
+  mline->SetLineStyle(2);
+  mline->SetLineWidth(2);
+  mline->Draw();
+  tgr_fxc->GetXaxis()->SetLimits(array_run[0]-100,array_run[counter-1]+100);
+  tgr_fxc->SetMarkerStyle(kFullCircle);
+  tgr_fxc->GetXaxis()->SetTitle("run number");
+  tgr_fxc->GetYaxis()->SetTitle("fvtx clusters per event");
+  c1->Print(Form("FigsRun/run_fxc_energy%d.png",energy));
+  c1->Print(Form("FigsRun/run_fxc_energy%d.pdf",energy));
+
+
+
+  if ( line ) delete line;
+  if ( aline ) delete aline;
+  if ( mline ) delete mline;
   delete c1;
 
 
-  TFile* fout = TFile::Open(Form("runindex_tgraphs_energy%d.root",energy),"recreate");
+
+  TFile* fout = TFile::Open(Form("runindex_histograms_energy%d.root",energy),"recreate");
   fout->cd();
-  tg_bbc->Write("tg_bbc");
-  tg_cnt->Write("tg_cnt");
-  tg_fxt->Write("tg_fxt");
-  tg_fxc->Write("tg_fxc");
+  TH1D* th1d_bbc = new TH1D("th1d_bbc","",counter,-0.5,counter-0.5);
+  TH1D* th1d_cnt = new TH1D("th1d_cnt","",counter,-0.5,counter-0.5);
+  TH1D* th1d_fxt = new TH1D("th1d_fxt","",counter,-0.5,counter-0.5);
+  TH1D* th1d_fxc = new TH1D("th1d_fxc","",counter,-0.5,counter-0.5);
+  TH1D* th1d_run = new TH1D("th1d_run","",counter,-0.5,counter-0.5);
+  for ( int i = 0; i < counter; ++i )
+    {
+      th1d_bbc->SetBinContent(i+1,array_bbc[i]);
+      th1d_cnt->SetBinContent(i+1,array_cnt[i]);
+      th1d_fxt->SetBinContent(i+1,array_fxt[i]);
+      th1d_fxc->SetBinContent(i+1,array_fxc[i]);
+      th1d_run->SetBinContent(i+1,array_run[i]);
+    }
   fout->Write();
   fout->Close();
 
