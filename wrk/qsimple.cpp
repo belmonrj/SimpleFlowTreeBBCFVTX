@@ -832,15 +832,16 @@ void flatten(int runNumber, int passNumber)
       unsigned int trigger_BBCLL1narrowcent  = 0x00000008;
       unsigned int trigger_BBCLL1narrow      = 0x00000010;
 
+      // --- for many run by run studies we want the MB trigger only
       unsigned int accepted_triggers = 0;
       // --- Run16dAu200
-      if ( runNumber >= 454774 && runNumber <= 455639 ) accepted_triggers = trigger_BBCLL1narrowcent | trigger_BBCLL1narrow;
+      if ( runNumber >= 454774 && runNumber <= 455639 ) accepted_triggers = trigger_BBCLL1narrow;
       // --- Run16dAu62
-      if ( runNumber >= 455792 && runNumber <= 456283 ) accepted_triggers = trigger_BBCLL1narrowcent | trigger_BBCLL1narrow;
+      if ( runNumber >= 455792 && runNumber <= 456283 ) accepted_triggers = trigger_BBCLL1narrow;
       // --- Run16dAu20
-      if ( runNumber >= 456652 && runNumber <= 457298 ) accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS;
+      if ( runNumber >= 456652 && runNumber <= 457298 ) accepted_triggers = trigger_FVTXNSBBCS;
       // --- Run16dAu39
-      if ( runNumber >= 457634 && runNumber <= 458167 ) accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS;
+      if ( runNumber >= 457634 && runNumber <= 458167 ) accepted_triggers = trigger_FVTXNSBBCS;
 
       unsigned int passes_trigger = trigger_scaled & accepted_triggers;
       if ( passes_trigger == 0 )
@@ -1007,7 +1008,9 @@ void flatten(int runNumber, int passNumber)
       // --- Run16dAu39
       if ( runNumber >= 457634 && runNumber <= 458167 ) toomanyclusters = 500;
 
-      bool is_okaync = ( d_nFVTX_clus < toomanyclusters );
+      // --- need to check downstream effects, might want to reorganize if/else structures
+      // --- might also want to get rid of a bunch of older, no longer used histograms
+      bool is_okaync = ( d_nFVTX_clus < toomanyclusters ) && is_central;
       if ( !is_okaync )
         {
           if ( verbosity > 0 ) cout << "too many clusters" << endl;
