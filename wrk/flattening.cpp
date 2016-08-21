@@ -104,18 +104,9 @@ int main(int argc, char *argv[])
 void flatten(int runNumber, int rp_recal_pass)
 {
 
-  int verbosity = 0;
-
-  char outFile1[300];
-  sprintf(outFile1,"%s%d%s","output/hist_",runNumber,".root");
-
-  char outFile2[100];
-  sprintf(outFile2,"%s%d%s","output/hrp_",runNumber,".root");
-
   cout << "runNumber = " << runNumber << " rp_recal_pass = " << rp_recal_pass << endl;
 
-  cout << "v2 histogram output file: " << outFile1 << endl;
-  cout << "EP histogram output file: " << outFile2 << endl;
+  int verbosity = 0;
 
   char calibfile[500];
   sprintf(calibfile,"output/flattening_%d_%d.dat",runNumber,rp_recal_pass-1);
@@ -235,6 +226,19 @@ void flatten(int runNumber, int rp_recal_pass)
 
   cout << "Lots of arrays and stuff" << endl;
 
+
+  char outFile1[300];
+  sprintf(outFile1,"%s%d%s","output/hist_",runNumber,".root");
+
+  char outFile2[100];
+  sprintf(outFile2,"%s%d%s","output/hrp_",runNumber,".root");
+
+  cout << "v2 histogram output file: " << outFile1 << endl;
+  cout << "EP histogram output file: " << outFile2 << endl;
+
+  TFile *mData2=TFile::Open(outFile2,"recreate");
+  mData2->cd();
+
   // --- lots of comments needed here
   // --- flattening parameters output to file
   TH2D     *qx[NMUL][NHAR][NDET]; // Q vector x component, Q vector vs z_vertex bin
@@ -251,6 +255,10 @@ void flatten(int runNumber, int rp_recal_pass)
   float    mean[NMUL][NZPS][NHAR][NDET][2]; // mean of Psi distribution (???)
   float    widt[NMUL][NZPS][NHAR][NDET][2]; // width of Psi distribution (???)
   float    four[NMUL][NZPS][NHAR][NDET][2][NORD]; // ?
+
+  TFile *mData1=TFile::Open(outFile1,"recreate");
+  mData1->cd();
+
 
   // ---
   TH1D* th1d_BBC_charge = new TH1D("th1d_BBC_charge","",200,-0.5,199.5);
@@ -2289,6 +2297,8 @@ void flatten(int runNumber, int rp_recal_pass)
       ofs.close();
     } // if pass 1 or 2
 
+
+  /*
   // --- QA purpose
   if(rp_recal_pass>0)
     {
@@ -2781,9 +2791,22 @@ void flatten(int runNumber, int rp_recal_pass)
       mData1->Close();
 
     } // check on last pass
-
+  */
 
   //return;
+
+  cout << "Now attempting to close and write data files" << endl;
+
+  cout << "v2 histogram output file: " << outFile1 << endl;
+  cout << "EP histogram output file: " << outFile2 << endl;
+
+  if ( rp_recal_pass == 3 )
+    {
+      mData1->Write();
+      mData2->Write();
+      mData1->Close();
+      mData2->Close();
+    }
 
   cout<<"cleaning up"<<endl;
 
@@ -2795,6 +2818,8 @@ void flatten(int runNumber, int rp_recal_pass)
   // htree->Delete();
   // f->Close();
   // delete f;
+
+  /*
 
   delete bbcs_v2_incl_nodetree;
   delete bbcs_v2_east_nodetree;
@@ -3202,13 +3227,13 @@ void flatten(int runNumber, int rp_recal_pass)
   delete os_fvtxs_d24_out_both;
   delete os_fvtxn_d24_out_both;
 
+  */
 
   // ---
 
   cout << "now attempting to close weight file" << endl;
 
   if ( phi_weight_file ) phi_weight_file->Close();
-
 
   cout<<"end of program ana"<<endl;
 
