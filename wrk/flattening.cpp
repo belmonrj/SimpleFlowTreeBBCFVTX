@@ -115,9 +115,12 @@ void flatten(int runNumber, int rp_recal_pass)
   cout << "runNumber = " << runNumber << " rp_recal_pass = " << rp_recal_pass << endl;
 
   cout << "v2 histogram output file: " << outFile1 << endl;
+  cout << "EP histogram output file: " << outFile2 << endl;
 
   char calibfile[500];
   sprintf(calibfile,"output/flattening_%d_%d.dat",runNumber,rp_recal_pass-1);
+
+  cout << "calib text output file: " << calibfile << endl;
 
   char filename[500];
 
@@ -241,6 +244,7 @@ void flatten(int runNumber, int rp_recal_pass)
   TH2D     *dis[NMUL][NHAR][NDET]; // displacement?  function of z_vertex bin
 
   TH2D     *psi_bf[NMUL][NHAR][NDET];
+  TH2D     *psi_mf[NMUL][NHAR][NDET];
   TH2D     *psi_af[NMUL][NHAR][NDET];
 
   // flattening parameters read in from file
@@ -413,6 +417,9 @@ void flatten(int runNumber, int rp_recal_pass)
 
           sprintf(name,"psi_bf_%d_%d_%d",ic,ih,id);
           psi_bf[ic][ih][id] = new TH2D(name,name,NZPS*3,-0.5,NZPS*3.0-0.5, 220,-4.1,4.1);
+
+          sprintf(name,"psi_mf_%d_%d_%d",ic,ih,id);
+          psi_mf[ic][ih][id] = new TH2D(name,name,NZPS*3,-0.5,NZPS*3.0-0.5, 220,-4.1,4.1);
 
           sprintf(name,"psi_af_%d_%d_%d",ic,ih,id);
           psi_af[ic][ih][id] = new TH2D(name,name,NZPS*3,-0.5,NZPS*3.0-0.5, 220,-4.1,4.1);
@@ -1492,8 +1499,10 @@ void flatten(int runNumber, int rp_recal_pass)
                   sumxy[ih][id][3]=atan2(sumxy[ih][id][1],sumxy[ih][id][0])/(ih+1.0);
                   if (rp_recal_pass>0)
                     {
-                      // fill histogram with psi calculated with recenter q vectors
+                      // fill histogram with psi calculated with recenter q vectors(??)
                       dis[icent][ih][id]->Fill(izvtx+NZPS,sumxy[ih][id][3]*(ih+1.0));
+                      // my own simpler version of the above histogram
+                      psi_mf[ic][ih][id]->Fill(izvtx,sumxy[ih][id][3]);
                     }
 
                   float psi=sumxy[ih][id][3]*(ih+1.0);
@@ -2305,6 +2314,7 @@ void flatten(int runNumber, int rp_recal_pass)
               qy[ic][ih][id]->Write();
               dis[ic][ih][id]->Write();
               psi_bf[ic][ih][id]->Write();
+              psi_mf[ic][ih][id]->Write();
               psi_af[ic][ih][id]->Write();
             } // detectors
         } // harmonics
@@ -2854,6 +2864,7 @@ void flatten(int runNumber, int rp_recal_pass)
   delete qx[ic][ih][id];
   delete qy[ic][ih][id];
   delete psi_bf[ic][ih][id];
+  delete psi_mf[ic][ih][id];
   delete psi_af[ic][ih][id];
   }
   }
