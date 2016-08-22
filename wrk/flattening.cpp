@@ -106,7 +106,7 @@ void flatten(int runNumber, int rp_recal_pass)
 
   cout << "runNumber = " << runNumber << " rp_recal_pass = " << rp_recal_pass << endl;
 
-  int verbosity = 0;
+  int verbosity = 1;
 
   char calibfile[500];
   sprintf(calibfile,"output/flattening_data/flattening_%d_%d.dat",runNumber,rp_recal_pass-1);
@@ -134,7 +134,7 @@ void flatten(int runNumber, int rp_recal_pass)
   // ---
 
   bool doweights = true; // change to false if you don't want to bother
-  TString phiweightfile_name = Form("SpecialProjects/WeightFiles/weight2d_run%d.root", runNumber);
+  TString phiweightfile_name = Form("SpecialProjects/WeightFiles/only2d_run%d.root", runNumber);
   TFile* phi_weight_file = TFile::Open(phiweightfile_name); // COME BACK HERE AND HAVE A LOOK
   if ( !phi_weight_file )
     {
@@ -142,86 +142,81 @@ void flatten(int runNumber, int rp_recal_pass)
       doweights = false;
     }
 
-  TH1D* th1d_fvtxs_phi_weight[10][5];
-  TH1D* th1d_fvtxn_phi_weight[10][5];
+  TH2D* th2d_fvtxs_phi_weight[5];
+  TH2D* th2d_fvtxn_phi_weight[5];
   if ( doweights )
     {
-      for ( int i = 0; i < 20; ++i )
+      TString histname0 = Form("th2d_fvtxs_clus_phi_weight" );
+      TString histname1 = Form("th2d_fvtxs0_clus_phi_weight");
+      TString histname2 = Form("th2d_fvtxs1_clus_phi_weight");
+      TString histname3 = Form("th2d_fvtxs2_clus_phi_weight");
+      TString histname4 = Form("th2d_fvtxs3_clus_phi_weight");
+      th2d_fvtxs_phi_weight[0] = (TH2D*)phi_weight_file->Get(histname0); // COME BACK HERE AND HAVE A LOOK
+      th2d_fvtxs_phi_weight[1] = (TH2D*)phi_weight_file->Get(histname1); // COME BACK HERE AND HAVE A LOOK
+      th2d_fvtxs_phi_weight[2] = (TH2D*)phi_weight_file->Get(histname2); // COME BACK HERE AND HAVE A LOOK
+      th2d_fvtxs_phi_weight[3] = (TH2D*)phi_weight_file->Get(histname3); // COME BACK HERE AND HAVE A LOOK
+      th2d_fvtxs_phi_weight[4] = (TH2D*)phi_weight_file->Get(histname4); // COME BACK HERE AND HAVE A LOOK
+      bool have_all_weight_histos =
+        th2d_fvtxs_phi_weight[0] &&
+        th2d_fvtxs_phi_weight[1] &&
+        th2d_fvtxs_phi_weight[2] &&
+        th2d_fvtxs_phi_weight[3] &&
+        th2d_fvtxs_phi_weight[4];
+      if ( verbosity > 0 || ( !have_all_weight_histos ) )
         {
-          TString histname0 = Form("th1d_weight_fvtxs_zvtx%d_clus_phi_GC" ,i);
-          TString histname1 = Form("th1d_weight_fvtxs0_zvtx%d_clus_phi_GC",i);
-          TString histname2 = Form("th1d_weight_fvtxs1_zvtx%d_clus_phi_GC",i);
-          TString histname3 = Form("th1d_weight_fvtxs2_zvtx%d_clus_phi_GC",i);
-          TString histname4 = Form("th1d_weight_fvtxs3_zvtx%d_clus_phi_GC",i);
-          th1d_fvtxs_phi_weight[i][0] = (TH1D*)phi_weight_file->Get(histname0); // COME BACK HERE AND HAVE A LOOK
-          th1d_fvtxs_phi_weight[i][1] = (TH1D*)phi_weight_file->Get(histname1); // COME BACK HERE AND HAVE A LOOK
-          th1d_fvtxs_phi_weight[i][2] = (TH1D*)phi_weight_file->Get(histname2); // COME BACK HERE AND HAVE A LOOK
-          th1d_fvtxs_phi_weight[i][3] = (TH1D*)phi_weight_file->Get(histname3); // COME BACK HERE AND HAVE A LOOK
-          th1d_fvtxs_phi_weight[i][4] = (TH1D*)phi_weight_file->Get(histname4); // COME BACK HERE AND HAVE A LOOK
-          bool have_all_weight_histos =
-            th1d_fvtxs_phi_weight[i][0] &&
-            th1d_fvtxs_phi_weight[i][1] &&
-            th1d_fvtxs_phi_weight[i][2] &&
-            th1d_fvtxs_phi_weight[i][3] &&
-            th1d_fvtxs_phi_weight[i][4];
-          if ( verbosity > 0 || ( !have_all_weight_histos ) )
-            {
-              cout << "memory address of th1d_fvtxs_phi_weight[i][0] is " << th1d_fvtxs_phi_weight[i][0] << endl;
-              cout << "memory address of th1d_fvtxs_phi_weight[i][1] is " << th1d_fvtxs_phi_weight[i][1] << endl;
-              cout << "memory address of th1d_fvtxs_phi_weight[i][2] is " << th1d_fvtxs_phi_weight[i][2] << endl;
-              cout << "memory address of th1d_fvtxs_phi_weight[i][3] is " << th1d_fvtxs_phi_weight[i][3] << endl;
-              cout << "memory address of th1d_fvtxs_phi_weight[i][4] is " << th1d_fvtxs_phi_weight[i][4] << endl;
-              cout << "name of th1d_fvtxs_phi_weight[i][0] is " << histname0.Data() << endl;
-              cout << "name of th1d_fvtxs_phi_weight[i][1] is " << histname1.Data() << endl;
-              cout << "name of th1d_fvtxs_phi_weight[i][2] is " << histname2.Data() << endl;
-              cout << "name of th1d_fvtxs_phi_weight[i][3] is " << histname3.Data() << endl;
-              cout << "name of th1d_fvtxs_phi_weight[i][4] is " << histname4.Data() << endl;
-              cout << "The phi weight file read in was " << phiweightfile_name.Data() << endl;
-            } // verbosity check
-          if ( !have_all_weight_histos )
-            {
-              cout << "WARNING: not all weight histograms present" << endl;
-              doweights = false;
-              break;
-            } // check on existence of histos
+          cout << "memory address of th2d_fvtxs_phi_weight[0] is " << th2d_fvtxs_phi_weight[0] << endl;
+          cout << "memory address of th2d_fvtxs_phi_weight[1] is " << th2d_fvtxs_phi_weight[1] << endl;
+          cout << "memory address of th2d_fvtxs_phi_weight[2] is " << th2d_fvtxs_phi_weight[2] << endl;
+          cout << "memory address of th2d_fvtxs_phi_weight[3] is " << th2d_fvtxs_phi_weight[3] << endl;
+          cout << "memory address of th2d_fvtxs_phi_weight[4] is " << th2d_fvtxs_phi_weight[4] << endl;
+          cout << "name of th2d_fvtxs_phi_weight[0] is " << histname0.Data() << endl;
+          cout << "name of th2d_fvtxs_phi_weight[1] is " << histname1.Data() << endl;
+          cout << "name of th2d_fvtxs_phi_weight[2] is " << histname2.Data() << endl;
+          cout << "name of th2d_fvtxs_phi_weight[3] is " << histname3.Data() << endl;
+          cout << "name of th2d_fvtxs_phi_weight[4] is " << histname4.Data() << endl;
+          cout << "The phi weight file read in was " << phiweightfile_name.Data() << endl;
+        } // verbosity check
+      if ( !have_all_weight_histos )
+        {
+          cout << "WARNING: not all weight histograms present" << endl;
+          doweights = false;
+        } // check on existence of histos
           // --- now get the weights for FVTX North
-          histname0 = Form("th1d_weight_fvtxn_zvtx%d_clus_phi_GC" ,i);
-          histname1 = Form("th1d_weight_fvtxn0_zvtx%d_clus_phi_GC",i);
-          histname2 = Form("th1d_weight_fvtxn1_zvtx%d_clus_phi_GC",i);
-          histname3 = Form("th1d_weight_fvtxn2_zvtx%d_clus_phi_GC",i);
-          histname4 = Form("th1d_weight_fvtxn3_zvtx%d_clus_phi_GC",i);
-          th1d_fvtxn_phi_weight[i][0] = (TH1D*)phi_weight_file->Get(histname0); // COME BACK HERE AND HAVE A LOOK
-          th1d_fvtxn_phi_weight[i][1] = (TH1D*)phi_weight_file->Get(histname1); // COME BACK HERE AND HAVE A LOOK
-          th1d_fvtxn_phi_weight[i][2] = (TH1D*)phi_weight_file->Get(histname2); // COME BACK HERE AND HAVE A LOOK
-          th1d_fvtxn_phi_weight[i][3] = (TH1D*)phi_weight_file->Get(histname3); // COME BACK HERE AND HAVE A LOOK
-          th1d_fvtxn_phi_weight[i][4] = (TH1D*)phi_weight_file->Get(histname4); // COME BACK HERE AND HAVE A LOOK
-          have_all_weight_histos =
-            th1d_fvtxn_phi_weight[i][0] &&
-            th1d_fvtxn_phi_weight[i][1] &&
-            th1d_fvtxn_phi_weight[i][2] &&
-            th1d_fvtxn_phi_weight[i][3] &&
-            th1d_fvtxn_phi_weight[i][4];
-          if ( verbosity > 0 || ( !have_all_weight_histos ) )
-            {
-              cout << "memory address of th1d_fvtxn_phi_weight[i][0] is " << th1d_fvtxn_phi_weight[i][0] << endl;
-              cout << "memory address of th1d_fvtxn_phi_weight[i][1] is " << th1d_fvtxn_phi_weight[i][1] << endl;
-              cout << "memory address of th1d_fvtxn_phi_weight[i][2] is " << th1d_fvtxn_phi_weight[i][2] << endl;
-              cout << "memory address of th1d_fvtxn_phi_weight[i][3] is " << th1d_fvtxn_phi_weight[i][3] << endl;
-              cout << "memory address of th1d_fvtxn_phi_weight[i][4] is " << th1d_fvtxn_phi_weight[i][4] << endl;
-              cout << "name of th1d_fvtxn_phi_weight[i][0] is " << histname0.Data() << endl;
-              cout << "name of th1d_fvtxn_phi_weight[i][1] is " << histname1.Data() << endl;
-              cout << "name of th1d_fvtxn_phi_weight[i][2] is " << histname2.Data() << endl;
-              cout << "name of th1d_fvtxn_phi_weight[i][3] is " << histname3.Data() << endl;
-              cout << "name of th1d_fvtxn_phi_weight[i][4] is " << histname4.Data() << endl;
-              cout << "The phi weight file read in was " << phiweightfile_name.Data() << endl;
-            } // verbosity check
-          if ( !have_all_weight_histos )
-            {
-              cout << "WARNING: not all weight histograms present" << endl;
-              doweights = false;
-              break;
-            } // check on existence of histos
-        } // end for loop over vertex index
+      histname0 = Form("th2d_fvtxn_clus_phi_weight" );
+      histname1 = Form("th2d_fvtxn0_clus_phi_weight");
+      histname2 = Form("th2d_fvtxn1_clus_phi_weight");
+      histname3 = Form("th2d_fvtxn2_clus_phi_weight");
+      histname4 = Form("th2d_fvtxn3_clus_phi_weight");
+      th2d_fvtxn_phi_weight[0] = (TH2D*)phi_weight_file->Get(histname0); // COME BACK HERE AND HAVE A LOOK
+      th2d_fvtxn_phi_weight[1] = (TH2D*)phi_weight_file->Get(histname1); // COME BACK HERE AND HAVE A LOOK
+      th2d_fvtxn_phi_weight[2] = (TH2D*)phi_weight_file->Get(histname2); // COME BACK HERE AND HAVE A LOOK
+      th2d_fvtxn_phi_weight[3] = (TH2D*)phi_weight_file->Get(histname3); // COME BACK HERE AND HAVE A LOOK
+      th2d_fvtxn_phi_weight[4] = (TH2D*)phi_weight_file->Get(histname4); // COME BACK HERE AND HAVE A LOOK
+      have_all_weight_histos =
+        th2d_fvtxn_phi_weight[0] &&
+        th2d_fvtxn_phi_weight[1] &&
+        th2d_fvtxn_phi_weight[2] &&
+        th2d_fvtxn_phi_weight[3] &&
+        th2d_fvtxn_phi_weight[4];
+      if ( verbosity > 0 || ( !have_all_weight_histos ) )
+        {
+          cout << "memory address of th2d_fvtxn_phi_weight[0] is " << th2d_fvtxn_phi_weight[0] << endl;
+          cout << "memory address of th2d_fvtxn_phi_weight[1] is " << th2d_fvtxn_phi_weight[1] << endl;
+          cout << "memory address of th2d_fvtxn_phi_weight[2] is " << th2d_fvtxn_phi_weight[2] << endl;
+          cout << "memory address of th2d_fvtxn_phi_weight[3] is " << th2d_fvtxn_phi_weight[3] << endl;
+          cout << "memory address of th2d_fvtxn_phi_weight[4] is " << th2d_fvtxn_phi_weight[4] << endl;
+          cout << "name of th2d_fvtxn_phi_weight[0] is " << histname0.Data() << endl;
+          cout << "name of th2d_fvtxn_phi_weight[1] is " << histname1.Data() << endl;
+          cout << "name of th2d_fvtxn_phi_weight[2] is " << histname2.Data() << endl;
+          cout << "name of th2d_fvtxn_phi_weight[3] is " << histname3.Data() << endl;
+          cout << "name of th2d_fvtxn_phi_weight[4] is " << histname4.Data() << endl;
+          cout << "The phi weight file read in was " << phiweightfile_name.Data() << endl;
+        } // verbosity check
+      if ( !have_all_weight_histos )
+        {
+          cout << "WARNING: not all weight histograms present" << endl;
+          doweights = false;
+        } // check on existence of histos
     } // check on doweights
 
   // ---
@@ -1290,14 +1285,18 @@ void flatten(int runNumber, int rp_recal_pass)
               float fvtx_weight = 1.0;
               if ( doweights )
                 {
-                  if ( !th1d_fvtxs_phi_weight[izvtx][fvtx_layer+1] )
+                  if ( !th2d_fvtxs_phi_weight[fvtx_layer+1] )
                     {
                       cout << "WARNING!!!  Problem with weight histograms in cluster loop..." << endl;
                       continue;
                     }
-                  int phi_bin = th1d_fvtxs_phi_weight[izvtx][fvtx_layer+1]->FindBin(phi); // COME BACK HERE AND HAVE A LOOK
-                  fvtx_weight = th1d_fvtxs_phi_weight[izvtx][fvtx_layer+1]->GetBinContent(phi_bin);
+                  int phi_bin = th2d_fvtxs_phi_weight[fvtx_layer+1]->GetYaxis()->FindBin(phi); // COME BACK HERE AND HAVE A LOOK
+                  int zvtx_bin = th2d_fvtxs_phi_weight[fvtx_layer+1]->GetXaxis()->FindBin(ZVTX); // COME BACK HERE AND HAVE A LOOK
+                  fvtx_weight = th2d_fvtxs_phi_weight[fvtx_layer+1]->GetBinContent(zvtx_bin,phi_bin);
                 }
+              if ( fvtx_weight != fvtx_weight ) fvtx_weight = 0;
+              if ( fvtx_weight < 0 ) fvtx_weight = 0;
+              if ( fvtx_weight > 10 ) fvtx_weight = 0;
 
               // --- south side
               if ( d_FVTX_z[iclus] < 0 )
@@ -1331,14 +1330,18 @@ void flatten(int runNumber, int rp_recal_pass)
 
               if ( doweights )
                 {
-                  if ( !th1d_fvtxn_phi_weight[izvtx][fvtx_layer+1] )
+                  if ( !th2d_fvtxn_phi_weight[fvtx_layer+1] )
                     {
                       cout << "WARNING!!!  Problem with weight histograms in cluster loop..." << endl;
                       continue;
                     }
-                  int phi_bin = th1d_fvtxn_phi_weight[izvtx][fvtx_layer+1]->FindBin(phi); // COME BACK HERE AND HAVE A LOOK
-                  fvtx_weight = th1d_fvtxn_phi_weight[izvtx][fvtx_layer+1]->GetBinContent(phi_bin);
+                  int phi_bin = th2d_fvtxn_phi_weight[fvtx_layer+1]->GetYaxis()->FindBin(phi); // COME BACK HERE AND HAVE A LOOK
+                  int zvtx_bin = th2d_fvtxn_phi_weight[fvtx_layer+1]->GetXaxis()->FindBin(ZVTX); // COME BACK HERE AND HAVE A LOOK
+                  fvtx_weight = th2d_fvtxn_phi_weight[fvtx_layer+1]->GetBinContent(zvtx_bin,phi_bin);
                 }
+              if ( fvtx_weight != fvtx_weight ) fvtx_weight = 0;
+              if ( fvtx_weight < 0 ) fvtx_weight = 0;
+              if ( fvtx_weight > 10 ) fvtx_weight = 0;
 
               // --- north side
               if ( d_FVTX_z[iclus] > 0 )
