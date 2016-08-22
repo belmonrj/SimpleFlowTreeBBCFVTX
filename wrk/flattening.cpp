@@ -109,7 +109,6 @@ void flatten(int runNumber, int rp_recal_pass)
   int verbosity = 0;
 
   char calibfile[500];
-  // --- this line is totally unnecessary based on the code below
   sprintf(calibfile,"output/flattening_data/flattening_%d_%d.dat",runNumber,rp_recal_pass-1);
 
   cout << "calib text output file: " << calibfile << endl;
@@ -144,6 +143,7 @@ void flatten(int runNumber, int rp_recal_pass)
     }
 
   TH1D* th1d_fvtxs_phi_weight[10][5];
+  TH1D* th1d_fvtxn_phi_weight[10][5];
   if ( doweights )
     {
       for ( int i = 0; i < 20; ++i )
@@ -176,6 +176,43 @@ void flatten(int runNumber, int rp_recal_pass)
               cout << "name of th1d_fvtxs_phi_weight[i][2] is " << histname2.Data() << endl;
               cout << "name of th1d_fvtxs_phi_weight[i][3] is " << histname3.Data() << endl;
               cout << "name of th1d_fvtxs_phi_weight[i][4] is " << histname4.Data() << endl;
+              cout << "The phi weight file read in was " << phiweightfile_name.Data() << endl;
+            } // verbosity check
+          if ( !have_all_weight_histos )
+            {
+              cout << "WARNING: not all weight histograms present" << endl;
+              doweights = false;
+              break;
+            } // check on existence of histos
+          // --- now get the weights for FVTX North
+          histname0 = Form("th1d_weight_fvtxn_zvtx%d_clus_phi_GC" ,i);
+          histname1 = Form("th1d_weight_fvtxn0_zvtx%d_clus_phi_GC",i);
+          histname2 = Form("th1d_weight_fvtxn1_zvtx%d_clus_phi_GC",i);
+          histname3 = Form("th1d_weight_fvtxn2_zvtx%d_clus_phi_GC",i);
+          histname4 = Form("th1d_weight_fvtxn3_zvtx%d_clus_phi_GC",i);
+          th1d_fvtxn_phi_weight[i][0] = (TH1D*)phi_weight_file->Get(histname0); // COME BACK HERE AND HAVE A LOOK
+          th1d_fvtxn_phi_weight[i][1] = (TH1D*)phi_weight_file->Get(histname1); // COME BACK HERE AND HAVE A LOOK
+          th1d_fvtxn_phi_weight[i][2] = (TH1D*)phi_weight_file->Get(histname2); // COME BACK HERE AND HAVE A LOOK
+          th1d_fvtxn_phi_weight[i][3] = (TH1D*)phi_weight_file->Get(histname3); // COME BACK HERE AND HAVE A LOOK
+          th1d_fvtxn_phi_weight[i][4] = (TH1D*)phi_weight_file->Get(histname4); // COME BACK HERE AND HAVE A LOOK
+          have_all_weight_histos =
+            th1d_fvtxn_phi_weight[i][0] &&
+            th1d_fvtxn_phi_weight[i][1] &&
+            th1d_fvtxn_phi_weight[i][2] &&
+            th1d_fvtxn_phi_weight[i][3] &&
+            th1d_fvtxn_phi_weight[i][4];
+          if ( verbosity > 0 || ( !have_all_weight_histos ) )
+            {
+              cout << "memory address of th1d_fvtxn_phi_weight[i][0] is " << th1d_fvtxn_phi_weight[i][0] << endl;
+              cout << "memory address of th1d_fvtxn_phi_weight[i][1] is " << th1d_fvtxn_phi_weight[i][1] << endl;
+              cout << "memory address of th1d_fvtxn_phi_weight[i][2] is " << th1d_fvtxn_phi_weight[i][2] << endl;
+              cout << "memory address of th1d_fvtxn_phi_weight[i][3] is " << th1d_fvtxn_phi_weight[i][3] << endl;
+              cout << "memory address of th1d_fvtxn_phi_weight[i][4] is " << th1d_fvtxn_phi_weight[i][4] << endl;
+              cout << "name of th1d_fvtxn_phi_weight[i][0] is " << histname0.Data() << endl;
+              cout << "name of th1d_fvtxn_phi_weight[i][1] is " << histname1.Data() << endl;
+              cout << "name of th1d_fvtxn_phi_weight[i][2] is " << histname2.Data() << endl;
+              cout << "name of th1d_fvtxn_phi_weight[i][3] is " << histname3.Data() << endl;
+              cout << "name of th1d_fvtxn_phi_weight[i][4] is " << histname4.Data() << endl;
               cout << "The phi weight file read in was " << phiweightfile_name.Data() << endl;
             } // verbosity check
           if ( !have_all_weight_histos )
@@ -292,6 +329,18 @@ void flatten(int runNumber, int rp_recal_pass)
   TH1D* th1d_fvtxn1_clus_phi = new TH1D("th1d_fvtxn1_clus_phi","",50,-pi,pi);
   TH1D* th1d_fvtxn2_clus_phi = new TH1D("th1d_fvtxn2_clus_phi","",50,-pi,pi);
   TH1D* th1d_fvtxn3_clus_phi = new TH1D("th1d_fvtxn3_clus_phi","",50,-pi,pi);
+
+  TH1D* th1d_fvtxs_clus_wphi = new TH1D("th1d_fvtxs_clus_wphi","",50,-pi,pi);
+  TH1D* th1d_fvtxs0_clus_wphi = new TH1D("th1d_fvtxs0_clus_wphi","",50,-pi,pi);
+  TH1D* th1d_fvtxs1_clus_wphi = new TH1D("th1d_fvtxs1_clus_wphi","",50,-pi,pi);
+  TH1D* th1d_fvtxs2_clus_wphi = new TH1D("th1d_fvtxs2_clus_wphi","",50,-pi,pi);
+  TH1D* th1d_fvtxs3_clus_wphi = new TH1D("th1d_fvtxs3_clus_wphi","",50,-pi,pi);
+
+  TH1D* th1d_fvtxn_clus_wphi = new TH1D("th1d_fvtxn_clus_wphi","",50,-pi,pi);
+  TH1D* th1d_fvtxn0_clus_wphi = new TH1D("th1d_fvtxn0_clus_wphi","",50,-pi,pi);
+  TH1D* th1d_fvtxn1_clus_wphi = new TH1D("th1d_fvtxn1_clus_wphi","",50,-pi,pi);
+  TH1D* th1d_fvtxn2_clus_wphi = new TH1D("th1d_fvtxn2_clus_wphi","",50,-pi,pi);
+  TH1D* th1d_fvtxn3_clus_wphi = new TH1D("th1d_fvtxn3_clus_wphi","",50,-pi,pi);
 
   // --- event plane resolution
   TProfile* tp1f_reso2_BBC_CNT = new TProfile("tp1f_reso2_BBC_CNT","",1,-0.5,0.5,-1e6,1e6,"");
@@ -986,8 +1035,16 @@ void flatten(int runNumber, int rp_recal_pass)
       unsigned int passes_trigger = trigger_scaled & accepted_triggers;
       if ( passes_trigger == 0 )
         {
-          if ( verbosity > 0 ) cout << "trigger rejected" << endl;
+          if ( verbosity > 1 ) cout << "trigger rejected" << endl;
           continue;
+        }
+
+      if ( centrality > -1 )
+        {
+          if ( runNumber >= 454744 && runNumber <= 455639 && centrality > 5  ) continue; // dAu 200 GeV
+          if ( runNumber >= 455792 && runNumber <= 456283 && centrality > 10 ) continue; // dAu 62 GeV
+          if ( runNumber >= 456652 && runNumber <= 457298 && centrality > 20 ) continue; // dAu 20 GeV
+          if ( runNumber >= 457634 && runNumber <= 458167 && centrality > 20 ) continue; // dAu 39 GeV
         }
 
       double ZVTX = -9999;
@@ -995,7 +1052,7 @@ void flatten(int runNumber, int rp_recal_pass)
       if ( runNumber >= 456652 && runNumber <= 458167 ) ZVTX = eventfvtx_z;
       if ( fabs(ZVTX) > 10.0 )
         {
-          if ( verbosity > 0 ) cout << "vertex rejected" << endl;
+          if ( verbosity > 1 ) cout << "vertex rejected" << endl;
           continue;
         }
       // --- this cut might be a good idea but it throws out too many events, further study needed
@@ -1030,7 +1087,7 @@ void flatten(int runNumber, int rp_recal_pass)
       bool is_okaync = ( d_nFVTX_clus < toomanyclusters );
       if ( !is_okaync )
         {
-          if ( verbosity > 0 ) cout << "too many clusters" << endl;
+          if ( verbosity > 1 ) cout << "too many clusters" << endl;
           continue;
         }
 
@@ -1051,11 +1108,11 @@ void flatten(int runNumber, int rp_recal_pass)
       float vtx_y = 0.02;
 
       // --- radius cut using FVTX coordinates
-      if ( sqrt(pow(eventfvtx_x-vtx_x,2.0) +  pow(eventfvtx_y-vtx_y,2.0)) >= 0.15 )
-        {
-          if ( verbosity > 0 ) cout << "rejecting event due to radius cut" << endl;
-          continue;
-        }
+      // if ( sqrt(pow(eventfvtx_x-vtx_x,2.0) +  pow(eventfvtx_y-vtx_y,2.0)) >= 0.15 )
+      //   {
+      //     if ( verbosity > 1 ) cout << "rejecting event due to radius cut" << endl;
+      //     continue;
+      //   }
 
       // -------------
       // --- BBC stuff
@@ -1107,14 +1164,7 @@ void flatten(int runNumber, int rp_recal_pass)
 
       // --- do centrality cut here!!!
 
-      if ( centrality > -999 )
-        {
-          if ( runNumber >= 454744 && runNumber <= 455639 && centrality > 5  ) continue; // dAu 200 GeV
-          if ( runNumber >= 455792 && runNumber <= 456283 && centrality > 10 ) continue; // dAu 62 GeV
-          if ( runNumber >= 456652 && runNumber <= 457298 && centrality > 20 ) continue; // dAu 20 GeV
-          if ( runNumber >= 457634 && runNumber <= 458167 && centrality > 20 ) continue; // dAu 39 GeV
-        }
-      else
+      if ( centrality < 0 )
         {
           //cout << "centrality undefined, cutting on bbc charge" << endl;
           // --- revise these numbers as needed
@@ -1272,22 +1322,38 @@ void flatten(int runNumber, int rp_recal_pass)
                   if ( fvtx_layer == 1 ) th1d_fvtxs1_clus_phi->Fill(phi);
                   if ( fvtx_layer == 2 ) th1d_fvtxs2_clus_phi->Fill(phi);
                   if ( fvtx_layer == 3 ) th1d_fvtxs3_clus_phi->Fill(phi);
+                  th1d_fvtxs_clus_wphi->Fill(phi,fvtx_weight);
+                  if ( fvtx_layer == 0 ) th1d_fvtxs0_clus_wphi->Fill(phi,fvtx_weight);
+                  if ( fvtx_layer == 1 ) th1d_fvtxs1_clus_wphi->Fill(phi,fvtx_weight);
+                  if ( fvtx_layer == 2 ) th1d_fvtxs2_clus_wphi->Fill(phi,fvtx_weight);
+                  if ( fvtx_layer == 3 ) th1d_fvtxs3_clus_wphi->Fill(phi,fvtx_weight);
                 } // check on south
+
+              if ( doweights )
+                {
+                  if ( !th1d_fvtxn_phi_weight[izvtx][fvtx_layer+1] )
+                    {
+                      cout << "WARNING!!!  Problem with weight histograms in cluster loop..." << endl;
+                      continue;
+                    }
+                  int phi_bin = th1d_fvtxn_phi_weight[izvtx][fvtx_layer+1]->FindBin(phi); // COME BACK HERE AND HAVE A LOOK
+                  fvtx_weight = th1d_fvtxn_phi_weight[izvtx][fvtx_layer+1]->GetBinContent(phi_bin);
+                }
 
               // --- north side
               if ( d_FVTX_z[iclus] > 0 )
                 {
-                  fvtxn_qx2[fvtx_layer+1] += TMath::Cos(2*phi);
-                  fvtxn_qy2[fvtx_layer+1] += TMath::Sin(2*phi);
-                  fvtxn_qx3[fvtx_layer+1] += TMath::Cos(3*phi);
-                  fvtxn_qy3[fvtx_layer+1] += TMath::Sin(3*phi);
+                  fvtxn_qx2[fvtx_layer+1] += fvtx_weight * TMath::Cos(2*phi);
+                  fvtxn_qy2[fvtx_layer+1] += fvtx_weight * TMath::Sin(2*phi);
+                  fvtxn_qx3[fvtx_layer+1] += fvtx_weight * TMath::Cos(3*phi);
+                  fvtxn_qy3[fvtx_layer+1] += fvtx_weight * TMath::Sin(3*phi);
 
-                  fvtxn_qx2[0] += TMath::Cos(2*phi);
-                  fvtxn_qy2[0] += TMath::Sin(2*phi);
-                  fvtxn_qx3[0] += TMath::Cos(3*phi);
-                  fvtxn_qy3[0] += TMath::Sin(3*phi);
-                  fvtxn_qx4[0] += TMath::Cos(4*phi);
-                  fvtxn_qy4[0] += TMath::Sin(4*phi);
+                  fvtxn_qx2[0] += fvtx_weight * TMath::Cos(2*phi);
+                  fvtxn_qy2[0] += fvtx_weight * TMath::Sin(2*phi);
+                  fvtxn_qx3[0] += fvtx_weight * TMath::Cos(3*phi);
+                  fvtxn_qy3[0] += fvtx_weight * TMath::Sin(3*phi);
+                  fvtxn_qx4[0] += fvtx_weight * TMath::Cos(4*phi);
+                  fvtxn_qy4[0] += fvtx_weight * TMath::Sin(4*phi);
 
                   fvtxn_qw[fvtx_layer+1] ++;
                   fvtxn_qw[0] ++;
@@ -1297,6 +1363,11 @@ void flatten(int runNumber, int rp_recal_pass)
                   if ( fvtx_layer == 1 ) th1d_fvtxn1_clus_phi->Fill(phi);
                   if ( fvtx_layer == 2 ) th1d_fvtxn2_clus_phi->Fill(phi);
                   if ( fvtx_layer == 3 ) th1d_fvtxn3_clus_phi->Fill(phi);
+                  th1d_fvtxn_clus_wphi->Fill(phi,fvtx_weight);
+                  if ( fvtx_layer == 0 ) th1d_fvtxn0_clus_wphi->Fill(phi,fvtx_weight);
+                  if ( fvtx_layer == 1 ) th1d_fvtxn1_clus_wphi->Fill(phi,fvtx_weight);
+                  if ( fvtx_layer == 2 ) th1d_fvtxn2_clus_wphi->Fill(phi,fvtx_weight);
+                  if ( fvtx_layer == 3 ) th1d_fvtxn3_clus_wphi->Fill(phi,fvtx_weight);
                 } // check on north
 
             } // loop over cluster
