@@ -7,23 +7,23 @@ void beforeafterflat_run(int, int);
 void event_plane_testing()
 {
 
-  psidiff_run(455050,2);
-  psidiff_run(456015,2);
-  psidiff_run(457015,2);
-  psidiff_run(457043,2);
-  psidiff_run(457213,2);
-  psidiff_run(458014,2);
-  psidiff_run(458153,2);
-  psidiff_run(458167,2);
+  // psidiff_run(455050,2);
+  // psidiff_run(456015,2);
+  // psidiff_run(457015,2);
+  // psidiff_run(457043,2);
+  // psidiff_run(457213,2);
+  // psidiff_run(458014,2);
+  // psidiff_run(458153,2);
+  // psidiff_run(458167,2);
 
-  cospsidiff_run(455050,2);
-  cospsidiff_run(456015,2);
-  cospsidiff_run(457015,2);
-  cospsidiff_run(457043,2);
-  cospsidiff_run(457213,2);
-  cospsidiff_run(458014,2);
-  cospsidiff_run(458153,2);
-  cospsidiff_run(458167,2);
+  // cospsidiff_run(455050,2);
+  // cospsidiff_run(456015,2);
+  // cospsidiff_run(457015,2);
+  // cospsidiff_run(457043,2);
+  // cospsidiff_run(457213,2);
+  // cospsidiff_run(458014,2);
+  // cospsidiff_run(458153,2);
+  // cospsidiff_run(458167,2);
 
   beforeafterflat_run(455050,2);
   beforeafterflat_run(456015,2);
@@ -40,46 +40,63 @@ void event_plane_testing()
 void beforeafterflat_run(int run, int harmonic)
 {
 
-  gStyle->SetOptTitle(1);
+  gStyle->SetOptTitle(0);
 
   TCanvas* c1 = new TCanvas("c1","");
 
-  TFile* file = TFile::Open(Form("input/hrp_%d.root",run));
+  // TFile* file = TFile::Open(Form("input/hrp_%d.root",run));
+  TFile* file = TFile::Open(Form("input/hist_%d.root",run));
 
   TH1D* hbbc = (TH1D*) ((TH2D*)file->Get("psi_bf_0_1_2"))->ProjectionY();
   hbbc->Draw();
+  hbbc->SetLineColor(kRed);
   hbbc->GetXaxis()->SetTitle("#Psi_{2}, BBCS");
-  c1->Print(Form("FigsEventPlane/before_psi2_bbcs_%d.png",run));
-  c1->Print(Form("FigsEventPlane/before_psi2_bbcs_%d.pdf",run));
+  TH1D* hbbcM = (TH1D*) ((TH2D*)file->Get("psi_mf_0_1_2"))->ProjectionY();
+  hbbcM->Draw("same");
+  hbbcM->SetLineColor(kBlue);
   TH1D* hbbcA = (TH1D*) ((TH2D*)file->Get("psi_af_0_1_2"))->ProjectionY();
   hbbcA->Draw("same");
-  hbbcA->GetXaxis()->SetTitle("#Psi_{2}, BBCS");
+  hbbcA->SetLineColor(kBlack);
+  TLegend* leg = new TLegend(0.68,0.68,0.88,0.88);
+  leg->AddEntry(hbbc,"Raw","l");
+  leg->AddEntry(hbbcM,"Recentering","l");
+  leg->AddEntry(hbbcA,"Flattening","l");
+  leg->SetTextSize(0.045);
+  leg->Draw();
   c1->Print(Form("FigsEventPlane/after_psi2_bbcs_%d.png",run));
   c1->Print(Form("FigsEventPlane/after_psi2_bbcs_%d.pdf",run));
 
   TH1D* hfvtxs = (TH1D*) ((TH2D*)file->Get("psi_bf_0_1_3"))->ProjectionY();
   hfvtxs->Draw();
+  hfvtxs->SetLineColor(kRed);
   hfvtxs->GetXaxis()->SetTitle("#Psi_{2}, FVTXS");
-  c1->Print(Form("FigsEventPlane/before_psi2_fvtxs_%d.png",run));
-  c1->Print(Form("FigsEventPlane/before_psi2_fvtxs_%d.pdf",run));
+  TH1D* hfvtxsM = (TH1D*) ((TH2D*)file->Get("psi_mf_0_1_3"))->ProjectionY();
+  hfvtxsM->Draw("same");
+  hfvtxsM->SetLineColor(kBlue);
   TH1D* hfvtxsA = (TH1D*) ((TH2D*)file->Get("psi_af_0_1_3"))->ProjectionY();
   hfvtxsA->Draw("same");
-  hfvtxsA->GetXaxis()->SetTitle("#Psi_{2}, FVTXS");
+  hfvtxsA->SetLineColor(kBlack);
+  leg->Draw();
   c1->Print(Form("FigsEventPlane/after_psi2_fvtxs_%d.png",run));
   c1->Print(Form("FigsEventPlane/after_psi2_fvtxs_%d.pdf",run));
 
   TH1D* hfvtxn = (TH1D*) ((TH2D*)file->Get("psi_bf_0_1_8"))->ProjectionY();
   hfvtxn->Draw();
+  hfvtxn->SetLineColor(kRed);
   hfvtxn->GetXaxis()->SetTitle("#Psi_{2}, FVTXN");
-  c1->Print(Form("FigsEventPlane/before_psi2_fvtxn_%d.png",run));
-  c1->Print(Form("FigsEventPlane/before_psi2_fvtxn_%d.pdf",run));
+  TH1D* hfvtxnM = (TH1D*) ((TH2D*)file->Get("psi_mf_0_1_8"))->ProjectionY();
+  hfvtxnM->Draw("same");
+  hfvtxnM->SetLineColor(kBlue);
   TH1D* hfvtxnA = (TH1D*) ((TH2D*)file->Get("psi_af_0_1_8"))->ProjectionY();
   hfvtxnA->Draw("same");
-  hfvtxnA->GetXaxis()->SetTitle("#Psi_{2}, FVTXN");
+  hfvtxnA->SetLineColor(kBlack);
+  leg->Draw();
   c1->Print(Form("FigsEventPlane/after_psi2_fvtxn_%d.png",run));
   c1->Print(Form("FigsEventPlane/after_psi2_fvtxn_%d.pdf",run));
 
   delete c1;
+
+  delete leg;
 
 }
 
