@@ -67,13 +67,13 @@ void only2d(int run)
   // --- south --- //
   // ------------- //
 
-  TH2D* th2d_fvtxs_clus_phi_GC = (TH2D*)file->Get("th2d_fvtxs_clus_phi_GC");
-  TH2D* th2d_fvtxs0_clus_phi_GC = (TH2D*)file->Get("th2d_fvtxs0_clus_phi_GC");
-  TH2D* th2d_fvtxs1_clus_phi_GC = (TH2D*)file->Get("th2d_fvtxs1_clus_phi_GC");
-  TH2D* th2d_fvtxs2_clus_phi_GC = (TH2D*)file->Get("th2d_fvtxs2_clus_phi_GC");
-  TH2D* th2d_fvtxs3_clus_phi_GC = (TH2D*)file->Get("th2d_fvtxs3_clus_phi_GC");
+  TH2D* th2d_fvtxs_clus_phi = (TH2D*)file->Get("th2d_fvtxs_clus_phi_GC");
+  TH2D* th2d_fvtxs0_clus_phi = (TH2D*)file->Get("th2d_fvtxs0_clus_phi_GC");
+  TH2D* th2d_fvtxs1_clus_phi = (TH2D*)file->Get("th2d_fvtxs1_clus_phi_GC");
+  TH2D* th2d_fvtxs2_clus_phi = (TH2D*)file->Get("th2d_fvtxs2_clus_phi_GC");
+  TH2D* th2d_fvtxs3_clus_phi = (TH2D*)file->Get("th2d_fvtxs3_clus_phi_GC");
 
-  bool ihavethehistos = th2d_fvtxs_clus_phi_GC && th2d_fvtxs0_clus_phi_GC && th2d_fvtxs1_clus_phi_GC && th2d_fvtxs2_clus_phi_GC && th2d_fvtxs3_clus_phi_GC;
+  bool ihavethehistos = th2d_fvtxs_clus_phi && th2d_fvtxs0_clus_phi && th2d_fvtxs1_clus_phi && th2d_fvtxs2_clus_phi && th2d_fvtxs3_clus_phi;
 
   if ( !ihavethehistos )
     {
@@ -82,43 +82,94 @@ void only2d(int run)
     }
 
   const int nbinsx = 20;
-  if ( th2d_fvtxs_clus_phi_GC->GetNbinsX() != nbinsx )
+  if ( th2d_fvtxs_clus_phi->GetNbinsX() != nbinsx )
     {
-      cout << "YOU'RE GONNA DIE " << nbinsx << " " << th2d_fvtxs_clus_phi_GC->GetNbinsX() << endl;
+      cout << "YOU'RE GONNA DIE " << nbinsx << " " << th2d_fvtxs_clus_phi->GetNbinsX() << endl;
       return;
     }
   const int nbinsy = 50;
-  if ( th2d_fvtxs_clus_phi_GC->GetNbinsY() != nbinsy )
+  if ( th2d_fvtxs_clus_phi->GetNbinsY() != nbinsy )
     {
-      cout << "YOU'RE GONNA DIE " << nbinsy << " " << th2d_fvtxs_clus_phi_GC->GetNbinsX() << endl;
+      cout << "YOU'RE GONNA DIE " << nbinsy << " " << th2d_fvtxs_clus_phi->GetNbinsX() << endl;
       return;
     }
 
-  double integral = th2d_fvtxs_clus_phi_GC->Integral(1,nbinsx,1,nbinsy);
+  double integral = th2d_fvtxs_clus_phi->Integral(1,nbinsx,1,nbinsy);
   double totalbins = (double)nbinsx*(double)nbinsy;
   double average = integral/totalbins;
 
   cout << "average is " << average << endl;
 
-  TH2D* th2d_fvtxs_clus_phi_GCweight = (TH2D*)th2d_fvtxs_clus_phi_GC->Clone("th2d_fvtxs_clus_phi_GCweight");
+  TFile* fout = TFile::Open(Form("WeightFiles/only2d_run%d.root",run),"recreate");
+
+  TH2D* th2d_fvtxs_clus_phi_weight = (TH2D*)th2d_fvtxs_clus_phi->Clone("th2d_fvtxs_clus_phi_weight");
+  TH2D* th2d_fvtxs0_clus_phi_weight = (TH2D*)th2d_fvtxs0_clus_phi->Clone("th2d_fvtxs0_clus_phi_weight");
+  TH2D* th2d_fvtxs1_clus_phi_weight = (TH2D*)th2d_fvtxs1_clus_phi->Clone("th2d_fvtxs1_clus_phi_weight");
+  TH2D* th2d_fvtxs2_clus_phi_weight = (TH2D*)th2d_fvtxs2_clus_phi->Clone("th2d_fvtxs2_clus_phi_weight");
+  TH2D* th2d_fvtxs3_clus_phi_weight = (TH2D*)th2d_fvtxs3_clus_phi->Clone("th2d_fvtxs3_clus_phi_weight");
   for ( int i = 0; i < nbinsx; ++i )
     {
       for ( int j = 0; j < nbinsy; ++j )
         {
-          double bincontent = th2d_fvtxs_clus_phi_GC->GetBinContent(i+1,j+1);
+          double bincontent = th2d_fvtxs_clus_phi->GetBinContent(i+1,j+1);
           double newvalue = 0;
           double temp = average/bincontent;
           if ( temp == temp ) newvalue = temp;
-          //if ( temp < 1.5 && temp > 0.5 ) newvalue = temp;
-          th2d_fvtxs_clus_phi_GCweight->SetBinContent(i+1,j+1,newvalue);
+          th2d_fvtxs_clus_phi_weight->SetBinContent(i+1,j+1,newvalue);
+          // ---
+          bincontent = th2d_fvtxs0_clus_phi->GetBinContent(i+1,j+1);
+          newvalue = 0;
+          temp = average/bincontent;
+          if ( temp == temp ) newvalue = temp;
+          th2d_fvtxs0_clus_phi_weight->SetBinContent(i+1,j+1,newvalue);
+          // ---
+          bincontent = th2d_fvtxs1_clus_phi->GetBinContent(i+1,j+1);
+          newvalue = 0;
+          temp = average/bincontent;
+          if ( temp == temp ) newvalue = temp;
+          th2d_fvtxs1_clus_phi_weight->SetBinContent(i+1,j+1,newvalue);
+          // ---
+          bincontent = th2d_fvtxs2_clus_phi->GetBinContent(i+1,j+1);
+          newvalue = 0;
+          temp = average/bincontent;
+          if ( temp == temp ) newvalue = temp;
+          th2d_fvtxs2_clus_phi_weight->SetBinContent(i+1,j+1,newvalue);
+          // ---
+          bincontent = th2d_fvtxs3_clus_phi->GetBinContent(i+1,j+1);
+          newvalue = 0;
+          temp = average/bincontent;
+          if ( temp == temp ) newvalue = temp;
+          th2d_fvtxs3_clus_phi_weight->SetBinContent(i+1,j+1,newvalue);
         }
     }
 
-  th2d_fvtxs_clus_phi_GC->Draw("colz");
-  c1->Print(Form("testing_only2ddist_%d.png",run));
+  th2d_fvtxs_clus_phi->Draw("colz");
+  c1->Print(Form("FigsWeight/testing_only2ddist_%d.png",run));
+  th2d_fvtxs_clus_phi_weight->Draw("colz");
+  c1->Print(Form("FigsWeight/testing_only2dweight_%d.png",run));
 
-  th2d_fvtxs_clus_phi_GCweight->Draw("colz");
-  c1->Print(Form("testing_only2dweight_%d.png",run));
+  th2d_fvtxs0_clus_phi->Draw("colz");
+  c1->Print(Form("FigsWeight/only2ddist_fvtxs0_%d.png",run));
+  th2d_fvtxs0_clus_phi_weight->Draw("colz");
+  c1->Print(Form("FigsWeight/only2dweight_fvtxs0_%d.png",run));
+
+  th2d_fvtxs1_clus_phi->Draw("colz");
+  c1->Print(Form("FigsWeight/only2ddist_fvtxs1_%d.png",run));
+  th2d_fvtxs1_clus_phi_weight->Draw("colz");
+  c1->Print(Form("FigsWeight/only2dweight_fvtxs1_%d.png",run));
+
+  th2d_fvtxs2_clus_phi->Draw("colz");
+  c1->Print(Form("FigsWeight/only2ddist_fvtxs2_%d.png",run));
+  th2d_fvtxs2_clus_phi_weight->Draw("colz");
+  c1->Print(Form("FigsWeight/only2dweight_fvtxs2_%d.png",run));
+
+  th2d_fvtxs3_clus_phi->Draw("colz");
+  c1->Print(Form("FigsWeight/only2ddist_fvtxs3_%d.png",run));
+  th2d_fvtxs3_clus_phi_weight->Draw("colz");
+  c1->Print(Form("FigsWeight/only2dweight_fvtxs3_%d.png",run));
+
+  fout->Write();
+  fout->Close();
 
   delete c1;
 
