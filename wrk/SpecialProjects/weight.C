@@ -4,17 +4,17 @@ void runweight2d(int);
 void weight()
 {
 
-  //runweight(456652);
-  //runweight2d(456652); // i have no idea why doing this first helps...
+  //runweight2d(456652);
+  runweight2d(455355);
 
-  //return;
+  return;
 
   int run;
   ifstream fin;
 
-  fin.open("list_20.short");
-  while ( fin >> run ) runweight2d(run);
-  fin.close();
+  // fin.open("list_20.short");
+  // while ( fin >> run ) runweight2d(run);
+  // fin.close();
 
   // fin.open("list_39.short");
   // while ( fin >> run ) runweight2d(run);
@@ -77,29 +77,24 @@ void runweight2d(int run)
     {
       // --- get the 1d projections
       TH1D* th1d_fvtxs_zvtxbin_clus_phi_GC = (TH1D*)th2d_fvtxs_clus_phi_GC->ProjectionY(Form("th1d_fvtxs_zvtx%d_clus_phi_GC",i),i+1,i+1);
-      // th1d_fvtxs_zvtxbin_clus_phi_GC->Write();
       th1d_fvtxs_zvtxbin_clus_phi_GC->Draw();
-      c1->Print(Form("FigsWeight/weight2d_fvtxs_zvtx%d_clus_phi_GC_run%d.png",i,run));
+      c1->Print(Form("FigsWeight/dist2d_fvtxs_zvtx%d_clus_phi_GC_run%d.png",i,run));
 
       TH1D* th1d_fvtxs0_zvtxbin_clus_phi_GC = (TH1D*)th2d_fvtxs0_clus_phi_GC->ProjectionY(Form("th1d_fvtxs0_zvtx%d_clus_phi_GC",i),i+1,i+1);
-      // th1d_fvtxs0_zvtxbin_clus_phi_GC->Write();
       th1d_fvtxs0_zvtxbin_clus_phi_GC->Draw();
-      c1->Print(Form("FigsWeight/weight2d_fvtxs0_zvtx%d_clus_phi_GC_run%d.png",i,run));
+      c1->Print(Form("FigsWeight/dist2d_fvtxs0_zvtx%d_clus_phi_GC_run%d.png",i,run));
 
       TH1D* th1d_fvtxs1_zvtxbin_clus_phi_GC = (TH1D*)th2d_fvtxs1_clus_phi_GC->ProjectionY(Form("th1d_fvtxs1_zvtx%d_clus_phi_GC",i),i+1,i+1);
-      // th1d_fvtxs1_zvtxbin_clus_phi_GC->Write();
       th1d_fvtxs1_zvtxbin_clus_phi_GC->Draw();
-      c1->Print(Form("FigsWeight/weight2d_fvtxs1_zvtx%d_clus_phi_GC_run%d.png",i,run));
+      c1->Print(Form("FigsWeight/dist2d_fvtxs1_zvtx%d_clus_phi_GC_run%d.png",i,run));
 
       TH1D* th1d_fvtxs2_zvtxbin_clus_phi_GC = (TH1D*)th2d_fvtxs2_clus_phi_GC->ProjectionY(Form("th1d_fvtxs2_zvtx%d_clus_phi_GC",i),i+1,i+1);
-      // th1d_fvtxs2_zvtxbin_clus_phi_GC->Write();
       th1d_fvtxs2_zvtxbin_clus_phi_GC->Draw();
-      c1->Print(Form("FigsWeight/weight2d_fvtxs2_zvtx%d_clus_phi_GC_run%d.png",i,run));
+      c1->Print(Form("FigsWeight/dist2d_fvtxs2_zvtx%d_clus_phi_GC_run%d.png",i,run));
 
       TH1D* th1d_fvtxs3_zvtxbin_clus_phi_GC = (TH1D*)th2d_fvtxs3_clus_phi_GC->ProjectionY(Form("th1d_fvtxs3_zvtx%d_clus_phi_GC",i),i+1,i+1);
-      // th1d_fvtxs3_zvtxbin_clus_phi_GC->Write();
       th1d_fvtxs3_zvtxbin_clus_phi_GC->Draw();
-      c1->Print(Form("FigsWeight/weight2d_fvtxs3_zvtx%d_clus_phi_GC_run%d.png",i,run));
+      c1->Print(Form("FigsWeight/dist2d_fvtxs3_zvtx%d_clus_phi_GC_run%d.png",i,run));
 
       // --- make 1d clones
       TH1D* th1d_weight_fvtxs_zvtxbin_clus_phi_GC = (TH1D*)th1d_fvtxs_zvtxbin_clus_phi_GC->Clone(Form("th1d_weight_fvtxs_zvtx%d_clus_phi_GC",i));
@@ -143,26 +138,35 @@ void runweight2d(int run)
 	  th1d_weight_fvtxs3_zvtxbin_clus_phi_GC->SetBinContent(j+1,weight3);
 	}
 
-      // --- write the weights to file
-      // th1d_weight_fvtxs_zvtxbin_clus_phi_GC->Write();
       th1d_weight_fvtxs_zvtxbin_clus_phi_GC->Draw();
-      c1->Print(Form("FigsWeight/wweight2d_fvtxs_zvtx%d_clus_phi_GC_run%d.png",i,run));
+      c1->Print(Form("FigsWeight/weight2d_fvtxs_zvtx%d_clus_phi_GC_run%d.png",i,run));
+      th1d_fvtxs_zvtxbin_clus_phi_GC->Multiply(th1d_weight_fvtxs_zvtxbin_clus_phi_GC);
+      th1d_fvtxs_zvtxbin_clus_phi_GC->Draw();
+      c1->Print(Form("FigsWeight/check2d_fvtxs_zvtx%d_clus_phi_GC_run%d.png",i,run));
 
-      // th1d_weight_fvtxs0_zvtxbin_clus_phi_GC->Write();
       th1d_weight_fvtxs0_zvtxbin_clus_phi_GC->Draw();
-      c1->Print(Form("FigsWeight/wweight2d_fvtxs0_zvtx%d_clus_phi_GC_run%d.png",i,run));
+      c1->Print(Form("FigsWeight/weight2d_fvtxs0_zvtx%d_clus_phi_GC_run%d.png",i,run));
+      th1d_fvtxs0_zvtxbin_clus_phi_GC->Multiply(th1d_weight_fvtxs0_zvtxbin_clus_phi_GC);
+      th1d_fvtxs0_zvtxbin_clus_phi_GC->Draw();
+      c1->Print(Form("FigsWeight/check2d_fvtxs0_zvtx%d_clus_phi_GC_run%d.png",i,run));
 
-      // th1d_weight_fvtxs1_zvtxbin_clus_phi_GC->Write();
       th1d_weight_fvtxs1_zvtxbin_clus_phi_GC->Draw();
-      c1->Print(Form("FigsWeight/wweight2d_fvtxs1_zvtx%d_clus_phi_GC_run%d.png",i,run));
+      c1->Print(Form("FigsWeight/weight2d_fvtxs1_zvtx%d_clus_phi_GC_run%d.png",i,run));
+      th1d_fvtxs1_zvtxbin_clus_phi_GC->Multiply(th1d_weight_fvtxs1_zvtxbin_clus_phi_GC);
+      th1d_fvtxs1_zvtxbin_clus_phi_GC->Draw();
+      c1->Print(Form("FigsWeight/check2d_fvtxs1_zvtx%d_clus_phi_GC_run%d.png",i,run));
 
-      // th1d_weight_fvtxs2_zvtxbin_clus_phi_GC->Write();
       th1d_weight_fvtxs2_zvtxbin_clus_phi_GC->Draw();
-      c1->Print(Form("FigsWeight/wweight2d_fvtxs2_zvtx%d_clus_phi_GC_run%d.png",i,run));
+      c1->Print(Form("FigsWeight/weight2d_fvtxs2_zvtx%d_clus_phi_GC_run%d.png",i,run));
+      th1d_fvtxs2_zvtxbin_clus_phi_GC->Multiply(th1d_weight_fvtxs2_zvtxbin_clus_phi_GC);
+      th1d_fvtxs2_zvtxbin_clus_phi_GC->Draw();
+      c1->Print(Form("FigsWeight/check2d_fvtxs2_zvtx%d_clus_phi_GC_run%d.png",i,run));
 
-      // th1d_weight_fvtxs3_zvtxbin_clus_phi_GC->Write();
       th1d_weight_fvtxs3_zvtxbin_clus_phi_GC->Draw();
-      c1->Print(Form("FigsWeight/wweight2d_fvtxs3_zvtx%d_clus_phi_GC_run%d.png",i,run));
+      c1->Print(Form("FigsWeight/weight2d_fvtxs3_zvtx%d_clus_phi_GC_run%d.png",i,run));
+      th1d_fvtxs3_zvtxbin_clus_phi_GC->Multiply(th1d_weight_fvtxs3_zvtxbin_clus_phi_GC);
+      th1d_fvtxs3_zvtxbin_clus_phi_GC->Draw();
+      c1->Print(Form("FigsWeight/check2d_fvtxs3_zvtx%d_clus_phi_GC_run%d.png",i,run));
 
     }
 
@@ -196,27 +200,22 @@ void runweight2d(int run)
     {
       // --- get the 1d projections
       TH1D* th1d_fvtxn_zvtxbin_clus_phi_GC = (TH1D*)th2d_fvtxn_clus_phi_GC->ProjectionY(Form("th1d_fvtxn_zvtx%d_clus_phi_GC",i),i+1,i+1);
-      // th1d_fvtxn_zvtxbin_clus_phi_GC->Write();
       th1d_fvtxn_zvtxbin_clus_phi_GC->Draw();
       c1->Print(Form("FigsWeight/weight2d_fvtxn_zvtx%d_clus_phi_GC_run%d.png",i,run));
 
       TH1D* th1d_fvtxn0_zvtxbin_clus_phi_GC = (TH1D*)th2d_fvtxn0_clus_phi_GC->ProjectionY(Form("th1d_fvtxn0_zvtx%d_clus_phi_GC",i),i+1,i+1);
-      // th1d_fvtxn0_zvtxbin_clus_phi_GC->Write();
       th1d_fvtxn0_zvtxbin_clus_phi_GC->Draw();
       c1->Print(Form("FigsWeight/weight2d_fvtxn0_zvtx%d_clus_phi_GC_run%d.png",i,run));
 
       TH1D* th1d_fvtxn1_zvtxbin_clus_phi_GC = (TH1D*)th2d_fvtxn1_clus_phi_GC->ProjectionY(Form("th1d_fvtxn1_zvtx%d_clus_phi_GC",i),i+1,i+1);
-      // th1d_fvtxn1_zvtxbin_clus_phi_GC->Write();
       th1d_fvtxn1_zvtxbin_clus_phi_GC->Draw();
       c1->Print(Form("FigsWeight/weight2d_fvtxn1_zvtx%d_clus_phi_GC_run%d.png",i,run));
 
       TH1D* th1d_fvtxn2_zvtxbin_clus_phi_GC = (TH1D*)th2d_fvtxn2_clus_phi_GC->ProjectionY(Form("th1d_fvtxn2_zvtx%d_clus_phi_GC",i),i+1,i+1);
-      // th1d_fvtxn2_zvtxbin_clus_phi_GC->Write();
       th1d_fvtxn2_zvtxbin_clus_phi_GC->Draw();
       c1->Print(Form("FigsWeight/weight2d_fvtxn2_zvtx%d_clus_phi_GC_run%d.png",i,run));
 
       TH1D* th1d_fvtxn3_zvtxbin_clus_phi_GC = (TH1D*)th2d_fvtxn3_clus_phi_GC->ProjectionY(Form("th1d_fvtxn3_zvtx%d_clus_phi_GC",i),i+1,i+1);
-      // th1d_fvtxn3_zvtxbin_clus_phi_GC->Write();
       th1d_fvtxn3_zvtxbin_clus_phi_GC->Draw();
       c1->Print(Form("FigsWeight/weight2d_fvtxn3_zvtx%d_clus_phi_GC_run%d.png",i,run));
 
@@ -262,26 +261,35 @@ void runweight2d(int run)
 	  th1d_weight_fvtxn3_zvtxbin_clus_phi_GC->SetBinContent(j+1,weight3);
 	}
 
-      // --- write the weights to file
-      // th1d_weight_fvtxn_zvtxbin_clus_phi_GC->Write();
       th1d_weight_fvtxn_zvtxbin_clus_phi_GC->Draw();
-      c1->Print(Form("FigsWeight/wweight2d_fvtxn_zvtx%d_clus_phi_GC_run%d.png",i,run));
+      c1->Print(Form("FigsWeight/weight2d_fvtxn_zvtx%d_clus_phi_GC_run%d.png",i,run));
+      th1d_fvtxn_zvtxbin_clus_phi_GC->Multiply(th1d_weight_fvtxn_zvtxbin_clus_phi_GC);
+      th1d_fvtxn_zvtxbin_clus_phi_GC->Draw();
+      c1->Print(Form("FigsWeight/check2d_fvtxn_zvtx%d_clus_phi_GC_run%d.png",i,run));
 
-      // th1d_weight_fvtxn0_zvtxbin_clus_phi_GC->Write();
       th1d_weight_fvtxn0_zvtxbin_clus_phi_GC->Draw();
-      c1->Print(Form("FigsWeight/wweight2d_fvtxn0_zvtx%d_clus_phi_GC_run%d.png",i,run));
+      c1->Print(Form("FigsWeight/weight2d_fvtxn0_zvtx%d_clus_phi_GC_run%d.png",i,run));
+      th1d_fvtxn0_zvtxbin_clus_phi_GC->Multiply(th1d_weight_fvtxn0_zvtxbin_clus_phi_GC);
+      th1d_fvtxn0_zvtxbin_clus_phi_GC->Draw();
+      c1->Print(Form("FigsWeight/check2d_fvtxn0_zvtx%d_clus_phi_GC_run%d.png",i,run));
 
-      // th1d_weight_fvtxn1_zvtxbin_clus_phi_GC->Write();
       th1d_weight_fvtxn1_zvtxbin_clus_phi_GC->Draw();
-      c1->Print(Form("FigsWeight/wweight2d_fvtxn1_zvtx%d_clus_phi_GC_run%d.png",i,run));
+      c1->Print(Form("FigsWeight/weight2d_fvtxn1_zvtx%d_clus_phi_GC_run%d.png",i,run));
+      th1d_fvtxn1_zvtxbin_clus_phi_GC->Multiply(th1d_weight_fvtxn1_zvtxbin_clus_phi_GC);
+      th1d_fvtxn1_zvtxbin_clus_phi_GC->Draw();
+      c1->Print(Form("FigsWeight/check2d_fvtxn1_zvtx%d_clus_phi_GC_run%d.png",i,run));
 
-      // th1d_weight_fvtxn2_zvtxbin_clus_phi_GC->Write();
       th1d_weight_fvtxn2_zvtxbin_clus_phi_GC->Draw();
-      c1->Print(Form("FigsWeight/wweight2d_fvtxn2_zvtx%d_clus_phi_GC_run%d.png",i,run));
+      c1->Print(Form("FigsWeight/weight2d_fvtxn2_zvtx%d_clus_phi_GC_run%d.png",i,run));
+      th1d_fvtxn2_zvtxbin_clus_phi_GC->Multiply(th1d_weight_fvtxn2_zvtxbin_clus_phi_GC);
+      th1d_fvtxn2_zvtxbin_clus_phi_GC->Draw();
+      c1->Print(Form("FigsWeight/check2d_fvtxn2_zvtx%d_clus_phi_GC_run%d.png",i,run));
 
-      // th1d_weight_fvtxn3_zvtxbin_clus_phi_GC->Write();
       th1d_weight_fvtxn3_zvtxbin_clus_phi_GC->Draw();
-      c1->Print(Form("FigsWeight/wweight2d_fvtxn3_zvtx%d_clus_phi_GC_run%d.png",i,run));
+      c1->Print(Form("FigsWeight/weight2d_fvtxn3_zvtx%d_clus_phi_GC_run%d.png",i,run));
+      th1d_fvtxn3_zvtxbin_clus_phi_GC->Multiply(th1d_weight_fvtxn3_zvtxbin_clus_phi_GC);
+      th1d_fvtxn3_zvtxbin_clus_phi_GC->Draw();
+      c1->Print(Form("FigsWeight/check2d_fvtxn3_zvtx%d_clus_phi_GC_run%d.png",i,run));
 
     }
 
