@@ -1,16 +1,34 @@
 void runweight2d(int);
+void only2d(int);
 
 
 void weight()
 {
 
-  //runweight2d(456652);
-  runweight2d(455355);
+  //runweight2d(456652); // remember when this was needed?
+  only2d(455355); // now this is needed, and that could change again in a little while (must be some weird environment thing)
+  //runweight2d(455355);
 
-  return;
+  //  return;
 
   int run;
   ifstream fin;
+
+  fin.open("list_20.short");
+  while ( fin >> run ) only2d(run);
+  fin.close();
+
+  // fin.open("list_39.short");
+  // while ( fin >> run ) only2d(run);
+  // fin.close();
+
+  // fin.open("list_62.short");
+  // while ( fin >> run ) only2d(run);
+  // fin.close();
+
+  // fin.open("list_200.short");
+  // while ( fin >> run ) only2d(run);
+  // fin.close();
 
   // fin.open("list_20.short");
   // while ( fin >> run ) runweight2d(run);
@@ -29,6 +47,83 @@ void weight()
   // fin.close();
 
 }
+
+
+void only2d(int run)
+{
+
+  cout << "Now processing run " << run << endl;
+
+  TCanvas* c1 = new TCanvas("c1","");
+
+  TFile* file = TFile::Open(Form("RootFiles/svrb_run%d_pass0.root",run));
+  if ( !file )
+    {
+      cout << "WARNING: file does not exist for run " << run << endl;
+      return;
+    }
+
+  // ------------- //
+  // --- south --- //
+  // ------------- //
+
+  TH2D* th2d_fvtxs_clus_phi_GC = (TH2D*)file->Get("th2d_fvtxs_clus_phi_GC");
+  TH2D* th2d_fvtxs0_clus_phi_GC = (TH2D*)file->Get("th2d_fvtxs0_clus_phi_GC");
+  TH2D* th2d_fvtxs1_clus_phi_GC = (TH2D*)file->Get("th2d_fvtxs1_clus_phi_GC");
+  TH2D* th2d_fvtxs2_clus_phi_GC = (TH2D*)file->Get("th2d_fvtxs2_clus_phi_GC");
+  TH2D* th2d_fvtxs3_clus_phi_GC = (TH2D*)file->Get("th2d_fvtxs3_clus_phi_GC");
+
+  bool ihavethehistos = th2d_fvtxs_clus_phi_GC && th2d_fvtxs0_clus_phi_GC && th2d_fvtxs1_clus_phi_GC && th2d_fvtxs2_clus_phi_GC && th2d_fvtxs3_clus_phi_GC;
+
+  if ( !ihavethehistos )
+    {
+      cout << "YOU'RE GONNA DIE (missing histograms)" << endl;
+      return;
+    }
+
+  const int nbinsx = 20;
+  if ( th2d_fvtxs_clus_phi_GC->GetNbinsX() != nbinsx )
+    {
+      cout << "YOU'RE GONNA DIE " << nbinsx << " " << th2d_fvtxs_clus_phi_GC->GetNbinsX() << endl;
+      return;
+    }
+  const int nbinsy = 50;
+  if ( th2d_fvtxs_clus_phi_GC->GetNbinsY() != nbinsy )
+    {
+      cout << "YOU'RE GONNA DIE " << nbinsy << " " << th2d_fvtxs_clus_phi_GC->GetNbinsX() << endl;
+      return;
+    }
+
+  double integral = th2d_fvtxs_clus_phi_GC->Integral(1,nbinsx,1,nbinsy);
+  double totalbins = (double)nbinsx*(double)nbinsy;
+  double average = integral/totalbins;
+
+  cout << "average is " << average << endl;
+
+  TH2D* th2d_fvtxs_clus_phi_GCweight = (TH2D*)th2d_fvtxs_clus_phi_GC->Clone("th2d_fvtxs_clus_phi_GCweight");
+  for ( int i = 0; i < nbinsx; ++i )
+    {
+      for ( int j = 0; j < nbinsy; ++j )
+        {
+          double bincontent = th2d_fvtxs_clus_phi_GC->GetBinContent(i+1,j+1);
+          double newvalue = 0;
+          double temp = average/bincontent;
+          if ( temp == temp ) newvalue = temp;
+          //if ( temp < 1.5 && temp > 0.5 ) newvalue = temp;
+          th2d_fvtxs_clus_phi_GCweight->SetBinContent(i+1,j+1,newvalue);
+        }
+    }
+
+  th2d_fvtxs_clus_phi_GC->Draw("colz");
+  c1->Print(Form("testing_only2ddist_%d.png",run));
+
+  th2d_fvtxs_clus_phi_GCweight->Draw("colz");
+  c1->Print(Form("testing_only2dweight_%d.png",run));
+
+  delete c1;
+
+} // only2d
+
 
 
 void runweight2d(int run)
