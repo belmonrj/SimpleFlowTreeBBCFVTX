@@ -1,7 +1,29 @@
 #ifndef RPPAR_H_
 #define RPPAR_H_
-//static const int NDET = 8; // number of detectors (BBCs Psi2, FVTX Psi2, BBCs corrected Psi2, FVTX corrected Psi2 for all, then four layers)
-static const int NDET = 13; // number of detectors (BBCs Psi2, FVTX Psi2, BBCs corrected Psi2, FVTX corrected Psi2 for all, then four layers, added FVTX north layer)
+static const int NDET = 23; // number of detectors (see below)
+//  0 -- BBCS  Psi2 from node tree
+//  1 -- FVTXS Psi2 from node tree
+//  2 -- BBCS Psi2 calculated
+//  3 -- FVTXS Psi2 calculated (with weight)
+//  4 -- FVTXS layer 0 Psi2 calculated (with weight)
+//  5 -- FVTXS layer 1 Psi2 calculated (with weight)
+//  6 -- FVTXS layer 2 Psi2 calculated (with weight)
+//  7 -- FVTXS layer 3 Psi2 calculated (with weight)
+//  8 -- FVTXN Psi2 calculated (with weight)
+//  9 -- FVTXN layer 0 Psi2 calculated (with weight)
+// 10 -- FVTXN layer 1 Psi2 calculated (with weight)
+// 11 -- FVTXN layer 2 Psi2 calculated (with weight)
+// 12 -- FVTXN layer 3 Psi2 calculated (with weight)
+// 13 -- FVTXS Psi2 calculated (without weight)
+// 14 -- FVTXS layer 0 Psi2 calculated (without weight)
+// 15 -- FVTXS layer 1 Psi2 calculated (without weight)
+// 16 -- FVTXS layer 2 Psi2 calculated (without weight)
+// 17 -- FVTXS layer 3 Psi2 calculated (without weight)
+// 18 -- FVTXN Psi2 calculated (without weight)
+// 19 -- FVTXN layer 0 Psi2 calculated (without weight)
+// 20 -- FVTXN layer 1 Psi2 calculated (without weight)
+// 21 -- FVTXN layer 2 Psi2 calculated (without weight)
+// 22 -- FVTXN layer 3 Psi2 calculated (without weight)
 static const int NHAR = 4; // number of harmonics (1, 2, 3)
 static const int NMUL = 1; // Multiplicity bins (centrality selections)
 static const int NZPS = 10; // number of z-vertex bins for flattening (very important for FVTX, maybe not so important for BBC)
