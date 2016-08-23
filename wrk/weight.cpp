@@ -539,6 +539,9 @@ void flatten(int runNumber, int passNumber)
                 }
               // --------------------------------------
 
+              double FVTX_r = sqrt(pow(d_FVTX_x[iclus],2.0)+pow(d_FVTX_y[iclus],2.0));
+              if ( runNumber >= 456652 && runNumber <= 458167 && FVTX_r < 5.2 ) continue;
+
               float phi = TMath::ATan2(fvtx_y,fvtx_x);
 
               // --- south side
