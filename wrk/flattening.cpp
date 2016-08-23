@@ -106,6 +106,16 @@ void flatten(int runNumber, int rp_recal_pass)
 
   cout << "runNumber = " << runNumber << " rp_recal_pass = " << rp_recal_pass << endl;
 
+  int energyflag = 0;
+  // --- Run16dAu200
+  if ( runNumber >= 454774 && runNumber <= 455639 ) energyflag = 200;
+  // --- Run16dAu62
+  if ( runNumber >= 455792 && runNumber <= 456283 ) energyflag = 62;
+  // --- Run16dAu20
+  if ( runNumber >= 456652 && runNumber <= 457298 ) energyflag = 20;
+  // --- Run16dAu39
+  if ( runNumber >= 457634 && runNumber <= 458167 ) energyflag = 39;
+
   int verbosity = 1;
 
   char calibfile[500];
@@ -1172,14 +1182,10 @@ void flatten(int runNumber, int rp_recal_pass)
       unsigned int trigger_BBCLL1narrow      = 0x00000010;
 
       unsigned int accepted_triggers = 0;
-      // --- Run16dAu200
-      if ( runNumber >= 454774 && runNumber <= 455639 ) accepted_triggers = trigger_BBCLL1narrowcent | trigger_BBCLL1narrow;
-      // --- Run16dAu62
-      if ( runNumber >= 455792 && runNumber <= 456283 ) accepted_triggers = trigger_BBCLL1narrowcent | trigger_BBCLL1narrow;
-      // --- Run16dAu20
-      if ( runNumber >= 456652 && runNumber <= 457298 ) accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS;
-      // --- Run16dAu39
-      if ( runNumber >= 457634 && runNumber <= 458167 ) accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS;
+      if ( energyflag == 200 ) accepted_triggers = trigger_BBCLL1narrowcent  | trigger_BBCLL1narrow;
+      if ( energyflag == 62  ) accepted_triggers = trigger_BBCLL1narrowcent  | trigger_BBCLL1narrow;
+      if ( energyflag == 20  ) accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS;
+      if ( energyflag == 39  ) accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS;
 
       unsigned int passes_trigger = trigger_scaled & accepted_triggers;
       if ( passes_trigger == 0 )
@@ -1190,10 +1196,10 @@ void flatten(int runNumber, int rp_recal_pass)
 
       if ( centrality > -1 )
         {
-          if ( runNumber >= 454744 && runNumber <= 455639 && centrality > 5  ) continue; // dAu 200 GeV
-          if ( runNumber >= 455792 && runNumber <= 456283 && centrality > 10 ) continue; // dAu 62 GeV
-          if ( runNumber >= 456652 && runNumber <= 457298 && centrality > 20 ) continue; // dAu 20 GeV
-          if ( runNumber >= 457634 && runNumber <= 458167 && centrality > 20 ) continue; // dAu 39 GeV
+          if ( energyflag == 200 && centrality > 5  ) continue;
+          if ( energyflag == 62  && centrality > 10 ) continue;
+          if ( energyflag == 20  && centrality > 20 ) continue;
+          if ( energyflag == 39  && centrality > 20 ) continue;
         }
 
       double ZVTX = -9999;
@@ -1224,14 +1230,10 @@ void flatten(int runNumber, int rp_recal_pass)
         }
 
       int toomanyclusters = 9999;
-      // --- Run16dAu200
-      if ( runNumber >= 454774 && runNumber <= 455639 ) toomanyclusters = 4000;
-      // --- Run16dAu62
-      if ( runNumber >= 455792 && runNumber <= 456283 ) toomanyclusters = 4000;
-      // --- Run16dAu20
-      if ( runNumber >= 456652 && runNumber <= 457298 ) toomanyclusters = 300;
-      // --- Run16dAu39
-      if ( runNumber >= 457634 && runNumber <= 458167 ) toomanyclusters = 500;
+      if ( energyflag == 200 ) toomanyclusters = 4000;
+      if ( energyflag == 62  ) toomanyclusters = 4000;
+      if ( energyflag == 20  ) toomanyclusters = 300;
+      if ( energyflag == 39  ) toomanyclusters = 500;
 
       bool is_okaync = ( d_nFVTX_clus < toomanyclusters );
       if ( !is_okaync )
@@ -1317,10 +1319,10 @@ void flatten(int runNumber, int rp_recal_pass)
         {
           //cout << "centrality undefined, cutting on bbc charge" << endl;
           // --- revise these numbers as needed
-          if ( runNumber >= 454744 && runNumber <= 455639 && bbc_qw < 60.0 ) continue; // dAu 200 GeV
-          if ( runNumber >= 455792 && runNumber <= 456283 && bbc_qw < 40.0 ) continue; // dAu 62 GeV
-          if ( runNumber >= 456652 && runNumber <= 457298 && bbc_qw < 25.0 ) continue; // dAu 20 GeV
-          if ( runNumber >= 457634 && runNumber <= 458167 && bbc_qw < 30.0 ) continue; // dAu 39 GeV
+          if ( energyflag == 200 && bbc_qw < 60.0 ) continue;
+          if ( energyflag == 62  && bbc_qw < 40.0 ) continue;
+          if ( energyflag == 20  && bbc_qw < 25.0 ) continue;
+          if ( energyflag == 39  && bbc_qw < 30.0 ) continue;
           ++bad_cent_counter;
         }
 
