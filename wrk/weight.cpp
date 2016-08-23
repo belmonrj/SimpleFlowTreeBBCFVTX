@@ -355,13 +355,13 @@ void flatten(int runNumber, int passNumber)
       // --- for many run by run studies we want the MB trigger only
       unsigned int accepted_triggers = 0;
       // --- Run16dAu200
-      if ( runNumber >= 454774 && runNumber <= 455639 ) accepted_triggers = trigger_BBCLL1narrow;
+      if ( runNumber >= 454774 && runNumber <= 455639 ) accepted_triggers = trigger_BBCLL1narrowcent | trigger_BBCLL1narrow;
       // --- Run16dAu62
-      if ( runNumber >= 455792 && runNumber <= 456283 ) accepted_triggers = trigger_BBCLL1narrow;
+      if ( runNumber >= 455792 && runNumber <= 456283 ) accepted_triggers = trigger_BBCLL1narrowcent | trigger_BBCLL1narrow;
       // --- Run16dAu20
-      if ( runNumber >= 456652 && runNumber <= 457298 ) accepted_triggers = trigger_FVTXNSBBCS;
+      if ( runNumber >= 456652 && runNumber <= 457298 ) accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS;
       // --- Run16dAu39
-      if ( runNumber >= 457634 && runNumber <= 458167 ) accepted_triggers = trigger_FVTXNSBBCS;
+      if ( runNumber >= 457634 && runNumber <= 458167 ) accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS;
 
       unsigned int passes_trigger = trigger_scaled & accepted_triggers;
       if ( passes_trigger == 0 )
@@ -370,6 +370,32 @@ void flatten(int runNumber, int passNumber)
           ++bad_trigger_counter;
           continue;
         }
+
+      int toomanyclusters = 9999;
+      // --- Run16dAu200
+      if ( runNumber >= 454774 && runNumber <= 455639 ) toomanyclusters = 4000;
+      // --- Run16dAu62
+      if ( runNumber >= 455792 && runNumber <= 456283 ) toomanyclusters = 4000;
+      // --- Run16dAu20
+      if ( runNumber >= 456652 && runNumber <= 457298 ) toomanyclusters = 300;
+      // --- Run16dAu39
+      if ( runNumber >= 457634 && runNumber <= 458167 ) toomanyclusters = 500;
+
+      bool is_okaync = ( d_nFVTX_clus < toomanyclusters );
+      if ( !is_okaync )
+        {
+          if ( verbosity > 1 ) cout << "too many clusters" << endl;
+          continue;
+        }
+
+      if ( centrality > -1 )
+        {
+          if ( runNumber >= 454744 && runNumber <= 455639 && centrality > 5  ) continue; // dAu 200 GeV
+          if ( runNumber >= 455792 && runNumber <= 456283 && centrality > 10 ) continue; // dAu 62 GeV
+          if ( runNumber >= 456652 && runNumber <= 457298 && centrality > 20 ) continue; // dAu 20 GeV
+          if ( runNumber >= 457634 && runNumber <= 458167 && centrality > 20 ) continue; // dAu 39 GeV
+        }
+      else continue;
 
       double ZVTX = -9999;
       if ( runNumber >= 454774 && runNumber <= 456283 ) ZVTX = d_bbcz;
@@ -380,13 +406,6 @@ void flatten(int runNumber, int passNumber)
           ++bad_vertex_counter;
           continue;
         }
-      // --- this cut might be a good idea but it throws out too many events, further study needed
-      // if ( d_bbcz > -999 && eventfvtx_z > -999 && fabs(d_bbcz-eventfvtx_z) > 5 )
-      //   {
-      //     if ( verbosity > 0 ) cout << "bbc and fvtx vertex exist but out of range of each other " << d_bbcz << " " << eventfvtx_z << endl;
-      //     ++bad_vertex_counter;
-      //     continue;
-      //   }
 
       // make sure bin number doesn't exceed number of bins
       int ibbcz = NZPS*(ZVTX+10)/20;
@@ -399,11 +418,6 @@ void flatten(int runNumber, int passNumber)
           continue;
         }
 
-      // ---------------------------------------------------------------------------------------
-
-      // --- look at these correlations prior to centrality cut
-
-      // ---------------------------------------------------------------------------------------
 
       //------------------------------------------------------------//
       //                Calculating Event Planes                    //
@@ -472,28 +486,6 @@ void flatten(int runNumber, int passNumber)
 
       // --- do centrality cut here!!!
 
-      bool is_central = false;
-      if ( centrality > -999 )
-        {
-          if ( runNumber >= 454744 && runNumber <= 455639 && centrality <= 5  ) is_central = true; // dAu 200 GeV
-          if ( runNumber >= 455792 && runNumber <= 456283 && centrality <= 10 ) is_central = true; // dAu 62 GeV
-          if ( runNumber >= 456652 && runNumber <= 457298 && centrality <= 20 ) is_central = true; // dAu 20 GeV
-          if ( runNumber >= 457634 && runNumber <= 458167 && centrality <= 20 ) is_central = true; // dAu 39 GeV
-        }
-      else
-        {
-          //cout << "centrality undefined, cutting on bbc charge" << endl;
-          // --- revise these numbers as needed
-          if ( runNumber >= 454744 && runNumber <= 455639 && bbc_qw > 60.0 ) is_central = true; // dAu 200 GeV
-          if ( runNumber >= 455792 && runNumber <= 456283 && bbc_qw > 40.0 ) is_central = true; // dAu 62 GeV
-          if ( runNumber >= 456652 && runNumber <= 457298 && bbc_qw > 25.0 ) is_central = true; // dAu 20 GeV
-          if ( runNumber >= 457634 && runNumber <= 458167 && bbc_qw > 30.0 ) is_central = true; // dAu 39 GeV
-          ++bad_cent_counter;
-        }
-
-      bool is_peripheral = false;
-      if ( centrality > 50 ) is_peripheral = true;
-      else if ( centrality < 0 && bbc_qw < 10.0 ) is_peripheral = true;
 
       if ( say_event )
         {
@@ -506,24 +498,6 @@ void flatten(int runNumber, int passNumber)
       bool is_goodnc = ( d_nFVTXN_clus < 100 && d_nFVTXS_clus < 200 );
       if ( !is_goodnc ) ++bad_nc_counter;
 
-      int toomanyclusters = 9999;
-      // --- Run16dAu200
-      if ( runNumber >= 454774 && runNumber <= 455639 ) toomanyclusters = 4000;
-      // --- Run16dAu62
-      if ( runNumber >= 455792 && runNumber <= 456283 ) toomanyclusters = 4000;
-      // --- Run16dAu20
-      if ( runNumber >= 456652 && runNumber <= 457298 ) toomanyclusters = 300;
-      // --- Run16dAu39
-      if ( runNumber >= 457634 && runNumber <= 458167 ) toomanyclusters = 500;
-
-      // --- need to check downstream effects, might want to reorganize if/else structures
-      // --- might also want to get rid of a bunch of older, no longer used histograms
-      bool is_okaync = ( d_nFVTX_clus < toomanyclusters ) && is_central;
-      if ( !is_okaync )
-        {
-          if ( verbosity > 0 ) cout << "too many clusters" << endl;
-          continue;
-        }
 
       //cout << "HELLO HERE I AM" << endl;
 
@@ -565,12 +539,6 @@ void flatten(int runNumber, int passNumber)
           fvtxn_qw[ilayer] = 0.0;
         } // loop over layers
 
-
-      if ( d_nFVTX_clus >= 4000 )
-        {
-          cout << "YOU'RE GONNA DIE event number " << ievt << " n fvtx clus " << d_nFVTX_clus << " " << d_nFVTXN_clus << " " << d_nFVTXS_clus << " " << endl;
-          continue;
-        }
 
       int innercluster_counter_event = 0;
       int innercluster_counter_event_south = 0;
@@ -641,19 +609,16 @@ void flatten(int runNumber, int passNumber)
                   fvtxs_qw[fvtx_layer+1] ++;
                   fvtxs_qw[0] ++;
 
-                  if ( is_central )
-                    {
-                      th1d_fvtxs_clus_phi->Fill(phi);
-                      if ( fvtx_layer == 0 ) th1d_fvtxs0_clus_phi->Fill(phi);
-                      if ( fvtx_layer == 1 ) th1d_fvtxs1_clus_phi->Fill(phi);
-                      if ( fvtx_layer == 2 ) th1d_fvtxs2_clus_phi->Fill(phi);
-                      if ( fvtx_layer == 3 ) th1d_fvtxs3_clus_phi->Fill(phi);
-                      th2d_fvtxs_clus_phi->Fill(vtx_z,phi);
-                      if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_phi->Fill(vtx_z,phi);
-                      if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_phi->Fill(vtx_z,phi);
-                      if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_phi->Fill(vtx_z,phi);
-                      if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_phi->Fill(vtx_z,phi);
-                    } // check on central
+                  th1d_fvtxs_clus_phi->Fill(phi);
+                  if ( fvtx_layer == 0 ) th1d_fvtxs0_clus_phi->Fill(phi);
+                  if ( fvtx_layer == 1 ) th1d_fvtxs1_clus_phi->Fill(phi);
+                  if ( fvtx_layer == 2 ) th1d_fvtxs2_clus_phi->Fill(phi);
+                  if ( fvtx_layer == 3 ) th1d_fvtxs3_clus_phi->Fill(phi);
+                  th2d_fvtxs_clus_phi->Fill(vtx_z,phi);
+                  if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_phi->Fill(vtx_z,phi);
+                  if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_phi->Fill(vtx_z,phi);
+                  if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_phi->Fill(vtx_z,phi);
+                  if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_phi->Fill(vtx_z,phi);
 
 
                 } // check on south
@@ -674,19 +639,16 @@ void flatten(int runNumber, int passNumber)
                   fvtxn_qw[fvtx_layer+1] ++;
                   fvtxn_qw[0] ++;
 
-                  if ( is_central )
-                    {
-                      th1d_fvtxn_clus_phi->Fill(phi);
-                      if ( fvtx_layer == 0 ) th1d_fvtxn0_clus_phi->Fill(phi);
-                      if ( fvtx_layer == 1 ) th1d_fvtxn1_clus_phi->Fill(phi);
-                      if ( fvtx_layer == 2 ) th1d_fvtxn2_clus_phi->Fill(phi);
-                      if ( fvtx_layer == 3 ) th1d_fvtxn3_clus_phi->Fill(phi);
-                      th2d_fvtxn_clus_phi->Fill(vtx_z,phi);
-                      if ( fvtx_layer == 0 ) th2d_fvtxn0_clus_phi->Fill(vtx_z,phi);
-                      if ( fvtx_layer == 1 ) th2d_fvtxn1_clus_phi->Fill(vtx_z,phi);
-                      if ( fvtx_layer == 2 ) th2d_fvtxn2_clus_phi->Fill(vtx_z,phi);
-                      if ( fvtx_layer == 3 ) th2d_fvtxn3_clus_phi->Fill(vtx_z,phi);
-                    } // check on central
+                  th1d_fvtxn_clus_phi->Fill(phi);
+                  if ( fvtx_layer == 0 ) th1d_fvtxn0_clus_phi->Fill(phi);
+                  if ( fvtx_layer == 1 ) th1d_fvtxn1_clus_phi->Fill(phi);
+                  if ( fvtx_layer == 2 ) th1d_fvtxn2_clus_phi->Fill(phi);
+                  if ( fvtx_layer == 3 ) th1d_fvtxn3_clus_phi->Fill(phi);
+                  th2d_fvtxn_clus_phi->Fill(vtx_z,phi);
+                  if ( fvtx_layer == 0 ) th2d_fvtxn0_clus_phi->Fill(vtx_z,phi);
+                  if ( fvtx_layer == 1 ) th2d_fvtxn1_clus_phi->Fill(vtx_z,phi);
+                  if ( fvtx_layer == 2 ) th2d_fvtxn2_clus_phi->Fill(vtx_z,phi);
+                  if ( fvtx_layer == 3 ) th2d_fvtxn3_clus_phi->Fill(vtx_z,phi);
 
                 } // check on north
 
