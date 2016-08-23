@@ -1041,6 +1041,10 @@ void makemult_new(int energy)
   double mean2_cnt = 0;
   double mean2_fxt = 0;
   double mean2_fxc = 0;
+  double counter_bbc = 0;
+  double counter_cnt = 0;
+  double counter_fxt = 0;
+  double counter_fxc = 0;
   ifstream fin((const char*)Form("list_%d.short",energy));
   for ( int i = 0; i < 110; ++i )
     {
@@ -1071,18 +1075,38 @@ void makemult_new(int energy)
       mean2_bbc += temp_bbc*temp_bbc;
       mean2_fxt += temp_fxt*temp_fxt;
       mean2_fxc += temp_fxc*temp_fxc;
+      if ( temp_cnt > 0 ) ++counter_cnt;
+      if ( temp_bbc > 0 ) ++counter_bbc;
+      if ( temp_fxt > 0 ) ++counter_fxt;
+      if ( temp_fxc > 0 ) ++counter_fxc;
     }
   fin.close();
 
-  mean_cnt /= mcounter;
-  mean_bbc /= mcounter;
-  mean_fxt /= mcounter;
-  mean_fxc /= mcounter;
+  cout << mcounter << " "
+       << counter_cnt << " "
+       << counter_bbc << " "
+       << counter_fxt << " "
+       << counter_fxc << " "
+       << endl;
+  // mean_cnt /= mcounter;
+  // mean_bbc /= mcounter;
+  // mean_fxt /= mcounter;
+  // mean_fxc /= mcounter;
 
-  mean2_cnt /= mcounter;
-  mean2_bbc /= mcounter;
-  mean2_fxt /= mcounter;
-  mean2_fxc /= mcounter;
+  // mean2_cnt /= mcounter;
+  // mean2_bbc /= mcounter;
+  // mean2_fxt /= mcounter;
+  // mean2_fxc /= mcounter;
+
+  mean_cnt /= counter_cnt;
+  mean_bbc /= counter_bbc;
+  mean_fxt /= counter_fxt;
+  mean_fxc /= counter_fxc;
+
+  mean2_cnt /= counter_cnt;
+  mean2_bbc /= counter_bbc;
+  mean2_fxt /= counter_fxt;
+  mean2_fxc /= counter_fxc;
 
   double vari_bbc = mean2_bbc - mean_bbc*mean_bbc;
   double vari_cnt = mean2_cnt - mean_cnt*mean_cnt;
