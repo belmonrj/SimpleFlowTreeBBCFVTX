@@ -134,7 +134,7 @@ void flatten(int runNumber, int rp_recal_pass)
   // ---
 
   bool doweights = true; // change to false if you don't want to bother
-  TString phiweightfile_name = Form("SpecialProjects/WeightFiles/only2d_run%d.root", runNumber);
+  TString phiweightfile_name = Form("SpecialProjects/WeightFiles/newweight2d_run%d.root", runNumber);
   TFile* phi_weight_file = TFile::Open(phiweightfile_name); // COME BACK HERE AND HAVE A LOOK
   if ( !phi_weight_file )
     {
