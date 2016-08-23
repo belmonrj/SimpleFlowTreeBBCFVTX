@@ -26,9 +26,9 @@ void newweight()
   // while ( fin >> run ) newweight2d(run);
   // fin.close();
 
-  // fin.open("list_200.short");
-  // while ( fin >> run ) newweight2d(run);
-  // fin.close();
+  fin.open("list_200.short");
+  while ( fin >> run ) newweight2d(run);
+  fin.close();
 
 }
 
@@ -44,6 +44,13 @@ void newweight2d(int run)
   if ( !file )
     {
       cout << "WARNING: file does not exist for run " << run << endl;
+      return;
+    }
+  TList* list = (TList*)file->GetListOfKeys();
+  int size = list->GetSize();
+  if ( size < 1 )
+    {
+      cout << "WARNING: file does not have enough keys, run " << run << endl;
       return;
     }
 
