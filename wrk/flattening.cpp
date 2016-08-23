@@ -309,20 +309,20 @@ void flatten(int runNumber, int rp_recal_pass)
 
 
 
-  int south_bbc_index    =  2;
-  int south_fvtx_index   =  3;
-  int south_fvtx0_index =  4;
-  int south_fvtx1_index =  5;
-  int south_fvtx2_index =  6;
-  int south_fvtx3_index =  7;
-  int north_fvtx_index   =  8;
-  int north_fvtx0_index =  9;
-  int north_fvtx1_index = 10;
-  int north_fvtx2_index = 11;
-  int north_fvtx3_index = 12;
+  int bbcs_index   =  2;
+  int fvtxs_index  =  3;
+  int fvtxs0_index =  4;
+  int fvtxs1_index =  5;
+  int fvtxs2_index =  6;
+  int fvtxs3_index =  7;
+  int fvtxn_index  =  8;
+  int fvtxn0_index =  9;
+  int fvtxn1_index = 10;
+  int fvtxn2_index = 11;
+  int fvtxn3_index = 12;
 
 
-  float pi = acos(-1.0);
+  float pi = acos(-1.0); // defined in RpPar.h, i wonder why no warning
 
   //------------------------------------------------------------//
   //                                                            //
@@ -1510,30 +1510,30 @@ void flatten(int runNumber, int rp_recal_pass)
 
       if ( bbc_pmts )
         {
-          sumxy[1][south_bbc_index][0] = bbc_qx2;
-          sumxy[1][south_bbc_index][1] = bbc_qy2;
-          sumxy[1][south_bbc_index][2] = bbc_qw;
-          sumxy[2][south_bbc_index][0] = bbc_qx3;
-          sumxy[2][south_bbc_index][1] = bbc_qy3;
-          sumxy[2][south_bbc_index][2] = bbc_qw;
+          sumxy[1][bbcs_index][0] = bbc_qx2;
+          sumxy[1][bbcs_index][1] = bbc_qy2;
+          sumxy[1][bbcs_index][2] = bbc_qw;
+          sumxy[2][bbcs_index][0] = bbc_qx3;
+          sumxy[2][bbcs_index][1] = bbc_qy3;
+          sumxy[2][bbcs_index][2] = bbc_qw;
         }
 
       if ( fvtx_clusters )
         {
           for ( int i = 0; i < 5; ++i )
             {
-              sumxy[1][south_fvtx_index+i][0] = fvtxs_qx2[i];
-              sumxy[1][south_fvtx_index+i][1] = fvtxs_qy2[i];
-              sumxy[1][south_fvtx_index+i][2] = fvtxs_qw[i];
-              sumxy[1][north_fvtx_index+i][0] = fvtxn_qx2[i];
-              sumxy[1][north_fvtx_index+i][1] = fvtxn_qy2[i];
-              sumxy[1][north_fvtx_index+i][2] = fvtxn_qw[i];
-              sumxy[2][south_fvtx_index+i][0] = fvtxs_qx3[i];
-              sumxy[2][south_fvtx_index+i][1] = fvtxs_qy3[i];
-              sumxy[2][south_fvtx_index+i][2] = fvtxs_qw[i];
-              sumxy[2][north_fvtx_index+i][0] = fvtxn_qx3[i];
-              sumxy[2][north_fvtx_index+i][1] = fvtxn_qy3[i];
-              sumxy[2][north_fvtx_index+i][2] = fvtxn_qw[i];
+              sumxy[1][fvtxs_index+i][0] = fvtxs_qx2[i];
+              sumxy[1][fvtxs_index+i][1] = fvtxs_qy2[i];
+              sumxy[1][fvtxs_index+i][2] = fvtxs_qw[i];
+              sumxy[1][fvtxn_index+i][0] = fvtxn_qx2[i];
+              sumxy[1][fvtxn_index+i][1] = fvtxn_qy2[i];
+              sumxy[1][fvtxn_index+i][2] = fvtxn_qw[i];
+              sumxy[2][fvtxs_index+i][0] = fvtxs_qx3[i];
+              sumxy[2][fvtxs_index+i][1] = fvtxs_qy3[i];
+              sumxy[2][fvtxs_index+i][2] = fvtxs_qw[i];
+              sumxy[2][fvtxn_index+i][0] = fvtxn_qx3[i];
+              sumxy[2][fvtxn_index+i][1] = fvtxn_qy3[i];
+              sumxy[2][fvtxn_index+i][2] = fvtxn_qw[i];
             } // loop over layers
         } // check on clusters
 
@@ -1701,12 +1701,12 @@ void flatten(int runNumber, int rp_recal_pass)
       os_bbcs_1dPsi3->Fill(os_bbc_psi3);
 
       float os_fvtxs_qw = fvtxs_qw[0];
-      float os_fvtxs_qx2 = mean[icent][izvtx][1][south_fvtx_index][0];
-      float os_fvtxs_qy2 = mean[icent][izvtx][1][south_fvtx_index][1];
-      float os_fvtxs_qx3 = mean[icent][izvtx][2][south_fvtx_index][0];
-      float os_fvtxs_qy3 = mean[icent][izvtx][2][south_fvtx_index][1];
-      float os_fvtxs_qx4 = mean[icent][izvtx][3][south_fvtx_index][0];
-      float os_fvtxs_qy4 = mean[icent][izvtx][3][south_fvtx_index][1];
+      float os_fvtxs_qx2 = mean[icent][izvtx][1][fvtxs_index][0];
+      float os_fvtxs_qy2 = mean[icent][izvtx][1][fvtxs_index][1];
+      float os_fvtxs_qx3 = mean[icent][izvtx][2][fvtxs_index][0];
+      float os_fvtxs_qy3 = mean[icent][izvtx][2][fvtxs_index][1];
+      float os_fvtxs_qx4 = mean[icent][izvtx][3][fvtxs_index][0];
+      float os_fvtxs_qy4 = mean[icent][izvtx][3][fvtxs_index][1];
       os_fvtxs_cos22->Fill(0.0,os_fvtxs_qx2);
       os_fvtxs_sin22->Fill(0.0,os_fvtxs_qy2);
       os_fvtxs_cos32->Fill(0.0,os_fvtxs_qx3);
@@ -1728,12 +1728,12 @@ void flatten(int runNumber, int rp_recal_pass)
       os_fvtxs_1dPsi3->Fill(os_fvtxs_psi3);
 
       float os_fvtxn_qw = fvtxn_qw[0];
-      float os_fvtxn_qx2 = mean[icent][izvtx][1][north_fvtx_index][0];
-      float os_fvtxn_qy2 = mean[icent][izvtx][1][north_fvtx_index][1];
-      float os_fvtxn_qx3 = mean[icent][izvtx][2][north_fvtx_index][0];
-      float os_fvtxn_qy3 = mean[icent][izvtx][2][north_fvtx_index][1];
-      float os_fvtxn_qx4 = mean[icent][izvtx][3][north_fvtx_index][0];
-      float os_fvtxn_qy4 = mean[icent][izvtx][3][north_fvtx_index][1];
+      float os_fvtxn_qx2 = mean[icent][izvtx][1][fvtxn_index][0];
+      float os_fvtxn_qy2 = mean[icent][izvtx][1][fvtxn_index][1];
+      float os_fvtxn_qx3 = mean[icent][izvtx][2][fvtxn_index][0];
+      float os_fvtxn_qy3 = mean[icent][izvtx][2][fvtxn_index][1];
+      float os_fvtxn_qx4 = mean[icent][izvtx][3][fvtxn_index][0];
+      float os_fvtxn_qy4 = mean[icent][izvtx][3][fvtxn_index][1];
       os_fvtxn_cos22->Fill(0.0,os_fvtxn_qx2);
       os_fvtxn_sin22->Fill(0.0,os_fvtxn_qy2);
       os_fvtxn_cos32->Fill(0.0,os_fvtxn_qx3);
@@ -1833,32 +1833,32 @@ void flatten(int runNumber, int rp_recal_pass)
 
       if ( bbc_pmts )
         {
-          bbc_south_psi2_docalib = (sumxy[1][south_bbc_index][2]>0)?sumxy[1][south_bbc_index][3]:-9999.9;
-          bbc_south_psi3_docalib = (sumxy[2][south_bbc_index][2]>0)?sumxy[2][south_bbc_index][3]:-9999.9;
+          bbc_south_psi2_docalib = (sumxy[1][bbcs_index][2]>0)?sumxy[1][bbcs_index][3]:-9999.9;
+          bbc_south_psi3_docalib = (sumxy[2][bbcs_index][2]>0)?sumxy[2][bbcs_index][3]:-9999.9;
         }
       if ( fvtx_clusters )
         {
-          fvtx_south_psi2_docalib  = (sumxy[1][south_fvtx_index][2]>4)  ? sumxy[1][south_fvtx_index][3]  : -9999.9;
-          fvtx0_south_psi2_docalib = (sumxy[1][south_fvtx0_index][2]>4) ? sumxy[1][south_fvtx0_index][3] : -9999.9;
-          fvtx1_south_psi2_docalib = (sumxy[1][south_fvtx1_index][2]>4) ? sumxy[1][south_fvtx1_index][3] : -9999.9;
-          fvtx2_south_psi2_docalib = (sumxy[1][south_fvtx2_index][2]>4) ? sumxy[1][south_fvtx2_index][3] : -9999.9;
-          fvtx3_south_psi2_docalib = (sumxy[1][south_fvtx3_index][2]>4) ? sumxy[1][south_fvtx3_index][3] : -9999.9;
-          fvtx_south_psi3_docalib  = (sumxy[2][south_fvtx_index][2]>4)  ? sumxy[2][south_fvtx_index][3]  : -9999.9;
-          fvtx0_south_psi3_docalib = (sumxy[2][south_fvtx0_index][2]>4) ? sumxy[2][south_fvtx0_index][3] : -9999.9;
-          fvtx1_south_psi3_docalib = (sumxy[2][south_fvtx1_index][2]>4) ? sumxy[2][south_fvtx1_index][3] : -9999.9;
-          fvtx2_south_psi3_docalib = (sumxy[2][south_fvtx2_index][2]>4) ? sumxy[2][south_fvtx2_index][3] : -9999.9;
-          fvtx3_south_psi3_docalib = (sumxy[2][south_fvtx3_index][2]>4) ? sumxy[2][south_fvtx3_index][3] : -9999.9;
+          fvtx_south_psi2_docalib  = (sumxy[1][fvtxs_index][2]>4)  ? sumxy[1][fvtxs_index][3]  : -9999.9;
+          fvtx0_south_psi2_docalib = (sumxy[1][fvtxs0_index][2]>4) ? sumxy[1][fvtxs0_index][3] : -9999.9;
+          fvtx1_south_psi2_docalib = (sumxy[1][fvtxs1_index][2]>4) ? sumxy[1][fvtxs1_index][3] : -9999.9;
+          fvtx2_south_psi2_docalib = (sumxy[1][fvtxs2_index][2]>4) ? sumxy[1][fvtxs2_index][3] : -9999.9;
+          fvtx3_south_psi2_docalib = (sumxy[1][fvtxs3_index][2]>4) ? sumxy[1][fvtxs3_index][3] : -9999.9;
+          fvtx_south_psi3_docalib  = (sumxy[2][fvtxs_index][2]>4)  ? sumxy[2][fvtxs_index][3]  : -9999.9;
+          fvtx0_south_psi3_docalib = (sumxy[2][fvtxs0_index][2]>4) ? sumxy[2][fvtxs0_index][3] : -9999.9;
+          fvtx1_south_psi3_docalib = (sumxy[2][fvtxs1_index][2]>4) ? sumxy[2][fvtxs1_index][3] : -9999.9;
+          fvtx2_south_psi3_docalib = (sumxy[2][fvtxs2_index][2]>4) ? sumxy[2][fvtxs2_index][3] : -9999.9;
+          fvtx3_south_psi3_docalib = (sumxy[2][fvtxs3_index][2]>4) ? sumxy[2][fvtxs3_index][3] : -9999.9;
           // ---
-          fvtx_north_psi2_docalib  = (sumxy[1][north_fvtx_index][2]>4)  ? sumxy[1][north_fvtx_index][3]  : -9999.9;
-          fvtx0_north_psi2_docalib = (sumxy[1][north_fvtx0_index][2]>4) ? sumxy[1][north_fvtx0_index][3] : -9999.9;
-          fvtx1_north_psi2_docalib = (sumxy[1][north_fvtx1_index][2]>4) ? sumxy[1][north_fvtx1_index][3] : -9999.9;
-          fvtx2_north_psi2_docalib = (sumxy[1][north_fvtx2_index][2]>4) ? sumxy[1][north_fvtx2_index][3] : -9999.9;
-          fvtx3_north_psi2_docalib = (sumxy[1][north_fvtx3_index][2]>4) ? sumxy[1][north_fvtx3_index][3] : -9999.9;
-          fvtx_north_psi3_docalib  = (sumxy[2][north_fvtx_index][2]>4)  ? sumxy[2][north_fvtx_index][3]  : -9999.9;
-          fvtx0_north_psi3_docalib = (sumxy[2][north_fvtx0_index][2]>4) ? sumxy[2][north_fvtx0_index][3] : -9999.9;
-          fvtx1_north_psi3_docalib = (sumxy[2][north_fvtx1_index][2]>4) ? sumxy[2][north_fvtx1_index][3] : -9999.9;
-          fvtx2_north_psi3_docalib = (sumxy[2][north_fvtx2_index][2]>4) ? sumxy[2][north_fvtx2_index][3] : -9999.9;
-          fvtx3_north_psi3_docalib = (sumxy[2][north_fvtx3_index][2]>4) ? sumxy[2][north_fvtx3_index][3] : -9999.9;
+          fvtx_north_psi2_docalib  = (sumxy[1][fvtxn_index][2]>4)  ? sumxy[1][fvtxn_index][3]  : -9999.9;
+          fvtx0_north_psi2_docalib = (sumxy[1][fvtxn0_index][2]>4) ? sumxy[1][fvtxn0_index][3] : -9999.9;
+          fvtx1_north_psi2_docalib = (sumxy[1][fvtxn1_index][2]>4) ? sumxy[1][fvtxn1_index][3] : -9999.9;
+          fvtx2_north_psi2_docalib = (sumxy[1][fvtxn2_index][2]>4) ? sumxy[1][fvtxn2_index][3] : -9999.9;
+          fvtx3_north_psi2_docalib = (sumxy[1][fvtxn3_index][2]>4) ? sumxy[1][fvtxn3_index][3] : -9999.9;
+          fvtx_north_psi3_docalib  = (sumxy[2][fvtxn_index][2]>4)  ? sumxy[2][fvtxn_index][3]  : -9999.9;
+          fvtx0_north_psi3_docalib = (sumxy[2][fvtxn0_index][2]>4) ? sumxy[2][fvtxn0_index][3] : -9999.9;
+          fvtx1_north_psi3_docalib = (sumxy[2][fvtxn1_index][2]>4) ? sumxy[2][fvtxn1_index][3] : -9999.9;
+          fvtx2_north_psi3_docalib = (sumxy[2][fvtxn2_index][2]>4) ? sumxy[2][fvtxn2_index][3] : -9999.9;
+          fvtx3_north_psi3_docalib = (sumxy[2][fvtxn3_index][2]>4) ? sumxy[2][fvtxn3_index][3] : -9999.9;
         }
 
 
