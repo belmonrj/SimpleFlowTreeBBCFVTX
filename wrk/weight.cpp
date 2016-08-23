@@ -443,11 +443,6 @@ void flatten(int runNumber, int passNumber)
       // --- BBCS stuff
       // -------------
 
-      float bbc_qx2 = 0;
-      float bbc_qy2 = 0;
-      float bbc_qx3 = 0;
-      float bbc_qy3 = 0;
-      float bbc_qw = 0;
 
       if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Looping over BBCS stuff now" << endl;
 
@@ -476,11 +471,6 @@ void flatten(int runNumber, int passNumber)
               if ( ring == 3 ) th1d_bbc3_charge_phi->Fill(phi,bbc_charge);
               if ( ring == 4 ) th1d_bbc4_charge_phi->Fill(phi,bbc_charge);
 
-              bbc_qx2 += bbc_charge*TMath::Cos(2*phi);
-              bbc_qy2 += bbc_charge*TMath::Sin(2*phi);
-              bbc_qx3 += bbc_charge*TMath::Cos(3*phi);
-              bbc_qy3 += bbc_charge*TMath::Sin(3*phi);
-              bbc_qw += bbc_charge;
             } // loop over tubes
         } // check on tubes
 
@@ -489,7 +479,6 @@ void flatten(int runNumber, int passNumber)
 
       if ( say_event )
         {
-          cout << "bbc charge = " << bbc_qw << endl;
           cout << "centrality = " << centrality << endl;
         }
 
@@ -506,38 +495,6 @@ void flatten(int runNumber, int passNumber)
       // --------------
       // --- FVTX stuff
       // --------------
-
-      float fvtxs_qx2[5];//all layers then 0 1 2 3
-      float fvtxs_qy2[5];
-      float fvtxs_qx3[5];//all layers then 0 1 2 3
-      float fvtxs_qy3[5];
-      float fvtxs_qw[5];
-
-      for(int ilayer = 0; ilayer < 5; ilayer++)
-        {
-          fvtxs_qx2[ilayer] = 0.0;
-          fvtxs_qy2[ilayer] = 0.0;
-          fvtxs_qx3[ilayer] = 0.0;
-          fvtxs_qy3[ilayer] = 0.0;
-          fvtxs_qw[ilayer] = 0.0;
-        } // loop over layers
-
-      // --- now FVTX North
-
-      float fvtxn_qx2[5];//all layers then 0 1 2 3
-      float fvtxn_qy2[5];
-      float fvtxn_qx3[5];//all layers then 0 1 2 3
-      float fvtxn_qy3[5];
-      float fvtxn_qw[5];
-
-      for(int ilayer = 0; ilayer < 5; ilayer++)
-        {
-          fvtxn_qx2[ilayer] = 0.0;
-          fvtxn_qy2[ilayer] = 0.0;
-          fvtxn_qx3[ilayer] = 0.0;
-          fvtxn_qy3[ilayer] = 0.0;
-          fvtxn_qw[ilayer] = 0.0;
-        } // loop over layers
 
 
       int innercluster_counter_event = 0;
@@ -580,35 +537,13 @@ void flatten(int runNumber, int passNumber)
                   ++gapcut_counter;
                   continue;
                 }
-              double fvtx_rb = sqrt(pow(d_FVTX_x[iclus],2.0)+pow(d_FVTX_y[iclus],2.0));
-              if ( fvtx_rb < 5.2 )
-                {
-                  ++innercluster_counter_event;
-                  if ( d_FVTX_z[iclus] < 0 ) ++innercluster_counter_event_south;
-                  if ( d_FVTX_z[iclus] > 0 ) ++innercluster_counter_event_north;
-                  ++innercluster_counter;
-                }
               // --------------------------------------
 
-              float phib = TMath::ATan2(d_FVTX_y[iclus],d_FVTX_x[iclus]);
               float phi = TMath::ATan2(fvtx_y,fvtx_x);
 
               // --- south side
               if ( d_FVTX_z[iclus] < 0 )
                 {
-                  fvtxs_qx2[fvtx_layer+1] += TMath::Cos(2*phi);
-                  fvtxs_qy2[fvtx_layer+1] += TMath::Sin(2*phi);
-                  fvtxs_qx3[fvtx_layer+1] += TMath::Cos(3*phi);
-                  fvtxs_qy3[fvtx_layer+1] += TMath::Sin(3*phi);
-
-                  fvtxs_qx2[0] += TMath::Cos(2*phi);
-                  fvtxs_qy2[0] += TMath::Sin(2*phi);
-                  fvtxs_qx3[0] += TMath::Cos(3*phi);
-                  fvtxs_qy3[0] += TMath::Sin(3*phi);
-
-                  fvtxs_qw[fvtx_layer+1] ++;
-                  fvtxs_qw[0] ++;
-
                   th1d_fvtxs_clus_phi->Fill(phi);
                   if ( fvtx_layer == 0 ) th1d_fvtxs0_clus_phi->Fill(phi);
                   if ( fvtx_layer == 1 ) th1d_fvtxs1_clus_phi->Fill(phi);
@@ -619,26 +554,11 @@ void flatten(int runNumber, int passNumber)
                   if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_phi->Fill(vtx_z,phi);
                   if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_phi->Fill(vtx_z,phi);
                   if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_phi->Fill(vtx_z,phi);
-
-
                 } // check on south
 
               // --- north side
               if ( d_FVTX_z[iclus] > 0 )
                 {
-                  fvtxn_qx2[fvtx_layer+1] += TMath::Cos(2*phi);
-                  fvtxn_qy2[fvtx_layer+1] += TMath::Sin(2*phi);
-                  fvtxn_qx3[fvtx_layer+1] += TMath::Cos(3*phi);
-                  fvtxn_qy3[fvtx_layer+1] += TMath::Sin(3*phi);
-
-                  fvtxn_qx2[0] += TMath::Cos(2*phi);
-                  fvtxn_qy2[0] += TMath::Sin(2*phi);
-                  fvtxn_qx3[0] += TMath::Cos(3*phi);
-                  fvtxn_qy3[0] += TMath::Sin(3*phi);
-
-                  fvtxn_qw[fvtx_layer+1] ++;
-                  fvtxn_qw[0] ++;
-
                   th1d_fvtxn_clus_phi->Fill(phi);
                   if ( fvtx_layer == 0 ) th1d_fvtxn0_clus_phi->Fill(phi);
                   if ( fvtx_layer == 1 ) th1d_fvtxn1_clus_phi->Fill(phi);
@@ -649,7 +569,6 @@ void flatten(int runNumber, int passNumber)
                   if ( fvtx_layer == 1 ) th2d_fvtxn1_clus_phi->Fill(vtx_z,phi);
                   if ( fvtx_layer == 2 ) th2d_fvtxn2_clus_phi->Fill(vtx_z,phi);
                   if ( fvtx_layer == 3 ) th2d_fvtxn3_clus_phi->Fill(vtx_z,phi);
-
                 } // check on north
 
             } // loop over cluster
