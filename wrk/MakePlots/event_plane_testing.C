@@ -65,10 +65,15 @@ void beforeafterflat_run(int run, int harmonic)
   leg->Draw();
   c1->Print(Form("FigsEventPlane/after_psi2_bbcs_%d.png",run));
   c1->Print(Form("FigsEventPlane/after_psi2_bbcs_%d.pdf",run));
+  delete leg;
 
+  TH1D* hfvtxsW = (TH1D*) ((TH2D*)file->Get("psi_bf_0_1_13"))->ProjectionY();
+  hfvtxsW->Draw();
+  hfvtxsW->SetLineColor(kRed);
+  hfvtxsW->GetXaxis()->SetTitle("#Psi_{2}, FVTXS");
   TH1D* hfvtxs = (TH1D*) ((TH2D*)file->Get("psi_bf_0_1_3"))->ProjectionY();
-  hfvtxs->Draw();
-  hfvtxs->SetLineColor(kRed);
+  hfvtxs->Draw("same");
+  hfvtxs->SetLineColor(kGreen+2);
   hfvtxs->GetXaxis()->SetTitle("#Psi_{2}, FVTXS");
   TH1D* hfvtxsM = (TH1D*) ((TH2D*)file->Get("psi_mf_0_1_3"))->ProjectionY();
   hfvtxsM->Draw("same");
@@ -76,13 +81,23 @@ void beforeafterflat_run(int run, int harmonic)
   TH1D* hfvtxsA = (TH1D*) ((TH2D*)file->Get("psi_af_0_1_3"))->ProjectionY();
   hfvtxsA->Draw("same");
   hfvtxsA->SetLineColor(kBlack);
+  leg = new TLegend(0.68,0.68,0.88,0.88);
+  leg->AddEntry(hfvtxsW,"Raw","l");
+  leg->AddEntry(hfvtxs,"Weighting","l");
+  leg->AddEntry(hfvtxsM,"Recentering","l");
+  leg->AddEntry(hfvtxsA,"Flattening","l");
+  leg->SetTextSize(0.045);
   leg->Draw();
   c1->Print(Form("FigsEventPlane/after_psi2_fvtxs_%d.png",run));
   c1->Print(Form("FigsEventPlane/after_psi2_fvtxs_%d.pdf",run));
 
+  TH1D* hfvtxnW = (TH1D*) ((TH2D*)file->Get("psi_bf_0_1_18"))->ProjectionY();
+  hfvtxnW->Draw();
+  hfvtxnW->SetLineColor(kRed);
+  hfvtxnW->GetXaxis()->SetTitle("#Psi_{2}, FVTXN");
   TH1D* hfvtxn = (TH1D*) ((TH2D*)file->Get("psi_bf_0_1_8"))->ProjectionY();
-  hfvtxn->Draw();
-  hfvtxn->SetLineColor(kRed);
+  hfvtxn->Draw("same");
+  hfvtxn->SetLineColor(kGreen+2);
   hfvtxn->GetXaxis()->SetTitle("#Psi_{2}, FVTXN");
   TH1D* hfvtxnM = (TH1D*) ((TH2D*)file->Get("psi_mf_0_1_8"))->ProjectionY();
   hfvtxnM->Draw("same");
