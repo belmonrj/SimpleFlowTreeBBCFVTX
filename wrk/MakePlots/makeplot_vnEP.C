@@ -64,9 +64,9 @@ void doenergy(int energy, int harmonic)
   cout << "cnt-fvtxs " << float_cnt_fvtx << endl;
   cout << "cbt-fvtxn " << float_cnt_fvtxN << endl;
 
-  if ( float_bbc_cnt < 0 ) { cout << "WARNING!!!! changing sign of correlation..." << endl; float_bbc_cnt *= -1; }
-  if ( float_cnt_fvtx < 0 ) { cout << "WARNING!!!! changing sign of correlation..." << endl; float_cnt_fvtx *= -1; }
-  if ( float_cnt_fvtxN < 0 ) { cout << "WARNING!!!! changing sign of correlation..." << endl; float_cnt_fvtxN *= -1; }
+  if ( float_bbc_cnt < 0 ) { cout << "YOU'RE GONNA DIE (bbcs-cnt)" << endl; }
+  if ( float_cnt_fvtx < 0 ) { cout << "YOU'RE GONNA DIE (cnt-fvtxs)" << endl; }
+  if ( float_cnt_fvtxN < 0 ) { cout << "YOU'RE GONNA DIE (cnt-fvtxn)" << endl; }
 
   float reso_bbc = sqrt((float_bbc_cnt*float_bbc_fvtx)/float_cnt_fvtx); // BCBS/CS
   float reso_fvtx = sqrt((float_cnt_fvtx*float_bbc_fvtx)/float_bbc_cnt); // CSBS/BC
