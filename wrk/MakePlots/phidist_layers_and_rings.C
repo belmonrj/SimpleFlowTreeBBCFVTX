@@ -7,8 +7,9 @@ void phidist_layers_and_rings()
 {
 
   combe();
-  return;
+  // return;
 
+  doe(200);
   doe(62);
   doe(39);
   doe(20);
