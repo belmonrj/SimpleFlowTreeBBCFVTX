@@ -25,6 +25,8 @@ void event_plane_testing()
   // cospsidiff_run(458153,2);
   // cospsidiff_run(458167,2);
 
+  beforeafterflat_run(456652,2);
+  return;
   beforeafterflat_run(455050,2);
   beforeafterflat_run(456015,2);
   beforeafterflat_run(457015,2);
@@ -47,9 +49,13 @@ void beforeafterflat_run(int run, int harmonic)
   // TFile* file = TFile::Open(Form("input/hrp_%d.root",run));
   TFile* file = TFile::Open(Form("input/hist_%d.root",run));
 
+  TH1D* hbbcW = (TH1D*) ((TH2D*)file->Get("psi_bf_0_1_23"))->ProjectionY();
+  hbbcW->Draw();
+  hbbcW->SetLineColor(kRed);
+  hbbcW->GetXaxis()->SetTitle("#Psi_{2}, BBCS");
   TH1D* hbbc = (TH1D*) ((TH2D*)file->Get("psi_bf_0_1_2"))->ProjectionY();
-  hbbc->Draw();
-  hbbc->SetLineColor(kRed);
+  hbbc->Draw("same");
+  hbbc->SetLineColor(kGreen+2);
   hbbc->GetXaxis()->SetTitle("#Psi_{2}, BBCS");
   TH1D* hbbcM = (TH1D*) ((TH2D*)file->Get("psi_mf_0_1_2"))->ProjectionY();
   hbbcM->Draw("same");
@@ -58,7 +64,8 @@ void beforeafterflat_run(int run, int harmonic)
   hbbcA->Draw("same");
   hbbcA->SetLineColor(kBlack);
   TLegend* leg = new TLegend(0.68,0.68,0.88,0.88);
-  leg->AddEntry(hbbc,"Raw","l");
+  leg->AddEntry(hbbcW,"Raw","l");
+  leg->AddEntry(hbbc,"Gain correction","l");
   leg->AddEntry(hbbcM,"Recentering","l");
   leg->AddEntry(hbbcA,"Flattening","l");
   leg->SetTextSize(0.045);
