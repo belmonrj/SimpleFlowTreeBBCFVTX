@@ -352,6 +352,7 @@ void flatten(int runNumber, int rp_recal_pass)
   int fvtxn1_nw_index = 20;
   int fvtxn2_nw_index = 21;
   int fvtxn3_nw_index = 22;
+  int bbcs_nw_index   = 23;
 
 
   float pi = acos(-1.0); // defined in RpPar.h, i wonder why no warning
@@ -1311,6 +1312,14 @@ void flatten(int runNumber, int rp_recal_pass)
       float bbc_qy4 = 0;
       float bbc_qw = 0;
 
+      float bbc_nw_qx2 = 0;
+      float bbc_nw_qy2 = 0;
+      float bbc_nw_qx3 = 0;
+      float bbc_nw_qy3 = 0;
+      float bbc_nw_qx4 = 0;
+      float bbc_nw_qy4 = 0;
+      float bbc_nw_qw = 0;
+
       if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Looping over BBC stuff now" << endl;
 
       if ( bbc_pmts )
@@ -1369,6 +1378,14 @@ void flatten(int runNumber, int rp_recal_pass)
               bbc_qx4 += bbc_charge_corrected*TMath::Cos(4*phi);
               bbc_qy4 += bbc_charge_corrected*TMath::Sin(4*phi);
               bbc_qw += bbc_charge_corrected;
+
+              bbc_nw_qx2 += bbc_charge*TMath::Cos(2*phi);
+              bbc_nw_qy2 += bbc_charge*TMath::Sin(2*phi);
+              bbc_nw_qx3 += bbc_charge*TMath::Cos(3*phi);
+              bbc_nw_qy3 += bbc_charge*TMath::Sin(3*phi);
+              bbc_nw_qx4 += bbc_charge*TMath::Cos(4*phi);
+              bbc_nw_qy4 += bbc_charge*TMath::Sin(4*phi);
+              bbc_nw_qw += bbc_charge;
             } // loop over tubes
         } // check on tubes
 
@@ -1378,10 +1395,10 @@ void flatten(int runNumber, int rp_recal_pass)
         {
           //cout << "centrality undefined, cutting on bbc charge" << endl;
           // --- revise these numbers as needed
-          if ( energyflag == 200 && bbc_qw < 60.0 ) continue;
-          if ( energyflag == 62  && bbc_qw < 40.0 ) continue;
-          if ( energyflag == 20  && bbc_qw < 25.0 ) continue;
-          if ( energyflag == 39  && bbc_qw < 30.0 ) continue;
+          if ( energyflag == 200 && bbc_nw_qw < 60.0 ) continue;
+          if ( energyflag == 62  && bbc_nw_qw < 40.0 ) continue;
+          if ( energyflag == 20  && bbc_nw_qw < 25.0 ) continue;
+          if ( energyflag == 39  && bbc_nw_qw < 30.0 ) continue;
           ++bad_cent_counter;
         }
 
@@ -1404,9 +1421,9 @@ void flatten(int runNumber, int rp_recal_pass)
 
       ++event_counter;
 
-      th1d_BBC_charge->Fill(bbc_qw);
+      th1d_BBC_charge->Fill(bbc_nw_qw);
       th1d_FVTX_nclus->Fill(d_nFVTX_clus);
-      th2d_qBBC_nFVTX->Fill(bbc_qw,d_nFVTX_clus);
+      th2d_qBBC_nFVTX->Fill(bbc_nw_qw,d_nFVTX_clus);
 
       // --------------
       // --- FVTX stuff
@@ -1692,6 +1709,12 @@ void flatten(int runNumber, int rp_recal_pass)
           sumxy[2][bbcs_index][0] = bbc_qx3;
           sumxy[2][bbcs_index][1] = bbc_qy3;
           sumxy[2][bbcs_index][2] = bbc_qw;
+          sumxy[1][bbcs_nw_index][0] = bbc_nw_qx2;
+          sumxy[1][bbcs_nw_index][1] = bbc_nw_qy2;
+          sumxy[1][bbcs_nw_index][2] = bbc_nw_qw;
+          sumxy[2][bbcs_nw_index][0] = bbc_nw_qx3;
+          sumxy[2][bbcs_nw_index][1] = bbc_nw_qy3;
+          sumxy[2][bbcs_nw_index][2] = bbc_nw_qw;
         }
 
       if ( fvtx_clusters )
@@ -1730,7 +1753,7 @@ void flatten(int runNumber, int rp_recal_pass)
       if ( DIAG )
         {
           cout<<"bbc from node tree: "<<d_Qx[5]<<" "<<d_Qy[5]<<" "<<d_Qw[5]<<endl;
-          cout<<"bbc from me: "<<bbc_qx2<<" "<<bbc_qy2<<" "<<bbc_qw<<endl;
+          cout<<"bbc from me: "<<bbc_nw_qx2<<" "<<bbc_nw_qy2<<" "<<bbc_nw_qw<<endl;
 
           cout<<"fvtx raw: "<<endl;
           cout<<"from node tree: "<<d_Qx[4]<<" "<<d_Qy[4]<<" "<<d_Qw[4]<<endl;
@@ -2051,9 +2074,8 @@ void flatten(int runNumber, int rp_recal_pass)
         {
           bbc_south_psi2_docalib = (sumxy[1][bbcs_index][2]>0)?sumxy[1][bbcs_index][3]:-9999.9;
           bbc_south_psi3_docalib = (sumxy[2][bbcs_index][2]>0)?sumxy[2][bbcs_index][3]:-9999.9;
-          // --- bbcs has no weight sothese are the same for now
-          bbc_south_psi2_dcnw = (sumxy[1][bbcs_index][2]>0)?sumxy[1][bbcs_index][3]:-9999.9;
-          bbc_south_psi3_dcnw = (sumxy[2][bbcs_index][2]>0)?sumxy[2][bbcs_index][3]:-9999.9;
+          bbc_south_psi2_dcnw = (sumxy[1][bbcs_nw_index][2]>0)?sumxy[1][bbcs_nw_index][3]:-9999.9;
+          bbc_south_psi3_dcnw = (sumxy[2][bbcs_nw_index][2]>0)?sumxy[2][bbcs_nw_index][3]:-9999.9;
         }
       if ( fvtx_clusters )
         {
