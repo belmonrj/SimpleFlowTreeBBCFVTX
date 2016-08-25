@@ -276,6 +276,27 @@ void flatten(int runNumber, int passNumber)
   TH1D* th1d_bbc3_charge_phi = new TH1D("th1d_bbc3_charge_phi","",50,-pi,pi);
   TH1D* th1d_bbc4_charge_phi = new TH1D("th1d_bbc4_charge_phi","",50,-pi,pi);
 
+  TH1D* th1d_bbc_charge_tube = new TH1D("th1d_bbc_charge_tube","",64,-0.5,63.5);
+  TH1D* th1d_bbc0_charge_tube = new TH1D("th1d_bbc0_charge_tube","",64,-0.5,63.5);
+  TH1D* th1d_bbc1_charge_tube = new TH1D("th1d_bbc1_charge_tube","",64,-0.5,63.5);
+  TH1D* th1d_bbc2_charge_tube = new TH1D("th1d_bbc2_charge_tube","",64,-0.5,63.5);
+  TH1D* th1d_bbc3_charge_tube = new TH1D("th1d_bbc3_charge_tube","",64,-0.5,63.5);
+  TH1D* th1d_bbc4_charge_tube = new TH1D("th1d_bbc4_charge_tube","",64,-0.5,63.5);
+
+  TProfile* tp1f_bbc_charge_phi = new TProfile("tp1f_bbc_charge_phi","",50,-pi,pi);
+  TProfile* tp1f_bbc0_charge_phi = new TProfile("tp1f_bbc0_charge_phi","",50,-pi,pi);
+  TProfile* tp1f_bbc1_charge_phi = new TProfile("tp1f_bbc1_charge_phi","",50,-pi,pi);
+  TProfile* tp1f_bbc2_charge_phi = new TProfile("tp1f_bbc2_charge_phi","",50,-pi,pi);
+  TProfile* tp1f_bbc3_charge_phi = new TProfile("tp1f_bbc3_charge_phi","",50,-pi,pi);
+  TProfile* tp1f_bbc4_charge_phi = new TProfile("tp1f_bbc4_charge_phi","",50,-pi,pi);
+
+  TProfile* tp1f_bbc_charge_tube = new TProfile("tp1f_bbc_charge_tube","",64,-0.5,63.5);
+  TProfile* tp1f_bbc0_charge_tube = new TProfile("tp1f_bbc0_charge_tube","",64,-0.5,63.5);
+  TProfile* tp1f_bbc1_charge_tube = new TProfile("tp1f_bbc1_charge_tube","",64,-0.5,63.5);
+  TProfile* tp1f_bbc2_charge_tube = new TProfile("tp1f_bbc2_charge_tube","",64,-0.5,63.5);
+  TProfile* tp1f_bbc3_charge_tube = new TProfile("tp1f_bbc3_charge_tube","",64,-0.5,63.5);
+  TProfile* tp1f_bbc4_charge_tube = new TProfile("tp1f_bbc4_charge_tube","",64,-0.5,63.5);
+
   TH1D* th1d_fvtxs_clus_phi = new TH1D("th1d_fvtxs_clus_phi","",50,-pi,pi);
   TH1D* th1d_fvtxs0_clus_phi = new TH1D("th1d_fvtxs0_clus_phi","",50,-pi,pi);
   TH1D* th1d_fvtxs1_clus_phi = new TH1D("th1d_fvtxs1_clus_phi","",50,-pi,pi);
@@ -471,7 +492,30 @@ void flatten(int runNumber, int passNumber)
               if ( ring == 3 ) th1d_bbc3_charge_phi->Fill(phi,bbc_charge);
               if ( ring == 4 ) th1d_bbc4_charge_phi->Fill(phi,bbc_charge);
 
+              float tube = ipmt;
+              th1d_bbc_charge_tube->Fill(tube,bbc_charge);
+              if ( ring == 0 ) th1d_bbc0_charge_tube->Fill(tube,bbc_charge);
+              if ( ring == 1 ) th1d_bbc1_charge_tube->Fill(tube,bbc_charge);
+              if ( ring == 2 ) th1d_bbc2_charge_tube->Fill(tube,bbc_charge);
+              if ( ring == 3 ) th1d_bbc3_charge_tube->Fill(tube,bbc_charge);
+              if ( ring == 4 ) th1d_bbc4_charge_tube->Fill(tube,bbc_charge);
+
+              tp1f_bbc_charge_phi->Fill(phi,bbc_charge);
+              if ( ring == 0 ) tp1f_bbc0_charge_phi->Fill(phi,bbc_charge);
+              if ( ring == 1 ) tp1f_bbc1_charge_phi->Fill(phi,bbc_charge);
+              if ( ring == 2 ) tp1f_bbc2_charge_phi->Fill(phi,bbc_charge);
+              if ( ring == 3 ) tp1f_bbc3_charge_phi->Fill(phi,bbc_charge);
+              if ( ring == 4 ) tp1f_bbc4_charge_phi->Fill(phi,bbc_charge);
+
+              tp1f_bbc_charge_tube->Fill(tube,bbc_charge);
+              if ( ring == 0 ) tp1f_bbc0_charge_tube->Fill(tube,bbc_charge);
+              if ( ring == 1 ) tp1f_bbc1_charge_tube->Fill(tube,bbc_charge);
+              if ( ring == 2 ) tp1f_bbc2_charge_tube->Fill(tube,bbc_charge);
+              if ( ring == 3 ) tp1f_bbc3_charge_tube->Fill(tube,bbc_charge);
+              if ( ring == 4 ) tp1f_bbc4_charge_tube->Fill(tube,bbc_charge);
+
             } // loop over tubes
+
         } // check on tubes
 
       // --- do centrality cut here!!!

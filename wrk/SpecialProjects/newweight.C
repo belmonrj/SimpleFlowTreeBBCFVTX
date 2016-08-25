@@ -1,8 +1,13 @@
 void newweight2d(int);
 
+void bbctube(int);
 
 void newweight()
 {
+
+  bbctube(456652);
+
+  return;
 
   //runweight2d(456652); // remember when this was needed?
   //newweight2d(455355); // now this is needed, and that could change again in a little while (must be some weird environment thing)
@@ -420,3 +425,91 @@ void newweight2d(int run)
 
 
 
+void bbctube(int run)
+{
+
+  cout << "Now processing run " << run << endl;
+
+  TCanvas* c1 = new TCanvas("c1","");
+
+  TFile* file = TFile::Open(Form("RootFiles/weight_run%d_pass0.root",run));
+  if ( !file )
+    {
+      cout << "WARNING: file does not exist for run " << run << endl;
+      return;
+    }
+  TList* list = (TList*)file->GetListOfKeys();
+  int size = list->GetSize();
+  if ( size < 1 )
+    {
+      cout << "WARNING: file does not have enough keys, run " << run << endl;
+      return;
+    }
+
+  gROOT->ProcessLine(".L bbcrings.C");
+
+  TProfile* tp1f_bbc_charge_tube = (TProfile*)file->Get("tp1f_bbc_charge_tube");
+  TProfile* tp1f_bbc0_charge_tube = (TProfile*)file->Get("tp1f_bbc0_charge_tube");
+  TProfile* tp1f_bbc1_charge_tube = (TProfile*)file->Get("tp1f_bbc1_charge_tube");
+  TProfile* tp1f_bbc2_charge_tube = (TProfile*)file->Get("tp1f_bbc2_charge_tube");
+  TProfile* tp1f_bbc3_charge_tube = (TProfile*)file->Get("tp1f_bbc3_charge_tube");
+  TProfile* tp1f_bbc4_charge_tube = (TProfile*)file->Get("tp1f_bbc4_charge_tube");
+
+  double mean0 = tp1f_bbc0_charge_tube->GetMean(2);
+  double mean1 = tp1f_bbc1_charge_tube->GetMean(2);
+  double mean2 = tp1f_bbc2_charge_tube->GetMean(2);
+  double mean3 = tp1f_bbc3_charge_tube->GetMean(2);
+  double mean4 = tp1f_bbc4_charge_tube->GetMean(2);
+
+  cout << mean0 << endl;
+  cout << mean1 << endl;
+  cout << mean2 << endl;
+  cout << mean3 << endl;
+  cout << mean4 << endl;
+
+  tp1f_bbc0_charge_tube->Draw();
+  TLine line0(0,mean0,63,mean0);
+  line0.Draw();
+  c1->Print(Form("FigsWeight/bbctube0_charge_run%d.png",run));
+  tp1f_bbc1_charge_tube->Draw();
+  TLine line1(0,mean1,63,mean1);
+  line1.Draw();
+  c1->Print(Form("FigsWeight/bbctube1_charge_run%d.png",run));
+  tp1f_bbc2_charge_tube->Draw();
+  TLine line2(0,mean2,63,mean2);
+  line2.Draw();
+  c1->Print(Form("FigsWeight/bbctube2_charge_run%d.png",run));
+  tp1f_bbc3_charge_tube->Draw();
+  TLine line3(0,mean3,63,mean3);
+  line3.Draw();
+  c1->Print(Form("FigsWeight/bbctube3_charge_run%d.png",run));
+  tp1f_bbc4_charge_tube->Draw();
+  TLine line4(0,mean4,63,mean4);
+  line4.Draw();
+  c1->Print(Form("FigsWeight/bbctube4_charge_run%d.png",run));
+
+  TFile* fout = TFile::Open(Form("WeightFiles/bbctube_run%d.root",run),"recreate");
+  TH1D* th1d_tubegaincorrection = new TH1D("th1d_tubegaincorrection","",64,-0.5,63.5);
+  for ( int i = 0; i < 64; ++i )
+    {
+      double rawcharge = 0;
+      double gaincorrection = 0;
+      int layer = bbcrings(i);
+      // cout << i << " " << layer << endl;
+      if ( layer == 0 ) { rawcharge = tp1f_bbc0_charge_tube->GetBinContent(i+1); gaincorrection = mean0 / rawcharge; }
+      if ( layer == 1 ) { rawcharge = tp1f_bbc1_charge_tube->GetBinContent(i+1); gaincorrection = mean1 / rawcharge; }
+      if ( layer == 2 ) { rawcharge = tp1f_bbc2_charge_tube->GetBinContent(i+1); gaincorrection = mean2 / rawcharge; }
+      if ( layer == 3 ) { rawcharge = tp1f_bbc3_charge_tube->GetBinContent(i+1); gaincorrection = mean3 / rawcharge; }
+      if ( layer == 4 ) { rawcharge = tp1f_bbc4_charge_tube->GetBinContent(i+1); gaincorrection = mean4 / rawcharge; }
+      th1d_tubegaincorrection->SetBinContent(i+1,gaincorrection);
+    }
+
+  th1d_tubegaincorrection->Draw();
+  c1->Print(Form("FigsWeight/bbctube_gaincorrection_run%d.png",run));
+
+  fout->Write();
+  fout->Close();
+
+  delete c1;
+
+}

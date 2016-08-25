@@ -116,7 +116,7 @@ void flatten(int runNumber, int rp_recal_pass)
   // --- Run16dAu39
   if ( runNumber >= 457634 && runNumber <= 458167 ) energyflag = 39;
 
-  int verbosity = 1;
+  int verbosity = 0;
 
   char calibfile[500];
   sprintf(calibfile,"output/flattening_data/flattening_%d_%d.dat",runNumber,rp_recal_pass-1);
@@ -308,6 +308,20 @@ void flatten(int runNumber, int rp_recal_pass)
 
   // ---
 
+  TString tubegaincorrectionfile_name = Form("SpecialProjects/WeightFiles/bbctube_run%d.root", runNumber);
+  TFile* tube_gaincorrection_file = TFile::Open(tubegaincorrectionfile_name);
+  float tube_gaincorrection[64] = {0};
+  if ( tube_gaincorrection_file )
+    {
+      TH1D* th1d_tube_gaincorrection = (TH1D*)tube_gaincorrection_file->Get("th1d_tubegaincorrection");
+      if ( th1d_tube_gaincorrection )
+          for ( int i = 0; i < 64; ++i )
+            tube_gaincorrection[i] = th1d_tube_gaincorrection->GetBinContent(i+1);
+      else cout << "WARNING could not get BBC tube gaincorrection histogram" << endl;
+    }
+  else cout << "WARNING could not get BBC tube gaincorrection file " << tubegaincorrectionfile_name.Data() << endl;
+  // ---
+
   cout << "Initalizing PMT positions for the BBC" << endl;
 
   initialize_pmt_position();
@@ -398,13 +412,33 @@ void flatten(int runNumber, int rp_recal_pass)
   TH1D* th1d_FVTXS_nclus = new TH1D("th1d_FVTXS_nclus","",200,-0.5,1999.5);
   TH1D* th1d_FVTXN_nclus = new TH1D("th1d_FVTXN_nclus","",200,-0.5,1999.5);
 
-  // --- come back here to make rings
-  TH1D* th1d_bbc_charge_phi = new TH1D("th1d_bbc_charge_phi","",50,-pi,pi);
-  TH1D* th1d_bbc0_charge_phi = new TH1D("th1d_bbc0_charge_phi","",50,-pi,pi);
-  TH1D* th1d_bbc1_charge_phi = new TH1D("th1d_bbc1_charge_phi","",50,-pi,pi);
-  TH1D* th1d_bbc2_charge_phi = new TH1D("th1d_bbc2_charge_phi","",50,-pi,pi);
-  TH1D* th1d_bbc3_charge_phi = new TH1D("th1d_bbc3_charge_phi","",50,-pi,pi);
-  TH1D* th1d_bbc4_charge_phi = new TH1D("th1d_bbc4_charge_phi","",50,-pi,pi);
+  TProfile* tp1f_bbc_charge_phi = new TProfile("tp1f_bbc_charge_phi","",50,-pi,pi);
+  TProfile* tp1f_bbc0_charge_phi = new TProfile("tp1f_bbc0_charge_phi","",50,-pi,pi);
+  TProfile* tp1f_bbc1_charge_phi = new TProfile("tp1f_bbc1_charge_phi","",50,-pi,pi);
+  TProfile* tp1f_bbc2_charge_phi = new TProfile("tp1f_bbc2_charge_phi","",50,-pi,pi);
+  TProfile* tp1f_bbc3_charge_phi = new TProfile("tp1f_bbc3_charge_phi","",50,-pi,pi);
+  TProfile* tp1f_bbc4_charge_phi = new TProfile("tp1f_bbc4_charge_phi","",50,-pi,pi);
+
+  TProfile* tp1f_bbc_charge_tube = new TProfile("tp1f_bbc_charge_tube","",64,-0.5,63.5);
+  TProfile* tp1f_bbc0_charge_tube = new TProfile("tp1f_bbc0_charge_tube","",64,-0.5,63.5);
+  TProfile* tp1f_bbc1_charge_tube = new TProfile("tp1f_bbc1_charge_tube","",64,-0.5,63.5);
+  TProfile* tp1f_bbc2_charge_tube = new TProfile("tp1f_bbc2_charge_tube","",64,-0.5,63.5);
+  TProfile* tp1f_bbc3_charge_tube = new TProfile("tp1f_bbc3_charge_tube","",64,-0.5,63.5);
+  TProfile* tp1f_bbc4_charge_tube = new TProfile("tp1f_bbc4_charge_tube","",64,-0.5,63.5);
+
+  TProfile* tp1f_bbc_charge_wphi = new TProfile("tp1f_bbc_charge_wphi","",50,-pi,pi);
+  TProfile* tp1f_bbc0_charge_wphi = new TProfile("tp1f_bbc0_charge_wphi","",50,-pi,pi);
+  TProfile* tp1f_bbc1_charge_wphi = new TProfile("tp1f_bbc1_charge_wphi","",50,-pi,pi);
+  TProfile* tp1f_bbc2_charge_wphi = new TProfile("tp1f_bbc2_charge_wphi","",50,-pi,pi);
+  TProfile* tp1f_bbc3_charge_wphi = new TProfile("tp1f_bbc3_charge_wphi","",50,-pi,pi);
+  TProfile* tp1f_bbc4_charge_wphi = new TProfile("tp1f_bbc4_charge_wphi","",50,-pi,pi);
+
+  TProfile* tp1f_bbc_charge_wtube = new TProfile("tp1f_bbc_charge_wtube","",64,-0.5,63.5);
+  TProfile* tp1f_bbc0_charge_wtube = new TProfile("tp1f_bbc0_charge_wtube","",64,-0.5,63.5);
+  TProfile* tp1f_bbc1_charge_wtube = new TProfile("tp1f_bbc1_charge_wtube","",64,-0.5,63.5);
+  TProfile* tp1f_bbc2_charge_wtube = new TProfile("tp1f_bbc2_charge_wtube","",64,-0.5,63.5);
+  TProfile* tp1f_bbc3_charge_wtube = new TProfile("tp1f_bbc3_charge_wtube","",64,-0.5,63.5);
+  TProfile* tp1f_bbc4_charge_wtube = new TProfile("tp1f_bbc4_charge_wtube","",64,-0.5,63.5);
 
   TH1D* th1d_fvtxs_clus_phi = new TH1D("th1d_fvtxs_clus_phi","",50,-pi,pi);
   TH1D* th1d_fvtxs0_clus_phi = new TH1D("th1d_fvtxs0_clus_phi","",50,-pi,pi);
@@ -1284,7 +1318,7 @@ void flatten(int runNumber, int rp_recal_pass)
           for(int ipmt = 0; ipmt < 64; ipmt++)
             {
               float bbc_charge = d_BBC_charge[ipmt];
-              if(bbc_charge <= 0) continue;
+              if ( bbc_charge <= 0 ) continue;
 
               float bbc_x      = d_pmt_x[ipmt] - vtx_x*10;//pmt location in mm
               float bbc_y      = d_pmt_y[ipmt] - vtx_y*10;
@@ -1296,20 +1330,45 @@ void flatten(int runNumber, int rp_recal_pass)
               float phi = TMath::ATan2(bbc_y,bbc_x);
 
               int ring = get_pmt_layer(ipmt);
-              th1d_bbc_charge_phi->Fill(phi,bbc_charge);
-              if ( ring == 0 ) th1d_bbc0_charge_phi->Fill(phi,bbc_charge);
-              if ( ring == 1 ) th1d_bbc1_charge_phi->Fill(phi,bbc_charge);
-              if ( ring == 2 ) th1d_bbc2_charge_phi->Fill(phi,bbc_charge);
-              if ( ring == 3 ) th1d_bbc3_charge_phi->Fill(phi,bbc_charge);
-              if ( ring == 4 ) th1d_bbc4_charge_phi->Fill(phi,bbc_charge);
+              float tube = ipmt;
+              float bbc_charge_corrected = bbc_charge * tube_gaincorrection[ipmt]; // tube by tube gain correction from above
+              if ( bbc_charge_corrected <= 0 ) continue;
 
-              bbc_qx2 += bbc_charge*TMath::Cos(2*phi);
-              bbc_qy2 += bbc_charge*TMath::Sin(2*phi);
-              bbc_qx3 += bbc_charge*TMath::Cos(3*phi);
-              bbc_qy3 += bbc_charge*TMath::Sin(3*phi);
-              bbc_qx4 += bbc_charge*TMath::Cos(4*phi);
-              bbc_qy4 += bbc_charge*TMath::Sin(4*phi);
-              bbc_qw += bbc_charge;
+              tp1f_bbc_charge_phi->Fill(phi,bbc_charge);
+              if ( ring == 0 ) tp1f_bbc0_charge_phi->Fill(phi,bbc_charge);
+              if ( ring == 1 ) tp1f_bbc1_charge_phi->Fill(phi,bbc_charge);
+              if ( ring == 2 ) tp1f_bbc2_charge_phi->Fill(phi,bbc_charge);
+              if ( ring == 3 ) tp1f_bbc3_charge_phi->Fill(phi,bbc_charge);
+              if ( ring == 4 ) tp1f_bbc4_charge_phi->Fill(phi,bbc_charge);
+
+              tp1f_bbc_charge_tube->Fill(tube,bbc_charge);
+              if ( ring == 0 ) tp1f_bbc0_charge_tube->Fill(tube,bbc_charge);
+              if ( ring == 1 ) tp1f_bbc1_charge_tube->Fill(tube,bbc_charge);
+              if ( ring == 2 ) tp1f_bbc2_charge_tube->Fill(tube,bbc_charge);
+              if ( ring == 3 ) tp1f_bbc3_charge_tube->Fill(tube,bbc_charge);
+              if ( ring == 4 ) tp1f_bbc4_charge_tube->Fill(tube,bbc_charge);
+
+              tp1f_bbc_charge_wphi->Fill(phi,bbc_charge_corrected);
+              if ( ring == 0 ) tp1f_bbc0_charge_wphi->Fill(phi,bbc_charge_corrected);
+              if ( ring == 1 ) tp1f_bbc1_charge_wphi->Fill(phi,bbc_charge_corrected);
+              if ( ring == 2 ) tp1f_bbc2_charge_wphi->Fill(phi,bbc_charge_corrected);
+              if ( ring == 3 ) tp1f_bbc3_charge_wphi->Fill(phi,bbc_charge_corrected);
+              if ( ring == 4 ) tp1f_bbc4_charge_wphi->Fill(phi,bbc_charge_corrected);
+
+              tp1f_bbc_charge_wtube->Fill(tube,bbc_charge_corrected);
+              if ( ring == 0 ) tp1f_bbc0_charge_wtube->Fill(tube,bbc_charge_corrected);
+              if ( ring == 1 ) tp1f_bbc1_charge_wtube->Fill(tube,bbc_charge_corrected);
+              if ( ring == 2 ) tp1f_bbc2_charge_wtube->Fill(tube,bbc_charge_corrected);
+              if ( ring == 3 ) tp1f_bbc3_charge_wtube->Fill(tube,bbc_charge_corrected);
+              if ( ring == 4 ) tp1f_bbc4_charge_wtube->Fill(tube,bbc_charge_corrected);
+
+              bbc_qx2 += bbc_charge_corrected*TMath::Cos(2*phi);
+              bbc_qy2 += bbc_charge_corrected*TMath::Sin(2*phi);
+              bbc_qx3 += bbc_charge_corrected*TMath::Cos(3*phi);
+              bbc_qy3 += bbc_charge_corrected*TMath::Sin(3*phi);
+              bbc_qx4 += bbc_charge_corrected*TMath::Cos(4*phi);
+              bbc_qy4 += bbc_charge_corrected*TMath::Sin(4*phi);
+              bbc_qw += bbc_charge_corrected;
             } // loop over tubes
         } // check on tubes
 
