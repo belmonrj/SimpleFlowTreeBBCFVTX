@@ -7,7 +7,7 @@ void newweight()
 
   bbctube(456652);
 
-  return;
+  // return;
 
   //runweight2d(456652); // remember when this was needed?
   //newweight2d(455355); // now this is needed, and that could change again in a little while (must be some weird environment thing)
@@ -19,20 +19,36 @@ void newweight()
   int run;
   ifstream fin;
 
-  // fin.open("list_20.short");
-  // while ( fin >> run ) newweight2d(run);
-  // fin.close();
-
-  // fin.open("list_39.short");
-  // while ( fin >> run ) newweight2d(run);
-  // fin.close();
-
-  // fin.open("list_62.short");
-  // while ( fin >> run ) newweight2d(run);
-  // fin.close();
-
   fin.open("list_200.short");
-  while ( fin >> run ) newweight2d(run);
+  while ( fin >> run )
+    {
+      newweight2d(run);
+      bbctube(run);
+    }
+  fin.close();
+
+  fin.open("list_62.short");
+  while ( fin >> run )
+    {
+      newweight2d(run);
+      bbctube(run);
+    }
+  fin.close();
+
+  fin.open("list_39.short");
+  while ( fin >> run )
+    {
+      newweight2d(run);
+      bbctube(run);
+    }
+  fin.close();
+
+  fin.open("list_20.short");
+  while ( fin >> run )
+    {
+      newweight2d(run);
+      bbctube(run);
+    }
   fin.close();
 
 }
