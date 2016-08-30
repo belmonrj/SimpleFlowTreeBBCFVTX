@@ -94,8 +94,17 @@ void doenergy(int energy, int harmonic)
   if ( energy == 20 ) hvn_fvtxs->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = 19.6 GeV"));
   hvn_fvtxs->SetMaximum(0.17);
   hvn_fvtxs->SetMinimum(0.0);
+  TLine line(0,0,3,0);
+  line.SetLineStyle(2);
+  line.SetLineWidth(2);
+  if ( harmonic == 3 )
+    {
+      hvn_fvtxs->SetMaximum(0.08);
+      hvn_fvtxs->SetMinimum(-0.02);
+      line.Draw();
+    }
   hvn_fvtxs->GetXaxis()->SetTitle("p_{T} (GeV/c)");
-  hvn_fvtxs->GetYaxis()->SetTitle("v_{2}{EP}");
+  hvn_fvtxs->GetYaxis()->SetTitle(Form("v_{%d}{EP}",harmonic));
   hvn_fvtxs->GetYaxis()->SetTitleOffset(1.25);
 
   ifstream finpub("ppg161.dat");
@@ -107,21 +116,18 @@ void doenergy(int energy, int harmonic)
 
   TGraphErrors* tge_pub = new TGraphErrors(13,pt,pubvn,0,epubvn);
   tge_pub->SetMarkerStyle(kFullCircle);
-  tge_pub->Draw("p");
+  if ( harmonic == 2 ) tge_pub->Draw("p");
 
   TProfile* hvn_bbcs = (TProfile*)file->Get(Form("bbcs_v%d_both_docalib",harmonic));
   hvn_bbcs->SetLineColor(kRed);
   hvn_bbcs->Scale(1.0/reso_bbc);
   hvn_bbcs->Draw("same");
 
-
-
-
   TLegend* leg = new TLegend(0.18,0.68,0.38,0.88);
   leg->AddEntry(hvn_fvtxs,"Run16 FVTXS","el");
   leg->AddEntry(hvn_bbcs,"Run16 BBCS","el");
-  if ( energy == 200 ) leg->AddEntry(tge_pub,"Run8 (ppg161)","p");
-  else leg->AddEntry(tge_pub,"Run8 (200 GeV)","p");
+  if ( energy == 200 && harmonic == 2 ) leg->AddEntry(tge_pub,"Run8 (ppg161)","p");
+  else if ( harmonic == 2 ) leg->AddEntry(tge_pub,"Run8 (200 GeV)","p");
   leg->SetTextSize(0.05);
   leg->Draw();
 
@@ -132,6 +138,54 @@ void doenergy(int energy, int harmonic)
 
   c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsbbcs.pdf",energy,harmonic));
   c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsbbcs.png",energy,harmonic));
+
+  TProfile* xhvn_bbcs = (TProfile*)hvn_bbcs->Clone();
+  TProfile* xhvn_fvtxs = (TProfile*)hvn_fvtxs->Clone();
+  xhvn_fvtxs->Add(xhvn_bbcs);
+  xhvn_fvtxs->SetLineColor(kBlack);
+  xhvn_fvtxs->SetMarkerColor(kBlack);
+  xhvn_fvtxs->SetMarkerStyle(kOpenCircle);
+  xhvn_fvtxs->Draw("same");
+
+  double x[15], y[15], exh[15], eyh[15], exl[15], eyl[15];
+  for ( int i = 0; i < 15; ++i )
+    {
+      x[i] = xhvn_fvtxs->GetBinCenter(i+1);
+      y[i] = xhvn_fvtxs->GetBinContent(i+1);
+      exl[i] = 0;
+      exh[i] = 0;
+      double a = hvn_fvtxs->GetBinContent(i+1) - y[i];
+      double b = hvn_bbcs->GetBinContent(i+1) - y[i];
+      if ( a > b )
+        {
+          eyl[i] = fabs(b);
+          eyh[i] = fabs(a);
+        }
+      else
+        {
+          eyl[i] = fabs(a);
+          eyh[i] = fabs(b);
+        }
+    }
+  TGraphAsymmErrors* tgae = new TGraphAsymmErrors(15,x,y,exl,exh,eyl,eyh);
+  tgae->SetMarkerStyle(1);
+  tgae->SetMarkerColor(kGray);
+  tgae->SetLineColor(kGray);
+  tgae->SetLineWidth(15);
+  tgae->Draw("pz");
+  xhvn_fvtxs->Draw("same");
+  if ( harmonic == 3 ) line.Draw();
+
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsbbcsA.pdf",energy,harmonic));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsbbcsA.png",energy,harmonic));
+
+  xhvn_fvtxs->Draw();
+  if ( harmonic == 3 ) line.Draw();
+
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsbbcsAO.pdf",energy,harmonic));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsbbcsAO.png",energy,harmonic));
+
+
 
   TProfile* hvn_fvtxn = (TProfile*)file->Get(Form("fvtxn_v%d_both_docalib",harmonic));
   hvn_fvtxn->SetLineColor(kGreen+2);
@@ -144,8 +198,8 @@ void doenergy(int energy, int harmonic)
   leg3->AddEntry(hvn_fvtxs,"Run16 FVTXS","el");
   leg3->AddEntry(hvn_fvtxn,"Run16 FVTXN","el");
   leg3->AddEntry(hvn_bbcs,"Run16 BBCS","el");
-  if ( energy == 200 ) leg3->AddEntry(tge_pub,"Run8 (ppg161)","p");
-  else leg3->AddEntry(tge_pub,"Run8 (200 GeV)","p");
+  if ( energy == 200 && harmonic == 2 ) leg3->AddEntry(tge_pub,"Run8 (ppg161)","p");
+  else if ( harmonic == 2 ) leg3->AddEntry(tge_pub,"Run8 (200 GeV)","p");
   leg3->SetTextSize(0.05);
   leg3->Draw();
 
@@ -176,8 +230,8 @@ void doenergy(int energy, int harmonic)
   leg = new TLegend(0.18,0.68,0.38,0.88);
   leg->AddEntry(hvn_fvtxs,"Run16 FVTXS","el");
   leg->AddEntry(hvn_bbcs,"Run16 BBCS","el");
-  if ( energy == 200 ) leg->AddEntry(tge_pub,"Run8 (ppg161)","p");
-  else leg->AddEntry(tge_pub,"Run8 (200 GeV)","p");
+  if ( energy == 200 && harmonic == 2 ) leg->AddEntry(tge_pub,"Run8 (ppg161)","p");
+  else if ( harmonic == 2 ) leg->AddEntry(tge_pub,"Run8 (200 GeV)","p");
   leg->SetTextSize(0.05);
   leg->Draw();
 
