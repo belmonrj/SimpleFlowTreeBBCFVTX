@@ -19,7 +19,7 @@ void checkweights()
 void beforeafterflat_run(int run)
 {
 
-  gStyle->SetOptTitle(0);
+  gStyle->SetOptTitle(1);
 
   TCanvas* c1 = new TCanvas("c1","");
 
@@ -38,8 +38,9 @@ void beforeafterflat_run(int run)
   tp1f_bbc_before->SetMarkerStyle(kFullCircle);
   tp1f_bbc_after->SetMarkerStyle(kFullCircle);
   tp1f_bbc_before->Draw();
-  tp1f_bbc_before->GetXaxis()->SetTitle("BBC South tube number");
-  tp1f_bbc_before->GetYaxis()->SetTitle("BBC South tube charge");
+  tp1f_bbc_before->SetTitle("BBC South");
+  tp1f_bbc_before->GetXaxis()->SetTitle("tube number");
+  tp1f_bbc_before->GetYaxis()->SetTitle("tube charge");
   tp1f_bbc_after->Draw("same");
 
   c1->Print(Form("FigsWeight/check_bbc_run%d.png",run));
@@ -51,8 +52,9 @@ void beforeafterflat_run(int run)
   th1d_fvtxs_before->SetLineColor(kRed);
   th1d_fvtxs_after->SetLineColor(kBlack);
   th1d_fvtxs_before->Draw();
-  th1d_fvtxs_before->GetXaxis()->SetTitle("FVTX South cluster #phi");
-  th1d_fvtxs_before->GetYaxis()->SetTitle("Number of clusters");
+  th1d_fvtxs_before->SetTitle("FVTX South");
+  th1d_fvtxs_before->GetXaxis()->SetTitle("cluster #phi");
+  th1d_fvtxs_before->GetYaxis()->SetTitle("number of clusters");
   th1d_fvtxs_after->Draw("same");
 
   c1->Print(Form("FigsWeight/check_fvtxs_run%d.png",run));
@@ -64,8 +66,9 @@ void beforeafterflat_run(int run)
   th1d_fvtxs0_before->SetLineColor(kRed);
   th1d_fvtxs0_after->SetLineColor(kBlack);
   th1d_fvtxs0_before->Draw();
-  th1d_fvtxs0_before->GetXaxis()->SetTitle("FVTX South cluster #phi");
-  th1d_fvtxs0_before->GetYaxis()->SetTitle("Number of clusters");
+  th1d_fvtxs0_before->SetTitle("FVTX South Layer 0");
+  th1d_fvtxs0_before->GetXaxis()->SetTitle("cluster #phi");
+  th1d_fvtxs0_before->GetYaxis()->SetTitle("number of clusters");
   th1d_fvtxs0_after->Draw("same");
 
   c1->Print(Form("FigsWeight/check_fvtxs0_run%d.png",run));
@@ -77,8 +80,9 @@ void beforeafterflat_run(int run)
   th1d_fvtxs1_before->SetLineColor(kRed);
   th1d_fvtxs1_after->SetLineColor(kBlack);
   th1d_fvtxs1_before->Draw();
-  th1d_fvtxs1_before->GetXaxis()->SetTitle("FVTX South cluster #phi");
-  th1d_fvtxs1_before->GetYaxis()->SetTitle("Number of clusters");
+  th1d_fvtxs1_before->SetTitle("FVTX South Layer 1");
+  th1d_fvtxs1_before->GetXaxis()->SetTitle("cluster #phi");
+  th1d_fvtxs1_before->GetYaxis()->SetTitle("number of clusters");
   th1d_fvtxs1_after->Draw("same");
 
   c1->Print(Form("FigsWeight/check_fvtxs1_run%d.png",run));
@@ -90,8 +94,9 @@ void beforeafterflat_run(int run)
   th1d_fvtxs2_before->SetLineColor(kRed);
   th1d_fvtxs2_after->SetLineColor(kBlack);
   th1d_fvtxs2_before->Draw();
-  th1d_fvtxs2_before->GetXaxis()->SetTitle("FVTX South cluster #phi");
-  th1d_fvtxs2_before->GetYaxis()->SetTitle("Number of clusters");
+  th1d_fvtxs2_before->SetTitle("FVTX South Layer 2");
+  th1d_fvtxs2_before->GetXaxis()->SetTitle("cluster #phi");
+  th1d_fvtxs2_before->GetYaxis()->SetTitle("number of clusters");
   th1d_fvtxs2_after->Draw("same");
 
   c1->Print(Form("FigsWeight/check_fvtxs2_run%d.png",run));
@@ -103,8 +108,9 @@ void beforeafterflat_run(int run)
   th1d_fvtxs3_before->SetLineColor(kRed);
   th1d_fvtxs3_after->SetLineColor(kBlack);
   th1d_fvtxs3_before->Draw();
-  th1d_fvtxs3_before->GetXaxis()->SetTitle("FVTX South cluster #phi");
-  th1d_fvtxs3_before->GetYaxis()->SetTitle("Number of clusters");
+  th1d_fvtxs3_before->SetTitle("FVTX South Layer 3");
+  th1d_fvtxs3_before->GetXaxis()->SetTitle("cluster #phi");
+  th1d_fvtxs3_before->GetYaxis()->SetTitle("number of clusters");
   th1d_fvtxs3_after->Draw("same");
 
   c1->Print(Form("FigsWeight/check_fvtxs3_run%d.png",run));
