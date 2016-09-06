@@ -1055,6 +1055,62 @@ void flatten(int runNumber, int rp_recal_pass)
   TProfile* os_fvtxs_d24_out_both = new TProfile(Form("os_fvtxs_d24_out_both"),Form("os_fvtxs_d24_out_both"),15,0.0,3.0,-1.1,1.1);
   TProfile* os_fvtxn_d24_out_both = new TProfile(Form("os_fvtxn_d24_out_both"),Form("os_fvtxn_d24_out_both"),15,0.0,3.0,-1.1,1.1);
 
+  TProfile* npc1_bbcs_v2 = new TProfile(Form("npc1_bbcs_v2"),Form("npc1_bbcs_v2"),31, -0.5, 30.5, -1.1, 1.1);
+  TProfile* npc1_fvtxs_v2 = new TProfile(Form("npc1_fvtxs_v2"),Form("npc1_fvtxs_v2"),31, -0.5, 30.5, -1.1, 1.1);
+  TProfile* npc1_fvtxn_v2 = new TProfile(Form("npc1_fvtxn_v2"),Form("npc1_fvtxn_v2"),31, -0.5, 30.5, -1.1, 1.1);
+  //TProfile* npc1_os_cnt_c22 = new TProfile(Form("npc1_os_cnt_c22"),Form("npc1_os_cnt_c22"),31, -0.5, 30.5, -1.1, 1.1);
+  TProfile* npc1_os_bbcs_c22 = new TProfile(Form("npc1_os_bbcs_c22"),Form("npc1_os_bbcs_c22"),31, -0.5, 30.5, -1.1, 1.1);
+  TProfile* npc1_os_fvtxs_c22 = new TProfile(Form("npc1_os_fvtxs_c22"),Form("npc1_os_fvtxs_c22"),31, -0.5, 30.5, -1.1, 1.1);
+  TProfile* npc1_os_fvtxn_c22 = new TProfile(Form("npc1_os_fvtxn_c22"),Form("npc1_os_fvtxn_c22"),31, -0.5, 30.5, -1.1, 1.1);
+  TProfile* npc1_os_cntbbcs_c22 = new TProfile(Form("npc1_os_cntbbcs_c22"),Form("npc1_os_cntbbcs_c22"),31, -0.5, 30.5, -1.1, 1.1);
+  TProfile* npc1_os_cntfvtxs_c22 = new TProfile(Form("npc1_os_cntfvtxs_c22"),Form("npc1_os_cntfvtxs_c22"),31, -0.5, 30.5, -1.1, 1.1);
+  TProfile* npc1_os_cntfvtxn_c22 = new TProfile(Form("npc1_os_cntfvtxn_c22"),Form("npc1_os_cntfvtxn_c22"),31, -0.5, 30.5, -1.1, 1.1);
+  TProfile* npc1_os_bbcsfvtxs_c22 = new TProfile(Form("npc1_os_bbcsfvtxs_c22"),Form("npc1_os_bbcsfvtxs_c22"),31, -0.5, 30.5, -1.1, 1.1);
+  TProfile* npc1_os_bbcsfvtxn_c22 = new TProfile(Form("npc1_os_bbcsfvtxn_c22"),Form("npc1_os_bbcsfvtxn_c22"),31, -0.5, 30.5, -1.1, 1.1);
+  TProfile* npc1_os_fvtxsfvtxn_c22 = new TProfile(Form("npc1_os_fvtxsfvtxn_c22"),Form("npc1_os_fvtxsfvtxn_c22"),31, -0.5, 30.5, -1.1, 1.1);
+
+  TProfile* npc1_bbcs_v3 = new TProfile(Form("npc1_bbcs_v3"),Form("npc1_bbcs_v3"),31, -0.5, 30.5, -1.1, 1.1);
+  TProfile* npc1_fvtxs_v3 = new TProfile(Form("npc1_fvtxs_v3"),Form("npc1_fvtxs_v3"),31, -0.5, 30.5, -1.1, 1.1);
+  TProfile* npc1_fvtxn_v3 = new TProfile(Form("npc1_fvtxn_v3"),Form("npc1_fvtxn_v3"),31, -0.5, 30.5, -1.1, 1.1);
+  //TProfile* npc1_os_cnt_c32 = new TProfile(Form("npc1_os_cnt_c32"),Form("npc1_os_cnt_c32"),31, -0.5, 30.5, -1.1, 1.1);
+  TProfile* npc1_os_bbcs_c32 = new TProfile(Form("npc1_os_bbcs_c32"),Form("npc1_os_bbcs_c32"),31, -0.5, 30.5, -1.1, 1.1);
+  TProfile* npc1_os_fvtxs_c32 = new TProfile(Form("npc1_os_fvtxs_c32"),Form("npc1_os_fvtxs_c32"),31, -0.5, 30.5, -1.1, 1.1);
+  TProfile* npc1_os_fvtxn_c32 = new TProfile(Form("npc1_os_fvtxn_c32"),Form("npc1_os_fvtxn_c32"),31, -0.5, 30.5, -1.1, 1.1);
+  TProfile* npc1_os_cntbbcs_c32 = new TProfile(Form("npc1_os_cntbbcs_c32"),Form("npc1_os_cntbbcs_c32"),31, -0.5, 30.5, -1.1, 1.1);
+  TProfile* npc1_os_cntfvtxs_c32 = new TProfile(Form("npc1_os_cntfvtxs_c32"),Form("npc1_os_cntfvtxs_c32"),31, -0.5, 30.5, -1.1, 1.1);
+  TProfile* npc1_os_cntfvtxn_c32 = new TProfile(Form("npc1_os_cntfvtxn_c32"),Form("npc1_os_cntfvtxn_c32"),31, -0.5, 30.5, -1.1, 1.1);
+  TProfile* npc1_os_bbcsfvtxs_c32 = new TProfile(Form("npc1_os_bbcsfvtxs_c32"),Form("npc1_os_bbcsfvtxs_c32"),31, -0.5, 30.5, -1.1, 1.1);
+  TProfile* npc1_os_bbcsfvtxn_c32 = new TProfile(Form("npc1_os_bbcsfvtxn_c32"),Form("npc1_os_bbcsfvtxn_c32"),31, -0.5, 30.5, -1.1, 1.1);
+  TProfile* npc1_os_fvtxsfvtxn_c32 = new TProfile(Form("npc1_os_fvtxsfvtxn_c32"),Form("npc1_os_fvtxsfvtxn_c32"),31, -0.5, 30.5, -1.1, 1.1);
+
+  TProfile* nfvtxt_bbcs_v2 = new TProfile(Form("nfvtxt_bbcs_v2"),Form("nfvtxt_bbcs_v2"),76, -0.5, 75.5, -1.1, 1.1);
+  TProfile* nfvtxt_fvtxs_v2 = new TProfile(Form("nfvtxt_fvtxs_v2"),Form("nfvtxt_fvtxs_v2"),76, -0.5, 75.5, -1.1, 1.1);
+  TProfile* nfvtxt_fvtxn_v2 = new TProfile(Form("nfvtxt_fvtxn_v2"),Form("nfvtxt_fvtxn_v2"),76, -0.5, 75.5, -1.1, 1.1);
+  //TProfile* nfvtxt_os_cnt_c22 = new TProfile(Form("nfvtxt_os_cnt_c22"),Form("nfvtxt_os_cnt_c22"),76, -0.5, 75.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_bbcs_c22 = new TProfile(Form("nfvtxt_os_bbcs_c22"),Form("nfvtxt_os_bbcs_c22"),76, -0.5, 75.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_fvtxs_c22 = new TProfile(Form("nfvtxt_os_fvtxs_c22"),Form("nfvtxt_os_fvtxs_c22"),76, -0.5, 75.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_fvtxn_c22 = new TProfile(Form("nfvtxt_os_fvtxn_c22"),Form("nfvtxt_os_fvtxn_c22"),76, -0.5, 75.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_cntbbcs_c22 = new TProfile(Form("nfvtxt_os_cntbbcs_c22"),Form("nfvtxt_os_cntbbcs_c22"),76, -0.5, 75.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_cntfvtxs_c22 = new TProfile(Form("nfvtxt_os_cntfvtxs_c22"),Form("nfvtxt_os_cntfvtxs_c22"),76, -0.5, 75.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_cntfvtxn_c22 = new TProfile(Form("nfvtxt_os_cntfvtxn_c22"),Form("nfvtxt_os_cntfvtxn_c22"),76, -0.5, 75.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_bbcsfvtxs_c22 = new TProfile(Form("nfvtxt_os_bbcsfvtxs_c22"),Form("nfvtxt_os_bbcsfvtxs_c22"),76, -0.5, 75.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_bbcsfvtxn_c22 = new TProfile(Form("nfvtxt_os_bbcsfvtxn_c22"),Form("nfvtxt_os_bbcsfvtxn_c22"),76, -0.5, 75.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_fvtxsfvtxn_c22 = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_c22"),Form("nfvtxt_os_fvtxsfvtxn_c22"),76, -0.5, 75.5, -1.1, 1.1);
+
+  TProfile* nfvtxt_bbcs_v3 = new TProfile(Form("nfvtxt_bbcs_v3"),Form("nfvtxt_bbcs_v3"),76, -0.5, 75.5, -1.1, 1.1);
+  TProfile* nfvtxt_fvtxs_v3 = new TProfile(Form("nfvtxt_fvtxs_v3"),Form("nfvtxt_fvtxs_v3"),76, -0.5, 75.5, -1.1, 1.1);
+  TProfile* nfvtxt_fvtxn_v3 = new TProfile(Form("nfvtxt_fvtxn_v3"),Form("nfvtxt_fvtxn_v3"),76, -0.5, 75.5, -1.1, 1.1);
+  //TProfile* nfvtxt_os_cnt_c32 = new TProfile(Form("nfvtxt_os_cnt_c32"),Form("nfvtxt_os_cnt_c32"),76, -0.5, 75.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_bbcs_c32 = new TProfile(Form("nfvtxt_os_bbcs_c32"),Form("nfvtxt_os_bbcs_c32"),76, -0.5, 75.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_fvtxs_c32 = new TProfile(Form("nfvtxt_os_fvtxs_c32"),Form("nfvtxt_os_fvtxs_c32"),76, -0.5, 75.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_fvtxn_c32 = new TProfile(Form("nfvtxt_os_fvtxn_c32"),Form("nfvtxt_os_fvtxn_c32"),76, -0.5, 75.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_cntbbcs_c32 = new TProfile(Form("nfvtxt_os_cntbbcs_c32"),Form("nfvtxt_os_cntbbcs_c32"),76, -0.5, 75.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_cntfvtxs_c32 = new TProfile(Form("nfvtxt_os_cntfvtxs_c32"),Form("nfvtxt_os_cntfvtxs_c32"),76, -0.5, 75.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_cntfvtxn_c32 = new TProfile(Form("nfvtxt_os_cntfvtxn_c32"),Form("nfvtxt_os_cntfvtxn_c32"),76, -0.5, 75.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_bbcsfvtxs_c32 = new TProfile(Form("nfvtxt_os_bbcsfvtxs_c32"),Form("nfvtxt_os_bbcsfvtxs_c32"),76, -0.5, 75.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_bbcsfvtxn_c32 = new TProfile(Form("nfvtxt_os_bbcsfvtxn_c32"),Form("nfvtxt_os_bbcsfvtxn_c32"),76, -0.5, 75.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_fvtxsfvtxn_c32 = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_c32"),Form("nfvtxt_os_fvtxsfvtxn_c32"),76, -0.5, 75.5, -1.1, 1.1);
+
   // ---------------------------------------------------------------------------------------------------------
 
 
@@ -1099,6 +1155,8 @@ void flatten(int runNumber, int rp_recal_pass)
   float        d_py[max_nh];
   float        d_pz[max_nh];
 
+  int nfvtxt;
+
   // List of branches
   TBranch* b_event;   //!
   TBranch* b_bbc_z;   //!
@@ -1128,6 +1186,7 @@ void flatten(int runNumber, int rp_recal_pass)
   TBranch* b_px;   //!
   TBranch* b_py;   //!
   TBranch* b_pz;   //!
+  TBranch* b_nfvtxt;   //!
   // TBranch* b_d_ntrk;   //!
   // TBranch* b_d_cntpx;   //!
   // TBranch* b_d_cntpy;   //!
@@ -1166,6 +1225,7 @@ void flatten(int runNumber, int rp_recal_pass)
   ntp_event_chain->SetBranchAddress("d_cntpy",d_py,&b_py);
   ntp_event_chain->SetBranchAddress("d_cntpz",d_pz,&b_pz);
 
+  ntp_event_chain->SetBranchAddress("ntracklets",&nfvtxt,&b_nfvtxt);
 
 
 
@@ -1907,6 +1967,10 @@ void flatten(int runNumber, int rp_recal_pass)
       // float os_bbc_qq4 = ( (os_bbc_qx4*os_bbc_qx4) + (os_bbc_qy4*os_bbc_qy4) - os_bbc_qw ) / ( (os_bbc_qw*os_bbc_qw) - os_bbc_qw );
       os_bbcs_c22->Fill(0.0,os_bbc_qq2);
       os_bbcs_c32->Fill(0.0,os_bbc_qq3);
+      npc1_os_bbcs_c22->Fill(npc1,os_bbc_qq2);
+      npc1_os_bbcs_c32->Fill(npc1,os_bbc_qq3);
+      nfvtxt_os_bbcs_c22->Fill(nfvtxt,os_bbc_qq2);
+      nfvtxt_os_bbcs_c32->Fill(nfvtxt,os_bbc_qq3);
       float os_bbc_psi2 = atan2(os_bbc_qy2,os_bbc_qx2)/2.0;
       float os_bbc_psi3 = atan2(os_bbc_qy3,os_bbc_qx3)/3.0;
       os_bbcs_1dPsi2->Fill(os_bbc_psi2);
@@ -1934,6 +1998,10 @@ void flatten(int runNumber, int rp_recal_pass)
       // float os_fvtxs_qq4 = ( (os_fvtxs_qx4*os_fvtxs_qx4) + (os_fvtxs_qy4*os_fvtxs_qy4) - os_fvtxs_qw ) / ( (os_fvtxs_qw*os_fvtxs_qw) - os_fvtxs_qw );
       os_fvtxs_c22->Fill(0.0,os_fvtxs_qq2);
       os_fvtxs_c32->Fill(0.0,os_fvtxs_qq3);
+      npc1_os_fvtxs_c22->Fill(npc1,os_fvtxs_qq2);
+      npc1_os_fvtxs_c32->Fill(npc1,os_fvtxs_qq3);
+      nfvtxt_os_fvtxs_c22->Fill(nfvtxt,os_fvtxs_qq2);
+      nfvtxt_os_fvtxs_c32->Fill(nfvtxt,os_fvtxs_qq3);
       float os_fvtxs_psi2 = atan2(os_fvtxs_qy2,os_fvtxs_qx2)/2.0;
       float os_fvtxs_psi3 = atan2(os_fvtxs_qy3,os_fvtxs_qx3)/3.0;
       os_fvtxs_1dPsi2->Fill(os_fvtxs_psi2);
@@ -1961,6 +2029,10 @@ void flatten(int runNumber, int rp_recal_pass)
       // float os_fvtxn_qq4 = ( (os_fvtxn_qx4*os_fvtxn_qx4) + (os_fvtxn_qy4*os_fvtxn_qy4) - os_fvtxn_qw ) / ( (os_fvtxn_qw*os_fvtxn_qw) - os_fvtxn_qw );
       os_fvtxn_c22->Fill(0.0,os_fvtxn_qq2);
       os_fvtxn_c32->Fill(0.0,os_fvtxn_qq3);
+      npc1_os_fvtxn_c22->Fill(npc1,os_fvtxn_qq2);
+      npc1_os_fvtxn_c32->Fill(npc1,os_fvtxn_qq3);
+      nfvtxt_os_fvtxn_c22->Fill(nfvtxt,os_fvtxn_qq2);
+      nfvtxt_os_fvtxn_c32->Fill(nfvtxt,os_fvtxn_qq3);
       float os_fvtxn_psi2 = atan2(os_fvtxn_qy2,os_fvtxn_qx2)/2.0;
       float os_fvtxn_psi3 = atan2(os_fvtxn_qy3,os_fvtxn_qx3)/3.0;
       os_fvtxn_1dPsi2->Fill(os_fvtxn_psi2);
@@ -1973,16 +2045,28 @@ void flatten(int runNumber, int rp_recal_pass)
       float os_bbcfvtxs_qq3 = ( (os_bbc_qx3*os_fvtxs_qx3) + (os_bbc_qy3*os_fvtxs_qy3) ) / ( os_bbc_qw*os_fvtxs_qw );
       os_bbcsfvtxs_c22->Fill(0.0,os_bbcfvtxs_qq2);
       os_bbcsfvtxs_c32->Fill(0.0,os_bbcfvtxs_qq3);
+      npc1_os_bbcsfvtxs_c22->Fill(npc1,os_bbcfvtxs_qq2);
+      npc1_os_bbcsfvtxs_c32->Fill(npc1,os_bbcfvtxs_qq3);
+      nfvtxt_os_bbcsfvtxs_c22->Fill(nfvtxt,os_bbcfvtxs_qq2);
+      nfvtxt_os_bbcsfvtxs_c32->Fill(nfvtxt,os_bbcfvtxs_qq3);
       // --- bbcs-fvtxn
       float os_bbcfvtxn_qq2 = ( (os_bbc_qx2*os_fvtxn_qx2) + (os_bbc_qy2*os_fvtxn_qy2) ) / ( os_bbc_qw*os_fvtxn_qw );
       float os_bbcfvtxn_qq3 = ( (os_bbc_qx3*os_fvtxn_qx3) + (os_bbc_qy3*os_fvtxn_qy3) ) / ( os_bbc_qw*os_fvtxn_qw );
       os_bbcsfvtxn_c22->Fill(0.0,os_bbcfvtxn_qq2);
       os_bbcsfvtxn_c32->Fill(0.0,os_bbcfvtxn_qq3);
+      npc1_os_bbcsfvtxn_c22->Fill(npc1,os_bbcfvtxn_qq2);
+      npc1_os_bbcsfvtxn_c32->Fill(npc1,os_bbcfvtxn_qq3);
+      nfvtxt_os_bbcsfvtxn_c22->Fill(nfvtxt,os_bbcfvtxn_qq2);
+      nfvtxt_os_bbcsfvtxn_c32->Fill(nfvtxt,os_bbcfvtxn_qq3);
       // --- fvtxs-fvtxn
       float os_fvtxsfvtxn_qq2 = ( (os_fvtxs_qx2*os_fvtxn_qx2) + (os_fvtxs_qy2*os_fvtxn_qy2) ) / ( os_fvtxs_qw*os_fvtxn_qw );
       float os_fvtxsfvtxn_qq3 = ( (os_fvtxs_qx3*os_fvtxn_qx3) + (os_fvtxs_qy3*os_fvtxn_qy3) ) / ( os_fvtxs_qw*os_fvtxn_qw );
       os_fvtxsfvtxn_c22->Fill(0.0,os_fvtxsfvtxn_qq2);
       os_fvtxsfvtxn_c32->Fill(0.0,os_fvtxsfvtxn_qq3);
+      npc1_os_fvtxsfvtxn_c22->Fill(npc1,os_fvtxsfvtxn_qq2);
+      npc1_os_fvtxsfvtxn_c32->Fill(npc1,os_fvtxsfvtxn_qq3);
+      nfvtxt_os_fvtxsfvtxn_c22->Fill(nfvtxt,os_fvtxsfvtxn_qq2);
+      nfvtxt_os_fvtxsfvtxn_c32->Fill(nfvtxt,os_fvtxsfvtxn_qq3);
 
       // --- now have a look at some 4 particle cumulants
 
@@ -2398,6 +2482,21 @@ void flatten(int runNumber, int rp_recal_pass)
 
               // ------------------------------------------------------------
 
+              npc1_os_cntbbcs_c22->Fill(npc1,os_bbc_uq2);
+              npc1_os_cntfvtxs_c22->Fill(npc1,os_fvtxs_uq2);
+              npc1_os_cntfvtxn_c22->Fill(npc1,os_fvtxn_uq2);
+              npc1_os_cntbbcs_c32->Fill(npc1,os_bbc_uq3);
+              npc1_os_cntfvtxs_c32->Fill(npc1,os_fvtxs_uq3);
+              npc1_os_cntfvtxn_c32->Fill(npc1,os_fvtxn_uq3);
+              nfvtxt_os_cntbbcs_c22->Fill(nfvtxt,os_bbc_uq2);
+              nfvtxt_os_cntfvtxs_c22->Fill(nfvtxt,os_fvtxs_uq2);
+              nfvtxt_os_cntfvtxn_c22->Fill(nfvtxt,os_fvtxn_uq2);
+              nfvtxt_os_cntbbcs_c32->Fill(nfvtxt,os_bbc_uq3);
+              nfvtxt_os_cntfvtxs_c32->Fill(nfvtxt,os_fvtxs_uq3);
+              nfvtxt_os_cntfvtxn_c32->Fill(nfvtxt,os_fvtxn_uq3);
+
+              // ------------------------------------------------------------
+
               os_bbcs_v2_both->Fill(pt_angle,cos(2.0*(phi_angle-os_bbc_psi2)));
               if ( dcarm == 1 ) os_bbcs_v2_west->Fill(pt_angle,cos(2.0*(phi_angle-os_bbc_psi2)));
               if ( dcarm == 0 ) os_bbcs_v2_east->Fill(pt_angle,cos(2.0*(phi_angle-os_bbc_psi2)));
@@ -2417,6 +2516,23 @@ void flatten(int runNumber, int rp_recal_pass)
               os_fvtxn_v3_both->Fill(pt_angle,cos(3.0*(phi_angle-os_fvtxn_psi3)));
               if ( dcarm == 1 ) os_fvtxn_v3_west->Fill(pt_angle,cos(3.0*(phi_angle-os_fvtxn_psi3)));
               if ( dcarm == 0 ) os_fvtxn_v3_east->Fill(pt_angle,cos(3.0*(phi_angle-os_fvtxn_psi3)));
+
+              // ------------------------------------------------------------
+
+              npc1_bbcs_v2->Fill(npc1,cos(2.0*(phi_angle-os_bbc_psi2)));
+              npc1_fvtxs_v2->Fill(npc1,cos(2.0*(phi_angle-os_fvtxs_psi2)));
+              npc1_fvtxn_v2->Fill(npc1,cos(2.0*(phi_angle-os_fvtxn_psi2)));
+              npc1_bbcs_v3->Fill(npc1,cos(3.0*(phi_angle-os_bbc_psi3)));
+              npc1_fvtxs_v3->Fill(npc1,cos(3.0*(phi_angle-os_fvtxs_psi3)));
+              npc1_fvtxn_v3->Fill(npc1,cos(3.0*(phi_angle-os_fvtxn_psi3)));
+              nfvtxt_bbcs_v2->Fill(nfvtxt,cos(2.0*(phi_angle-os_bbc_psi2)));
+              nfvtxt_fvtxs_v2->Fill(nfvtxt,cos(2.0*(phi_angle-os_fvtxs_psi2)));
+              nfvtxt_fvtxn_v2->Fill(nfvtxt,cos(2.0*(phi_angle-os_fvtxn_psi2)));
+              nfvtxt_bbcs_v3->Fill(nfvtxt,cos(3.0*(phi_angle-os_bbc_psi3)));
+              nfvtxt_fvtxs_v3->Fill(nfvtxt,cos(3.0*(phi_angle-os_fvtxs_psi3)));
+              nfvtxt_fvtxn_v3->Fill(nfvtxt,cos(3.0*(phi_angle-os_fvtxn_psi3)));
+
+              // ------------------------------------------------------------
 
               // --- 4 particle stuff
 
