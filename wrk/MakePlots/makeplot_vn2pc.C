@@ -333,7 +333,9 @@ void doit(int handle, int harmonic)
   c1->Print(Form("FigsTwo/newref_os_compare_v%d2_%d.png",harmonic,handle));
   c1->Print(Form("FigsTwo/newref_os_compare_v%d2_%d.pdf",harmonic,handle));
 
-  th1d_os_bbcsfvtxs_vn2_3csp->SetLineColor(kGreen+2);
+  th1d_os_bbcs_dn2_both_corr->SetLineColor(kBlue);
+  th1d_os_fvtxs_dn2_both_corr->SetLineColor(kRed);
+  th1d_os_bbcsfvtxs_vn2_3csp->SetLineColor(kBlack);
   th1d_os_bbcsfvtxs_vn2_3csp->Draw();
   th1d_os_bbcs_dn2_both_corr->Draw("same");
   th1d_os_fvtxs_dn2_both_corr->Draw("same");

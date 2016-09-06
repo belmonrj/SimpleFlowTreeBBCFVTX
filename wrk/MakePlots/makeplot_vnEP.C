@@ -93,6 +93,7 @@ void doenergy(int energy, int harmonic)
   if ( energy == 62 ) hvn_fvtxs->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = 62.4 GeV"));
   if ( energy == 20 ) hvn_fvtxs->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = 19.6 GeV"));
   hvn_fvtxs->SetMaximum(0.17);
+  if ( energy == 39 ) hvn_fvtxs->SetMaximum(0.27);
   hvn_fvtxs->SetMinimum(0.0);
   TLine line(0,0,3,0);
   line.SetLineStyle(2);
@@ -302,14 +303,20 @@ void diagnostic(int energy, int harmonic)
   hvn_fvtxs_E->SetLineColor(kRed);
   hvn_fvtxs_W->SetLineColor(kBlue);
 
+
   if ( energy == 200 ) {MIN = -0.01; MAX = 0.05;}
   if ( energy == 62 ) {MIN = -0.01; MAX = 0.05;}
   if ( energy == 39 ) {MIN = -0.03; MAX = 0.05;}
   if ( energy == 20 ) {MIN = -0.1; MAX = 0.2;}
+  if ( harmonic == 3 ) {MIN = -0.003; MAX = 0.008;}
+  TLine line(0,0,3,0);
+  line.SetLineStyle(2);
+  line.SetLineWidth(2);
   TH2D* h2dummy = new TH2D("h2dummy","",1,0.0,3.0,1,MIN,MAX);
   h2dummy->Draw();
+  line.Draw();
   h2dummy->GetXaxis()->SetTitle("p_{T} (GeV/c)");
-  h2dummy->GetYaxis()->SetTitle("v_{2} not corrected for EP resolution");
+  h2dummy->GetYaxis()->SetTitle(Form("v_{%d} not corrected for EP resolution",harmonic));
   h2dummy->GetYaxis()->SetTitleOffset(1.3);
 
   hvn_fvtxs_B->Draw("same");
@@ -344,11 +351,13 @@ void diagnostic(int energy, int harmonic)
   if ( energy == 62 ) {MIN = -0.01; MAX = 0.05;}
   if ( energy == 39 ) {MIN = -0.03; MAX = 0.05;}
   if ( energy == 20 ) {MIN = -0.1; MAX = 0.2;}
+  if ( harmonic == 3 ) {MIN = -0.003; MAX = 0.008;}
   delete h2dummy;
   h2dummy = new TH2D("h2dummy","",1,0.0,3.0,1,MIN,MAX);
   h2dummy->Draw();
+  line.Draw();
   h2dummy->GetXaxis()->SetTitle("p_{T} (GeV/c)");
-  h2dummy->GetYaxis()->SetTitle("v_{2} not corrected for EP resolution");
+  h2dummy->GetYaxis()->SetTitle(Form("v_{%d} not corrected for EP resolution",harmonic));
   h2dummy->GetYaxis()->SetTitleOffset(1.3);
 
   hvn_fvtxs_B->Draw("same");
@@ -389,11 +398,13 @@ void diagnostic(int energy, int harmonic)
   if ( energy == 62 ) {MIN = -0.005; MAX = 0.02;}
   if ( energy == 39 ) {MIN = -0.02; MAX = 0.02;}
   if ( energy == 20 ) {MIN = -0.05; MAX = 0.05;}
+  if ( harmonic == 3 ) {MIN = -0.002; MAX = 0.008;}
   delete h2dummy;
   h2dummy = new TH2D("h2dummy","",1,0.0,3.0,1,MIN,MAX);
   h2dummy->Draw();
+  line.Draw();
   h2dummy->GetXaxis()->SetTitle("p_{T} (GeV/c)");
-  h2dummy->GetYaxis()->SetTitle("v_{2} not corrected for EP resolution");
+  h2dummy->GetYaxis()->SetTitle(Form("v_{%d} not corrected for EP resolution",harmonic));
   h2dummy->GetYaxis()->SetTitleOffset(1.3);
 
   hvn_bbcs_B->Draw("same");
@@ -430,11 +441,13 @@ void diagnostic(int energy, int harmonic)
   if ( energy == 62 ) {MIN = -0.01; MAX = 0.05;}
   if ( energy == 39 ) {MIN = -0.03; MAX = 0.05;}
   if ( energy == 20 ) {MIN = -0.1; MAX = 0.2;}
+  if ( harmonic == 3 ) {MIN = -0.003; MAX = 0.008;}
   delete h2dummy;
   h2dummy = new TH2D("h2dummy","",1,0.0,3.0,1,MIN,MAX);
   h2dummy->Draw();
+  line.Draw();
   h2dummy->GetXaxis()->SetTitle("p_{T} (GeV/c)");
-  h2dummy->GetYaxis()->SetTitle("v_{2} not corrected for EP resolution");
+  h2dummy->GetYaxis()->SetTitle(Form("v_{%d} not corrected for EP resolution",harmonic));
   h2dummy->GetYaxis()->SetTitleOffset(1.3);
 
   hvn_fvtxn_B->Draw("same");
