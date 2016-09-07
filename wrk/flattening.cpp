@@ -370,7 +370,7 @@ void flatten(int runNumber, int rp_recal_pass)
 
 
   char outFile1[300];
-  sprintf(outFile1,"%s%d%s","output/hist_",runNumber,".root");
+  sprintf(outFile1,"%s%d%s%d%s","output/files_",energyflag,"/hist_",runNumber,".root");
 
   // char outFile2[100];
   // sprintf(outFile2,"%s%d%s","output/hrp_",runNumber,".root");
