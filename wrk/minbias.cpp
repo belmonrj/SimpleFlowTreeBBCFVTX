@@ -1963,8 +1963,8 @@ void flatten(int runNumber, int rp_recal_pass)
       // float os_bbc_qq4 = ( (os_bbc_qx4*os_bbc_qx4) + (os_bbc_qy4*os_bbc_qy4) - os_bbc_qw ) / ( (os_bbc_qw*os_bbc_qw) - os_bbc_qw );
       os_bbcs_c22->Fill(0.0,os_bbc_qq2);
       os_bbcs_c32->Fill(0.0,os_bbc_qq3);
-      if ( is_minbias > 0 ) npc1_os_bbcs_c22->Fill(npc1,os_bbc_qq2);
-      if ( is_minbias > 0 ) npc1_os_bbcs_c32->Fill(npc1,os_bbc_qq3);
+      npc1_os_bbcs_c22->Fill(npc1,os_bbc_qq2);
+      npc1_os_bbcs_c32->Fill(npc1,os_bbc_qq3);
       nfvtxt_os_bbcs_c22->Fill(nfvtxt,os_bbc_qq2);
       nfvtxt_os_bbcs_c32->Fill(nfvtxt,os_bbc_qq3);
       float os_bbc_psi2 = atan2(os_bbc_qy2,os_bbc_qx2)/2.0;
@@ -1994,8 +1994,8 @@ void flatten(int runNumber, int rp_recal_pass)
       // float os_fvtxs_qq4 = ( (os_fvtxs_qx4*os_fvtxs_qx4) + (os_fvtxs_qy4*os_fvtxs_qy4) - os_fvtxs_qw ) / ( (os_fvtxs_qw*os_fvtxs_qw) - os_fvtxs_qw );
       os_fvtxs_c22->Fill(0.0,os_fvtxs_qq2);
       os_fvtxs_c32->Fill(0.0,os_fvtxs_qq3);
-      if ( is_minbias > 0 ) npc1_os_fvtxs_c22->Fill(npc1,os_fvtxs_qq2);
-      if ( is_minbias > 0 ) npc1_os_fvtxs_c32->Fill(npc1,os_fvtxs_qq3);
+      npc1_os_fvtxs_c22->Fill(npc1,os_fvtxs_qq2);
+      npc1_os_fvtxs_c32->Fill(npc1,os_fvtxs_qq3);
       nfvtxt_os_fvtxs_c22->Fill(nfvtxt,os_fvtxs_qq2);
       nfvtxt_os_fvtxs_c32->Fill(nfvtxt,os_fvtxs_qq3);
       float os_fvtxs_psi2 = atan2(os_fvtxs_qy2,os_fvtxs_qx2)/2.0;
@@ -2025,8 +2025,8 @@ void flatten(int runNumber, int rp_recal_pass)
       // float os_fvtxn_qq4 = ( (os_fvtxn_qx4*os_fvtxn_qx4) + (os_fvtxn_qy4*os_fvtxn_qy4) - os_fvtxn_qw ) / ( (os_fvtxn_qw*os_fvtxn_qw) - os_fvtxn_qw );
       os_fvtxn_c22->Fill(0.0,os_fvtxn_qq2);
       os_fvtxn_c32->Fill(0.0,os_fvtxn_qq3);
-      if ( is_minbias > 0 ) npc1_os_fvtxn_c22->Fill(npc1,os_fvtxn_qq2);
-      if ( is_minbias > 0 ) npc1_os_fvtxn_c32->Fill(npc1,os_fvtxn_qq3);
+      npc1_os_fvtxn_c22->Fill(npc1,os_fvtxn_qq2);
+      npc1_os_fvtxn_c32->Fill(npc1,os_fvtxn_qq3);
       nfvtxt_os_fvtxn_c22->Fill(nfvtxt,os_fvtxn_qq2);
       nfvtxt_os_fvtxn_c32->Fill(nfvtxt,os_fvtxn_qq3);
       float os_fvtxn_psi2 = atan2(os_fvtxn_qy2,os_fvtxn_qx2)/2.0;
@@ -2041,8 +2041,8 @@ void flatten(int runNumber, int rp_recal_pass)
       float os_bbcfvtxs_qq3 = ( (os_bbc_qx3*os_fvtxs_qx3) + (os_bbc_qy3*os_fvtxs_qy3) ) / ( os_bbc_qw*os_fvtxs_qw );
       os_bbcsfvtxs_c22->Fill(0.0,os_bbcfvtxs_qq2);
       os_bbcsfvtxs_c32->Fill(0.0,os_bbcfvtxs_qq3);
-      if ( is_minbias > 0 ) npc1_os_bbcsfvtxs_c22->Fill(npc1,os_bbcfvtxs_qq2);
-      if ( is_minbias > 0 ) npc1_os_bbcsfvtxs_c32->Fill(npc1,os_bbcfvtxs_qq3);
+      npc1_os_bbcsfvtxs_c22->Fill(npc1,os_bbcfvtxs_qq2);
+      npc1_os_bbcsfvtxs_c32->Fill(npc1,os_bbcfvtxs_qq3);
       nfvtxt_os_bbcsfvtxs_c22->Fill(nfvtxt,os_bbcfvtxs_qq2);
       nfvtxt_os_bbcsfvtxs_c32->Fill(nfvtxt,os_bbcfvtxs_qq3);
       // --- bbcs-fvtxn
@@ -2050,8 +2050,8 @@ void flatten(int runNumber, int rp_recal_pass)
       float os_bbcfvtxn_qq3 = ( (os_bbc_qx3*os_fvtxn_qx3) + (os_bbc_qy3*os_fvtxn_qy3) ) / ( os_bbc_qw*os_fvtxn_qw );
       os_bbcsfvtxn_c22->Fill(0.0,os_bbcfvtxn_qq2);
       os_bbcsfvtxn_c32->Fill(0.0,os_bbcfvtxn_qq3);
-      if ( is_minbias > 0 ) npc1_os_bbcsfvtxn_c22->Fill(npc1,os_bbcfvtxn_qq2);
-      if ( is_minbias > 0 ) npc1_os_bbcsfvtxn_c32->Fill(npc1,os_bbcfvtxn_qq3);
+      npc1_os_bbcsfvtxn_c22->Fill(npc1,os_bbcfvtxn_qq2);
+      npc1_os_bbcsfvtxn_c32->Fill(npc1,os_bbcfvtxn_qq3);
       nfvtxt_os_bbcsfvtxn_c22->Fill(nfvtxt,os_bbcfvtxn_qq2);
       nfvtxt_os_bbcsfvtxn_c32->Fill(nfvtxt,os_bbcfvtxn_qq3);
       // --- fvtxs-fvtxn
@@ -2059,8 +2059,8 @@ void flatten(int runNumber, int rp_recal_pass)
       float os_fvtxsfvtxn_qq3 = ( (os_fvtxs_qx3*os_fvtxn_qx3) + (os_fvtxs_qy3*os_fvtxn_qy3) ) / ( os_fvtxs_qw*os_fvtxn_qw );
       os_fvtxsfvtxn_c22->Fill(0.0,os_fvtxsfvtxn_qq2);
       os_fvtxsfvtxn_c32->Fill(0.0,os_fvtxsfvtxn_qq3);
-      if ( is_minbias > 0 ) npc1_os_fvtxsfvtxn_c22->Fill(npc1,os_fvtxsfvtxn_qq2);
-      if ( is_minbias > 0 ) npc1_os_fvtxsfvtxn_c32->Fill(npc1,os_fvtxsfvtxn_qq3);
+      npc1_os_fvtxsfvtxn_c22->Fill(npc1,os_fvtxsfvtxn_qq2);
+      npc1_os_fvtxsfvtxn_c32->Fill(npc1,os_fvtxsfvtxn_qq3);
       nfvtxt_os_fvtxsfvtxn_c22->Fill(nfvtxt,os_fvtxsfvtxn_qq2);
       nfvtxt_os_fvtxsfvtxn_c32->Fill(nfvtxt,os_fvtxsfvtxn_qq3);
 
@@ -2478,12 +2478,12 @@ void flatten(int runNumber, int rp_recal_pass)
 
               // ------------------------------------------------------------
 
-              if ( is_minbias > 0 ) npc1_os_cntbbcs_c22->Fill(npc1,os_bbc_uq2);
-              if ( is_minbias > 0 ) npc1_os_cntfvtxs_c22->Fill(npc1,os_fvtxs_uq2);
-              if ( is_minbias > 0 ) npc1_os_cntfvtxn_c22->Fill(npc1,os_fvtxn_uq2);
-              if ( is_minbias > 0 ) npc1_os_cntbbcs_c32->Fill(npc1,os_bbc_uq3);
-              if ( is_minbias > 0 ) npc1_os_cntfvtxs_c32->Fill(npc1,os_fvtxs_uq3);
-              if ( is_minbias > 0 ) npc1_os_cntfvtxn_c32->Fill(npc1,os_fvtxn_uq3);
+              npc1_os_cntbbcs_c22->Fill(npc1,os_bbc_uq2);
+              npc1_os_cntfvtxs_c22->Fill(npc1,os_fvtxs_uq2);
+              npc1_os_cntfvtxn_c22->Fill(npc1,os_fvtxn_uq2);
+              npc1_os_cntbbcs_c32->Fill(npc1,os_bbc_uq3);
+              npc1_os_cntfvtxs_c32->Fill(npc1,os_fvtxs_uq3);
+              npc1_os_cntfvtxn_c32->Fill(npc1,os_fvtxn_uq3);
               nfvtxt_os_cntbbcs_c22->Fill(nfvtxt,os_bbc_uq2);
               nfvtxt_os_cntfvtxs_c22->Fill(nfvtxt,os_fvtxs_uq2);
               nfvtxt_os_cntfvtxn_c22->Fill(nfvtxt,os_fvtxn_uq2);
@@ -2515,12 +2515,12 @@ void flatten(int runNumber, int rp_recal_pass)
 
               // ------------------------------------------------------------
 
-              if ( is_minbias > 0 ) npc1_bbcs_v2->Fill(npc1,cos(2.0*(phi_angle-os_bbc_psi2)));
-              if ( is_minbias > 0 ) npc1_fvtxs_v2->Fill(npc1,cos(2.0*(phi_angle-os_fvtxs_psi2)));
-              if ( is_minbias > 0 ) npc1_fvtxn_v2->Fill(npc1,cos(2.0*(phi_angle-os_fvtxn_psi2)));
-              if ( is_minbias > 0 ) npc1_bbcs_v3->Fill(npc1,cos(3.0*(phi_angle-os_bbc_psi3)));
-              if ( is_minbias > 0 ) npc1_fvtxs_v3->Fill(npc1,cos(3.0*(phi_angle-os_fvtxs_psi3)));
-              if ( is_minbias > 0 ) npc1_fvtxn_v3->Fill(npc1,cos(3.0*(phi_angle-os_fvtxn_psi3)));
+              npc1_bbcs_v2->Fill(npc1,cos(2.0*(phi_angle-os_bbc_psi2)));
+              npc1_fvtxs_v2->Fill(npc1,cos(2.0*(phi_angle-os_fvtxs_psi2)));
+              npc1_fvtxn_v2->Fill(npc1,cos(2.0*(phi_angle-os_fvtxn_psi2)));
+              npc1_bbcs_v3->Fill(npc1,cos(3.0*(phi_angle-os_bbc_psi3)));
+              npc1_fvtxs_v3->Fill(npc1,cos(3.0*(phi_angle-os_fvtxs_psi3)));
+              npc1_fvtxn_v3->Fill(npc1,cos(3.0*(phi_angle-os_fvtxn_psi3)));
               nfvtxt_bbcs_v2->Fill(nfvtxt,cos(2.0*(phi_angle-os_bbc_psi2)));
               nfvtxt_fvtxs_v2->Fill(nfvtxt,cos(2.0*(phi_angle-os_fvtxs_psi2)));
               nfvtxt_fvtxn_v2->Fill(nfvtxt,cos(2.0*(phi_angle-os_fvtxn_psi2)));
