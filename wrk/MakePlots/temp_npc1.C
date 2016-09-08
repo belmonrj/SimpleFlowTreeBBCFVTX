@@ -1,14 +1,17 @@
 void temp_npc1()
 {
 
-  takename("bbcsfvtxs");
-  takename("bbcsfvtxn");
-  takename("fvtxsfvtxn");
+  takename("bbcsfvtxs",2);
+  takename("bbcsfvtxn",2);
+  takename("fvtxsfvtxn",2);
+  takename("bbcsfvtxs",3);
+  takename("bbcsfvtxn",3);
+  takename("fvtxsfvtxn",3);
 
 }
 
 
-void takename(const char* name)
+void takename(const char* name, int harmonic)
 {
 
   TCanvas* c1 = new TCanvas();
@@ -18,40 +21,40 @@ void takename(const char* name)
   TFile* file_39 = TFile::Open("input/combined_39.root");
   TFile* file_20 = TFile::Open("input/combined_20.root");
 
-  TProfile* tp1f_200 = (TProfile*)file_200->Get(Form("npc1_os_%s_c22",name));
-  TProfile* tp1f_62 = (TProfile*)file_62->Get(Form("npc1_os_%s_c22",name));
-  TProfile* tp1f_39 = (TProfile*)file_39->Get(Form("npc1_os_%s_c22",name));
-  TProfile* tp1f_20 = (TProfile*)file_20->Get(Form("npc1_os_%s_c22",name));
+  TProfile* tp1f_200 = (TProfile*)file_200->Get(Form("npc1_os_%s_c%d2",name,harmonic));
+  TProfile* tp1f_62 = (TProfile*)file_62->Get(Form("npc1_os_%s_c%d2",name,harmonic));
+  TProfile* tp1f_39 = (TProfile*)file_39->Get(Form("npc1_os_%s_c%d2",name,harmonic));
+  TProfile* tp1f_20 = (TProfile*)file_20->Get(Form("npc1_os_%s_c%d2",name,harmonic));
 
   tp1f_200->SetName("tp1f_200");
   tp1f_62->SetName("tp1f_62");
   tp1f_39->SetName("tp1f_39");
   tp1f_20->SetName("tp1f_20");
 
-  TH1D* th1d_v2_200 = sqrt(tp1f_200);
-  TH1D* th1d_v2_62 = sqrt(tp1f_62);
-  TH1D* th1d_v2_39 = sqrt(tp1f_39);
-  TH1D* th1d_v2_20 = sqrt(tp1f_20);
+  TH1D* th1d_vn_200 = sqrt(tp1f_200);
+  TH1D* th1d_vn_62 = sqrt(tp1f_62);
+  TH1D* th1d_vn_39 = sqrt(tp1f_39);
+  TH1D* th1d_vn_20 = sqrt(tp1f_20);
 
-  th1d_v2_200->Draw();
-  th1d_v2_200->GetYaxis()->SetTitle("v_{2}{2}");
-  th1d_v2_200->GetXaxis()->SetTitle("N_{PC1}");
-  c1->Print(Form("FigsMultiplicity/run16dau_v2_%s_npc1_200.png",name));
+  th1d_vn_200->Draw();
+  th1d_vn_200->GetYaxis()->SetTitle(Form("v_{%d}{2}",harmonic));
+  th1d_vn_200->GetXaxis()->SetTitle("N_{PC1}");
+  c1->Print(Form("FigsMultiplicity/run16dau_v%d_%s_npc1_200.png",harmonic,name));
 
-  th1d_v2_62->Draw();
-  th1d_v2_62->GetYaxis()->SetTitle("v_{2}{2}");
-  th1d_v2_62->GetXaxis()->SetTitle("N_{PC1}");
-  c1->Print(Form("FigsMultiplicity/run16dau_v2_%s_npc1_62.png",name));
+  th1d_vn_62->Draw();
+  th1d_vn_62->GetYaxis()->SetTitle(Form("v_{%d}{2}",harmonic));
+  th1d_vn_62->GetXaxis()->SetTitle("N_{PC1}");
+  c1->Print(Form("FigsMultiplicity/run16dau_v%d_%s_npc1_62.png",harmonic,name));
 
-  th1d_v2_39->Draw();
-  th1d_v2_39->GetYaxis()->SetTitle("v_{2}{2}");
-  th1d_v2_39->GetXaxis()->SetTitle("N_{PC1}");
-  c1->Print(Form("FigsMultiplicity/run16dau_v2_%s_npc1_39.png",name));
+  th1d_vn_39->Draw();
+  th1d_vn_39->GetYaxis()->SetTitle(Form("v_{%d}{2}",harmonic));
+  th1d_vn_39->GetXaxis()->SetTitle("N_{PC1}");
+  c1->Print(Form("FigsMultiplicity/run16dau_v%d_%s_npc1_39.png",harmonic,name));
 
-  th1d_v2_20->Draw();
-  th1d_v2_20->GetYaxis()->SetTitle("v_{2}{2}");
-  th1d_v2_20->GetXaxis()->SetTitle("N_{PC1}");
-  c1->Print(Form("FigsMultiplicity/run16dau_v2_%s_npc1_20.png",name));
+  th1d_vn_20->Draw();
+  th1d_vn_20->GetYaxis()->SetTitle(Form("v_{%d}{2}",harmonic));
+  th1d_vn_20->GetXaxis()->SetTitle("N_{PC1}");
+  c1->Print(Form("FigsMultiplicity/run16dau_v%d_%s_npc1_20.png",harmonic,name));
 
   double npc1[61];
   double v2_200[61];
@@ -65,15 +68,15 @@ void takename(const char* name)
 
   for ( int i = 0; i < 61; ++i )
     {
-      npc1[i] = th1d_v2_200->GetBinCenter(i+1);
-      v2_200[i] = th1d_v2_200->GetBinContent(i+1);
-      v2_62[i] = th1d_v2_62->GetBinContent(i+1);
-      v2_39[i] = th1d_v2_39->GetBinContent(i+1);
-      v2_20[i] = th1d_v2_20->GetBinContent(i+1);
-      ev2_200[i] = th1d_v2_200->GetBinError(i+1);
-      ev2_62[i] = th1d_v2_62->GetBinError(i+1);
-      ev2_39[i] = th1d_v2_39->GetBinError(i+1);
-      ev2_20[i] = th1d_v2_20->GetBinError(i+1);
+      npc1[i] = th1d_vn_200->GetBinCenter(i+1);
+      v2_200[i] = th1d_vn_200->GetBinContent(i+1);
+      v2_62[i] = th1d_vn_62->GetBinContent(i+1);
+      v2_39[i] = th1d_vn_39->GetBinContent(i+1);
+      v2_20[i] = th1d_vn_20->GetBinContent(i+1);
+      ev2_200[i] = th1d_vn_200->GetBinError(i+1);
+      ev2_62[i] = th1d_vn_62->GetBinError(i+1);
+      ev2_39[i] = th1d_vn_39->GetBinError(i+1);
+      ev2_20[i] = th1d_vn_20->GetBinError(i+1);
       if ( npc1[i] > 61 ) v2_200[i] = -9;
       if ( npc1[i] > 28 ) v2_62[i] = -9;
       if ( npc1[i] > 19 ) v2_39[i] = -9;
@@ -81,7 +84,7 @@ void takename(const char* name)
     }
 
   TH2D* hdummy = new TH2D("hdummy","",1,-0.5,60.5,1,0,0.08);
-  hdummy->GetYaxis()->SetTitle("v_{2}{2}");
+  hdummy->GetYaxis()->SetTitle(Form("v_{%d}{2}",harmonic));
   hdummy->GetXaxis()->SetTitle("N_{PC1}");
   TGraphErrors* tge_200 = new TGraphErrors(61,npc1,v2_200,0,ev2_200);
   TGraphErrors* tge_62 = new TGraphErrors(61,npc1,v2_62,0,ev2_62);
@@ -108,7 +111,7 @@ void takename(const char* name)
   leg->SetTextSize(0.045);
   leg->SetFillStyle(0);
   leg->Draw();
-  c1->Print(Form("FigsMultiplicity/run16dau_v2_%s_npc1_all.png",name));
+  c1->Print(Form("FigsMultiplicity/run16dau_v%d_%s_npc1_all.png",harmonic,name));
 
 }
 
