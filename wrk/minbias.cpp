@@ -119,7 +119,7 @@ void flatten(int runNumber, int rp_recal_pass)
   int verbosity = 0;
 
   char calibfile[500];
-  sprintf(calibfile,"output/flattening_data/flattening_%d_%d.dat",runNumber,rp_recal_pass-1);
+  sprintf(calibfile,"output/flattening_data/minbiasflattening_%d_%d.dat",runNumber,rp_recal_pass-1);
 
   cout << "calib text output file: " << calibfile << endl;
 
@@ -2845,7 +2845,7 @@ void flatten(int runNumber, int rp_recal_pass)
   if(rp_recal_pass<3 && rp_recal_pass>0)
     {
       // --- previous pass calib file is named above, rename it here
-      sprintf(calibfile,"output/flattening_data/flattening_%d_%d.dat",runNumber,rp_recal_pass);
+      sprintf(calibfile,"output/flattening_data/minbiasflattening_%d_%d.dat",runNumber,rp_recal_pass);
       cout << "writing calibration file : " << calibfile << endl;
       ofstream ofs;
       ofs.open(calibfile);
