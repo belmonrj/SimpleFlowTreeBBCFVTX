@@ -370,7 +370,7 @@ void flatten(int runNumber, int rp_recal_pass)
 
 
   char outFile1[300];
-  sprintf(outFile1,"%s%d%s%d%s","output/files_",energyflag,"/hist_",runNumber,".root");
+  sprintf(outFile1,"%s%d%s%d%s","output/files_",energyflag,"/minbiashistos_",runNumber,".root");
 
   // char outFile2[100];
   // sprintf(outFile2,"%s%d%s","output/hrp_",runNumber,".root");
@@ -1276,25 +1276,13 @@ void flatten(int runNumber, int rp_recal_pass)
       unsigned int trigger_BBCLL1narrowcent  = 0x00000008;
       unsigned int trigger_BBCLL1narrow      = 0x00000010;
 
-      unsigned int accepted_triggers = 0;
-      if ( energyflag == 200 ) accepted_triggers = trigger_BBCLL1narrowcent  | trigger_BBCLL1narrow;
-      if ( energyflag == 62  ) accepted_triggers = trigger_BBCLL1narrowcent  | trigger_BBCLL1narrow;
-      if ( energyflag == 20  ) accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS;
-      if ( energyflag == 39  ) accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS;
-
       unsigned int minbias_triggers = 0;
       if ( energyflag == 200 ) minbias_triggers = trigger_BBCLL1narrow;
       if ( energyflag == 62  ) minbias_triggers = trigger_BBCLL1narrow;
       if ( energyflag == 20  ) minbias_triggers = trigger_FVTXNSBBCS;
       if ( energyflag == 39  ) minbias_triggers = trigger_FVTXNSBBCS;
       unsigned int is_minbias = trigger_scaled & minbias_triggers;
-
-      unsigned int passes_trigger = trigger_scaled & accepted_triggers;
-      if ( passes_trigger == 0 )
-        {
-          if ( verbosity > 1 ) cout << "trigger rejected" << endl;
-          continue;
-        }
+      if ( is_minbias == 0 ) continue;
 
       bool is_central = false;
       if ( centrality > -1 )
