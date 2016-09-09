@@ -113,6 +113,65 @@ void takename(const char* name, int harmonic)
   leg->Draw();
   c1->Print(Form("FigsMultiplicity/run16dau_v%d_%s_npc1_all.png",harmonic,name));
 
+  // ---
+
+  TFile* file_200C = TFile::Open("input/combined_200.root");
+  TFile* file_62C = TFile::Open("input/combined_62.root");
+  TFile* file_39C = TFile::Open("input/combined_39.root");
+  TFile* file_20C = TFile::Open("input/combined_20.root");
+
+  TProfile* tp1f_200C = (TProfile*)file_200C->Get(Form("npc1_os_%s_c%d2",name,harmonic));
+  TProfile* tp1f_62C = (TProfile*)file_62C->Get(Form("npc1_os_%s_c%d2",name,harmonic));
+  TProfile* tp1f_39C = (TProfile*)file_39C->Get(Form("npc1_os_%s_c%d2",name,harmonic));
+  TProfile* tp1f_20C = (TProfile*)file_20C->Get(Form("npc1_os_%s_c%d2",name,harmonic));
+
+  tp1f_200C->SetName("tp1f_200C");
+  tp1f_62C->SetName("tp1f_62C");
+  tp1f_39C->SetName("tp1f_39C");
+  tp1f_20C->SetName("tp1f_20C");
+
+  TH1D* th1d_vn_200C = sqrt(tp1f_200C);
+  TH1D* th1d_vn_62C = sqrt(tp1f_62C);
+  TH1D* th1d_vn_39C = sqrt(tp1f_39C);
+  TH1D* th1d_vn_20C = sqrt(tp1f_20C);
+
+  // ---
+
+  th1d_vn_200C->SetLineColor(kRed);
+  th1d_vn_200->SetLineColor(kBlack);
+  th1d_vn_200->Draw();
+  th1d_vn_200->SetMinimum(0);
+  th1d_vn_200->SetMaximum(0.08);
+  th1d_vn_200C->Draw("same");
+  c1->Print(Form("FigsMultiplicity/run16dau_cmbc_v%d_%s_npc1_200.png",harmonic,name));
+
+  th1d_vn_62C->SetLineColor(kRed);
+  th1d_vn_62->SetLineColor(kBlack);
+  th1d_vn_62->Draw();
+  th1d_vn_62->SetMinimum(0);
+  th1d_vn_62->SetMaximum(0.08);
+  th1d_vn_62->GetXaxis()->SetRangeUser(-0.5,30.5);
+  th1d_vn_62C->Draw("same");
+  c1->Print(Form("FigsMultiplicity/run16dau_cmbc_v%d_%s_npc1_62.png",harmonic,name));
+
+  th1d_vn_39C->SetLineColor(kRed);
+  th1d_vn_39->SetLineColor(kBlack);
+  th1d_vn_39->Draw();
+  th1d_vn_39->SetMinimum(0);
+  th1d_vn_39->SetMaximum(0.08);
+  th1d_vn_39->GetXaxis()->SetRangeUser(-0.5,20.5);
+  th1d_vn_39C->Draw("same");
+  c1->Print(Form("FigsMultiplicity/run16dau_cmbc_v%d_%s_npc1_39.png",harmonic,name));
+
+  th1d_vn_20C->SetLineColor(kRed);
+  th1d_vn_20->SetLineColor(kBlack);
+  th1d_vn_20->Draw();
+  th1d_vn_20->SetMinimum(0);
+  th1d_vn_20->SetMaximum(0.08);
+  th1d_vn_20->GetXaxis()->SetRangeUser(-0.5,10.5);
+  th1d_vn_20C->Draw("same");
+  c1->Print(Form("FigsMultiplicity/run16dau_cmbc_v%d_%s_npc1_20.png",harmonic,name));
+
 }
 
 TH1D* sqrt(TProfile* tp1f)
