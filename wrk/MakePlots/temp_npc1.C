@@ -16,10 +16,10 @@ void takename(const char* name, int harmonic)
 
   TCanvas* c1 = new TCanvas();
 
-  TFile* file_200 = TFile::Open("input/combined_200.root");
-  TFile* file_62 = TFile::Open("input/combined_62.root");
-  TFile* file_39 = TFile::Open("input/combined_39.root");
-  TFile* file_20 = TFile::Open("input/combined_20.root");
+  TFile* file_200 = TFile::Open("input/minbiascombined_200.root");
+  TFile* file_62 = TFile::Open("input/minbiascombined_62.root");
+  TFile* file_39 = TFile::Open("input/minbiascombined_39.root");
+  TFile* file_20 = TFile::Open("input/minbiascombined_20.root");
 
   TProfile* tp1f_200 = (TProfile*)file_200->Get(Form("npc1_os_%s_c%d2",name,harmonic));
   TProfile* tp1f_62 = (TProfile*)file_62->Get(Form("npc1_os_%s_c%d2",name,harmonic));
