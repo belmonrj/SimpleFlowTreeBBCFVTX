@@ -68,10 +68,15 @@ void doenergy(int energy, int harmonic)
                        float_BBCS_CNT,efloat_BBCS_CNT,
                        float_CNT_FVTXS,efloat_CNT_FVTXS);
 
-  cout << data1.Data() << endl;
+  //cout << data1.Data() << endl;
 
-  cout << reso_BBCS << " " << ereso_BBCS << endl;
+  TString data2 = Form("%d GeV & %.2e & %.2e & %.2e & %.2e & %.2e & %.2e \\\\",
+                       energy, reso_BBCS_fn, reso_FVTXS_fn, reso_FVTXN_fn,
+                       float_BBCS_FVTXS, float_BBCS_FVTXN, float_FVTXN_FVTXS);
 
+  cout << data2.Data() << endl;
+
+  // cout << reso_BBCS << " " << ereso_BBCS << endl;
   // cout << energy << " GeV & " << reso_BBCS << " & " << reso_FVTXS << " & " << float_BBCS_FVTXS << " & " << float_BBCS_CNT << " & " << float_CNT_FVTXS << " \\\\ " << endl;
   // cout << energy << " GeV & " << reso_BBCS_fn << " & " << reso_FVTXS_fn << " & " << reso_FVTXN_fn << " & " << float_BBCS_FVTXS << " & " << float_BBCS_FVTXN << " & " << float_FVTXN_FVTXS << " \\\\ " << endl;
 
