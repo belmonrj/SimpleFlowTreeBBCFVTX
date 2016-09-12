@@ -26,6 +26,19 @@ void doenergy(int energy, int harmonic)
   // ---
   // ---
 
+  TH1D* th1d_FVTXN_nclus = (TH1D*)file->Get("th1d_FVTXN_nclus");
+  TH1D* th1d_FVTXS_nclus = (TH1D*)file->Get("th1d_FVTXS_nclus");
+  TH1D* th1d_BBC_charge = (TH1D*)file->Get("th1d_BBC_charge");
+
+  float mean_fvtxn = th1d_FVTXN_nclus->GetMean();
+  float mean_fvtxs = th1d_FVTXS_nclus->GetMean();
+  float mean_bbcs = th1d_BBC_charge->GetMean();
+
+  // ---
+  // ---
+  // ---
+
+
   TProfile* tp1f_BBCS_FVTXN = (TProfile*)file->Get(Form("tp1f_reso%d_BBC_FVTXN",harmonic));
   TProfile* tp1f_BBCS_FVTXS = (TProfile*)file->Get(Form("tp1f_reso%d_BBC_FVTX",harmonic));
   TProfile* tp1f_FVTXN_FVTXS = (TProfile*)file->Get(Form("tp1f_reso%d_FVTXS_FVTXN",harmonic));
@@ -62,23 +75,25 @@ void doenergy(int energy, int harmonic)
                            + ( efloat_BBCS_FVTXS*efloat_BBCS_FVTXS/4*float_BBCS_FVTXS )
                            + ( efloat_CNT_FVTXS*efloat_CNT_FVTXS/4*pow(float_CNT_FVTXS,3) ) );
 
+  // --- event planes and correlations using CNT
   TString data1 = Form("%d GeV & %.2e & %.2e & %.2e \$\\pm\$ %.2e & %.2e \$\\pm\$ %.2e & %.2e \$\\pm\$ %.2e \\\\",
                        energy,reso_BBCS,reso_FVTXS,
                        float_BBCS_FVTXS,efloat_BBCS_FVTXS,
                        float_BBCS_CNT,efloat_BBCS_CNT,
                        float_CNT_FVTXS,efloat_CNT_FVTXS);
 
-  //cout << data1.Data() << endl;
-
+  // --- event planes and correlations using FVTXN
   TString data2 = Form("%d GeV & %.2e & %.2e & %.2e & %.2e & %.2e & %.2e \\\\",
                        energy, reso_BBCS_fn, reso_FVTXS_fn, reso_FVTXN_fn,
                        float_BBCS_FVTXS, float_BBCS_FVTXN, float_FVTXN_FVTXS);
 
-  cout << data2.Data() << endl;
+  TString data3 = Form("%d GeV & %.2e & %.2e & %.2e & %.2e \\\\",
+                       energy, mean_bbcs, mean_fvtxs, reso_BBCS, reso_FVTXS);
 
-  // cout << reso_BBCS << " " << ereso_BBCS << endl;
-  // cout << energy << " GeV & " << reso_BBCS << " & " << reso_FVTXS << " & " << float_BBCS_FVTXS << " & " << float_BBCS_CNT << " & " << float_CNT_FVTXS << " \\\\ " << endl;
-  // cout << energy << " GeV & " << reso_BBCS_fn << " & " << reso_FVTXS_fn << " & " << reso_FVTXN_fn << " & " << float_BBCS_FVTXS << " & " << float_BBCS_FVTXN << " & " << float_FVTXN_FVTXS << " \\\\ " << endl;
+  //cout << data1.Data() << endl;
+  //cout << data2.Data() << endl;
+  cout << data3.Data() << endl;
+
 
 }
 
