@@ -47,13 +47,13 @@ void ts_energy(int energy)
     }
 
   th1d_numtracks->Draw();
-  c1->Print(Form("fig_numtracks_%d.png",energy));
+  c1->Print(Form("FigsStats/fig_numtracks_%d.png",energy));
   th1d_counterr->Draw();
-  c1->Print(Form("fig_counterr_%d.png",energy));
+  c1->Print(Form("FigsStats/fig_counterr_%d.png",energy));
   th1d_v2err->Draw();
-  c1->Print(Form("fig_v2err_%d.png",energy));
+  c1->Print(Form("FigsStats/fig_v2err_%d.png",energy));
   th1d_projv2err->Draw();
-  c1->Print(Form("fig_projv2err_%d.png",energy));
+  c1->Print(Form("FigsStats/fig_projv2err_%d.png",energy));
 
   th1d_counterr->SetLineColor(kBlue);
   th1d_counterr->GetXaxis()->SetTitle("p_{T} (GeV/c)");
@@ -67,7 +67,7 @@ void ts_energy(int energy)
   leg->AddEntry(th1d_v2err,"From v_{2} histogram","l");
   leg->SetTextSize(0.045);
   leg->Draw();
-  c1->Print(Form("fig_countandv2err_%d.png",energy));
+  c1->Print(Form("FigsStats/fig_countandv2err_%d.png",energy));
 
   c1->SetLogy(0);
   th1d_v2err->Divide(th1d_counterr);
@@ -75,7 +75,7 @@ void ts_energy(int energy)
   th1d_v2err->GetYaxis()->SetTitle("Ratio of Statistical Uncertainties");
   th1d_v2err->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = %d GeV",energy));
   th1d_v2err->Draw();
-  c1->Print(Form("fig_countandv2err_ratio_%d.png",energy));
+  c1->Print(Form("FigsStats/fig_countandv2err_ratio_%d.png",energy));
 
 
 }
