@@ -355,6 +355,25 @@ void doit(int handle, int harmonic)
 
   // ---
 
+  th1d_os_bbcsfvtxs_vn2_3csp->Draw();
+  th1d_os_bbcsfvtxs_vn2_3csp->GetYaxis()->SetTitle(Form("v_{%d}",harmonic));
+  th1d_os_bbcsfvtxs_vn2_3csp->GetYaxis()->SetTitleOffset(1.2);
+  if ( harmonic == 3 )
+    {
+      th1d_os_bbcsfvtxs_vn2_3csp->SetMaximum(0.08);
+      th1d_os_bbcsfvtxs_vn2_3csp->SetMinimum(-0.02);
+    }
+  tge_ep->Draw("p");
+  if ( leg ) delete leg;
+  leg = new TLegend(0.18,0.68,0.38,0.88);
+  leg->AddEntry(tge_ep,"event plane (FVTXS)","ep");
+  leg->AddEntry(th1d_os_bbcsfvtxs_vn2_3csp,"scalar product (3sub)","el");
+  leg->SetTextSize(0.04);
+  leg->SetFillStyle(0);
+  leg->Draw();
+  c1->Print(Form("FigsTwo/run16dau_2pcEPcompare_v%d2_%d.png",harmonic,handle));
+  c1->Print(Form("FigsTwo/run16dau_2pcEPcompare_v%d2_%d.pdf",harmonic,handle));
+
   delete c1;
 
 }
