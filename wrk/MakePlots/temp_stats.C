@@ -14,6 +14,8 @@ void ts_energy(int energy)
   TCanvas* c1 = new TCanvas();
   c1->SetLogy();
 
+  gStyle->SetOptTitle(1);
+
   TFile* file = TFile::Open(Form("input/combined_%d.root",energy));
   TProfile* tp1f_fvtxsv2 = (TProfile*)file->Get("fvtxs_v2_both_docalib");
   tp1f_fvtxsv2->SetName("tp1f_fvtxsv2");
@@ -53,10 +55,27 @@ void ts_energy(int energy)
   th1d_projv2err->Draw();
   c1->Print(Form("fig_projv2err_%d.png",energy));
 
+  th1d_counterr->SetLineColor(kBlue);
+  th1d_counterr->GetXaxis()->SetTitle("p_{T} (GeV/c)");
+  th1d_counterr->GetYaxis()->SetTitle("Statistical Uncertainty");
+  th1d_counterr->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = %d GeV",energy));
+  th1d_counterr->Draw();
+  th1d_v2err->SetLineColor(kBlack);
+  th1d_v2err->Draw("same");
+  TLegend* leg = new TLegend(0.18,0.68,0.38,0.88);
+  leg->AddEntry(th1d_counterr,"1/#sqrt{N_{tracks}}","l");
+  leg->AddEntry(th1d_v2err,"From v_{2} histogram","l");
+  leg->SetTextSize(0.045);
+  leg->Draw();
+  c1->Print(Form("fig_countandv2err_%d.png",energy));
+
   c1->SetLogy(0);
   th1d_v2err->Divide(th1d_counterr);
+  th1d_v2err->GetXaxis()->SetTitle("p_{T} (GeV/c)");
+  th1d_v2err->GetYaxis()->SetTitle("Ratio of Statistical Uncertainties");
+  th1d_v2err->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = %d GeV",energy));
   th1d_v2err->Draw();
-  c1->Print(Form("fig_countv2err_%d.png",energy));
+  c1->Print(Form("fig_countandv2err_ratio_%d.png",energy));
 
 
 }
