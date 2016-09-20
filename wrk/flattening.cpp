@@ -1111,6 +1111,45 @@ void flatten(int runNumber, int rp_recal_pass)
   TProfile* nfvtxt_os_bbcsfvtxn_c32 = new TProfile(Form("nfvtxt_os_bbcsfvtxn_c32"),Form("nfvtxt_os_bbcsfvtxn_c32"),76, -0.5, 75.5, -1.1, 1.1);
   TProfile* nfvtxt_os_fvtxsfvtxn_c32 = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_c32"),Form("nfvtxt_os_fvtxsfvtxn_c32"),76, -0.5, 75.5, -1.1, 1.1);
 
+  // --- now we'll do some pseudorapidity depenence
+  TProfile* bbcs_v2eta_west_docalib = new TProfile(Form("bbcs_v2eta_west_docalib"),Form("bbcs_v2eta_west_docalib"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* bbcs_v2eta_east_docalib = new TProfile(Form("bbcs_v2eta_east_docalib"),Form("bbcs_v2eta_east_docalib"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* bbcs_v2eta_both_docalib = new TProfile(Form("bbcs_v2eta_both_docalib"),Form("bbcs_v2eta_both_docalib"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* fvtxs_v2eta_west_docalib = new TProfile(Form("fvtxs_v2eta_west_docalib"),Form("fvtxs_v2eta_west_docalib"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* fvtxs_v2eta_east_docalib = new TProfile(Form("fvtxs_v2eta_east_docalib"),Form("fvtxs_v2eta_east_docalib"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* fvtxs_v2eta_both_docalib = new TProfile(Form("fvtxs_v2eta_both_docalib"),Form("fvtxs_v2eta_both_docalib"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* fvtxn_v2eta_west_docalib = new TProfile(Form("fvtxn_v2eta_west_docalib"),Form("fvtxn_v2eta_west_docalib"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* fvtxn_v2eta_east_docalib = new TProfile(Form("fvtxn_v2eta_east_docalib"),Form("fvtxn_v2eta_east_docalib"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* fvtxn_v2eta_both_docalib = new TProfile(Form("fvtxn_v2eta_both_docalib"),Form("fvtxn_v2eta_both_docalib"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* bbcs_v3eta_west_docalib = new TProfile(Form("bbcs_v3eta_west_docalib"),Form("bbcs_v3eta_west_docalib"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* bbcs_v3eta_east_docalib = new TProfile(Form("bbcs_v3eta_east_docalib"),Form("bbcs_v3eta_east_docalib"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* bbcs_v3eta_both_docalib = new TProfile(Form("bbcs_v3eta_both_docalib"),Form("bbcs_v3eta_both_docalib"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* fvtxs_v3eta_west_docalib = new TProfile(Form("fvtxs_v3eta_west_docalib"),Form("fvtxs_v3eta_west_docalib"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* fvtxs_v3eta_east_docalib = new TProfile(Form("fvtxs_v3eta_east_docalib"),Form("fvtxs_v3eta_east_docalib"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* fvtxs_v3eta_both_docalib = new TProfile(Form("fvtxs_v3eta_both_docalib"),Form("fvtxs_v3eta_both_docalib"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* fvtxn_v3eta_west_docalib = new TProfile(Form("fvtxn_v3eta_west_docalib"),Form("fvtxn_v3eta_west_docalib"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* fvtxn_v3eta_east_docalib = new TProfile(Form("fvtxn_v3eta_east_docalib"),Form("fvtxn_v3eta_east_docalib"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* fvtxn_v3eta_both_docalib = new TProfile(Form("fvtxn_v3eta_both_docalib"),Form("fvtxn_v3eta_both_docalib"),32, -3.2, 3.2, -1.1, 1.1);
+  // ---
+  TProfile* os_bbcs_d22eta_west = new TProfile(Form("os_bbcs_d22eta_west"),Form("os_bbcs_d22eta_west"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_bbcs_d22eta_east = new TProfile(Form("os_bbcs_d22eta_east"),Form("os_bbcs_d22eta_east"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_bbcs_d22eta_both = new TProfile(Form("os_bbcs_d22eta_both"),Form("os_bbcs_d22eta_both"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxs_d22eta_west = new TProfile(Form("os_fvtxs_d22eta_west"),Form("os_fvtxs_d22eta_west"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxs_d22eta_east = new TProfile(Form("os_fvtxs_d22eta_east"),Form("os_fvtxs_d22eta_east"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxs_d22eta_both = new TProfile(Form("os_fvtxs_d22eta_both"),Form("os_fvtxs_d22eta_both"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxn_d22eta_west = new TProfile(Form("os_fvtxn_d22eta_west"),Form("os_fvtxn_d22eta_west"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxn_d22eta_east = new TProfile(Form("os_fvtxn_d22eta_east"),Form("os_fvtxn_d22eta_east"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxn_d22eta_both = new TProfile(Form("os_fvtxn_d22eta_both"),Form("os_fvtxn_d22eta_both"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_bbcs_d32eta_west = new TProfile(Form("os_bbcs_d32eta_west"),Form("os_bbcs_d32eta_west"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_bbcs_d32eta_east = new TProfile(Form("os_bbcs_d32eta_east"),Form("os_bbcs_d32eta_east"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_bbcs_d32eta_both = new TProfile(Form("os_bbcs_d32eta_both"),Form("os_bbcs_d32eta_both"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxs_d32eta_west = new TProfile(Form("os_fvtxs_d32eta_west"),Form("os_fvtxs_d32eta_west"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxs_d32eta_east = new TProfile(Form("os_fvtxs_d32eta_east"),Form("os_fvtxs_d32eta_east"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxs_d32eta_both = new TProfile(Form("os_fvtxs_d32eta_both"),Form("os_fvtxs_d32eta_both"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxn_d32eta_west = new TProfile(Form("os_fvtxn_d32eta_west"),Form("os_fvtxn_d32eta_west"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxn_d32eta_east = new TProfile(Form("os_fvtxn_d32eta_east"),Form("os_fvtxn_d32eta_east"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxn_d32eta_both = new TProfile(Form("os_fvtxn_d32eta_both"),Form("os_fvtxn_d32eta_both"),32, -3.2, 3.2, -1.1, 1.1);
+
   // ---------------------------------------------------------------------------------------------------------
 
 
@@ -1156,6 +1195,11 @@ void flatten(int runNumber, int rp_recal_pass)
   float        d_pz[max_nh];
 
   int nfvtxt;
+  float feta[75];
+  float fphi[75];
+  float fchisq[75];
+  float fdcax[75];
+  float fdcay[75];
 
   // List of branches
   TBranch* b_event;   //!
@@ -1187,6 +1231,11 @@ void flatten(int runNumber, int rp_recal_pass)
   TBranch* b_py;   //!
   TBranch* b_pz;   //!
   TBranch* b_nfvtxt;   //!
+  TBranch* b_fphi;   //!
+  TBranch* b_feta;   //!
+  TBranch* b_fchisq;   //!
+  TBranch* b_fdcax;   //!
+  TBranch* b_fdcay;   //!
   // TBranch* b_d_ntrk;   //!
   // TBranch* b_d_cntpx;   //!
   // TBranch* b_d_cntpy;   //!
@@ -1226,6 +1275,11 @@ void flatten(int runNumber, int rp_recal_pass)
   ntp_event_chain->SetBranchAddress("d_cntpz",d_pz,&b_pz);
 
   ntp_event_chain->SetBranchAddress("ntracklets",&nfvtxt,&b_nfvtxt);
+  ntp_event_chain->SetBranchAddress("fphi",fphi,&b_fphi);
+  ntp_event_chain->SetBranchAddress("feta",feta,&b_feta);
+  ntp_event_chain->SetBranchAddress("fchisq",fchisq,&b_fchisq);
+  ntp_event_chain->SetBranchAddress("fDCA_X",fdcax,&b_fdcax);
+  ntp_event_chain->SetBranchAddress("fDCA_Y",fdcay,&b_fdcay);
 
 
 
@@ -2347,6 +2401,11 @@ void flatten(int runNumber, int rp_recal_pass)
 
               if ( pt_angle < 0.2 || pt_angle > 5.0 ) continue; // pt cut added 2016-06-30
 
+              float pr = sqrt(px*px+py*py);
+              double theta = atan2(pr,pz);
+              double eta = -log(tan(theta/2));
+              //cout << "pz is " << pz << " and eta is " << eta << endl;
+
               // ------------------------------------------------------------
               // --- COME BACK HERE
               // --- doing the 2pc up front...
@@ -2497,6 +2556,28 @@ void flatten(int runNumber, int rp_recal_pass)
 
               // ------------------------------------------------------------
 
+              os_bbcs_d22eta_both->Fill(eta,os_bbc_uq2);
+              if ( dcarm == 1 ) os_bbcs_d22eta_west->Fill(eta,os_bbc_uq2);
+              if ( dcarm == 0 ) os_bbcs_d22eta_east->Fill(eta,os_bbc_uq2);
+              os_fvtxs_d22eta_both->Fill(eta,os_fvtxs_uq2);
+              if ( dcarm == 1 ) os_fvtxs_d22eta_west->Fill(eta,os_fvtxs_uq2);
+              if ( dcarm == 0 ) os_fvtxs_d22eta_east->Fill(eta,os_fvtxs_uq2);
+              os_fvtxs_d22eta_both->Fill(eta,os_fvtxn_uq2);
+              if ( dcarm == 1 ) os_fvtxn_d22eta_west->Fill(eta,os_fvtxn_uq2);
+              if ( dcarm == 0 ) os_fvtxn_d22eta_east->Fill(eta,os_fvtxn_uq2);
+
+              os_bbcs_d32eta_both->Fill(eta,os_bbc_uq3);
+              if ( dcarm == 1 ) os_bbcs_d32eta_west->Fill(eta,os_bbc_uq3);
+              if ( dcarm == 0 ) os_bbcs_d32eta_east->Fill(eta,os_bbc_uq3);
+              os_fvtxs_d32eta_both->Fill(eta,os_fvtxs_uq2);
+              if ( dcarm == 1 ) os_fvtxs_d32eta_west->Fill(eta,os_fvtxs_uq3);
+              if ( dcarm == 0 ) os_fvtxs_d32eta_east->Fill(eta,os_fvtxs_uq3);
+              os_fvtxn_d32eta_both->Fill(eta,os_fvtxn_uq2);
+              if ( dcarm == 1 ) os_fvtxn_d32eta_west->Fill(eta,os_fvtxn_uq3);
+              if ( dcarm == 0 ) os_fvtxn_d32eta_east->Fill(eta,os_fvtxn_uq3);
+
+              // ------------------------------------------------------------
+
               os_bbcs_v2_both->Fill(pt_angle,cos(2.0*(phi_angle-os_bbc_psi2)));
               if ( dcarm == 1 ) os_bbcs_v2_west->Fill(pt_angle,cos(2.0*(phi_angle-os_bbc_psi2)));
               if ( dcarm == 0 ) os_bbcs_v2_east->Fill(pt_angle,cos(2.0*(phi_angle-os_bbc_psi2)));
@@ -2591,6 +2672,13 @@ void flatten(int runNumber, int rp_recal_pass)
                       th1d_os_reso3_BBC_CNT->Fill( cos(3.0*(phi_angle-os_bbc_psi3)) );
                       th1d_os_dreso2_BBC_CNT->Fill( phi_angle-os_bbc_psi2 );
                       th1d_os_dreso3_BBC_CNT->Fill( phi_angle-os_bbc_psi3 );
+                      // ---
+                      bbcs_v2eta_both_docalib->Fill(eta,cosbbc_dphi2_docalib);
+                      if ( dcarm == 1 ) bbcs_v2eta_west_docalib->Fill(eta,cosbbc_dphi2_docalib);
+                      if ( dcarm == 0 ) bbcs_v2eta_east_docalib->Fill(eta,cosbbc_dphi2_docalib);
+                      bbcs_v3eta_both_docalib->Fill(eta,cosbbc_dphi3_docalib);
+                      if ( dcarm == 1 ) bbcs_v3eta_west_docalib->Fill(eta,cosbbc_dphi3_docalib);
+                      if ( dcarm == 0 ) bbcs_v3eta_east_docalib->Fill(eta,cosbbc_dphi3_docalib);
                     } // check on bbc EP
                   // ---
                   if(-4.0<bbc_south_psi2_dcnw && bbc_south_psi2_dcnw<4.0)
@@ -2658,6 +2746,13 @@ void flatten(int runNumber, int rp_recal_pass)
                   th1d_os_reso3_CNT_FVTX->Fill( cos(3.0*(phi_angle-os_fvtxs_psi3)) );
                   th1d_os_dreso2_CNT_FVTX->Fill( phi_angle-os_fvtxs_psi2 );
                   th1d_os_dreso3_CNT_FVTX->Fill( phi_angle-os_fvtxs_psi3 );
+                  // ---
+                  fvtxs_v2eta_both_docalib->Fill(eta,cosfvtx_dphi2_docalib);
+                  if ( dcarm == 1 ) fvtxs_v2eta_west_docalib->Fill(eta,cosfvtx_dphi2_docalib);
+                  if ( dcarm == 0 ) fvtxs_v2eta_east_docalib->Fill(eta,cosfvtx_dphi2_docalib);
+                  fvtxs_v3eta_both_docalib->Fill(eta,cosfvtx_dphi3_docalib);
+                  if ( dcarm == 1 ) fvtxs_v3eta_west_docalib->Fill(eta,cosfvtx_dphi3_docalib);
+                  if ( dcarm == 0 ) fvtxs_v3eta_east_docalib->Fill(eta,cosfvtx_dphi3_docalib);
                 }
               // --- now dcnw
               if(-4.0<fvtx_south_psi2_dcnw && fvtx_south_psi2_dcnw<4.0)
@@ -2725,6 +2820,13 @@ void flatten(int runNumber, int rp_recal_pass)
                   th1d_os_reso3_CNT_FVTXN->Fill( cos(3.0*(phi_angle-os_fvtxn_psi3)) );
                   th1d_os_dreso2_CNT_FVTXN->Fill( phi_angle-os_fvtxn_psi2 );
                   th1d_os_dreso3_CNT_FVTXN->Fill( phi_angle-os_fvtxn_psi3 );
+                  // ---
+                  fvtxn_v2eta_both_docalib->Fill(eta,cosfvtx_dphi2_docalib);
+                  if ( dcarm == 1 ) fvtxn_v2eta_west_docalib->Fill(eta,cosfvtx_dphi2_docalib);
+                  if ( dcarm == 0 ) fvtxn_v2eta_east_docalib->Fill(eta,cosfvtx_dphi2_docalib);
+                  fvtxn_v3eta_both_docalib->Fill(eta,cosfvtx_dphi3_docalib);
+                  if ( dcarm == 1 ) fvtxn_v3eta_west_docalib->Fill(eta,cosfvtx_dphi3_docalib);
+                  if ( dcarm == 0 ) fvtxn_v3eta_east_docalib->Fill(eta,cosfvtx_dphi3_docalib);
                 }
               // --- now dcnw
               if(-4.0<fvtx_north_psi2_dcnw && fvtx_north_psi2_dcnw<4.0)
@@ -2838,6 +2940,83 @@ void flatten(int runNumber, int rp_recal_pass)
                 } // check on psi
 
             } // loop over tracks
+
+          for ( int i = 0; i < nfvtxt; ++i )
+            {
+              float phi = fphi[i]; // need to deal with rotation(?)
+              float eta = feta[i]; // need to deal with rotation(?)
+              int ns = 0;
+              int nn = 0;
+              if ( eta > 0 ) nn = 1;
+              else if ( eta < 0 ) ns = 1;
+              // cout << "eta is " << eta << " and ns is " << ns << " and nn is " << nn << endl;
+
+              double cosbbc_dphi2_docalib = cos(2*(phi-bbc_south_psi2_docalib));
+              bbcs_v2eta_both_docalib->Fill(eta,cosbbc_dphi2_docalib);
+              bbcs_v2eta_west_docalib->Fill(eta,cosbbc_dphi2_docalib);
+              bbcs_v2eta_east_docalib->Fill(eta,cosbbc_dphi2_docalib);
+              double cosbbc_dphi3_docalib = cos(3*(phi-bbc_south_psi3_docalib));
+              bbcs_v3eta_both_docalib->Fill(eta,cosbbc_dphi3_docalib);
+              bbcs_v3eta_west_docalib->Fill(eta,cosbbc_dphi3_docalib);
+              bbcs_v3eta_east_docalib->Fill(eta,cosbbc_dphi3_docalib);
+
+              // --- autocorrelations in FVTX south...
+              double cosfvtx_dphi2_docalib = cos(2*(phi-fvtx_south_psi2_docalib));
+              fvtxs_v2eta_both_docalib->Fill(eta,cosfvtx_dphi2_docalib);
+              fvtxs_v2eta_west_docalib->Fill(eta,cosfvtx_dphi2_docalib);
+              fvtxs_v2eta_east_docalib->Fill(eta,cosfvtx_dphi2_docalib);
+              double cosfvtx_dphi3_docalib = cos(3*(phi-fvtx_south_psi3_docalib));
+              fvtxs_v3eta_both_docalib->Fill(eta,cosfvtx_dphi3_docalib);
+              fvtxs_v3eta_west_docalib->Fill(eta,cosfvtx_dphi3_docalib);
+              fvtxs_v3eta_east_docalib->Fill(eta,cosfvtx_dphi3_docalib);
+
+              // --- autocorrelations in FVTX north...
+              cosfvtx_dphi2_docalib = cos(2*(phi-fvtx_north_psi2_docalib));
+              fvtxn_v2eta_both_docalib->Fill(eta,cosfvtx_dphi2_docalib);
+              fvtxn_v2eta_west_docalib->Fill(eta,cosfvtx_dphi2_docalib);
+              fvtxn_v2eta_east_docalib->Fill(eta,cosfvtx_dphi2_docalib);
+              cosfvtx_dphi3_docalib = cos(3*(phi-fvtx_north_psi3_docalib));
+              fvtxn_v3eta_both_docalib->Fill(eta,cosfvtx_dphi3_docalib);
+              fvtxn_v3eta_west_docalib->Fill(eta,cosfvtx_dphi3_docalib);
+              fvtxn_v3eta_east_docalib->Fill(eta,cosfvtx_dphi3_docalib);
+
+              // --- now to do scalar products
+              float ux2 = cos(2*phi);
+              float uy2 = sin(2*phi);
+              float ux3 = cos(3*phi);
+              float uy3 = sin(3*phi);
+              // float ux4 = cos(4*phi);
+              // float uy4 = sin(4*phi);
+              float os_bbc_uq2 = ( (ux2*os_bbc_qx2) + (uy2*os_bbc_qy2) ) / ( os_bbc_qw );
+              float os_bbc_uq3 = ( (ux3*os_bbc_qx3) + (uy3*os_bbc_qy3) ) / ( os_bbc_qw );
+              float os_fvtxs_uq2 = ( (ux2*os_fvtxs_qx2) + (uy2*os_fvtxs_qy2) - ns ) / ( os_fvtxs_qw - ns );
+              float os_fvtxs_uq3 = ( (ux3*os_fvtxs_qx3) + (uy3*os_fvtxs_qy3) - ns ) / ( os_fvtxs_qw - ns );
+              float os_fvtxn_uq2 = ( (ux2*os_fvtxn_qx2) + (uy2*os_fvtxn_qy2) - nn ) / ( os_fvtxn_qw - nn );
+              float os_fvtxn_uq3 = ( (ux3*os_fvtxn_qx3) + (uy3*os_fvtxn_qy3) - nn ) / ( os_fvtxn_qw - nn );
+
+              os_bbcs_d22eta_both->Fill(eta,os_bbc_uq2);
+              os_bbcs_d22eta_west->Fill(eta,os_bbc_uq2);
+              os_bbcs_d22eta_east->Fill(eta,os_bbc_uq2);
+              os_fvtxs_d22eta_both->Fill(eta,os_fvtxs_uq2);
+              os_fvtxs_d22eta_west->Fill(eta,os_fvtxs_uq2);
+              os_fvtxs_d22eta_east->Fill(eta,os_fvtxs_uq2);
+              os_fvtxn_d22eta_both->Fill(eta,os_fvtxn_uq2);
+              os_fvtxn_d22eta_west->Fill(eta,os_fvtxn_uq2);
+              os_fvtxn_d22eta_east->Fill(eta,os_fvtxn_uq2);
+
+              os_bbcs_d32eta_both->Fill(eta,os_bbc_uq3);
+              os_bbcs_d32eta_west->Fill(eta,os_bbc_uq3);
+              os_bbcs_d32eta_east->Fill(eta,os_bbc_uq3);
+              os_fvtxs_d32eta_both->Fill(eta,os_fvtxs_uq3);
+              os_fvtxs_d32eta_west->Fill(eta,os_fvtxs_uq3);
+              os_fvtxs_d32eta_east->Fill(eta,os_fvtxs_uq3);
+              os_fvtxn_d32eta_both->Fill(eta,os_fvtxn_uq3);
+              os_fvtxn_d32eta_west->Fill(eta,os_fvtxn_uq3);
+              os_fvtxn_d32eta_east->Fill(eta,os_fvtxn_uq3);
+
+            }
+
+
         } // check on tracks
     }//end of event
 
