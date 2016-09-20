@@ -8,10 +8,10 @@ void calculate_epreso()
   doenergy(39,2);
   doenergy(20,2);
 
-  doenergy(200,3);
-  doenergy(62,3);
-  doenergy(39,3);
-  doenergy(20,3);
+  // doenergy(200,3);
+  // doenergy(62,3);
+  // doenergy(39,3);
+  // doenergy(20,3);
 
 }
 
@@ -92,7 +92,28 @@ void doenergy(int energy, int harmonic)
 
   //cout << data1.Data() << endl;
   //cout << data2.Data() << endl;
-  cout << data3.Data() << endl;
+  //cout << data3.Data() << endl;
+
+  float nreso_CNT = sqrt((float_CNT_FVTXN*float_CNT_FVTXS)/float_CNT_FVTXS); // BCBS/CS
+  float nreso_FVTXS = sqrt((float_CNT_FVTXS*float_FVTXN_FVTXS)/float_CNT_FVTXN); // CSBS/BC
+  float nreso_FVTXN = sqrt((float_CNT_FVTXN*float_FVTXN_FVTXS)/float_CNT_FVTXS); // CNBN/BC
+
+  // --- event planes and correlations using CNT
+  TString data4 = Form("%d GeV & %.2e & %.2e & %.2e \$\\pm\$ %.2e & %.2e \$\\pm\$ %.2e & %.2e \$\\pm\$ %.2e \\\\",
+                       energy,nreso_FVTXN,nreso_FVTXS,
+                       float_FVTXN_FVTXS,efloat_FVTXN_FVTXS,
+                       float_CNT_FVTXN,efloat_CNT_FVTXN,
+                       float_CNT_FVTXS,efloat_CNT_FVTXS);
+
+  //  cout << data4.Data() << endl;
+  // --- very roughly 85%
+  float ratio = nreso_FVTXS/reso_FVTXS;
+  cout << nreso_FVTXS << " " << reso_FVTXS << " " << ratio << endl;
+
+  float ave = ( nreso_FVTXS + reso_FVTXS_fn ) / 2.0;
+  ratio = ave/reso_FVTXS;
+  cout << nreso_FVTXS << " " << reso_FVTXS << " " << reso_FVTXS_fn << " " << ave << " " << ratio << endl;
+
 
 
 }
