@@ -269,6 +269,38 @@ void doenergy(int energy, int harmonic)
 
 
 
+  // --- now eta plots
+
+  TProfile* hvneta_bbcs = (TProfile*)file->Get(Form("bbcs_v%deta_both_docalib",harmonic));
+  hvneta_bbcs->SetLineColor(kBlack);
+  hvneta_bbcs->Scale(1.0/reso_bbc);
+  hvneta_bbcs->Draw();
+  hvneta_bbcs->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = %d GeV",energy));
+  if ( energy == 62 ) hvneta_bbcs->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = 62.4 GeV"));
+  if ( energy == 20 ) hvneta_bbcs->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = 19.6 GeV"));
+  hvneta_bbcs->SetMaximum(0.1);
+  hvneta_bbcs->SetMinimum(0.0);
+  if ( energy <= 39 || harmonic == 3 ) hvneta_bbcs->SetMinimum(-0.02);
+  hvneta_bbcs->GetXaxis()->SetTitle("#eta");
+  hvneta_bbcs->GetYaxis()->SetTitle(Form("v_{%d}{EP}",harmonic));
+  hvneta_bbcs->GetYaxis()->SetTitleOffset(1.25);
+  TLegend* leta = new TLegend(0.68,0.68,0.88,0.88);
+  leta->AddEntry(hvneta_bbcs,"BBCS","el");
+  leta->SetTextSize(0.05);
+  leta->Draw();
+
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%deta_bbcs.pdf",energy,harmonic));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%deta_bbcs.png",energy,harmonic));
+
+  TProfile* hvneta_fvtxs = (TProfile*)file->Get(Form("fvtxs_v%deta_both_docalib",harmonic));
+  hvneta_fvtxs->SetLineColor(kBlue);
+  hvneta_fvtxs->Scale(1.0/reso_fvtx);
+  hvneta_fvtxs->Draw("same");
+  leta->AddEntry(hvneta_fvtxs,"FVTXS","el");
+  leta->Draw();
+
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%deta_fvtxsbbcs.pdf",energy,harmonic));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%deta_fvtxsbbcs.png",energy,harmonic));
 
   delete c1;
 
