@@ -6,15 +6,15 @@ void makeplot_vnEP()
 
   for ( int i = 2; i < 4; ++i )
     {
-      doenergy(200,i);
-      doenergy(62,i);
-      doenergy(39,i);
+      // doenergy(200,i);
+      // doenergy(62,i);
+      // doenergy(39,i);
       doenergy(20,i);
       // ---
-      diagnostic(200,i);
-      diagnostic(62,i);
-      diagnostic(39,i);
-      diagnostic(20,i);
+      // diagnostic(200,i);
+      // diagnostic(62,i);
+      // diagnostic(39,i);
+      // diagnostic(20,i);
     }
 
 }
@@ -82,6 +82,18 @@ void doenergy(int energy, int harmonic)
 
   cout << "fvtxN resolution is " << reso_fvtxN_xb << endl;
 
+  // ---
+
+  if ( energy == 20 )
+    {
+      // --- i like chocolate and fudge and other tasty deserts
+      cout << "Now making empirical adjustment for 20 GeV data" << endl;
+      reso_bbc = 0.015;
+      reso_fvtx = 0.04;
+    }
+
+  // ---
+
   TProfile* hvn_fvtxs = (TProfile*)file->Get(Form("fvtxs_v%d_both_docalib",harmonic));
   hvn_fvtxs->Scale(1.0/reso_fvtx);
   ofstream fout((const char*)Form("DataTextFiles/run16dau%d_v%dfvtxs.dat",energy,harmonic));
@@ -98,6 +110,12 @@ void doenergy(int energy, int harmonic)
   TLine line(0,0,3,0);
   line.SetLineStyle(2);
   line.SetLineWidth(2);
+  if ( energy == 20 )
+    {
+      hvn_fvtxs->SetMaximum(0.5);
+      hvn_fvtxs->SetMinimum(-0.2);
+      line.Draw();
+    }
   if ( harmonic == 3 )
     {
       hvn_fvtxs->SetMaximum(0.08);
@@ -119,10 +137,20 @@ void doenergy(int energy, int harmonic)
   tge_pub->SetMarkerStyle(kFullCircle);
   if ( harmonic == 2 ) tge_pub->Draw("p");
 
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxs.pdf",energy,harmonic));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxs.png",energy,harmonic));
+
   TProfile* hvn_bbcs = (TProfile*)file->Get(Form("bbcs_v%d_both_docalib",harmonic));
   hvn_bbcs->SetLineColor(kRed);
   hvn_bbcs->Scale(1.0/reso_bbc);
   hvn_bbcs->Draw("same");
+
+  if ( energy == 20 )
+    {
+      hvn_fvtxs->SetMaximum(1.0);
+      hvn_fvtxs->SetMinimum(-0.5);
+      line.Draw();
+    }
 
   TLegend* leg = new TLegend(0.18,0.68,0.38,0.88);
   leg->AddEntry(hvn_fvtxs,"Run16 FVTXS","el");
@@ -281,6 +309,15 @@ void doenergy(int energy, int harmonic)
   hvneta_bbcs->SetMaximum(0.1);
   hvneta_bbcs->SetMinimum(0.0);
   if ( energy <= 39 || harmonic == 3 ) hvneta_bbcs->SetMinimum(-0.02);
+  if ( energy == 20 )
+    {
+      hvneta_bbcs->SetMaximum(0.3);
+      hvneta_bbcs->SetMinimum(-0.2);
+      TLine line(-3.1,0,3.1,0);
+      line.SetLineStyle(2);
+      line.SetLineWidth(2);
+      line.Draw();
+    }
   hvneta_bbcs->GetXaxis()->SetTitle("#eta");
   hvneta_bbcs->GetYaxis()->SetTitle(Form("v_{%d}{EP}",harmonic));
   hvneta_bbcs->GetYaxis()->SetTitleOffset(1.25);
