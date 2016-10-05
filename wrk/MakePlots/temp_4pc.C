@@ -10,7 +10,7 @@ void temp_4pc()
 void doit(int handle)
 {
 
-  gStyle->SetOptTitle(1);
+  gStyle->SetOptTitle(0);
 
   TCanvas* c1 = new TCanvas("c1","");
 
@@ -138,38 +138,110 @@ void doit(int handle)
       float c24 = th1d_nfvtxt_fvtxns_c22a->GetBinContent(i+1);
       float ec24 = th1d_nfvtxt_fvtxns_c22a->GetBinError(i+1);
       float v24 = 0;
-      if ( c24 < 0 ) v24 = sqrt(sqrt(-c24));
-      float ev24 = fabs(ec24*v24/c24); // not right, get back to it soon
+      float ev24 = 0;
+      if ( c24 < 0 )
+	{
+	  v24 = sqrt(sqrt(-c24));
+	  fabs(ec24*v24/c24); // not right, get back to it soon
+	}
       th1d_nfvtxt_fvtxns_v24a->SetBinContent(i+1,v24);
       th1d_nfvtxt_fvtxns_v24a->SetBinError(i+1,ev24);
       // --- v24b
       c24 = th1d_nfvtxt_fvtxns_c22b->GetBinContent(i+1);
       ec24 = th1d_nfvtxt_fvtxns_c22b->GetBinError(i+1);
       v24 = 0;
-      if ( c24 < 0 ) v24 = sqrt(sqrt(-c24));
-      ev24 = fabs(ec24*v24/c24); // not right, get back to it soon
+      ev24 = 0;
+      if ( c24 < 0 )
+	{
+	  v24 = sqrt(sqrt(-c24));
+	  ev24 = fabs(ec24*v24/c24); // not right, get back to it soon
+	}
       th1d_nfvtxt_fvtxns_v24b->SetBinContent(i+1,v24);
       th1d_nfvtxt_fvtxns_v24b->SetBinError(i+1,ev24);
-      cout << c24 << " " << v24 << " " << ev24 << endl;
+      // cout << c24 << " " << v24 << " " << ev24 << endl;
+      // cout << c24 << " " << th1d_nfvtxt_fvtxns_v24b->GetBinContent(i+1) << " " << th1d_nfvtxt_fvtxns_v24b->GetBinError(i+1) << endl;
       // --- v24c
       c24 = th1d_nfvtxt_fvtxns_c22c->GetBinContent(i+1);
       ec24 = th1d_nfvtxt_fvtxns_c22c->GetBinError(i+1);
       v24 = 0;
-      if ( c24 < 0 ) v24 = sqrt(sqrt(-c24));
-      ev24 = fabs(ec24*v24/c24); // not right, get back to it soon
+      ev24 = 0;
+      if ( c24 < 0 )
+	{
+	  v24 = sqrt(sqrt(-c24));
+	  ev24 = fabs(ec24*v24/c24); // not right, get back to it soon
+	}
       th1d_nfvtxt_fvtxns_v24c->SetBinContent(i+1,v24);
       th1d_nfvtxt_fvtxns_v24c->SetBinError(i+1,ev24);
       // cout << c24 << " " << v24 << " " << ev24 << endl;
     }
 
+  //TProfile* tp1f_22 = (TProfile*)file_200->Get(Form("nfvtxt_os_%s_c%d2",name,harmonic));
+  TProfile* tp1f_22 = (TProfile*)file->Get(Form("nfvtxt_os_fvtxsfvtxn_c22"));
+  tp1f_22->SetName("tp1f_22");
+  TH1D* th1d_vn_22 = sqrt(tp1f_22);
+  th1d_vn_22->SetLineColor(kRed);
 
   th1d_nfvtxt_fvtxns_v24a->Draw();
+  th1d_nfvtxt_fvtxns_v24a->GetXaxis()->SetTitle("N_{tracks}^{FVTX}");
+  th1d_nfvtxt_fvtxns_v24a->GetYaxis()->SetTitle("v_{2}{}");
+  th1d_nfvtxt_fvtxns_v24a->SetMaximum(0.1);
+  th1d_nfvtxt_fvtxns_v24a->SetMinimum(-0.01);
+  TLegend leg(0.68,0.68,0.88,0.88);
+  leg.AddEntry(th1d_vn_22,"v_{2}{2}","el");
+  leg.AddEntry(th1d_nfvtxt_fvtxns_v24a,"v_{2}{4}","el");
+  leg.SetTextSize(0.045);
+  leg.Draw();
+  line.Draw();
   c1->Print("v24a_nfvtxt.png");
+  th1d_vn_22->Draw("same");
+  c1->Print("v24a_and_v22_nfvtxt.png");
   th1d_nfvtxt_fvtxns_v24b->Draw();
+  th1d_nfvtxt_fvtxns_v24b->GetXaxis()->SetTitle("N_{tracks}^{FVTX}");
+  th1d_nfvtxt_fvtxns_v24b->GetYaxis()->SetTitle("v_{2}{}");
+  th1d_nfvtxt_fvtxns_v24b->SetMaximum(0.1);
+  th1d_nfvtxt_fvtxns_v24b->SetMinimum(-0.01);
+  leg.Draw();
+  line.Draw();
   c1->Print("v24b_nfvtxt.png");
+  th1d_vn_22->Draw("same");
+  c1->Print("v24b_and_v22_nfvtxt.png");
   th1d_nfvtxt_fvtxns_v24c->Draw();
+  th1d_nfvtxt_fvtxns_v24c->GetXaxis()->SetTitle("N_{tracks}^{FVTX}");
+  th1d_nfvtxt_fvtxns_v24c->GetYaxis()->SetTitle("v_{2}{}");
+  th1d_nfvtxt_fvtxns_v24c->SetMaximum(0.1);
+  th1d_nfvtxt_fvtxns_v24c->SetMinimum(-0.01);
+  leg.Draw();
+  line.Draw();
   c1->Print("v24c_nfvtxt.png");
+  th1d_vn_22->Draw("same");
+  c1->Print("v24c_and_v22_nfvtxt.png");
 
   delete c1;
 
 }
+
+
+TH1D* sqrt(TProfile* tp1f)
+{
+  TH1D* th1d = tp1f->ProjectionX(Form("%s_px",tp1f->GetName()));
+  return sqrt(th1d);
+}
+
+TH1D* sqrt(TH1D* th1d)
+{
+  TH1D* hnew = (TH1D*)th1d->Clone(Form("%s_sqrt",th1d->GetName()));
+  int nbins = th1d->GetNbinsX();
+  for ( int i = 0; i < nbins; ++i )
+    {
+      double content = th1d->GetBinContent(i+1);
+      double uncert = th1d->GetBinError(i+1);
+      if ( content > 0 ) content = sqrt(content);
+      else content = 0;
+      if ( uncert > 0 && content > 0 ) uncert = uncert/content;
+      else uncert = 0;
+      hnew->SetBinContent(i+1,content);
+      hnew->SetBinError(i+1,uncert);
+    }
+  return hnew;
+}
+
