@@ -1,8 +1,11 @@
 void doit(int, int);
 
+TFile* outfile;
+
 void makeplot_vn2pc()
 {
 
+  outfile = TFile::Open("histograms_vnEP.root","update");
 
   // doit(456652,2);
   for ( int i = 2; i < 4; ++i )
@@ -12,6 +15,9 @@ void makeplot_vn2pc()
       doit(39,i);
       doit(20,i);
     }
+
+  outfile->Write();
+  outfile->Close();
 
 }
 
@@ -375,5 +381,13 @@ void doit(int handle, int harmonic)
   c1->Print(Form("FigsTwo/run16dau_2pcEPcompare_v%d2_%d.pdf",harmonic,handle));
 
   delete c1;
+
+  outfile->cd();
+  th1d_os_bbcsfvtxs_vn2_3csp->SetName(Form("th1d_v%d_pT_scalarproduct_bbcsfvtxs_%d",harmonic,handle));
+  th1d_os_bbcsfvtxn_vn2_3csp->SetName(Form("th1d_v%d_pT_scalarproduct_bbcsfvtxn_%d",harmonic,handle));
+  th1d_os_fvtxsfvtxn_vn2_3csp->SetName(Form("th1d_v%d_pT_scalarproduct_fvtxsfvtxn_%d",harmonic,handle));
+  th1d_os_bbcsfvtxs_vn2_3csp->Write();
+  th1d_os_bbcsfvtxn_vn2_3csp->Write();
+  th1d_os_fvtxsfvtxn_vn2_3csp->Write();
 
 }

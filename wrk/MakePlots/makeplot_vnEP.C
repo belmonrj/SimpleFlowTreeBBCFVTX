@@ -1,14 +1,18 @@
 void doenergy(int, int);
 void diagnostic(int, int);
 
+TFile* outfile;
+
 void makeplot_vnEP()
 {
 
+  outfile = TFile::Open("histograms_vnEP.root","update");
+
   for ( int i = 2; i < 4; ++i )
     {
-      // doenergy(200,i);
-      // doenergy(62,i);
-      // doenergy(39,i);
+      doenergy(200,i);
+      doenergy(62,i);
+      doenergy(39,i);
       doenergy(20,i);
       // ---
       // diagnostic(200,i);
@@ -16,6 +20,9 @@ void makeplot_vnEP()
       // diagnostic(39,i);
       // diagnostic(20,i);
     }
+
+  outfile->Write();
+  outfile->Close();
 
 }
 
@@ -340,6 +347,20 @@ void doenergy(int energy, int harmonic)
   c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%deta_fvtxsbbcs.png",energy,harmonic));
 
   delete c1;
+
+  if ( harmonic == 3 ) hvn_fvtxs = xhvn_fvtxs;
+
+  hvneta_fvtxs->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = %d GeV",energy));
+  if ( energy == 62 ) hvneta_fvtxs->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = 62.4 GeV"));
+  if ( energy == 20 ) hvneta_fvtxs->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = 19.6 GeV"));
+
+  outfile->cd();
+  hvn_fvtxs->SetName(Form("tprofile_v%d_pT_eventplane_fvtxs_%d",harmonic,energy));
+  hvneta_bbcs->SetName(Form("tprofile_v%d_eta_eventplane_bbcs_%d",harmonic,energy));
+  hvneta_fvtxs->SetName(Form("tprofile_v%d_eta_eventplane_fvtxs_%d",harmonic,energy));
+  hvn_fvtxs->Write();
+  hvneta_bbcs->Write();
+  hvneta_fvtxs->Write();
 
 }
 
