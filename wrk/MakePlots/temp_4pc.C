@@ -216,6 +216,40 @@ void doit(int handle)
   th1d_vn_22->Draw("same");
   c1->Print("v24c_and_v22_nfvtxt.png");
 
+  // ---
+
+  TProfile* tp1f_nfvtxt_fvtxs_c22 = (TProfile*)file->Get("nfvtxt_os_fvtxs_c22");
+  TProfile* tp1f_nfvtxt_fvtxs_c24a = (TProfile*)file->Get("nfvtxt_os_fvtxs_c24");
+  TH1D* th1d_nfvtxt_fvtxs_c24a = tp1f_nfvtxt_fvtxs_c24a->ProjectionX();
+  TH1D* th1d_nfvtxt_fvtxs_c22 = tp1f_nfvtxt_fvtxs_c22->ProjectionX();
+  TH1D* th1d_nfvtxt_fvtxs_c22a = (TH1D*)th1d_nfvtxt_fvtxs_c22->Clone("th1d_nfvtxt_fvtxs_c22a");
+  th1d_nfvtxt_fvtxs_c22a->Multiply(th1d_nfvtxt_fvtxs_c22);
+  th1d_nfvtxt_fvtxs_c22a->Scale(-2.0);
+  th1d_nfvtxt_fvtxs_c22a->Add(th1d_nfvtxt_fvtxs_c24a,1.0);
+  th1d_nfvtxt_fvtxs_c22a->Draw();
+  TLine line(0.0,0.0,75.0,0.0);
+  line.SetLineWidth(2);
+  line.SetLineStyle(2);
+  line.Draw();
+  c1->Print("c24_fvtxs_nfvtxt.png");
+
+  TProfile* tp1f_nfvtxt_fvtxn_c22 = (TProfile*)file->Get("nfvtxt_os_fvtxn_c22");
+  TProfile* tp1f_nfvtxt_fvtxn_c24a = (TProfile*)file->Get("nfvtxt_os_fvtxn_c24");
+  TH1D* th1d_nfvtxt_fvtxn_c24a = tp1f_nfvtxt_fvtxn_c24a->ProjectionX();
+  TH1D* th1d_nfvtxt_fvtxn_c22 = tp1f_nfvtxt_fvtxn_c22->ProjectionX();
+  TH1D* th1d_nfvtxt_fvtxn_c22a = (TH1D*)th1d_nfvtxt_fvtxn_c22->Clone("th1d_nfvtxt_fvtxn_c22a");
+  th1d_nfvtxt_fvtxn_c22a->Multiply(th1d_nfvtxt_fvtxn_c22);
+  th1d_nfvtxt_fvtxn_c22a->Scale(-2.0);
+  th1d_nfvtxt_fvtxn_c22a->Add(th1d_nfvtxt_fvtxn_c24a,1.0);
+  th1d_nfvtxt_fvtxn_c22a->Draw();
+  TLine line(0.0,0.0,75.0,0.0);
+  line.SetLineWidth(2);
+  line.SetLineStyle(2);
+  line.Draw();
+  c1->Print("c24_fvtxn_nfvtxt.png");
+
+
+
   delete c1;
 
 }
