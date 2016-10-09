@@ -1924,6 +1924,7 @@ void flatten(int runNumber, int rp_recal_pass)
 	      fvtxs_tracks_qy3[0] += fvtx_weight * TMath::Sin(3*phi);
 	      fvtxs_tracks_qx4[0] += fvtx_weight * TMath::Cos(4*phi);
 	      fvtxs_tracks_qy4[0] += fvtx_weight * TMath::Sin(4*phi);
+	      fvtxs_tracks_qw[0] += 1;
 	    }
 	  if ( is_south_inner )
 	    {
@@ -1933,6 +1934,7 @@ void flatten(int runNumber, int rp_recal_pass)
 	      fvtxs_tracks_qy3[1] += fvtx_weight * TMath::Sin(3*phi);
 	      fvtxs_tracks_qx4[1] += fvtx_weight * TMath::Cos(4*phi);
 	      fvtxs_tracks_qy4[1] += fvtx_weight * TMath::Sin(4*phi);
+	      fvtxs_tracks_qw[1] += 1;
 	    }
 	  if ( is_south_outer )
 	    {
@@ -1942,6 +1944,7 @@ void flatten(int runNumber, int rp_recal_pass)
 	      fvtxs_tracks_qy3[2] += fvtx_weight * TMath::Sin(3*phi);
 	      fvtxs_tracks_qx4[2] += fvtx_weight * TMath::Cos(4*phi);
 	      fvtxs_tracks_qy4[2] += fvtx_weight * TMath::Sin(4*phi);
+	      fvtxs_tracks_qw[2] += 1;
 	    }
 	  if ( is_north )
 	    {
@@ -1951,6 +1954,7 @@ void flatten(int runNumber, int rp_recal_pass)
 	      fvtxn_tracks_qy3[0] += fvtx_weight * TMath::Sin(3*phi);
 	      fvtxn_tracks_qx4[0] += fvtx_weight * TMath::Cos(4*phi);
 	      fvtxn_tracks_qy4[0] += fvtx_weight * TMath::Sin(4*phi);
+	      fvtxn_tracks_qw[0] += 1;
 	    }
 	  if ( is_north_inner )
 	    {
@@ -1960,6 +1964,7 @@ void flatten(int runNumber, int rp_recal_pass)
 	      fvtxn_tracks_qy3[1] += fvtx_weight * TMath::Sin(3*phi);
 	      fvtxn_tracks_qx4[1] += fvtx_weight * TMath::Cos(4*phi);
 	      fvtxn_tracks_qy4[1] += fvtx_weight * TMath::Sin(4*phi);
+	      fvtxn_tracks_qw[1] += 1;
 	    }
 	  if ( is_north_outer )
 	    {
@@ -1969,6 +1974,7 @@ void flatten(int runNumber, int rp_recal_pass)
 	      fvtxn_tracks_qy3[2] += fvtx_weight * TMath::Sin(3*phi);
 	      fvtxn_tracks_qx4[2] += fvtx_weight * TMath::Cos(4*phi);
 	      fvtxn_tracks_qy4[2] += fvtx_weight * TMath::Sin(4*phi);
+	      fvtxn_tracks_qw[2] += 1;
 	    }
 	}
 
@@ -2425,6 +2431,11 @@ void flatten(int runNumber, int rp_recal_pass)
       float os_fvtxn_tracks_qqqq4 = calc4_event(os_fvtxn_tracks_qx2,os_fvtxn_tracks_qy2,os_fvtxn_tracks_qx4,os_fvtxn_tracks_qy4,os_fvtxn_tracks_qw);
       nfvtxt_os_fvtxs_tracks_c24->Fill(nfvtxt,os_fvtxs_tracks_qqqq4);
       nfvtxt_os_fvtxn_tracks_c24->Fill(nfvtxt,os_fvtxn_tracks_qqqq4);
+
+      // cout << "tracks cumulant " << os_fvtxs_tracks_qq2 << endl;
+      // cout << "tracks qx " << os_fvtxs_tracks_qx2 << endl;
+      // cout << "tracks qy " << os_fvtxs_tracks_qy2 << endl;
+      // cout << "tracks qw " << os_fvtxs_tracks_qw << endl;
 
       nfvtxt_os_fvtxs_tracks_c22->Fill(nfvtxt,os_fvtxs_tracks_qq2);
       nfvtxt_os_fvtxn_tracks_c22->Fill(nfvtxt,os_fvtxn_tracks_qq2);
