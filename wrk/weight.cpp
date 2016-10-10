@@ -190,7 +190,13 @@ void flatten(int runNumber, int passNumber)
   float        d_py[max_nh];
   float        d_pz[max_nh];
 
-  int nfvtx_tracks;
+  //int nfvtx_tracks;
+  int nfvtxt;
+  float feta[75];
+  float fphi[75];
+  float fchisq[75];
+  float fdcax[75];
+  float fdcay[75];
 
   // List of branches
   TBranch* b_event;   //!
@@ -225,7 +231,13 @@ void flatten(int runNumber, int passNumber)
   TBranch* b_d_cntpx;   //!
   TBranch* b_d_cntpy;   //!
   TBranch* b_d_cntpz;   //!
-  TBranch* b_nfvtx_tracks; //!
+  //TBranch* b_nfvtx_tracks; //!
+  TBranch* b_nfvtxt;   //!
+  TBranch* b_fphi;   //!
+  TBranch* b_feta;   //!
+  TBranch* b_fchisq;   //!
+  TBranch* b_fdcax;   //!
+  TBranch* b_fdcay;   //!
 
   ntp_event_chain->SetBranchAddress("bbc_z",&d_bbcz,&b_bbc_z);
   ntp_event_chain->SetBranchAddress("centrality",&centrality,&b_centrality);
@@ -260,7 +272,13 @@ void flatten(int runNumber, int passNumber)
   ntp_event_chain->SetBranchAddress("d_cntpy",d_py,&b_py);
   ntp_event_chain->SetBranchAddress("d_cntpz",d_pz,&b_pz);
 
-  ntp_event_chain->SetBranchAddress("ntracklets",&nfvtx_tracks,&b_nfvtx_tracks);
+  //ntp_event_chain->SetBranchAddress("ntracklets",&nfvtx_tracks,&b_nfvtx_tracks);
+  ntp_event_chain->SetBranchAddress("ntracklets",&nfvtxt,&b_nfvtxt);
+  ntp_event_chain->SetBranchAddress("fphi",fphi,&b_fphi);
+  ntp_event_chain->SetBranchAddress("feta",feta,&b_feta);
+  ntp_event_chain->SetBranchAddress("fchisq",fchisq,&b_fchisq);
+  ntp_event_chain->SetBranchAddress("fDCA_X",fdcax,&b_fdcax);
+  ntp_event_chain->SetBranchAddress("fDCA_Y",fdcay,&b_fdcay);
 
 
 
@@ -297,6 +315,8 @@ void flatten(int runNumber, int passNumber)
   TProfile* tp1f_bbc3_charge_tube = new TProfile("tp1f_bbc3_charge_tube","",64,-0.5,63.5);
   TProfile* tp1f_bbc4_charge_tube = new TProfile("tp1f_bbc4_charge_tube","",64,-0.5,63.5);
 
+  // ---
+
   TH1D* th1d_fvtxs_clus_phi = new TH1D("th1d_fvtxs_clus_phi","",50,-pi,pi);
   TH1D* th1d_fvtxs0_clus_phi = new TH1D("th1d_fvtxs0_clus_phi","",50,-pi,pi);
   TH1D* th1d_fvtxs1_clus_phi = new TH1D("th1d_fvtxs1_clus_phi","",50,-pi,pi);
@@ -308,8 +328,6 @@ void flatten(int runNumber, int passNumber)
   TH1D* th1d_fvtxn1_clus_phi = new TH1D("th1d_fvtxn1_clus_phi","",50,-pi,pi);
   TH1D* th1d_fvtxn2_clus_phi = new TH1D("th1d_fvtxn2_clus_phi","",50,-pi,pi);
   TH1D* th1d_fvtxn3_clus_phi = new TH1D("th1d_fvtxn3_clus_phi","",50,-pi,pi);
-
-  // ---
 
   TH2D* th2d_fvtxs_clus_phi = new TH2D("th2d_fvtxs_clus_phi","",20,-10.0,10.0,50,-pi,pi);
   TH2D* th2d_fvtxs0_clus_phi = new TH2D("th2d_fvtxs0_clus_phi","",20,-10.0,10.0,50,-pi,pi);
@@ -323,6 +341,23 @@ void flatten(int runNumber, int passNumber)
   TH2D* th2d_fvtxn2_clus_phi = new TH2D("th2d_fvtxn2_clus_phi","",20,-10.0,10.0,50,-pi,pi);
   TH2D* th2d_fvtxn3_clus_phi = new TH2D("th2d_fvtxn3_clus_phi","",20,-10.0,10.0,50,-pi,pi);
 
+  // ---
+
+  TH1D* th1d_fvtxs_track_phi = new TH1D("th1d_fvtxs_track_phi","",50,-pi,pi);
+  TH1D* th1d_fvtxs0_track_phi = new TH1D("th1d_fvtxs0_track_phi","",50,-pi,pi);
+  TH1D* th1d_fvtxs1_track_phi = new TH1D("th1d_fvtxs1_track_phi","",50,-pi,pi);
+
+  TH1D* th1d_fvtxn_track_phi = new TH1D("th1d_fvtxn_track_phi","",50,-pi,pi);
+  TH1D* th1d_fvtxn0_track_phi = new TH1D("th1d_fvtxn0_track_phi","",50,-pi,pi);
+  TH1D* th1d_fvtxn1_track_phi = new TH1D("th1d_fvtxn1_track_phi","",50,-pi,pi);
+
+  TH2D* th2d_fvtxs_track_phi = new TH2D("th2d_fvtxs_track_phi","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxs0_track_phi = new TH2D("th2d_fvtxs0_track_phi","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxs1_track_phi = new TH2D("th2d_fvtxs1_track_phi","",20,-10.0,10.0,50,-pi,pi);
+
+  TH2D* th2d_fvtxn_track_phi = new TH2D("th2d_fvtxn_track_phi","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxn0_track_phi = new TH2D("th2d_fvtxn0_track_phi","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxn1_track_phi = new TH2D("th2d_fvtxn1_track_phi","",20,-10.0,10.0,50,-pi,pi);
 
 
 
@@ -624,6 +659,54 @@ void flatten(int runNumber, int passNumber)
 
 
 
+      for ( int i = 0; i < nfvtxt; ++i )
+	{
+
+	  float phi = fphi[i]; // need to deal with rotation(?)
+	  float eta = feta[i]; // need to deal with rotation(?)
+
+	  //cout << "uncorrected phi is " << phi << endl;
+
+	  float x = cos(phi);
+	  float y = sin(phi);
+	  float theta = 2*atan(exp(-eta));
+	  float z = sin(theta);
+
+	  x = z*sin(-beam_angle) + x*cos(-beam_angle);
+	  phi = atan2(y,x);
+
+	  //cout << "corrected phi is " << phi << endl;
+
+	  int fvtx_layer = -1;
+	  if ( fabs(eta) < 2 ) fvtx_layer = 0;
+	  if ( fabs(eta) > 2 ) fvtx_layer = 1;
+
+	  // --- south side
+	  if ( eta < 0 )
+	    {
+	      th1d_fvtxs_track_phi->Fill(phi);
+	      if ( fvtx_layer == 0 ) th1d_fvtxs0_track_phi->Fill(phi);
+	      if ( fvtx_layer == 1 ) th1d_fvtxs1_track_phi->Fill(phi);
+	      th2d_fvtxs_track_phi->Fill(vtx_z,phi);
+	      if ( fvtx_layer == 0 ) th2d_fvtxs0_track_phi->Fill(vtx_z,phi);
+	      if ( fvtx_layer == 1 ) th2d_fvtxs1_track_phi->Fill(vtx_z,phi);
+	    } // check on south
+
+              // --- north side
+	  if ( eta > 0 )
+	    {
+	      th1d_fvtxn_track_phi->Fill(phi);
+	      if ( fvtx_layer == 0 ) th1d_fvtxn0_track_phi->Fill(phi);
+	      if ( fvtx_layer == 1 ) th1d_fvtxn1_track_phi->Fill(phi);
+	      th2d_fvtxn_track_phi->Fill(vtx_z,phi);
+	      if ( fvtx_layer == 0 ) th2d_fvtxn0_track_phi->Fill(vtx_z,phi);
+	      if ( fvtx_layer == 1 ) th2d_fvtxn1_track_phi->Fill(vtx_z,phi);
+	    } // check on north
+
+	}
+
+
+
     }//end of event
 
   cout << "Processed " << event_counter << "/" << all_counter << " events (" << (float)event_counter/(float)all_counter << ")" << endl;
@@ -647,6 +730,8 @@ void flatten(int runNumber, int passNumber)
   cout << "attempting to close out file" << endl;
   tf_histo_out->Close();
 
+
+  cout << tf_histo_out->GetName() << endl;
 
   cout<<"end of program ana"<<endl;
 
