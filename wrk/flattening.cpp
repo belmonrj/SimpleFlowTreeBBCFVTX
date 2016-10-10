@@ -2210,25 +2210,19 @@ void flatten(int runNumber, int rp_recal_pass)
       // --- this one? mean[icent][izvtx][ih][id][ib] typical agreement better than 1%
       // --- or maybe this one? sumxy[ih][id][ib] actually i think these are recentered Q-vectors, but if that's the case i could use them directly...
       // --- adding fourth harmonic to the flattening procedure for the first time... 20160803-1702 EDT
-      float os_bbc_qw = bbc_qw; // probably the same...
-      float os_bbc_qx2 = mean[icent][izvtx][1][2][0];
-      float os_bbc_qy2 = mean[icent][izvtx][1][2][1];
-      float os_bbc_qx3 = mean[icent][izvtx][2][2][0];
-      float os_bbc_qy3 = mean[icent][izvtx][2][2][1];
-      float os_bbc_qx4 = mean[icent][izvtx][3][2][0];
-      float os_bbc_qy4 = mean[icent][izvtx][3][2][1];
+      float os_bbc_qw = bbc_qw; // the same
+      float os_bbc_qx2 = bbc_qx2 - os_bbc_qw*mean[icent][izvtx][1][2][0];
+      float os_bbc_qy2 = bbc_qy2 - os_bbc_qw*mean[icent][izvtx][1][2][1];
+      float os_bbc_qx3 = bbc_qx3 - os_bbc_qw*mean[icent][izvtx][2][2][0];
+      float os_bbc_qy3 = bbc_qy3 - os_bbc_qw*mean[icent][izvtx][2][2][1];
+      float os_bbc_qx4 = bbc_qx4 - os_bbc_qw*mean[icent][izvtx][3][2][0];
+      float os_bbc_qy4 = bbc_qy4 - os_bbc_qw*mean[icent][izvtx][3][2][1];
+      float os_bbc_qq2 = calc2_event(os_bbc_qx2,os_bbc_qy2,os_bbc_qw);
+      float os_bbc_qq3 = calc2_event(os_bbc_qx3,os_bbc_qy3,os_bbc_qw);
       os_bbcs_cos22->Fill(0.0,os_bbc_qx2);
       os_bbcs_sin22->Fill(0.0,os_bbc_qy2);
       os_bbcs_cos32->Fill(0.0,os_bbc_qx3);
       os_bbcs_sin32->Fill(0.0,os_bbc_qy3);
-      os_bbc_qx2 = bbc_qx2 - os_bbc_qw*os_bbc_qx2;
-      os_bbc_qy2 = bbc_qy2 - os_bbc_qw*os_bbc_qy2;
-      os_bbc_qx3 = bbc_qx3 - os_bbc_qw*os_bbc_qx3;
-      os_bbc_qy3 = bbc_qy3 - os_bbc_qw*os_bbc_qy3;
-      os_bbc_qx4 = bbc_qx4 - os_bbc_qw*os_bbc_qx4;
-      os_bbc_qy4 = bbc_qy4 - os_bbc_qw*os_bbc_qy4;
-      float os_bbc_qq2 = calc2_event(os_bbc_qx2,os_bbc_qy2,os_bbc_qw);
-      float os_bbc_qq3 = calc2_event(os_bbc_qx3,os_bbc_qy3,os_bbc_qw);
       os_bbcs_c22->Fill(0.0,os_bbc_qq2);
       os_bbcs_c32->Fill(0.0,os_bbc_qq3);
       npc1_os_bbcs_c22->Fill(npc1,os_bbc_qq2);
