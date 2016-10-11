@@ -73,19 +73,12 @@ class VTX_event_plane_reco: public SubsysReco
 
   // --- set methods for variousthings to write out to trees/ntuples
   void set_write_clusters(bool b){_write_clusters = b;}
-
   void set_write_bbc(bool b){_write_bbc = b;}
-
   void set_write_fvtx(bool b){_write_fvtx = b;}
-
   void set_trimmed_tree(bool b){_trimmed_tree = b;}
-
   void set_write_vtx(bool b){_write_vtx = b;}
-
   void set_write_fvtx_clusters(bool b){_write_fvtx_clusters = b;}
-
   bool pass_chisq_cut(double chisq, double pt, int nhits);
-
   bool is_run_in_list(int runnumber);
 
  protected:
@@ -93,7 +86,6 @@ class VTX_event_plane_reco: public SubsysReco
   // ---
 
   float calc_chisq_fromquality(float quality, float score);
-
   bool pass_eta_cut(float eta, int bbcz_bin);
 
   /// current event
@@ -164,7 +156,7 @@ class VTX_event_plane_reco: public SubsysReco
   float d_Qx[9]; // x comp of Q vec, 3 detectors times 3 harmonics
   float d_Qy[9]; // y comp of Q vec, 3 detectors times 3 harmonics
   float d_Qw[9]; // weight for q-vector (not harmonic dependent? but the option is available)
-  float d_BBC_charge[64]; // charge from each bbc tube for South side only (for asymmetric collision systems)
+  float d_BBC_charge[128]; // charge from each bbc tube for south (first 64) and north (second 64)
   int   d_nFVTX_clus;
   int   d_nFVTXN_clus;
   int   d_nFVTXS_clus;
@@ -203,6 +195,7 @@ class VTX_event_plane_reco: public SubsysReco
   int ntracklets;
   float fphi[75];
   float feta[75];
+  float fthe[75];
   float fchisq[75];
   int farm[75];
   int fnhits[75];

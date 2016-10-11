@@ -76,13 +76,7 @@ VTX_event_plane_reco::VTX_event_plane_reco(): SubsysReco("VTXULTRALIGHTRECO")
   _trimmed_tree = false;
   _write_vtx = true;
   _write_fvtx_clusters = false;
-  int file = open("/dev/urandom", O_RDONLY);
-  int seed;
-  read(file, &seed, sizeof seed);
-  close(file);
   _write_clusters = false;
-  srand(seed);
-  cout << PHWHERE << " random seed = " << seed << endl;
   _write_fvtx = false;
 
   m_bbccalib = new BbcCalib();
@@ -132,7 +126,7 @@ int VTX_event_plane_reco::Init(PHCompositeNode *topNode)
         {
           _ntp_event -> Branch("bbc_qn",&bbc_qn,"bbc_qn/F");
           _ntp_event -> Branch("bbc_qs",&bbc_qs,"bbc_qs/F");
-          _ntp_event -> Branch("d_BBC_charge",&d_BBC_charge,"d_BBC_charge[64]/F");
+          _ntp_event -> Branch("d_BBC_charge",&d_BBC_charge,"d_BBC_charge[128]/F");
         }
       if(_write_fvtx_clusters)
         {
@@ -191,6 +185,7 @@ int VTX_event_plane_reco::Init(PHCompositeNode *topNode)
           //_ntp_event -> Branch("fvtx_z",&fvtx_z,"fvtx_z/F");
           _ntp_event -> Branch("ntracklets",&ntracklets,"ntracklets/I");
           _ntp_event -> Branch("feta",&feta,"feta[ntracklets]/F");
+          _ntp_event -> Branch("fthe",&fthe,"fthe[ntracklets]/F");
           _ntp_event -> Branch("fphi",&fphi,"fphi[ntracklets]/F");
           _ntp_event -> Branch("fchisq",&fchisq,"fchisq[ntracklets]/F");
           _ntp_event -> Branch("farm",&farm,"farm[ntracklets]/I");
@@ -280,7 +275,7 @@ int VTX_event_plane_reco::ResetEvent(PHCompositeNode *topNode)
       d_Qw[i] = 0;
     }
 
-  for(int i = 0; i < 64; i++)
+  for(int i = 0; i < 128; i++)
     {
       d_BBC_charge[i] = 0.0;
 
@@ -317,6 +312,7 @@ int VTX_event_plane_reco::ResetEvent(PHCompositeNode *topNode)
         farm[i]      = -9999;
         fphi[i]      = -9999;
         feta[i]      = -9999;
+        fthe[i]      = -9999;
         fchisq[i]    = -9999;
         fnhits[i]    = -9999;
         fDCA_X[i]    = -9999;
@@ -753,7 +749,7 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
     {
       if(bbcraw)
         {
-          for(int ipmt=0; ipmt<64; ipmt++)
+          for ( int ipmt = 0; ipmt < 128; ++ipmt )
             {
 
               short iadc    = bbcraw->get_Adc(ipmt);
@@ -774,7 +770,7 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
               if ( icharge <= 0 && itime0 >=0 )
                 {
                   // --- this never happens
-                  cout << "Holy shit!" << endl;
+                  cout << "THIS SHOULDN'T BE HAPPENING" << endl;
                   cout << "For event number " << _ievent-1
                        << " and BBC tube number " << ipmt
                        << " the time is " << itime0
@@ -784,23 +780,10 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
               if ( itime0 <= 0 ) icharge -= 10000.0;
               //float ibbc_x  = m_bbcgeo->getX(ipmt);
               //float ibbc_y  = m_bbcgeo->getY(ipmt);
-              float ibbc_z  = m_bbcgeo->getZ(ipmt);
+              //float ibbc_z  = m_bbcgeo->getZ(ipmt);
               //cout<<"d_pmt_x["<<ipmt<<"] = "<<ibbc_x<<";"<<endl;
               //cout<<"d_pmt_y["<<ipmt<<"] = "<<ibbc_y<<";"<<endl;
               //cout<<"d_pmt_z["<<ipmt<<"] = "<<ibbc_z<<";"<<endl;
-              // --- i think this cut is unnecessary...
-              if(ibbc_z > 0) continue;//only select on south bbc
-
-              if ( ( itime0 <=0 || icharge <=0 ) && verbosity > 8 )
-                {
-                  // --- this happens A LOT
-                  cout << "SOUTH SIDE!!!" << endl;
-                  cout << "For event number " << _ievent-1
-                       << " and BBC tube number " << ipmt
-                       << " the time is " << itime0
-                       << " and the charge is " << icharge
-                       << endl;
-                }
 
               d_BBC_charge[ipmt] = icharge;
 
@@ -906,6 +889,7 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
           if(ntr < 74)
             {
               feta[ntr]   = eta;
+              fthe[ntr]   = the;
               fphi[ntr]   = phi;
               fchisq[ntr] = fvtx_trk->get_chi2_ndf();
               farm[ntr]   = arm;
@@ -946,12 +930,6 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
 
   if(segments && !failed_tick_cut && _write_vtx )
     {
-      //vector<int> indexes;
-      //for(int isegment = 0; isegment < nsegments; isegment++)
-      //{
-      //indexes.push_back(isegment);
-      //}
-      //random_shuffle( indexes.begin(), indexes.end() );
 
       for(int isegment = 0; isegment < nsegments; isegment++)
         {
