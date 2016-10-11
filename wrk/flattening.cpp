@@ -1910,8 +1910,23 @@ void flatten(int runNumber, int rp_recal_pass)
       // --- first fvtx track loop
       for ( int i = 0; i < nfvtxt; ++i )
 	{
+	  // --- raw angles from FVTX track object
 	  float phi = fphi[i]; // need to deal with rotation(?)
 	  float eta = feta[i]; // need to deal with rotation(?)
+
+	  // --- calculate angle from pseudorapidity
+	  float theta = 2*atan(exp(-eta));
+	  // --- calculate coordinates from angles
+	  float x = cos(phi);
+	  float y = sin(phi);
+	  float z = sin(theta);
+	  // --- apply offset and rotation corrections to coordinates
+	  x = x - vtx_x; // offset // need to find out from FVTX experts if offset needed
+	  x = z*sin(-beam_angle) + x*cos(-beam_angle); // rotation
+	  // --- recalculate angles from corrected coordinates
+	  phi = atan2(y,x);
+
+
 	  bool is_south = ( eta < 0 );
 	  bool is_south_inner = ( eta > -2 && eta < 0 );
 	  bool is_south_outer = ( eta < -2 );
