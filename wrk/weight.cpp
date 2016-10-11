@@ -672,6 +672,7 @@ void flatten(int runNumber, int passNumber)
 	  float theta = 2*atan(exp(-eta));
 	  float z = sin(theta);
 
+	  x = x - vtx_x;
 	  x = z*sin(-beam_angle) + x*cos(-beam_angle);
 	  phi = atan2(y,x);
 
