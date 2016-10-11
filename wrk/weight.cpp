@@ -667,13 +667,18 @@ void flatten(int runNumber, int passNumber)
 
 	  //cout << "uncorrected phi is " << phi << endl;
 
-	  float x = cos(phi);
-	  float y = sin(phi);
-	  float theta = 2*atan(exp(-eta));
-	  float z = sin(theta);
+	  float the = 2*atan(exp(-eta));
+	  float x = sin(the)*cos(phi);
+	  float y = sin(the)*sin(phi);
+	  float z = cos(the);
 
+	  //cout << "eta is " << eta << " theta is " << the << " z is " << z << endl;
+
+	  //cout << "raw x is " << x << endl;
 	  x = x - vtx_x;
+	  //cout << "offset x is " << x << endl;
 	  x = z*sin(-beam_angle) + x*cos(-beam_angle);
+	  //cout << "offset and rotated x is " << x << endl;
 	  phi = atan2(y,x);
 
 	  //cout << "corrected phi is " << phi << endl;

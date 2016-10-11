@@ -1917,11 +1917,11 @@ void flatten(int runNumber, int rp_recal_pass)
 	  // --- calculate angle from pseudorapidity
 	  float theta = 2*atan(exp(-eta));
 	  // --- calculate coordinates from angles
-	  float x = cos(phi);
-	  float y = sin(phi);
-	  float z = sin(theta);
+	  float x = sin(theta)*cos(phi);
+	  float y = sin(theta)*sin(phi);
+	  float z = cos(theta);
 	  // --- apply offset and rotation corrections to coordinates
-	  x = x - vtx_x; // offset // need to find out from FVTX experts if offset needed
+	  x = x - vtx_x; // offset
 	  x = z*sin(-beam_angle) + x*cos(-beam_angle); // rotation
 	  // --- recalculate angles from corrected coordinates
 	  phi = atan2(y,x);
