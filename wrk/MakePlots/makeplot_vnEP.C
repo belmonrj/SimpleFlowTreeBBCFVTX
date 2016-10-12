@@ -6,7 +6,7 @@ TFile* outfile;
 void makeplot_vnEP()
 {
 
-  outfile = TFile::Open("histograms_vnEP.root","update");
+  outfile = TFile::Open("histograms_vnEP.root","recreate");
 
   for ( int i = 2; i < 4; ++i )
     {
@@ -244,56 +244,56 @@ void doenergy(int energy, int harmonic)
   c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsnbbcs.pdf",energy,harmonic));
   c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsnbbcs.png",energy,harmonic));
 
-  hvn_fvtxn->Scale(reso_fvtxN/reso_fvtxN_fn);
-  hvn_fvtxs->Scale(reso_fvtx/reso_fvtx_fn);
-  hvn_bbcs->Scale(reso_bbc/reso_bbc_fn);
+  // hvn_fvtxn->Scale(reso_fvtxN/reso_fvtxN_fn);
+  // hvn_fvtxs->Scale(reso_fvtx/reso_fvtx_fn);
+  // hvn_bbcs->Scale(reso_bbc/reso_bbc_fn);
 
-  delete latex;
-  latex = new TLatex(0.2,0.2,"EP resolutions calculated without CNT");
-  latex->SetNDC();
-  latex->SetTextSize(0.05);
-  latex->Draw();
+  // delete latex;
+  // latex = new TLatex(0.2,0.2,"EP resolutions calculated without CNT");
+  // latex->SetNDC();
+  // latex->SetTextSize(0.05);
+  // latex->Draw();
 
-  //  latex->DrawLatex(0.2,0.2,"EP resolutions calculated without CNT");
+  // //  latex->DrawLatex(0.2,0.2,"EP resolutions calculated without CNT");
 
-  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsnbbcs_fn.pdf",energy,harmonic));
-  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsnbbcs_fn.png",energy,harmonic));
+  // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsnbbcs_fn.pdf",energy,harmonic));
+  // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsnbbcs_fn.png",energy,harmonic));
 
-  c1->Clear();
-  hvn_fvtxs->Draw();
-  hvn_bbcs->Draw("same");
-  tge_pub->Draw("p");
-  leg = new TLegend(0.18,0.68,0.38,0.88);
-  leg->AddEntry(hvn_fvtxs,"Run16 FVTXS","el");
-  leg->AddEntry(hvn_bbcs,"Run16 BBCS","el");
-  if ( energy == 200 && harmonic == 2 ) leg->AddEntry(tge_pub,"Run8 (ppg161)","p");
-  else if ( harmonic == 2 ) leg->AddEntry(tge_pub,"Run8 (200 GeV)","p");
-  leg->SetTextSize(0.05);
-  leg->Draw();
+  // c1->Clear();
+  // hvn_fvtxs->Draw();
+  // hvn_bbcs->Draw("same");
+  // tge_pub->Draw("p");
+  // leg = new TLegend(0.18,0.68,0.38,0.88);
+  // leg->AddEntry(hvn_fvtxs,"Run16 FVTXS","el");
+  // leg->AddEntry(hvn_bbcs,"Run16 BBCS","el");
+  // if ( energy == 200 && harmonic == 2 ) leg->AddEntry(tge_pub,"Run8 (ppg161)","p");
+  // else if ( harmonic == 2 ) leg->AddEntry(tge_pub,"Run8 (200 GeV)","p");
+  // leg->SetTextSize(0.05);
+  // leg->Draw();
 
-  latex->Draw();
+  // latex->Draw();
 
-  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsbbcs_fn.pdf",energy,harmonic));
-  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsbbcs_fn.png",energy,harmonic));
+  // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsbbcs_fn.pdf",energy,harmonic));
+  // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsbbcs_fn.png",energy,harmonic));
 
-  hvn_fvtxn->Scale(2*reso_fvtxN_fn/(reso_fvtxN_fn+reso_fvtxN));
-  hvn_fvtxs->Scale(2*reso_fvtx_fn/(reso_fvtx_fn+reso_fvtx));
-  hvn_bbcs->Scale(2*reso_bbc_fn/(reso_bbc_fn+reso_bbc));
+  // hvn_fvtxn->Scale(2*reso_fvtxN_fn/(reso_fvtxN_fn+reso_fvtxN));
+  // hvn_fvtxs->Scale(2*reso_fvtx_fn/(reso_fvtx_fn+reso_fvtx));
+  // hvn_bbcs->Scale(2*reso_bbc_fn/(reso_bbc_fn+reso_bbc));
 
-  delete latex;
-  latex = new TLatex(0.2,0.2,"Average EP resolutions with and without CNT");
-  latex->SetNDC();
-  latex->SetTextSize(0.05);
-  latex->Draw();
+  // delete latex;
+  // latex = new TLatex(0.2,0.2,"Average EP resolutions with and without CNT");
+  // latex->SetNDC();
+  // latex->SetTextSize(0.05);
+  // latex->Draw();
 
-  //  latex->DrawLatex(0.2,0.2,"Average of EP resolutions with and without CNT");
+  // //  latex->DrawLatex(0.2,0.2,"Average of EP resolutions with and without CNT");
 
-  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsbbcs_ave.pdf",energy,harmonic));
-  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsbbcs_ave.png",energy,harmonic));
+  // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsbbcs_ave.pdf",energy,harmonic));
+  // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsbbcs_ave.png",energy,harmonic));
 
-  delete leg;
-  hvn_fvtxn->Draw("same");
-  leg3->Draw();
+  // delete leg;
+  // hvn_fvtxn->Draw("same");
+  // leg3->Draw();
 
   //latex->Draw();
 
