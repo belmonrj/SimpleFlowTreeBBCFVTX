@@ -585,12 +585,12 @@ void flatten(int runNumber, int passNumber)
           for(int iclus = 0; iclus < d_nFVTX_clus; iclus++)
             {
               // --- offset
-              float fvtx_x      = d_FVTX_x[iclus] - vtx_x;
-              float fvtx_y      = d_FVTX_y[iclus] - vtx_y;
+              float fvtx_x      = d_FVTX_x[iclus];// - vtx_x;
+              float fvtx_y      = d_FVTX_y[iclus];// - vtx_y;
               float fvtx_z      = d_FVTX_z[iclus] - vtx_z;
 
               // --- rotation
-              fvtx_x = fvtx_z*sin(-beam_angle) + fvtx_x*cos(-beam_angle);
+              //fvtx_x = fvtx_z*sin(-beam_angle) + fvtx_x*cos(-beam_angle);
 
               double fvtx_r = sqrt(pow(fvtx_x,2.0)+pow(fvtx_y,2.0));
               double fvtx_the = atan2(fvtx_r,fvtx_z);
@@ -679,7 +679,7 @@ void flatten(int runNumber, int passNumber)
 	  //cout << "offset x is " << x << endl;
 	  x = z*sin(-beam_angle) + x*cos(-beam_angle);
 	  //cout << "offset and rotated x is " << x << endl;
-	  phi = atan2(y,x);
+	  //phi = atan2(y,x);
 
 	  //cout << "corrected phi is " << phi << endl;
 
