@@ -925,26 +925,34 @@ void flatten(int runNumber, int rp_recal_pass)
   TProfile* os_bbcs_d22_west = new TProfile(Form("os_bbcs_d22_west"),Form("os_bbcs_d22_west"),15, 0.0, 3.0, -1.1, 1.1);
   TProfile* os_bbcs_d22_east = new TProfile(Form("os_bbcs_d22_east"),Form("os_bbcs_d22_east"),15, 0.0, 3.0, -1.1, 1.1);
   TProfile* os_bbcs_d22_both = new TProfile(Form("os_bbcs_d22_both"),Form("os_bbcs_d22_both"),15, 0.0, 3.0, -1.1, 1.1);
-
   TProfile* os_fvtxs_d22_west = new TProfile(Form("os_fvtxs_d22_west"),Form("os_fvtxs_d22_west"),15, 0.0, 3.0, -1.1, 1.1);
   TProfile* os_fvtxs_d22_east = new TProfile(Form("os_fvtxs_d22_east"),Form("os_fvtxs_d22_east"),15, 0.0, 3.0, -1.1, 1.1);
   TProfile* os_fvtxs_d22_both = new TProfile(Form("os_fvtxs_d22_both"),Form("os_fvtxs_d22_both"),15, 0.0, 3.0, -1.1, 1.1);
-
   TProfile* os_fvtxn_d22_west = new TProfile(Form("os_fvtxn_d22_west"),Form("os_fvtxn_d22_west"),15, 0.0, 3.0, -1.1, 1.1);
   TProfile* os_fvtxn_d22_east = new TProfile(Form("os_fvtxn_d22_east"),Form("os_fvtxn_d22_east"),15, 0.0, 3.0, -1.1, 1.1);
   TProfile* os_fvtxn_d22_both = new TProfile(Form("os_fvtxn_d22_both"),Form("os_fvtxn_d22_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_tracks_d22_west = new TProfile(Form("os_fvtxs_tracks_d22_west"),Form("os_fvtxs_tracks_d22_west"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_tracks_d22_east = new TProfile(Form("os_fvtxs_tracks_d22_east"),Form("os_fvtxs_tracks_d22_east"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_tracks_d22_both = new TProfile(Form("os_fvtxs_tracks_d22_both"),Form("os_fvtxs_tracks_d22_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_tracks_d22_west = new TProfile(Form("os_fvtxn_tracks_d22_west"),Form("os_fvtxn_tracks_d22_west"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_tracks_d22_east = new TProfile(Form("os_fvtxn_tracks_d22_east"),Form("os_fvtxn_tracks_d22_east"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_tracks_d22_both = new TProfile(Form("os_fvtxn_tracks_d22_both"),Form("os_fvtxn_tracks_d22_both"),15, 0.0, 3.0, -1.1, 1.1);
 
   TProfile* os_bbcs_d32_west = new TProfile(Form("os_bbcs_d32_west"),Form("os_bbcs_d32_west"),15, 0.0, 3.0, -1.1, 1.1);
   TProfile* os_bbcs_d32_east = new TProfile(Form("os_bbcs_d32_east"),Form("os_bbcs_d32_east"),15, 0.0, 3.0, -1.1, 1.1);
   TProfile* os_bbcs_d32_both = new TProfile(Form("os_bbcs_d32_both"),Form("os_bbcs_d32_both"),15, 0.0, 3.0, -1.1, 1.1);
-
   TProfile* os_fvtxs_d32_west = new TProfile(Form("os_fvtxs_d32_west"),Form("os_fvtxs_d32_west"),15, 0.0, 3.0, -1.1, 1.1);
   TProfile* os_fvtxs_d32_east = new TProfile(Form("os_fvtxs_d32_east"),Form("os_fvtxs_d32_east"),15, 0.0, 3.0, -1.1, 1.1);
   TProfile* os_fvtxs_d32_both = new TProfile(Form("os_fvtxs_d32_both"),Form("os_fvtxs_d32_both"),15, 0.0, 3.0, -1.1, 1.1);
-
   TProfile* os_fvtxn_d32_west = new TProfile(Form("os_fvtxn_d32_west"),Form("os_fvtxn_d32_west"),15, 0.0, 3.0, -1.1, 1.1);
   TProfile* os_fvtxn_d32_east = new TProfile(Form("os_fvtxn_d32_east"),Form("os_fvtxn_d32_east"),15, 0.0, 3.0, -1.1, 1.1);
   TProfile* os_fvtxn_d32_both = new TProfile(Form("os_fvtxn_d32_both"),Form("os_fvtxn_d32_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_tracks_d32_west = new TProfile(Form("os_fvtxs_tracks_d32_west"),Form("os_fvtxs_tracks_d32_west"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_tracks_d32_east = new TProfile(Form("os_fvtxs_tracks_d32_east"),Form("os_fvtxs_tracks_d32_east"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_tracks_d32_both = new TProfile(Form("os_fvtxs_tracks_d32_both"),Form("os_fvtxs_tracks_d32_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_tracks_d32_west = new TProfile(Form("os_fvtxn_tracks_d32_west"),Form("os_fvtxn_tracks_d32_west"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_tracks_d32_east = new TProfile(Form("os_fvtxn_tracks_d32_east"),Form("os_fvtxn_tracks_d32_east"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_tracks_d32_both = new TProfile(Form("os_fvtxn_tracks_d32_both"),Form("os_fvtxn_tracks_d32_both"),15, 0.0, 3.0, -1.1, 1.1);
 
   TProfile* os_bbcs_sin22_west = new TProfile(Form("os_bbcs_sin22_west"),Form("os_bbcs_sin22_west"),15, 0.0, 3.0, -1.1, 1.1);
   TProfile* os_bbcs_sin22_east = new TProfile(Form("os_bbcs_sin22_east"),Form("os_bbcs_sin22_east"),15, 0.0, 3.0, -1.1, 1.1);
@@ -1208,6 +1216,12 @@ void flatten(int runNumber, int rp_recal_pass)
   TProfile* os_fvtxn_d22eta_west = new TProfile(Form("os_fvtxn_d22eta_west"),Form("os_fvtxn_d22eta_west"),32, -3.2, 3.2, -1.1, 1.1);
   TProfile* os_fvtxn_d22eta_east = new TProfile(Form("os_fvtxn_d22eta_east"),Form("os_fvtxn_d22eta_east"),32, -3.2, 3.2, -1.1, 1.1);
   TProfile* os_fvtxn_d22eta_both = new TProfile(Form("os_fvtxn_d22eta_both"),Form("os_fvtxn_d22eta_both"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxs_tracks_d22eta_west = new TProfile(Form("os_fvtxs_tracks_d22eta_west"),Form("os_fvtxs_tracks_d22eta_west"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxs_tracks_d22eta_east = new TProfile(Form("os_fvtxs_tracks_d22eta_east"),Form("os_fvtxs_tracks_d22eta_east"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxs_tracks_d22eta_both = new TProfile(Form("os_fvtxs_tracks_d22eta_both"),Form("os_fvtxs_tracks_d22eta_both"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxn_tracks_d22eta_west = new TProfile(Form("os_fvtxn_tracks_d22eta_west"),Form("os_fvtxn_tracks_d22eta_west"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxn_tracks_d22eta_east = new TProfile(Form("os_fvtxn_tracks_d22eta_east"),Form("os_fvtxn_tracks_d22eta_east"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxn_tracks_d22eta_both = new TProfile(Form("os_fvtxn_tracks_d22eta_both"),Form("os_fvtxn_tracks_d22eta_both"),32, -3.2, 3.2, -1.1, 1.1);
   TProfile* os_bbcs_d32eta_west = new TProfile(Form("os_bbcs_d32eta_west"),Form("os_bbcs_d32eta_west"),32, -3.2, 3.2, -1.1, 1.1);
   TProfile* os_bbcs_d32eta_east = new TProfile(Form("os_bbcs_d32eta_east"),Form("os_bbcs_d32eta_east"),32, -3.2, 3.2, -1.1, 1.1);
   TProfile* os_bbcs_d32eta_both = new TProfile(Form("os_bbcs_d32eta_both"),Form("os_bbcs_d32eta_both"),32, -3.2, 3.2, -1.1, 1.1);
@@ -1217,6 +1231,12 @@ void flatten(int runNumber, int rp_recal_pass)
   TProfile* os_fvtxn_d32eta_west = new TProfile(Form("os_fvtxn_d32eta_west"),Form("os_fvtxn_d32eta_west"),32, -3.2, 3.2, -1.1, 1.1);
   TProfile* os_fvtxn_d32eta_east = new TProfile(Form("os_fvtxn_d32eta_east"),Form("os_fvtxn_d32eta_east"),32, -3.2, 3.2, -1.1, 1.1);
   TProfile* os_fvtxn_d32eta_both = new TProfile(Form("os_fvtxn_d32eta_both"),Form("os_fvtxn_d32eta_both"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxs_tracks_d32eta_west = new TProfile(Form("os_fvtxs_tracks_d32eta_west"),Form("os_fvtxs_tracks_d32eta_west"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxs_tracks_d32eta_east = new TProfile(Form("os_fvtxs_tracks_d32eta_east"),Form("os_fvtxs_tracks_d32eta_east"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxs_tracks_d32eta_both = new TProfile(Form("os_fvtxs_tracks_d32eta_both"),Form("os_fvtxs_tracks_d32eta_both"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxn_tracks_d32eta_west = new TProfile(Form("os_fvtxn_tracks_d32eta_west"),Form("os_fvtxn_tracks_d32eta_west"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxn_tracks_d32eta_east = new TProfile(Form("os_fvtxn_tracks_d32eta_east"),Form("os_fvtxn_tracks_d32eta_east"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxn_tracks_d32eta_both = new TProfile(Form("os_fvtxn_tracks_d32eta_both"),Form("os_fvtxn_tracks_d32eta_both"),32, -3.2, 3.2, -1.1, 1.1);
 
   // ---------------------------------------------------------------------------------------------------------
 
@@ -2897,6 +2917,27 @@ void flatten(int runNumber, int rp_recal_pass)
 
               // ------------------------------------------------------------
 
+              float os_fvtxs_tracks_uq2 = ( (ux2*os_fvtxs_tracks_qx2) + (uy2*os_fvtxs_tracks_qy2) ) / ( os_fvtxs_tracks_qw );
+              float os_fvtxs_tracks_uq3 = ( (ux3*os_fvtxs_tracks_qx3) + (uy3*os_fvtxs_tracks_qy3) ) / ( os_fvtxs_tracks_qw );
+              float os_fvtxn_tracks_uq2 = ( (ux2*os_fvtxn_tracks_qx2) + (uy2*os_fvtxn_tracks_qy2) ) / ( os_fvtxn_tracks_qw );
+              float os_fvtxn_tracks_uq3 = ( (ux3*os_fvtxn_tracks_qx3) + (uy3*os_fvtxn_tracks_qy3) ) / ( os_fvtxn_tracks_qw );
+
+              os_fvtxs_tracks_d22_both->Fill(pt_angle,os_fvtxs_tracks_uq2);
+              if ( dcarm == 1 ) os_fvtxs_tracks_d22_west->Fill(pt_angle,os_fvtxs_tracks_uq2);
+              if ( dcarm == 0 ) os_fvtxs_tracks_d22_east->Fill(pt_angle,os_fvtxs_tracks_uq2);
+              os_fvtxn_tracks_d22_both->Fill(pt_angle,os_fvtxn_tracks_uq2);
+              if ( dcarm == 1 ) os_fvtxn_tracks_d22_west->Fill(pt_angle,os_fvtxn_tracks_uq2);
+              if ( dcarm == 0 ) os_fvtxn_tracks_d22_east->Fill(pt_angle,os_fvtxn_tracks_uq2);
+
+              os_fvtxs_tracks_d32_both->Fill(pt_angle,os_fvtxs_tracks_uq3);
+              if ( dcarm == 1 ) os_fvtxs_tracks_d32_west->Fill(pt_angle,os_fvtxs_tracks_uq3);
+              if ( dcarm == 0 ) os_fvtxs_tracks_d32_east->Fill(pt_angle,os_fvtxs_tracks_uq3);
+              os_fvtxn_tracks_d32_both->Fill(pt_angle,os_fvtxn_tracks_uq3);
+              if ( dcarm == 1 ) os_fvtxn_tracks_d32_west->Fill(pt_angle,os_fvtxn_tracks_uq3);
+              if ( dcarm == 0 ) os_fvtxn_tracks_d32_east->Fill(pt_angle,os_fvtxn_tracks_uq3);
+
+              // ------------------------------------------------------------
+
               npc1_os_cntbbcs_c22->Fill(npc1,os_bbc_uq2);
               npc1_os_cntfvtxs_c22->Fill(npc1,os_fvtxs_uq2);
               npc1_os_cntfvtxn_c22->Fill(npc1,os_fvtxn_uq2);
@@ -2931,6 +2972,20 @@ void flatten(int runNumber, int rp_recal_pass)
               os_fvtxn_d32eta_both->Fill(eta,os_fvtxn_uq2);
               if ( dcarm == 1 ) os_fvtxn_d32eta_west->Fill(eta,os_fvtxn_uq3);
               if ( dcarm == 0 ) os_fvtxn_d32eta_east->Fill(eta,os_fvtxn_uq3);
+
+              os_fvtxs_tracks_d22eta_both->Fill(eta,os_fvtxs_tracks_uq2);
+              if ( dcarm == 1 ) os_fvtxs_tracks_d22eta_west->Fill(eta,os_fvtxs_tracks_uq2);
+              if ( dcarm == 0 ) os_fvtxs_tracks_d22eta_east->Fill(eta,os_fvtxs_tracks_uq2);
+              os_fvtxn_tracks_d22eta_both->Fill(eta,os_fvtxn_tracks_uq2);
+              if ( dcarm == 1 ) os_fvtxn_tracks_d22eta_west->Fill(eta,os_fvtxn_tracks_uq2);
+              if ( dcarm == 0 ) os_fvtxn_tracks_d22eta_east->Fill(eta,os_fvtxn_tracks_uq2);
+
+              os_fvtxs_tracks_d32eta_both->Fill(eta,os_fvtxs_tracks_uq3);
+              if ( dcarm == 1 ) os_fvtxs_tracks_d32eta_west->Fill(eta,os_fvtxs_tracks_uq3);
+              if ( dcarm == 0 ) os_fvtxs_tracks_d32eta_east->Fill(eta,os_fvtxs_tracks_uq3);
+              os_fvtxn_tracks_d32eta_both->Fill(eta,os_fvtxn_tracks_uq3);
+              if ( dcarm == 1 ) os_fvtxn_tracks_d32eta_west->Fill(eta,os_fvtxn_tracks_uq3);
+              if ( dcarm == 0 ) os_fvtxn_tracks_d32eta_east->Fill(eta,os_fvtxn_tracks_uq3);
 
               // ------------------------------------------------------------
 
@@ -3299,8 +3354,8 @@ void flatten(int runNumber, int rp_recal_pass)
 
           for ( int i = 0; i < nfvtxt; ++i )
             {
-              float phi = fphi[i]; // need to deal with rotation(?)
-              float eta = feta[i]; // need to deal with rotation(?)
+              float phi = fphi[i];
+              float eta = feta[i];
               int ns = 0;
               int nn = 0;
               if ( eta > 0 ) nn = 1;
@@ -3349,6 +3404,10 @@ void flatten(int runNumber, int rp_recal_pass)
               float os_fvtxs_uq3 = ( (ux3*os_fvtxs_qx3) + (uy3*os_fvtxs_qy3) - ns ) / ( os_fvtxs_qw - ns );
               float os_fvtxn_uq2 = ( (ux2*os_fvtxn_qx2) + (uy2*os_fvtxn_qy2) - nn ) / ( os_fvtxn_qw - nn );
               float os_fvtxn_uq3 = ( (ux3*os_fvtxn_qx3) + (uy3*os_fvtxn_qy3) - nn ) / ( os_fvtxn_qw - nn );
+              float os_fvtxs_tracks_uq2 = ( (ux2*os_fvtxs_tracks_qx2) + (uy2*os_fvtxs_tracks_qy2) - ns ) / ( os_fvtxs_tracks_qw - ns );
+              float os_fvtxs_tracks_uq3 = ( (ux3*os_fvtxs_tracks_qx3) + (uy3*os_fvtxs_tracks_qy3) - ns ) / ( os_fvtxs_tracks_qw - ns );
+              float os_fvtxn_tracks_uq2 = ( (ux2*os_fvtxn_tracks_qx2) + (uy2*os_fvtxn_tracks_qy2) - nn ) / ( os_fvtxn_tracks_qw - nn );
+              float os_fvtxn_tracks_uq3 = ( (ux3*os_fvtxn_tracks_qx3) + (uy3*os_fvtxn_tracks_qy3) - nn ) / ( os_fvtxn_tracks_qw - nn );
 
               os_bbcs_d22eta_both->Fill(eta,os_bbc_uq2);
               os_bbcs_d22eta_west->Fill(eta,os_bbc_uq2);
@@ -3359,6 +3418,12 @@ void flatten(int runNumber, int rp_recal_pass)
               os_fvtxn_d22eta_both->Fill(eta,os_fvtxn_uq2);
               os_fvtxn_d22eta_west->Fill(eta,os_fvtxn_uq2);
               os_fvtxn_d22eta_east->Fill(eta,os_fvtxn_uq2);
+              os_fvtxs_tracks_d22eta_both->Fill(eta,os_fvtxs_tracks_uq2);
+              os_fvtxs_tracks_d22eta_west->Fill(eta,os_fvtxs_tracks_uq2);
+              os_fvtxs_tracks_d22eta_east->Fill(eta,os_fvtxs_tracks_uq2);
+              os_fvtxn_tracks_d22eta_both->Fill(eta,os_fvtxn_tracks_uq2);
+              os_fvtxn_tracks_d22eta_west->Fill(eta,os_fvtxn_tracks_uq2);
+              os_fvtxn_tracks_d22eta_east->Fill(eta,os_fvtxn_tracks_uq2);
 
               os_bbcs_d32eta_both->Fill(eta,os_bbc_uq3);
               os_bbcs_d32eta_west->Fill(eta,os_bbc_uq3);
@@ -3369,6 +3434,12 @@ void flatten(int runNumber, int rp_recal_pass)
               os_fvtxn_d32eta_both->Fill(eta,os_fvtxn_uq3);
               os_fvtxn_d32eta_west->Fill(eta,os_fvtxn_uq3);
               os_fvtxn_d32eta_east->Fill(eta,os_fvtxn_uq3);
+              os_fvtxs_tracks_d32eta_both->Fill(eta,os_fvtxs_tracks_uq3);
+              os_fvtxs_tracks_d32eta_west->Fill(eta,os_fvtxs_tracks_uq3);
+              os_fvtxs_tracks_d32eta_east->Fill(eta,os_fvtxs_tracks_uq3);
+              os_fvtxn_tracks_d32eta_both->Fill(eta,os_fvtxn_tracks_uq3);
+              os_fvtxn_tracks_d32eta_west->Fill(eta,os_fvtxn_tracks_uq3);
+              os_fvtxn_tracks_d32eta_east->Fill(eta,os_fvtxn_tracks_uq3);
 
             }
 
