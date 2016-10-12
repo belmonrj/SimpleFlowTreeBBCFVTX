@@ -355,12 +355,12 @@ void flatten(int runNumber, int rp_recal_pass)
   int fvtxn2_nw_index = 21;
   int fvtxn3_nw_index = 22;
   int bbcs_nw_index   = 23;
-  int fvtxs_tracks_index       = 24; // come back here
-  //int fvtxs_tracks_inner_index = 25;
-  //int fvtxs_tracks_outer_index = 26;
-  int fvtxn_tracks_index       = 27;
-  //int fvtxn_tracks_inner_index = 28;
-  //int fvtxn_tracks_outer_index = 29;
+  int fvtxs_tracks_index  = 24; // come back here
+  int fvtxs0_tracks_index = 25; // inner
+  int fvtxs1_tracks_index = 26; // outer
+  int fvtxn_tracks_index  = 27;
+  int fvtxn0_tracks_index = 28;
+  int fvtxn1_tracks_index = 29;
 
 
   float pi = acos(-1.0); // defined in RpPar.h, i wonder why no warning
@@ -494,6 +494,15 @@ void flatten(int runNumber, int rp_recal_pass)
   TH1D* th1d_dreso3_BBC_CNT = new TH1D("th1d_dreso3_BBC_CNT","",252,-6.3,6.3);
   TH1D* th1d_dreso3_BBC_FVTX = new TH1D("th1d_dreso3_BBC_FVTX","",252,-6.3,6.3);
   TH1D* th1d_dreso3_CNT_FVTX = new TH1D("th1d_dreso3_CNT_FVTX","",252,-6.3,6.3);
+
+  // --- have a quick look at fvtxs clusters and trucks, because why not
+  TProfile* tp1f_reso2_FVTX_FVTX = new TProfile("tp1f_reso2_FVTX_FVTX","",1,-0.5,0.5,-1e6,1e6,"");
+  TH1D* th1d_reso2_FVTX_FVTX = new TH1D("th1d_reso2_FVTX_FVTX","",220,-1.1,1.1);
+  TH1D* th1d_dreso2_FVTX_FVTX = new TH1D("th1d_dreso2_FVTX_FVTX","",252,-6.3,6.3);
+  TProfile* tp1f_reso3_FVTX_FVTX = new TProfile("tp1f_reso3_FVTX_FVTX","",1,-0.5,0.5,-1e6,1e6,"");
+  TH1D* th1d_reso3_FVTX_FVTX = new TH1D("th1d_reso3_FVTX_FVTX","",220,-1.1,1.1);
+  TH1D* th1d_dreso3_FVTX_FVTX = new TH1D("th1d_dreso3_FVTX_FVTX","",252,-6.3,6.3);
+
 
   // --- new EP resolution histograms using FVTX north
   TProfile* tp1f_reso2_BBC_FVTXN = new TProfile("tp1f_reso2_BBC_FVTXN","",1,-0.5,0.5,-1e6,1e6,"");
@@ -2518,6 +2527,22 @@ void flatten(int runNumber, int rp_recal_pass)
       float fvtx2_north_psi3_dcnw;
       float fvtx3_north_psi3_dcnw;
 
+      float fvtx_south_psi2_tracks;
+      float fvtx0_south_psi2_tracks;
+      float fvtx1_south_psi2_tracks;
+
+      float fvtx_south_psi3_tracks;
+      float fvtx0_south_psi3_tracks;
+      float fvtx1_south_psi3_tracks;
+
+      float fvtx_north_psi2_tracks;
+      float fvtx0_north_psi2_tracks;
+      float fvtx1_north_psi2_tracks;
+
+      float fvtx_north_psi3_tracks;
+      float fvtx0_north_psi3_tracks;
+      float fvtx1_north_psi3_tracks;
+
       if ( bbc_pmts )
         {
           bbc_south_psi2_docalib = (sumxy[1][bbcs_index][2]>0)?sumxy[1][bbcs_index][3]:-9999.9;
@@ -2571,6 +2596,20 @@ void flatten(int runNumber, int rp_recal_pass)
           fvtx1_north_psi3_dcnw = (sumxy[2][fvtxn1_nw_index][2]>4) ? sumxy[2][fvtxn1_nw_index][3] : -9999.9;
           fvtx2_north_psi3_dcnw = (sumxy[2][fvtxn2_nw_index][2]>4) ? sumxy[2][fvtxn2_nw_index][3] : -9999.9;
           fvtx3_north_psi3_dcnw = (sumxy[2][fvtxn3_nw_index][2]>4) ? sumxy[2][fvtxn3_nw_index][3] : -9999.9;
+          // --- tracks don't belong with clusters I guess, but...
+          fvtx_south_psi2_tracks  = (sumxy[1][fvtxs_tracks_index][2]>4)  ? sumxy[1][fvtxs_tracks_index][3]  : -9999.9;
+          fvtx0_south_psi2_tracks = (sumxy[1][fvtxs0_tracks_index][2]>4) ? sumxy[1][fvtxs0_tracks_index][3] : -9999.9;
+          fvtx1_south_psi2_tracks = (sumxy[1][fvtxs1_tracks_index][2]>4) ? sumxy[1][fvtxs1_tracks_index][3] : -9999.9;
+          fvtx_south_psi3_tracks  = (sumxy[2][fvtxs_tracks_index][2]>4)  ? sumxy[2][fvtxs_tracks_index][3]  : -9999.9;
+          fvtx0_south_psi3_tracks = (sumxy[2][fvtxs0_tracks_index][2]>4) ? sumxy[2][fvtxs0_tracks_index][3] : -9999.9;
+          fvtx1_south_psi3_tracks = (sumxy[2][fvtxs1_tracks_index][2]>4) ? sumxy[2][fvtxs1_tracks_index][3] : -9999.9;
+          // ---
+          fvtx_north_psi2_tracks  = (sumxy[1][fvtxn_tracks_index][2]>4)  ? sumxy[1][fvtxn_tracks_index][3]  : -9999.9;
+          fvtx0_north_psi2_tracks = (sumxy[1][fvtxn0_tracks_index][2]>4) ? sumxy[1][fvtxn0_tracks_index][3] : -9999.9;
+          fvtx1_north_psi2_tracks = (sumxy[1][fvtxn1_tracks_index][2]>4) ? sumxy[1][fvtxn1_tracks_index][3] : -9999.9;
+          fvtx_north_psi3_tracks  = (sumxy[2][fvtxn_tracks_index][2]>4)  ? sumxy[2][fvtxn_tracks_index][3]  : -9999.9;
+          fvtx0_north_psi3_tracks = (sumxy[2][fvtxn0_tracks_index][2]>4) ? sumxy[2][fvtxn0_tracks_index][3] : -9999.9;
+          fvtx1_north_psi3_tracks = (sumxy[2][fvtxn1_tracks_index][2]>4) ? sumxy[2][fvtxn1_tracks_index][3] : -9999.9;
         }
 
 
@@ -2621,6 +2660,13 @@ void flatten(int runNumber, int rp_recal_pass)
       tp1f_reso42_BBC_FVTXN->Fill(0.0,cos(4*(bbc_south_psi2_docalib-fvtx_north_psi2_docalib)));
       tp1f_reso42_FVTXS_FVTXN->Fill(0.0,cos(4*(fvtx_south_psi2_docalib-fvtx_north_psi2_docalib)));
 
+      // --- FVTX clusters and tracks
+      tp1f_reso2_FVTX_FVTX->Fill(0.0,cos(2*(fvtx_south_psi2_docalib-fvtx_south_psi2_tracks)));
+      tp1f_reso3_FVTX_FVTX->Fill(0.0,cos(3*(fvtx_south_psi3_docalib-fvtx_south_psi3_tracks)));
+      th1d_reso2_FVTX_FVTX->Fill(cos(2*(fvtx_south_psi2_docalib-fvtx_south_psi2_tracks)));
+      th1d_reso3_FVTX_FVTX->Fill(cos(3*(fvtx_south_psi3_docalib-fvtx_south_psi3_tracks)));
+      th1d_dreso2_FVTX_FVTX->Fill(fvtx_south_psi2_docalib-fvtx_south_psi2_tracks);
+      th1d_dreso3_FVTX_FVTX->Fill(fvtx_south_psi3_docalib-fvtx_south_psi3_tracks);
       // ---
       // --- resolution histograms
       // ---
