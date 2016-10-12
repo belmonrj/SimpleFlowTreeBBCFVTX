@@ -9,15 +9,15 @@ void newweight()
 
   fvtx_track_weight1d(455355);
 
-  return;
+  //return;
 
-  bbctube(456652);
+  //bbctube(456652);
 
   // return;
 
   //runweight2d(456652); // remember when this was needed?
   //newweight2d(455355); // now this is needed, and that could change again in a little while (must be some weird environment thing)
-  newweight2d(456652); // now this is needed, and that could change again in a little while (must be some weird environment thing)
+  //newweight2d(456652); // now this is needed, and that could change again in a little while (must be some weird environment thing)
   //runweight2d(455355);
 
   //  return;
@@ -28,32 +28,38 @@ void newweight()
   fin.open("list_200.short");
   while ( fin >> run )
     {
-      newweight2d(run);
-      bbctube(run);
+      //newweight2d(run);
+      //bbctube(run);
+      fvtx_track_weight1d(run);
     }
   fin.close();
+
+  return;
 
   fin.open("list_62.short");
   while ( fin >> run )
     {
-      newweight2d(run);
-      bbctube(run);
+      // newweight2d(run);
+      // bbctube(run);
+      fvtx_track_weight1d(run);
     }
   fin.close();
 
   fin.open("list_39.short");
   while ( fin >> run )
     {
-      newweight2d(run);
-      bbctube(run);
+      // newweight2d(run);
+      // bbctube(run);
+      fvtx_track_weight1d(run);
     }
   fin.close();
 
   fin.open("list_20.short");
   while ( fin >> run )
     {
-      newweight2d(run);
-      bbctube(run);
+      // newweight2d(run);
+      // bbctube(run);
+      fvtx_track_weight1d(run);
     }
   fin.close();
 
