@@ -24,66 +24,6 @@ void doit(int handle)
     }
 
   // ---
-
-  TProfile* tp1f_os_bbcs_d22_both = (TProfile*)file->Get("os_bbcs_d22_both");
-  TProfile* tp1f_os_bbcs_c22 = (TProfile*)file->Get("os_bbcs_c22");
-  double os_bbcs_c22 = tp1f_os_bbcs_c22->GetBinContent(1);
-  if ( os_bbcs_c22 < 0 ) cout << "YOU'RE GONNA DIE" << endl;
-  double os_bbcs_v22 = sqrt(fabs(os_bbcs_c22));
-  cout << os_bbcs_v22 << endl;
-
-  TProfile* tp1f_os_bbcs_d24_out_both = (TProfile*)file->Get("os_bbcs_d24_out_both");
-  TProfile* tp1f_os_bbcs_c24 = (TProfile*)file->Get("os_bbcs_c24");
-  double os_bbcs_c24 = tp1f_os_bbcs_c24->GetBinContent(1);
-
-  double os_bbcs_cumulant = 2*os_bbcs_c22*os_bbcs_c22 - os_bbcs_c24;
-  cout << os_bbcs_c24 << endl;
-  cout << 2*os_bbcs_c22*os_bbcs_c22 << endl;
-  if ( os_bbcs_cumulant < 0 ) cout << "YOU'RE GONNA DIE" << endl;
-  double os_bbcs_v24 = pow(fabs(os_bbcs_c24),0.25);
-  cout << os_bbcs_v24 << endl;
-
-  tp1f_os_bbcs_d24_out_both->Draw();
-  c1->Print("FigsFour/fourpc_bbcs_pt.png");
-
-  TH1D* th1d_os_bbcs_d22_both = tp1f_os_bbcs_d22_both->ProjectionX();
-  TH1D* th1d_os_bbcs_d24_out_both = tp1f_os_bbcs_d24_out_both->ProjectionX();
-  th1d_os_bbcs_d22_both->Scale(2*os_bbcs_c22);
-  th1d_os_bbcs_d22_both->Add(th1d_os_bbcs_d24_out_both,-1.0);
-  th1d_os_bbcs_d22_both->Draw();
-  c1->Print("FigsFour/cumulant4pc_bbcs_pt.png");
-
-  // ---
-
-  TProfile* tp1f_os_fvtxs_d22_both = (TProfile*)file->Get("os_fvtxs_d22_both");
-  TProfile* tp1f_os_fvtxs_c22 = (TProfile*)file->Get("os_fvtxs_c22");
-  double os_fvtxs_c22 = tp1f_os_fvtxs_c22->GetBinContent(1);
-  if ( os_fvtxs_c22 < 0 ) cout << "YOU'RE GONNA DIE" << endl;
-  double os_fvtxs_v22 = sqrt(fabs(os_fvtxs_c22));
-  cout << os_fvtxs_v22 << endl;
-
-  TProfile* tp1f_os_fvtxs_d24_out_both = (TProfile*)file->Get("os_fvtxs_d24_out_both");
-  TProfile* tp1f_os_fvtxs_c24 = (TProfile*)file->Get("os_fvtxs_c24");
-  double os_fvtxs_c24 = tp1f_os_fvtxs_c24->GetBinContent(1);
-
-  double os_fvtxs_cumulant = 2*os_fvtxs_c22*os_fvtxs_c22 - os_fvtxs_c24;
-  cout << os_fvtxs_c24 << endl;
-  cout << 2*os_fvtxs_c22*os_fvtxs_c22 << endl;
-  if ( os_fvtxs_cumulant < 0 ) cout << "YOU'RE GONNA DIE" << endl;
-  double os_fvtxs_v24 = pow(fabs(os_fvtxs_c24),0.25);
-  cout << os_fvtxs_v24 << endl;
-
-  tp1f_os_fvtxs_d24_out_both->Draw();
-  c1->Print("FigsFour/fourpc_fvtxs_pt.png");
-
-  TH1D* th1d_os_fvtxs_d22_both = tp1f_os_fvtxs_d22_both->ProjectionX();
-  TH1D* th1d_os_fvtxs_d24_out_both = tp1f_os_fvtxs_d24_out_both->ProjectionX();
-  th1d_os_fvtxs_d22_both->Scale(2*os_fvtxs_c22);
-  th1d_os_fvtxs_d22_both->Add(th1d_os_fvtxs_d24_out_both,-1.0);
-  th1d_os_fvtxs_d22_both->Draw();
-  c1->Print("FigsFour/cumulant4pc_fvtxs_pt.png");
-
-  // ---
   // --- now let's have a look at the c24 vs nfvtxt
   // ---
 
@@ -227,6 +167,8 @@ void doit(int handle)
   th1d_nfvtxt_fvtxs_c22a->Scale(-2.0);
   th1d_nfvtxt_fvtxs_c22a->Add(th1d_nfvtxt_fvtxs_c24a,1.0);
   th1d_nfvtxt_fvtxs_c22a->Draw();
+  th1d_nfvtxt_fvtxs_c22a->SetMaximum(1e-4);
+  th1d_nfvtxt_fvtxs_c22a->SetMinimum(-1e-4);
   TLine line(0.0,0.0,75.0,0.0);
   line.SetLineWidth(2);
   line.SetLineStyle(2);
@@ -242,6 +184,8 @@ void doit(int handle)
   th1d_nfvtxt_fvtxn_c22a->Scale(-2.0);
   th1d_nfvtxt_fvtxn_c22a->Add(th1d_nfvtxt_fvtxn_c24a,1.0);
   th1d_nfvtxt_fvtxn_c22a->Draw();
+  th1d_nfvtxt_fvtxn_c22a->SetMaximum(1e-4);
+  th1d_nfvtxt_fvtxn_c22a->SetMinimum(-1e-4);
   TLine line(0.0,0.0,75.0,0.0);
   line.SetLineWidth(2);
   line.SetLineStyle(2);
@@ -257,6 +201,8 @@ void doit(int handle)
   th1d_nfvtxt_fvtxs_tracks_c22a->Scale(-2.0);
   th1d_nfvtxt_fvtxs_tracks_c22a->Add(th1d_nfvtxt_fvtxs_tracks_c24a,1.0);
   th1d_nfvtxt_fvtxs_tracks_c22a->Draw();
+  th1d_nfvtxt_fvtxs_tracks_c22a->SetMaximum(1e-4);
+  th1d_nfvtxt_fvtxs_tracks_c22a->SetMinimum(-1e-4);
   TLine line(0.0,0.0,75.0,0.0);
   line.SetLineWidth(2);
   line.SetLineStyle(2);
@@ -272,6 +218,8 @@ void doit(int handle)
   th1d_nfvtxt_fvtxn_tracks_c22a->Scale(-2.0);
   th1d_nfvtxt_fvtxn_tracks_c22a->Add(th1d_nfvtxt_fvtxn_tracks_c24a,1.0);
   th1d_nfvtxt_fvtxn_tracks_c22a->Draw();
+  th1d_nfvtxt_fvtxn_tracks_c22a->SetMaximum(1e-4);
+  th1d_nfvtxt_fvtxn_tracks_c22a->SetMinimum(-1e-4);
   TLine line(0.0,0.0,75.0,0.0);
   line.SetLineWidth(2);
   line.SetLineStyle(2);
@@ -287,6 +235,8 @@ void doit(int handle)
   th1d_nfvtxt_fvtxc_tracks_c22a->Scale(-2.0);
   th1d_nfvtxt_fvtxc_tracks_c22a->Add(th1d_nfvtxt_fvtxc_tracks_c24a,1.0);
   th1d_nfvtxt_fvtxc_tracks_c22a->Draw();
+  th1d_nfvtxt_fvtxc_tracks_c22a->SetMaximum(1e-4);
+  th1d_nfvtxt_fvtxc_tracks_c22a->SetMinimum(-1e-4);
   TLine line(0.0,0.0,75.0,0.0);
   line.SetLineWidth(2);
   line.SetLineStyle(2);
