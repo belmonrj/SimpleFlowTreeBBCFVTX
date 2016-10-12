@@ -2,8 +2,14 @@ void newweight2d(int);
 
 void bbctube(int);
 
+void fvtx_track_weight1d(int);
+
 void newweight()
 {
+
+  fvtx_track_weight1d(455355);
+
+  return;
 
   bbctube(456652);
 
@@ -529,3 +535,143 @@ void bbctube(int run)
   delete c1;
 
 }
+
+
+// --- come back here
+
+void fvtx_track_weight1d(int run)
+{
+
+  cout << "Now processing run " << run << endl;
+
+  TCanvas* c1 = new TCanvas("c1","");
+
+  TFile* file = TFile::Open(Form("RootFiles/ftweight_run%d_pass0.root",run));
+  if ( !file )
+    {
+      cout << "WARNING: file does not exist for run " << run << endl;
+      return;
+    }
+  TList* list = (TList*)file->GetListOfKeys();
+  int size = list->GetSize();
+  if ( size < 1 )
+    {
+      cout << "WARNING: file does not have enough keys, run " << run << endl;
+      return;
+    }
+
+  // ---
+  // ---
+  // ---
+
+  TFile* fout = TFile::Open(Form("WeightFiles/ftweight1d_run%d.root",run),"recreate");
+
+  TH1D* th1d_fvtxs_track_phi  = (TH1D*)((TH1D*)file->Get("th1d_fvtxs_track_phi" ))->Clone();
+  TH1D* th1d_fvtxs0_track_phi = (TH1D*)((TH1D*)file->Get("th1d_fvtxs0_track_phi"))->Clone();
+  TH1D* th1d_fvtxs1_track_phi = (TH1D*)((TH1D*)file->Get("th1d_fvtxs1_track_phi"))->Clone();
+  // TH1D* th1d_fvtxs2_track_phi = (TH1D*)((TH1D*)file->Get("th1d_fvtxs2_track_phi"))->Clone();
+  // TH1D* th1d_fvtxs3_track_phi = (TH1D*)((TH1D*)file->Get("th1d_fvtxs3_track_phi"))->Clone();
+
+  TH1D* th1d_weight_fvtxs  = (TH1D*)th1d_fvtxs_track_phi ->Clone("th1d_fvtxs_track_phi_weight");
+  TH1D* th1d_weight_fvtxs0 = (TH1D*)th1d_fvtxs0_track_phi->Clone("th1d_fvtxs0_track_phi_weight");
+  TH1D* th1d_weight_fvtxs1 = (TH1D*)th1d_fvtxs1_track_phi->Clone("th1d_fvtxs1_track_phi_weight");
+  // TH1D* th1d_weight_fvtxs2 = (TH1D*)th1d_fvtxs2_track_phi->Clone("th1d_fvtxs2_track_phi_weight");
+  // TH1D* th1d_weight_fvtxs3 = (TH1D*)th1d_fvtxs3_track_phi->Clone("th1d_fvtxs3_track_phi_weight");
+
+  const int nbins = 50;
+  if ( th1d_fvtxs_track_phi->GetNbinsX() != nbins )
+    {
+      cout << "YOU'RE GONNA DIE" << endl;
+      return;
+    }
+
+  double ave = th1d_fvtxs_track_phi->Integral(1,nbins); // use 1 and nbins to exclude underflow (0) and overflow (nbins+1)
+  double ave0 = th1d_fvtxs0_track_phi->Integral(1,nbins);
+  double ave1 = th1d_fvtxs1_track_phi->Integral(1,nbins);
+  // double ave2 = th1d_fvtxs2_track_phi->Integral(1,nbins);
+  // double ave3 = th1d_fvtxs3_track_phi->Integral(1,nbins);
+  ave /= nbins;
+  ave0 /= nbins;
+  ave1 /= nbins;
+  // ave2 /= nbins;
+  // ave3 /= nbins;
+  for ( int i = 0; i < nbins; ++i )
+    {
+      double phi = th1d_fvtxs_track_phi->GetBinCenter(i+1);
+      double weight = ave/th1d_fvtxs_track_phi->GetBinContent(i+1);
+      double weight0 = ave0/th1d_fvtxs0_track_phi->GetBinContent(i+1);
+      double weight1 = ave1/th1d_fvtxs1_track_phi->GetBinContent(i+1);
+      // double weight2 = ave2/th1d_fvtxs2_track_phi->GetBinContent(i+1);
+      // double weight3 = ave3/th1d_fvtxs3_track_phi->GetBinContent(i+1);
+      if ( !TMath::Finite(weight) ) weight = 0;
+      if ( !TMath::Finite(weight0) ) weight0 = 0;
+      if ( !TMath::Finite(weight1) ) weight1 = 0;
+      // if ( !TMath::Finite(weight2) ) weight2 = 0;
+      // if ( !TMath::Finite(weight3) ) weight3 = 0;
+      th1d_weight_fvtxs->SetBinContent(i+1,weight);
+      th1d_weight_fvtxs0->SetBinContent(i+1,weight0);
+      th1d_weight_fvtxs1->SetBinContent(i+1,weight1);
+      // th1d_weight_fvtxs2->SetBinContent(i+1,weight2);
+      // th1d_weight_fvtxs3->SetBinContent(i+1,weight3);
+    }
+
+  // ---
+  // ---
+  // ---
+
+  TH1D* th1d_fvtxn_track_phi  = (TH1D*)((TH1D*)file->Get("th1d_fvtxn_track_phi" ))->Clone();
+  TH1D* th1d_fvtxn0_track_phi = (TH1D*)((TH1D*)file->Get("th1d_fvtxn0_track_phi"))->Clone();
+  TH1D* th1d_fvtxn1_track_phi = (TH1D*)((TH1D*)file->Get("th1d_fvtxn1_track_phi"))->Clone();
+  // TH1D* th1d_fvtxn2_track_phi = (TH1D*)((TH1D*)file->Get("th1d_fvtxn2_track_phi"))->Clone();
+  // TH1D* th1d_fvtxn3_track_phi = (TH1D*)((TH1D*)file->Get("th1d_fvtxn3_track_phi"))->Clone();
+
+  TH1D* th1d_weight_fvtxn  = (TH1D*)th1d_fvtxn_track_phi ->Clone("th1d_fvtxn_track_phi_weight");
+  TH1D* th1d_weight_fvtxn0 = (TH1D*)th1d_fvtxn0_track_phi->Clone("th1d_fvtxn0_track_phi_weight");
+  TH1D* th1d_weight_fvtxn1 = (TH1D*)th1d_fvtxn1_track_phi->Clone("th1d_fvtxn1_track_phi_weight");
+  // TH1D* th1d_weight_fvtxn2 = (TH1D*)th1d_fvtxn2_track_phi->Clone("th1d_fvtxn2_track_phi_weight");
+  // TH1D* th1d_weight_fvtxn3 = (TH1D*)th1d_fvtxn3_track_phi->Clone("th1d_fvtxn3_track_phi_weight");
+
+  if ( th1d_fvtxn_track_phi->GetNbinsX() != nbins )
+    {
+      cout << "YOU'RE GONNA DIE" << endl;
+      return;
+    }
+
+  double ave = th1d_fvtxn_track_phi->Integral(1,nbins); // use 1 and nbins to exclude underflow (0) and overflow (nbins+1)
+  double ave0 = th1d_fvtxn0_track_phi->Integral(1,nbins);
+  double ave1 = th1d_fvtxn1_track_phi->Integral(1,nbins);
+  // double ave2 = th1d_fvtxn2_track_phi->Integral(1,nbins);
+  // double ave3 = th1d_fvtxn3_track_phi->Integral(1,nbins);
+  ave /= nbins;
+  ave0 /= nbins;
+  ave1 /= nbins;
+  // ave2 /= nbins;
+  // ave3 /= nbins;
+  for ( int i = 0; i < nbins; ++i )
+    {
+      double phi = th1d_fvtxn_track_phi->GetBinCenter(i+1);
+      double weight = ave/th1d_fvtxn_track_phi->GetBinContent(i+1);
+      double weight0 = ave0/th1d_fvtxn0_track_phi->GetBinContent(i+1);
+      double weight1 = ave1/th1d_fvtxn1_track_phi->GetBinContent(i+1);
+      // double weight2 = ave2/th1d_fvtxn2_track_phi->GetBinContent(i+1);
+      // double weight3 = ave3/th1d_fvtxn3_track_phi->GetBinContent(i+1);
+      if ( !TMath::Finite(weight) ) weight = 0;
+      if ( !TMath::Finite(weight0) ) weight0 = 0;
+      if ( !TMath::Finite(weight1) ) weight1 = 0;
+      // if ( !TMath::Finite(weight2) ) weight2 = 0;
+      // if ( !TMath::Finite(weight3) ) weight3 = 0;
+      th1d_weight_fvtxn->SetBinContent(i+1,weight);
+      th1d_weight_fvtxn0->SetBinContent(i+1,weight0);
+      th1d_weight_fvtxn1->SetBinContent(i+1,weight1);
+      // th1d_weight_fvtxn2->SetBinContent(i+1,weight2);
+      // th1d_weight_fvtxn3->SetBinContent(i+1,weight3);
+    }
+
+  fout->Write();
+  fout->Close();
+
+  cout << "Hopefully wrote out file " << fout->GetName() << endl;
+
+  delete c1;
+
+} // newweight2d
