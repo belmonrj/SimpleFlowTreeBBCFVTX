@@ -49,6 +49,7 @@ void doit(int handle)
   line.SetLineStyle(2);
   line.Draw();
   c1->Print("FigsFour/c24a_nfvtxt.png");
+  c1->Print("FigsFour/c24a_nfvtxt.pdf");
 
   th1d_nfvtxt_fvtxns_c22b->Multiply(th1d_nfvtxt_fvtxns_c22);
   th1d_nfvtxt_fvtxns_c22b->Scale(-2.0);
@@ -58,6 +59,7 @@ void doit(int handle)
   th1d_nfvtxt_fvtxns_c22b->Draw();
   line.Draw();
   c1->Print("FigsFour/c24b_nfvtxt.png");
+  c1->Print("FigsFour/c24b_nfvtxt.pdf");
 
   th1d_nfvtxt_fvtxns_c22c->Multiply(th1d_nfvtxt_fvtxns_c22);
   th1d_nfvtxt_fvtxns_c22c->Scale(-2.0);
@@ -67,6 +69,7 @@ void doit(int handle)
   th1d_nfvtxt_fvtxns_c22c->Draw();
   line.Draw();
   c1->Print("FigsFour/c24c_nfvtxt.png");
+  c1->Print("FigsFour/c24c_nfvtxt.pdf");
 
   const int nbins = tp1f_nfvtxt_fvtxns_c22->GetNbinsX();
   TH1D* th1d_nfvtxt_fvtxns_v24a = tp1f_nfvtxt_fvtxns_c24a->ProjectionX("th1d_nfvtxt_fvtxns_v24a");
@@ -74,6 +77,9 @@ void doit(int handle)
   TH1D* th1d_nfvtxt_fvtxns_v24c = tp1f_nfvtxt_fvtxns_c24c->ProjectionX("th1d_nfvtxt_fvtxns_v24c");
   for ( int i = 0; i < nbins; ++i )
     {
+      float q22 = th1d_nfvtxt_fvtxns_c22->GetBinContent(i+1);
+      float eq22 = th1d_nfvtxt_fvtxns_c22->GetBinError(i+1);
+      float eq24 = 0;
       // --- v24a
       float c24 = th1d_nfvtxt_fvtxns_c22a->GetBinContent(i+1);
       float ec24 = th1d_nfvtxt_fvtxns_c22a->GetBinError(i+1);
@@ -82,7 +88,9 @@ void doit(int handle)
       if ( c24 < 0 )
 	{
 	  v24 = sqrt(sqrt(-c24));
-	  fabs(ec24*v24/c24); // not right, get back to it soon
+	  eq24 = th1d_nfvtxt_fvtxns_c24a->GetBinError(i+1);
+	  //ev24 = fabs(ec24*v24/c24); // not right, get back to it soon
+	  ev24 = (1.0/pow(fabs(-c24),0.75))*sqrt((q22*q22*eq22*eq22)+(0.0625*eq24*eq24));
 	}
       th1d_nfvtxt_fvtxns_v24a->SetBinContent(i+1,v24);
       th1d_nfvtxt_fvtxns_v24a->SetBinError(i+1,ev24);
@@ -94,7 +102,9 @@ void doit(int handle)
       if ( c24 < 0 )
 	{
 	  v24 = sqrt(sqrt(-c24));
-	  ev24 = fabs(ec24*v24/c24); // not right, get back to it soon
+	  eq24 = th1d_nfvtxt_fvtxns_c24b->GetBinError(i+1);
+	  //ev24 = fabs(ec24*v24/c24); // not right, get back to it soon
+	  ev24 = (1.0/pow(fabs(-c24),0.75))*sqrt((q22*q22*eq22*eq22)+(0.0625*eq24*eq24));
 	}
       th1d_nfvtxt_fvtxns_v24b->SetBinContent(i+1,v24);
       th1d_nfvtxt_fvtxns_v24b->SetBinError(i+1,ev24);
@@ -108,7 +118,9 @@ void doit(int handle)
       if ( c24 < 0 )
 	{
 	  v24 = sqrt(sqrt(-c24));
-	  ev24 = fabs(ec24*v24/c24); // not right, get back to it soon
+	  eq24 = th1d_nfvtxt_fvtxns_c24c->GetBinError(i+1);
+	  //ev24 = fabs(ec24*v24/c24); // not right, get back to it soon
+	  ev24 = (1.0/pow(fabs(-c24),0.75))*sqrt((q22*q22*eq22*eq22)+(0.0625*eq24*eq24));
 	}
       th1d_nfvtxt_fvtxns_v24c->SetBinContent(i+1,v24);
       th1d_nfvtxt_fvtxns_v24c->SetBinError(i+1,ev24);
@@ -133,8 +145,10 @@ void doit(int handle)
   leg.Draw();
   line.Draw();
   c1->Print("FigsFour/v24a_nfvtxt.png");
+  c1->Print("FigsFour/v24a_nfvtxt.pdf");
   th1d_vn_22->Draw("same");
   c1->Print("FigsFour/v24a_and_v22_nfvtxt.png");
+  c1->Print("FigsFour/v24a_and_v22_nfvtxt.pdf");
   th1d_nfvtxt_fvtxns_v24b->Draw();
   th1d_nfvtxt_fvtxns_v24b->GetXaxis()->SetTitle("N_{tracks}^{FVTX}");
   th1d_nfvtxt_fvtxns_v24b->GetYaxis()->SetTitle("v_{2}{}");
@@ -143,8 +157,10 @@ void doit(int handle)
   leg.Draw();
   line.Draw();
   c1->Print("FigsFour/v24b_nfvtxt.png");
+  c1->Print("FigsFour/v24b_nfvtxt.pdf");
   th1d_vn_22->Draw("same");
   c1->Print("FigsFour/v24b_and_v22_nfvtxt.png");
+  c1->Print("FigsFour/v24b_and_v22_nfvtxt.pdf");
   th1d_nfvtxt_fvtxns_v24c->Draw();
   th1d_nfvtxt_fvtxns_v24c->GetXaxis()->SetTitle("N_{tracks}^{FVTX}");
   th1d_nfvtxt_fvtxns_v24c->GetYaxis()->SetTitle("v_{2}{}");
@@ -153,8 +169,10 @@ void doit(int handle)
   leg.Draw();
   line.Draw();
   c1->Print("FigsFour/v24c_nfvtxt.png");
+  c1->Print("FigsFour/v24c_nfvtxt.pdf");
   th1d_vn_22->Draw("same");
   c1->Print("FigsFour/v24c_and_v22_nfvtxt.png");
+  c1->Print("FigsFour/v24c_and_v22_nfvtxt.pdf");
 
   // ---
 
@@ -174,6 +192,7 @@ void doit(int handle)
   line.SetLineStyle(2);
   line.Draw();
   c1->Print("FigsFour/c24_fvtxs_nfvtxt.png");
+  c1->Print("FigsFour/c24_fvtxs_nfvtxt.pdf");
 
   TProfile* tp1f_nfvtxt_fvtxn_c22 = (TProfile*)file->Get("nfvtxt_os_fvtxn_c22");
   TProfile* tp1f_nfvtxt_fvtxn_c24a = (TProfile*)file->Get("nfvtxt_os_fvtxn_c24");
@@ -191,6 +210,7 @@ void doit(int handle)
   line.SetLineStyle(2);
   line.Draw();
   c1->Print("FigsFour/c24_fvtxn_nfvtxt.png");
+  c1->Print("FigsFour/c24_fvtxn_nfvtxt.pdf");
 
   TProfile* tp1f_nfvtxt_fvtxs_tracks_c22 = (TProfile*)file->Get("nfvtxt_os_fvtxs_tracks_c22");
   TProfile* tp1f_nfvtxt_fvtxs_tracks_c24a = (TProfile*)file->Get("nfvtxt_os_fvtxs_tracks_c24");
@@ -208,6 +228,7 @@ void doit(int handle)
   line.SetLineStyle(2);
   line.Draw();
   c1->Print("FigsFour/c24_fvtxs_tracks_nfvtxt.png");
+  c1->Print("FigsFour/c24_fvtxs_tracks_nfvtxt.pdf");
 
   TProfile* tp1f_nfvtxt_fvtxn_tracks_c22 = (TProfile*)file->Get("nfvtxt_os_fvtxn_tracks_c22");
   TProfile* tp1f_nfvtxt_fvtxn_tracks_c24a = (TProfile*)file->Get("nfvtxt_os_fvtxn_tracks_c24");
@@ -225,6 +246,7 @@ void doit(int handle)
   line.SetLineStyle(2);
   line.Draw();
   c1->Print("FigsFour/c24_fvtxn_tracks_nfvtxt.png");
+  c1->Print("FigsFour/c24_fvtxn_tracks_nfvtxt.pdf");
 
   TProfile* tp1f_nfvtxt_fvtxc_tracks_c22 = (TProfile*)file->Get("nfvtxt_os_fvtxc_tracks_c22");
   TProfile* tp1f_nfvtxt_fvtxc_tracks_c24a = (TProfile*)file->Get("nfvtxt_os_fvtxc_tracks_c24");
@@ -242,6 +264,7 @@ void doit(int handle)
   line.SetLineStyle(2);
   line.Draw();
   c1->Print("FigsFour/c24_fvtxc_tracks_nfvtxt.png");
+  c1->Print("FigsFour/c24_fvtxc_tracks_nfvtxt.pdf");
 
 
 
