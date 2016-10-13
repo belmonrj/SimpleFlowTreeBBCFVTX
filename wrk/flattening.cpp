@@ -1433,10 +1433,14 @@ void flatten(int runNumber, int rp_recal_pass)
 
       if ( centrality > -1 )
         {
+          // if ( energyflag == 200 && centrality > 5  ) continue;
+          // if ( energyflag == 62  && centrality > 10 ) continue;
+          // if ( energyflag == 20  && centrality > 20 ) continue;
+          // if ( energyflag == 39  && centrality > 20 ) continue;
           if ( energyflag == 200 && centrality > 5  ) continue;
-          if ( energyflag == 62  && centrality > 10 ) continue;
+          if ( energyflag == 62  && centrality > 5  ) continue;
           if ( energyflag == 20  && centrality > 20 ) continue;
-          if ( energyflag == 39  && centrality > 20 ) continue;
+          if ( energyflag == 39  && centrality > 10 ) continue;
         }
 
       double ZVTX = -9999;
@@ -1939,22 +1943,8 @@ void flatten(int runNumber, int rp_recal_pass)
       // --- first fvtx track loop
       for ( int i = 0; i < nfvtxt; ++i )
 	{
-	  // --- raw angles from FVTX track object
-	  float phi = fphi[i]; // need to deal with rotation(?)
-	  float eta = feta[i]; // need to deal with rotation(?)
-
-	  // --- calculate angle from pseudorapidity
-	  float theta = 2*atan(exp(-eta));
-	  // --- calculate coordinates from angles
-	  float x = sin(theta)*cos(phi);
-	  float y = sin(theta)*sin(phi);
-	  float z = cos(theta);
-	  // --- apply offset and rotation corrections to coordinates
-	  x = x - vtx_x; // offset
-	  x = z*sin(-beam_angle) + x*cos(-beam_angle); // rotation
-	  // --- recalculate angles from corrected coordinates
-	  phi = atan2(y,x);
-
+	  float phi = fphi[i]; // no need to deal with rotation
+	  float eta = feta[i]; // no need to deal with rotation
 
 	  bool is_south = ( eta < 0 );
 	  bool is_south_inner = ( eta > -2 && eta < 0 );
@@ -1962,7 +1952,6 @@ void flatten(int runNumber, int rp_recal_pass)
 	  bool is_north = ( eta > 0 );
 	  bool is_north_inner = ( eta < 2 && eta > 0 );
 	  bool is_north_outer = ( eta > 2 );
-	  // cout << "eta is " << eta << " and ns is " << ns << " and nn is " << nn << endl;
 
 	  float fvtx_weight = 1.0; // need to weight tracks at some point...
 
