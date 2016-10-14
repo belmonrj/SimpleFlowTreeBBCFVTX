@@ -26,6 +26,7 @@
 #include "TRandom.h"
 #include "TLorentzVector.h"
 #include "TSystem.h"
+#include "TComplex.h"
 //#endif
 
 // global pmt variables
@@ -1005,12 +1006,16 @@ void flatten(int runNumber, int rp_recal_pass)
   TProfile* os_bbcs_c22 = new TProfile(Form("os_bbcs_c22"),Form("os_bbcs_c22"),1, -0.5, 0.5, -1.1, 1.1);
   TProfile* os_fvtxs_c22 = new TProfile(Form("os_fvtxs_c22"),Form("os_fvtxs_c22"),1, -0.5, 0.5, -1.1, 1.1);
   TProfile* os_fvtxn_c22 = new TProfile(Form("os_fvtxn_c22"),Form("os_fvtxn_c22"),1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxs_ce01_c22 = new TProfile(Form("os_fvtxs_ce01_c22"),     "" ,1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxn_ce01_c22 = new TProfile(Form("os_fvtxn_ce01_c22"),     "" ,1, -0.5, 0.5, -1.1, 1.1);
   TProfile* os_fvtxs_tracks_c22 = new TProfile(Form("os_fvtxs_tracks_c22"),     "" ,1, -0.5, 0.5, -1.1, 1.1);
   TProfile* os_fvtxn_tracks_c22 = new TProfile(Form("os_fvtxn_tracks_c22"),     "" ,1, -0.5, 0.5, -1.1, 1.1);
   //TProfile* os_fvtxc_tracks_c22 = new TProfile(Form("os_fvtxc_tracks_c22"),     "" ,1, -0.5, 0.5, -1.1, 1.1);
   TProfile* os_bbcs_c32 = new TProfile(Form("os_bbcs_c32"),Form("os_bbcs_c32"),1, -0.5, 0.5, -1.1, 1.1);
   TProfile* os_fvtxs_c32 = new TProfile(Form("os_fvtxs_c32"),Form("os_fvtxs_c32"),1, -0.5, 0.5, -1.1, 1.1);
   TProfile* os_fvtxn_c32 = new TProfile(Form("os_fvtxn_c32"),Form("os_fvtxn_c32"),1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxs_ce01_c32 = new TProfile(Form("os_fvtxs_ce01_c32"),     "" ,1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxn_ce01_c32 = new TProfile(Form("os_fvtxn_ce01_c32"),     "" ,1, -0.5, 0.5, -1.1, 1.1);
   TProfile* os_fvtxs_tracks_c32 = new TProfile(Form("os_fvtxs_tracks_c32"),     "" ,1, -0.5, 0.5, -1.1, 1.1);
   TProfile* os_fvtxn_tracks_c32 = new TProfile(Form("os_fvtxn_tracks_c32"),     "" ,1, -0.5, 0.5, -1.1, 1.1);
   //TProfile* os_fvtxc_tracks_c32 = new TProfile(Form("os_fvtxc_tracks_c32"),     "" ,1, -0.5, 0.5, -1.1, 1.1);
@@ -1158,18 +1163,25 @@ void flatten(int runNumber, int rp_recal_pass)
   TProfile* nfvtxt_os_fvtxc_tracks_c22 = new TProfile(Form("nfvtxt_os_fvtxc_tracks_c22"),"",76, -0.5, 75.5, -1.1, 1.1);
   TProfile* nfvtxt_os_fvtxc_tracks_c24 = new TProfile(Form("nfvtxt_os_fvtxc_tracks_c24"),"",76, -0.5, 75.5, -1.1, 1.1);
   TProfile* nfvtxt_os_fvtxsfvtxn_c22  = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_c22"),Form("nfvtxt_os_fvtxsfvtxn_c22"),76, -0.5, 75.5, -1.1, 1.1);
-  //TProfile* nfvtxt_os_fvtxsfvtxn_c24  = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_c24"),Form("nfvtxt_os_fvtxsfvtxn_c24"),76, -0.5, 75.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_fvtxsfvtxn_c24  = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_c24"),Form("nfvtxt_os_fvtxsfvtxn_c24"),76, -0.5, 75.5, -1.1, 1.1);
   TProfile* nfvtxt_os_fvtxsfvtxn_c24a = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_c24a"),Form("nfvtxt_os_fvtxsfvtxn_c24a"),76, -0.5, 75.5, -1.1, 1.1);
   TProfile* nfvtxt_os_fvtxsfvtxn_c24b = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_c24b"),Form("nfvtxt_os_fvtxsfvtxn_c24b"),76, -0.5, 75.5, -1.1, 1.1);
   TProfile* nfvtxt_os_fvtxsfvtxn_c24c = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_c24c"),Form("nfvtxt_os_fvtxsfvtxn_c24c"),76, -0.5, 75.5, -1.1, 1.1);
-  //TProfile* nfvtxt_os_fvtxsfvtxn_c24d = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_c24d"),Form("nfvtxt_os_fvtxsfvtxn_c24d"),76, -0.5, 75.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_fvtxsfvtxn_c24d = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_c24d"),Form("nfvtxt_os_fvtxsfvtxn_c24d"),76, -0.5, 75.5, -1.1, 1.1);
   TProfile* nfvtxt_os_fvtxsfvtxn_tracks_c22  = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_tracks_c22"),"",76, -0.5, 75.5, -1.1, 1.1);
-  //TProfile* nfvtxt_os_fvtxsfvtxn_tracks_c24  = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_tracks_c24"),"",76, -0.5, 75.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_fvtxsfvtxn_tracks_c24  = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_tracks_c24"),"",76, -0.5, 75.5, -1.1, 1.1);
   TProfile* nfvtxt_os_fvtxsfvtxn_tracks_c24a = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_tracks_c24a"),"",76, -0.5, 75.5, -1.1, 1.1);
   TProfile* nfvtxt_os_fvtxsfvtxn_tracks_c24b = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_tracks_c24b"),"",76, -0.5, 75.5, -1.1, 1.1);
   TProfile* nfvtxt_os_fvtxsfvtxn_tracks_c24c = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_tracks_c24c"),"",76, -0.5, 75.5, -1.1, 1.1);
-  //TProfile* nfvtxt_os_fvtxsfvtxn_tracks_c24d = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_tracks_c24d"),"",76, -0.5, 75.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_fvtxsfvtxn_tracks_c24d = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_tracks_c24d"),"",76, -0.5, 75.5, -1.1, 1.1);
   TProfile* nfvtxt_os_fvtxsfvtxn_tracks_c32  = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_tracks_c32"),"",76, -0.5, 75.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_fvtxs_ce01_c22 = new TProfile(Form("nfvtxt_os_fvtxs_ce01_c22"),       "",76, -0.5, 75.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_fvtxn_ce01_c22 = new TProfile(Form("nfvtxt_os_fvtxn_ce01_c22"),       "",76, -0.5, 75.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_fvtxsfvtxn_ce01_c24  = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_ce01_c24"), "",76, -0.5, 75.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_fvtxsfvtxn_ce01_c24a = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_ce01_c24a"),"",76, -0.5, 75.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_fvtxsfvtxn_ce01_c24b = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_ce01_c24b"),"",76, -0.5, 75.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_fvtxsfvtxn_ce01_c24c = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_ce01_c24c"),"",76, -0.5, 75.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_fvtxsfvtxn_ce01_c24d = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_ce01_c24d"),"",76, -0.5, 75.5, -1.1, 1.1);
 
   TProfile* nfvtxt_bbcs_v3 = new TProfile(Form("nfvtxt_bbcs_v3"),Form("nfvtxt_bbcs_v3"),76, -0.5, 75.5, -1.1, 1.1);
   TProfile* nfvtxt_fvtxs_v3 = new TProfile(Form("nfvtxt_fvtxs_v3"),Form("nfvtxt_fvtxs_v3"),76, -0.5, 75.5, -1.1, 1.1);
@@ -1178,6 +1190,8 @@ void flatten(int runNumber, int rp_recal_pass)
   TProfile* nfvtxt_os_bbcs_c32 = new TProfile(Form("nfvtxt_os_bbcs_c32"),Form("nfvtxt_os_bbcs_c32"),76, -0.5, 75.5, -1.1, 1.1);
   TProfile* nfvtxt_os_fvtxs_c32 = new TProfile(Form("nfvtxt_os_fvtxs_c32"),Form("nfvtxt_os_fvtxs_c32"),76, -0.5, 75.5, -1.1, 1.1);
   TProfile* nfvtxt_os_fvtxn_c32 = new TProfile(Form("nfvtxt_os_fvtxn_c32"),Form("nfvtxt_os_fvtxn_c32"),76, -0.5, 75.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_fvtxs_ce01_c32 = new TProfile(Form("nfvtxt_os_fvtxs_ce01_c32"),    "",76, -0.5, 75.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_fvtxn_ce01_c32 = new TProfile(Form("nfvtxt_os_fvtxn_ce01_c32"),    "",76, -0.5, 75.5, -1.1, 1.1);
   TProfile* nfvtxt_os_fvtxs_tracks_c32 = new TProfile(Form("nfvtxt_os_fvtxs_tracks_c32"),"",76, -0.5, 75.5, -1.1, 1.1);
   TProfile* nfvtxt_os_fvtxn_tracks_c32 = new TProfile(Form("nfvtxt_os_fvtxn_tracks_c32"),"",76, -0.5, 75.5, -1.1, 1.1);
   TProfile* nfvtxt_os_cntbbcs_c32 = new TProfile(Form("nfvtxt_os_cntbbcs_c32"),Form("nfvtxt_os_cntbbcs_c32"),76, -0.5, 75.5, -1.1, 1.1);
@@ -1720,6 +1734,8 @@ void flatten(int runNumber, int rp_recal_pass)
 
               float phi = TMath::ATan2(fvtx_y,fvtx_x);
 
+	      // ------------------------------------------------
+	      // --- determine the weights for south clusters ---
               float fvtx_weight = 1.0;
               if ( doweights )
                 {
@@ -1762,22 +1778,38 @@ void flatten(int runNumber, int rp_recal_pass)
                   fvtxs_qw[fvtx_layer+1] += fvtx_weight;
                   fvtxs_qw[0] += fvtx_weight;
 
-                  // -----------------------------------------
-                  // --- explicitly excluding weights ---------
-                  fvtxs_qx2[fvtx_layer+6] += TMath::Cos(2*phi);
-                  fvtxs_qy2[fvtx_layer+6] += TMath::Sin(2*phi);
-                  fvtxs_qx3[fvtx_layer+6] += TMath::Cos(3*phi);
-                  fvtxs_qy3[fvtx_layer+6] += TMath::Sin(3*phi);
+		  // --- inner eta clusters
+		  if ( fvtx_eta > -2.0 && fvtx_eta < -0.5 )
+		    {
+		      fvtxs_qx2[6] += fvtx_weight * TMath::Cos(2*phi);
+		      fvtxs_qy2[6] += fvtx_weight * TMath::Sin(2*phi);
+		      fvtxs_qx3[6] += fvtx_weight * TMath::Cos(3*phi);
+		      fvtxs_qy3[6] += fvtx_weight * TMath::Sin(3*phi);
+		      fvtxs_qx4[6] += fvtx_weight * TMath::Cos(4*phi);
+		      fvtxs_qy4[6] += fvtx_weight * TMath::Sin(4*phi);
+		      fvtxs_qw[6] += fvtx_weight;
+		    }
+		  // --- outer eta clusters
+		  if ( fvtx_eta > -3.5 && fvtx_eta < -2.0 )
+		    {
+		      fvtxs_qx2[7] += fvtx_weight * TMath::Cos(2*phi);
+		      fvtxs_qy2[7] += fvtx_weight * TMath::Sin(2*phi);
+		      fvtxs_qx3[7] += fvtx_weight * TMath::Cos(3*phi);
+		      fvtxs_qy3[7] += fvtx_weight * TMath::Sin(3*phi);
+		      fvtxs_qx4[7] += fvtx_weight * TMath::Cos(4*phi);
+		      fvtxs_qy4[7] += fvtx_weight * TMath::Sin(4*phi);
+		      fvtxs_qw[7] += fvtx_weight;
+		    }
 
+                  // ------------------------------------------
+                  // --- explicitly excluding weights ---------
                   fvtxs_qx2[5] += TMath::Cos(2*phi);
                   fvtxs_qy2[5] += TMath::Sin(2*phi);
                   fvtxs_qx3[5] += TMath::Cos(3*phi);
                   fvtxs_qy3[5] += TMath::Sin(3*phi);
                   fvtxs_qx4[5] += TMath::Cos(4*phi);
                   fvtxs_qy4[5] += TMath::Sin(4*phi);
-
-                  fvtxs_qw[fvtx_layer+6] += fvtx_weight;
-                  fvtxs_qw[5] += fvtx_weight;
+                  fvtxs_qw[5] += 1;
                   // -----------------------------------------
 
                   th1d_fvtxs_clus_phi->Fill(phi);
@@ -1792,6 +1824,8 @@ void flatten(int runNumber, int rp_recal_pass)
                   if ( fvtx_layer == 3 ) th1d_fvtxs3_clus_wphi->Fill(phi,fvtx_weight);
                 } // check on south
 
+	      // ------------------------------------------------
+	      // --- determine the weights for north clusters ---
               if ( doweights )
                 {
                   if ( !th2d_fvtxn_phi_weight[fvtx_layer+1] )
@@ -1830,26 +1864,42 @@ void flatten(int runNumber, int rp_recal_pass)
                   fvtxn_qx4[0] += fvtx_weight * TMath::Cos(4*phi);
                   fvtxn_qy4[0] += fvtx_weight * TMath::Sin(4*phi);
 
-                  fvtxn_qw[fvtx_layer+1] ++;
-                  fvtxn_qw[0] ++;
+                  fvtxn_qw[fvtx_layer+1] += fvtx_weight;
+                  fvtxn_qw[0] += fvtx_weight;
 
-                  // -----------------------------------------
+                  // ------------------------------------------
                   // --- explicitly excluding weights ---------
-                  fvtxn_qx2[fvtx_layer+6] += TMath::Cos(2*phi);
-                  fvtxn_qy2[fvtx_layer+6] += TMath::Sin(2*phi);
-                  fvtxn_qx3[fvtx_layer+6] += TMath::Cos(3*phi);
-                  fvtxn_qy3[fvtx_layer+6] += TMath::Sin(3*phi);
-
                   fvtxn_qx2[5] += TMath::Cos(2*phi);
                   fvtxn_qy2[5] += TMath::Sin(2*phi);
                   fvtxn_qx3[5] += TMath::Cos(3*phi);
                   fvtxn_qy3[5] += TMath::Sin(3*phi);
                   fvtxn_qx4[5] += TMath::Cos(4*phi);
                   fvtxn_qy4[5] += TMath::Sin(4*phi);
-
-                  fvtxn_qw[fvtx_layer+6] += fvtx_weight;
-                  fvtxn_qw[5] += fvtx_weight;
+                  fvtxn_qw[5] += 1;
                   // -----------------------------------------
+
+		  // --- inner eta clusters
+		  if ( fvtx_eta > 0.5 && fvtx_eta < 2.0 )
+		    {
+		      fvtxn_qx2[6] += fvtx_weight * TMath::Cos(2*phi);
+		      fvtxn_qy2[6] += fvtx_weight * TMath::Sin(2*phi);
+		      fvtxn_qx3[6] += fvtx_weight * TMath::Cos(3*phi);
+		      fvtxn_qy3[6] += fvtx_weight * TMath::Sin(3*phi);
+		      fvtxn_qx4[6] += fvtx_weight * TMath::Cos(4*phi);
+		      fvtxn_qy4[6] += fvtx_weight * TMath::Sin(4*phi);
+		      fvtxn_qw[6] += fvtx_weight;
+		    }
+		  // --- outer eta clusters
+		  if ( fvtx_eta > 2.0 && fvtx_eta < 3.5 )
+		    {
+		      fvtxn_qx2[7] += fvtx_weight * TMath::Cos(2*phi);
+		      fvtxn_qy2[7] += fvtx_weight * TMath::Sin(2*phi);
+		      fvtxn_qx3[7] += fvtx_weight * TMath::Cos(3*phi);
+		      fvtxn_qy3[7] += fvtx_weight * TMath::Sin(3*phi);
+		      fvtxn_qx4[7] += fvtx_weight * TMath::Cos(4*phi);
+		      fvtxn_qy4[7] += fvtx_weight * TMath::Sin(4*phi);
+		      fvtxn_qw[7] += fvtx_weight;
+		    }
 
                   th1d_fvtxn_clus_phi->Fill(phi);
                   if ( fvtx_layer == 0 ) th1d_fvtxn0_clus_phi->Fill(phi);
@@ -2315,6 +2365,51 @@ void flatten(int runNumber, int rp_recal_pass)
       os_fvtxn_1dPsi2->Fill(os_fvtxn_psi2);
       os_fvtxn_1dPsi3->Fill(os_fvtxn_psi3);
 
+      // --- eta dependent clusters
+
+      float os_fvtxs_ce0_qw = fvtxs_qw[6];
+      float os_fvtxs_ce0_qx2 = fvtxs_qx2[6] - os_fvtxs_ce0_qw*mean[icent][izvtx][1][fvtxs0_nw_index][0];
+      float os_fvtxs_ce0_qy2 = fvtxs_qy2[6] - os_fvtxs_ce0_qw*mean[icent][izvtx][1][fvtxs0_nw_index][1];
+      float os_fvtxs_ce0_qx3 = fvtxs_qx3[6] - os_fvtxs_ce0_qw*mean[icent][izvtx][2][fvtxs0_nw_index][0];
+      float os_fvtxs_ce0_qy3 = fvtxs_qy3[6] - os_fvtxs_ce0_qw*mean[icent][izvtx][2][fvtxs0_nw_index][1];
+      float os_fvtxs_ce0_qx4 = fvtxs_qx4[6] - os_fvtxs_ce0_qw*mean[icent][izvtx][3][fvtxs0_nw_index][0];
+      float os_fvtxs_ce0_qy4 = fvtxs_qy4[6] - os_fvtxs_ce0_qw*mean[icent][izvtx][3][fvtxs0_nw_index][1];
+      float os_fvtxs_ce1_qw = fvtxs_qw[7];
+      float os_fvtxs_ce1_qx2 = fvtxs_qx2[7] - os_fvtxs_ce1_qw*mean[icent][izvtx][1][fvtxs1_nw_index][0];
+      float os_fvtxs_ce1_qy2 = fvtxs_qy2[7] - os_fvtxs_ce1_qw*mean[icent][izvtx][1][fvtxs1_nw_index][1];
+      float os_fvtxs_ce1_qx3 = fvtxs_qx3[7] - os_fvtxs_ce1_qw*mean[icent][izvtx][2][fvtxs1_nw_index][0];
+      float os_fvtxs_ce1_qy3 = fvtxs_qy3[7] - os_fvtxs_ce1_qw*mean[icent][izvtx][2][fvtxs1_nw_index][1];
+      float os_fvtxs_ce1_qx4 = fvtxs_qx4[7] - os_fvtxs_ce1_qw*mean[icent][izvtx][3][fvtxs1_nw_index][0];
+      float os_fvtxs_ce1_qy4 = fvtxs_qy4[7] - os_fvtxs_ce1_qw*mean[icent][izvtx][3][fvtxs1_nw_index][1];
+      float os_fvtxn_ce0_qw = fvtxn_qw[6];
+      float os_fvtxn_ce0_qx2 = fvtxn_qx2[6] - os_fvtxn_ce0_qw*mean[icent][izvtx][1][fvtxn0_nw_index][0];
+      float os_fvtxn_ce0_qy2 = fvtxn_qy2[6] - os_fvtxn_ce0_qw*mean[icent][izvtx][1][fvtxn0_nw_index][1];
+      float os_fvtxn_ce0_qx3 = fvtxn_qx3[6] - os_fvtxn_ce0_qw*mean[icent][izvtx][2][fvtxn0_nw_index][0];
+      float os_fvtxn_ce0_qy3 = fvtxn_qy3[6] - os_fvtxn_ce0_qw*mean[icent][izvtx][2][fvtxn0_nw_index][1];
+      float os_fvtxn_ce0_qx4 = fvtxn_qx4[6] - os_fvtxn_ce0_qw*mean[icent][izvtx][3][fvtxn0_nw_index][0];
+      float os_fvtxn_ce0_qy4 = fvtxn_qy4[6] - os_fvtxn_ce0_qw*mean[icent][izvtx][3][fvtxn0_nw_index][1];
+      float os_fvtxn_ce1_qw = fvtxn_qw[7];
+      float os_fvtxn_ce1_qx2 = fvtxn_qx2[7] - os_fvtxn_ce1_qw*mean[icent][izvtx][1][fvtxn1_nw_index][0];
+      float os_fvtxn_ce1_qy2 = fvtxn_qy2[7] - os_fvtxn_ce1_qw*mean[icent][izvtx][1][fvtxn1_nw_index][1];
+      float os_fvtxn_ce1_qx3 = fvtxn_qx3[7] - os_fvtxn_ce1_qw*mean[icent][izvtx][2][fvtxn1_nw_index][0];
+      float os_fvtxn_ce1_qy3 = fvtxn_qy3[7] - os_fvtxn_ce1_qw*mean[icent][izvtx][2][fvtxn1_nw_index][1];
+      float os_fvtxn_ce1_qx4 = fvtxn_qx4[7] - os_fvtxn_ce1_qw*mean[icent][izvtx][3][fvtxn1_nw_index][0];
+      float os_fvtxn_ce1_qy4 = fvtxn_qy4[7] - os_fvtxn_ce1_qw*mean[icent][izvtx][3][fvtxn1_nw_index][1];
+      // ---
+      float os_fvtxs_ce01_qq2 = ( os_fvtxs_ce0_qx2*os_fvtxs_ce1_qx2 + os_fvtxs_ce0_qy2*os_fvtxs_ce1_qy2 ) / ( os_fvtxs_ce0_qw*os_fvtxs_ce1_qw );
+      float os_fvtxs_ce01_qq3 = ( os_fvtxs_ce0_qx3*os_fvtxs_ce1_qx3 + os_fvtxs_ce0_qy3*os_fvtxs_ce1_qy3 ) / ( os_fvtxs_ce0_qw*os_fvtxs_ce1_qw );
+      float os_fvtxn_ce01_qq2 = ( os_fvtxn_ce0_qx2*os_fvtxn_ce1_qx2 + os_fvtxn_ce0_qy2*os_fvtxn_ce1_qy2 ) / ( os_fvtxn_ce0_qw*os_fvtxn_ce1_qw );
+      float os_fvtxn_ce01_qq3 = ( os_fvtxn_ce0_qx3*os_fvtxn_ce1_qx3 + os_fvtxn_ce0_qy3*os_fvtxn_ce1_qy3 ) / ( os_fvtxn_ce0_qw*os_fvtxn_ce1_qw );
+      // --- come back here to add some histograms and do some 4 particle stuff
+      os_fvtxs_ce01_c22->Fill(0.0,os_fvtxs_ce01_qq2);
+      os_fvtxs_ce01_c32->Fill(0.0,os_fvtxs_ce01_qq3);
+      os_fvtxn_ce01_c22->Fill(0.0,os_fvtxn_ce01_qq2);
+      os_fvtxn_ce01_c32->Fill(0.0,os_fvtxn_ce01_qq3);
+      nfvtxt_os_fvtxs_ce01_c22->Fill(nfvtxt,os_fvtxs_ce01_qq2);
+      nfvtxt_os_fvtxs_ce01_c32->Fill(nfvtxt,os_fvtxs_ce01_qq3);
+      nfvtxt_os_fvtxn_ce01_c22->Fill(nfvtxt,os_fvtxn_ce01_qq2);
+      nfvtxt_os_fvtxn_ce01_c32->Fill(nfvtxt,os_fvtxn_ce01_qq3);
+
       // --- now fvtx tracks
 
       float os_fvtxs_tracks_qw = fvtxs_tracks_qw[0];
@@ -2467,8 +2562,28 @@ void flatten(int runNumber, int rp_recal_pass)
       nfvtxt_os_fvtxsfvtxn_tracks_c24b->Fill(nfvtxt,os_fvtxs_tracks_qq2*os_fvtxs_tracks_qq2*os_fvtxn_tracks_qq2*os_fvtxn_tracks_qq2); // over accounts for cross terms?
       nfvtxt_os_fvtxsfvtxn_tracks_c24c->Fill(nfvtxt,os_fvtxsfvtxn_tracks_qq2*os_fvtxs_tracks_qq2*os_fvtxn_tracks_qq2); // stupidly splits the difference?
 
-
-
+      // --- now let's look at some subevent 4pc stuff
+      TComplex tc_fvtxs_ce0(os_fvtxs_ce0_qx2,os_fvtxs_ce0_qy2);
+      TComplex tc_fvtxs_ce1(os_fvtxs_ce1_qx2,os_fvtxs_ce1_qy2);
+      TComplex tc_fvtxn_ce0(os_fvtxn_ce0_qx2,os_fvtxn_ce0_qy2);
+      TComplex tc_fvtxn_ce1(os_fvtxn_ce1_qx2,os_fvtxn_ce1_qy2);
+      // --- first
+      TComplex tc_fvtxns_ce01 = tc_fvtxs_ce0 * tc_fvtxs_ce1 * TComplex::Conjugate(tc_fvtxn_ce0) * TComplex::Conjugate(tc_fvtxn_ce1);
+      float os_fvtxns_ce01_qqqq4 = tc_fvtxns_ce01.Re();
+      nfvtxt_os_fvtxsfvtxn_ce01_c24->Fill(nfvtxt,os_fvtxns_ce01_qqqq4); // seems redundant but i sort of need an anchor result
+      nfvtxt_os_fvtxsfvtxn_ce01_c24a->Fill(nfvtxt,os_fvtxns_ce01_qqqq4);
+      // --- second
+      tc_fvtxns_ce01 = tc_fvtxs_ce0 * TComplex::Conjugate(tc_fvtxs_ce1) * tc_fvtxn_ce0 * TComplex::Conjugate(tc_fvtxn_ce1);
+      os_fvtxns_ce01_qqqq4 = tc_fvtxns_ce01.Re();
+      nfvtxt_os_fvtxsfvtxn_ce01_c24b->Fill(nfvtxt,os_fvtxns_ce01_qqqq4);
+      // --- third
+      tc_fvtxns_ce01 = TComplex::Conjugate(tc_fvtxs_ce0) * tc_fvtxs_ce1 * TComplex::Conjugate(tc_fvtxn_ce0) * tc_fvtxn_ce1;
+      os_fvtxns_ce01_qqqq4 = tc_fvtxns_ce01.Re();
+      nfvtxt_os_fvtxsfvtxn_ce01_c24c->Fill(nfvtxt,os_fvtxns_ce01_qqqq4);
+      // --- fourth
+      tc_fvtxns_ce01 = TComplex::Conjugate(tc_fvtxs_ce0) * TComplex::Conjugate(tc_fvtxs_ce1) * tc_fvtxn_ce0 * tc_fvtxn_ce1;
+      os_fvtxns_ce01_qqqq4 = tc_fvtxns_ce01.Re();
+      nfvtxt_os_fvtxsfvtxn_ce01_c24d->Fill(nfvtxt,os_fvtxns_ce01_qqqq4);
       // --------------------------------------
       // --- now the standard event plane stuff
       // --------------------------------------
