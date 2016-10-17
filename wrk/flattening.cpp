@@ -1689,6 +1689,10 @@ void flatten(int runNumber, int rp_recal_pass)
           fvtxn_qw[ilayer] = 0.0;
         } // loop over layers
 
+      int nclus_south_inner = 0; // good_4_event
+      int nclus_north_inner = 0;
+      int nclus_south_outer = 0;
+      int nclus_north_outer = 0;
 
       if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Looping over FVTX cluster" << endl;
       if ( fvtx_clusters )
@@ -1788,6 +1792,7 @@ void flatten(int runNumber, int rp_recal_pass)
 		      fvtxs_qx4[6] += fvtx_weight * TMath::Cos(4*phi);
 		      fvtxs_qy4[6] += fvtx_weight * TMath::Sin(4*phi);
 		      fvtxs_qw[6] += fvtx_weight;
+		      ++nclus_south_inner; // good_4_event
 		    }
 		  // --- outer eta clusters
 		  if ( fvtx_eta > -3.5 && fvtx_eta < -2.0 )
@@ -1799,6 +1804,7 @@ void flatten(int runNumber, int rp_recal_pass)
 		      fvtxs_qx4[7] += fvtx_weight * TMath::Cos(4*phi);
 		      fvtxs_qy4[7] += fvtx_weight * TMath::Sin(4*phi);
 		      fvtxs_qw[7] += fvtx_weight;
+		      ++nclus_south_outer; // good_4_event
 		    }
 
                   // ------------------------------------------
@@ -1888,6 +1894,7 @@ void flatten(int runNumber, int rp_recal_pass)
 		      fvtxn_qx4[6] += fvtx_weight * TMath::Cos(4*phi);
 		      fvtxn_qy4[6] += fvtx_weight * TMath::Sin(4*phi);
 		      fvtxn_qw[6] += fvtx_weight;
+		      ++nclus_north_inner; // good_4_event
 		    }
 		  // --- outer eta clusters
 		  if ( fvtx_eta > 2.0 && fvtx_eta < 3.5 )
@@ -1899,6 +1906,7 @@ void flatten(int runNumber, int rp_recal_pass)
 		      fvtxn_qx4[7] += fvtx_weight * TMath::Cos(4*phi);
 		      fvtxn_qy4[7] += fvtx_weight * TMath::Sin(4*phi);
 		      fvtxn_qw[7] += fvtx_weight;
+		      ++nclus_north_outer; // good_4_event
 		    }
 
                   th1d_fvtxn_clus_phi->Fill(phi);
@@ -1928,6 +1936,7 @@ void flatten(int runNumber, int rp_recal_pass)
       fvtxs_c22->Fill(0.0,fvtxs_qq2);
       fvtxs_c32->Fill(0.0,fvtxs_qq3);
 
+      bool good_4_event = ( nclus_south_inner > 3 ) && ( nclus_south_outer > 3 ) && ( nclus_north_inner > 3 ) && ( nclus_north_outer > 3 ) ;
 
       // --- the array that has all of the Q vectors
       float sumxy[NHAR][NDET][4];
@@ -1990,6 +1999,11 @@ void flatten(int runNumber, int rp_recal_pass)
           fvtxn_tracks_qw[i] = 0.0;
         } // loop over layers
 
+      int ntrack_south_inner = 0; // good_4_event
+      int ntrack_north_inner = 0;
+      int ntrack_south_outer = 0;
+      int ntrack_north_outer = 0;
+
       // --- first fvtx track loop
       for ( int i = 0; i < nfvtxt; ++i )
 	{
@@ -2013,7 +2027,7 @@ void flatten(int runNumber, int rp_recal_pass)
 	      fvtxs_tracks_qy3[0] += fvtx_weight * TMath::Sin(3*phi);
 	      fvtxs_tracks_qx4[0] += fvtx_weight * TMath::Cos(4*phi);
 	      fvtxs_tracks_qy4[0] += fvtx_weight * TMath::Sin(4*phi);
-	      fvtxs_tracks_qw[0] += 1;
+	      fvtxs_tracks_qw[0] += fvtx_weight;
 	    }
 	  if ( is_south_inner )
 	    {
@@ -2023,7 +2037,8 @@ void flatten(int runNumber, int rp_recal_pass)
 	      fvtxs_tracks_qy3[1] += fvtx_weight * TMath::Sin(3*phi);
 	      fvtxs_tracks_qx4[1] += fvtx_weight * TMath::Cos(4*phi);
 	      fvtxs_tracks_qy4[1] += fvtx_weight * TMath::Sin(4*phi);
-	      fvtxs_tracks_qw[1] += 1;
+	      fvtxs_tracks_qw[1] += fvtx_weight;
+	      ++ntrack_south_inner; // good_4_event
 	    }
 	  if ( is_south_outer )
 	    {
@@ -2033,7 +2048,8 @@ void flatten(int runNumber, int rp_recal_pass)
 	      fvtxs_tracks_qy3[2] += fvtx_weight * TMath::Sin(3*phi);
 	      fvtxs_tracks_qx4[2] += fvtx_weight * TMath::Cos(4*phi);
 	      fvtxs_tracks_qy4[2] += fvtx_weight * TMath::Sin(4*phi);
-	      fvtxs_tracks_qw[2] += 1;
+	      fvtxs_tracks_qw[2] += fvtx_weight;
+	      ++ntrack_south_outer; // good_4_event
 	    }
 	  if ( is_north )
 	    {
@@ -2043,7 +2059,7 @@ void flatten(int runNumber, int rp_recal_pass)
 	      fvtxn_tracks_qy3[0] += fvtx_weight * TMath::Sin(3*phi);
 	      fvtxn_tracks_qx4[0] += fvtx_weight * TMath::Cos(4*phi);
 	      fvtxn_tracks_qy4[0] += fvtx_weight * TMath::Sin(4*phi);
-	      fvtxn_tracks_qw[0] += 1;
+	      fvtxn_tracks_qw[0] += fvtx_weight;
 	    }
 	  if ( is_north_inner )
 	    {
@@ -2053,7 +2069,8 @@ void flatten(int runNumber, int rp_recal_pass)
 	      fvtxn_tracks_qy3[1] += fvtx_weight * TMath::Sin(3*phi);
 	      fvtxn_tracks_qx4[1] += fvtx_weight * TMath::Cos(4*phi);
 	      fvtxn_tracks_qy4[1] += fvtx_weight * TMath::Sin(4*phi);
-	      fvtxn_tracks_qw[1] += 1;
+	      fvtxn_tracks_qw[1] += fvtx_weight;
+	      ++ntrack_north_inner; // good_4_event
 	    }
 	  if ( is_north_outer )
 	    {
@@ -2063,9 +2080,12 @@ void flatten(int runNumber, int rp_recal_pass)
 	      fvtxn_tracks_qy3[2] += fvtx_weight * TMath::Sin(3*phi);
 	      fvtxn_tracks_qx4[2] += fvtx_weight * TMath::Cos(4*phi);
 	      fvtxn_tracks_qy4[2] += fvtx_weight * TMath::Sin(4*phi);
-	      fvtxn_tracks_qw[2] += 1;
+	      fvtxn_tracks_qw[2] += fvtx_weight;
+	      ++ntrack_north_outer; // good_4_event
 	    }
 	}
+
+      good_4_event = good_4_event && ( ntrack_south_inner > 0 ) && ( ntrack_south_outer > 0 ) && ( ntrack_north_inner > 0 ) && ( ntrack_north_outer > 0 ) ;
 
       if ( bbc_pmts )
         {
@@ -2515,75 +2535,86 @@ void flatten(int runNumber, int rp_recal_pass)
       nfvtxt_os_fvtxsfvtxn_tracks_c32->Fill(nfvtxt,os_fvtxsfvtxn_tracks_qq3);
 
       // --- now have a look at some 4 particle cumulants
+      if ( good_4_event )
+	{
+	  float os_bbc_qqqq4 = calc4_event(os_bbc_qx2,os_bbc_qy2,os_bbc_qx4,os_bbc_qy4,os_bbc_qw);
+	  float os_fvtxs_qqqq4 = calc4_event(os_fvtxs_qx2,os_fvtxs_qy2,os_fvtxs_qx4,os_fvtxs_qy4,os_fvtxs_qw);
+	  float os_fvtxn_qqqq4 = calc4_event(os_fvtxn_qx2,os_fvtxn_qy2,os_fvtxn_qx4,os_fvtxn_qy4,os_fvtxn_qw);
+	  os_bbcs_c24->Fill(0.0,os_bbc_qqqq4);
+	  os_fvtxs_c24->Fill(0.0,os_fvtxs_qqqq4);
+	  os_fvtxn_c24->Fill(0.0,os_fvtxn_qqqq4);
+	  os_bbcs_c24_vs_cent->Fill(centrality,os_bbc_qqqq4);
+	  os_fvtxs_c24_vs_cent->Fill(centrality,os_fvtxs_qqqq4);
+	  os_fvtxn_c24_vs_cent->Fill(centrality,os_fvtxn_qqqq4);
+	  os_bbcs_c24_vs_bbcqs->Fill(bbc_qs,os_bbc_qqqq4);
+	  os_fvtxs_c24_vs_bbcqs->Fill(bbc_qs,os_fvtxs_qqqq4);
+	  os_fvtxn_c24_vs_bbcqs->Fill(bbc_qs,os_fvtxn_qqqq4);
+	  os_bbcs_c24_vs_nfvtxs->Fill(d_nFVTXS_clus,os_bbc_qqqq4);
+	  os_fvtxs_c24_vs_nfvtxs->Fill(d_nFVTXS_clus,os_fvtxs_qqqq4);
+	  os_fvtxn_c24_vs_nfvtxs->Fill(d_nFVTXS_clus,os_fvtxn_qqqq4);
+	  // ---
+	  //nfvtxt_os_fvtxs_c22->Fill(nfvtxt,os_fvtxs_qq2);
+	  //nfvtxt_os_fvtxn_c22->Fill(nfvtxt,os_fvtxn_qq2);
+	  nfvtxt_os_fvtxs_c24->Fill(nfvtxt,os_fvtxs_qqqq4);
+	  nfvtxt_os_fvtxn_c24->Fill(nfvtxt,os_fvtxn_qqqq4);
+	  //nfvtxt_os_fvtxsfvtxn_c22->Fill(nfvtxt,os_fvtxsfvtxn_qq2);
+	  nfvtxt_os_fvtxsfvtxn_c24a->Fill(nfvtxt,os_fvtxsfvtxn_qq2*os_fvtxsfvtxn_qq2); // doesn't account for cross terms
+	  nfvtxt_os_fvtxsfvtxn_c24b->Fill(nfvtxt,os_fvtxs_qq2*os_fvtxs_qq2*os_fvtxn_qq2*os_fvtxn_qq2); // i think this power counts to v^8
+	  nfvtxt_os_fvtxsfvtxn_c24c->Fill(nfvtxt,os_fvtxsfvtxn_qq2*os_fvtxs_qq2*os_fvtxn_qq2); // i think this power counts to v^6
+	  nfvtxt_os_fvtxsfvtxn_c24d->Fill(nfvtxt,os_fvtxs_qq2*os_fvtxn_qq2); // i think this is right (but problem with autocorrelations)
+	  nfvtxt_os_fvtxsfvtxn_c24->Fill(nfvtxt,os_fvtxs_qq2*os_fvtxn_qq2); // might as well use this as an anchor
 
-      float os_bbc_qqqq4 = calc4_event(os_bbc_qx2,os_bbc_qy2,os_bbc_qx4,os_bbc_qy4,os_bbc_qw);
-      float os_fvtxs_qqqq4 = calc4_event(os_fvtxs_qx2,os_fvtxs_qy2,os_fvtxs_qx4,os_fvtxs_qy4,os_fvtxs_qw);
-      float os_fvtxn_qqqq4 = calc4_event(os_fvtxn_qx2,os_fvtxn_qy2,os_fvtxn_qx4,os_fvtxn_qy4,os_fvtxn_qw);
-      os_bbcs_c24->Fill(0.0,os_bbc_qqqq4);
-      os_fvtxs_c24->Fill(0.0,os_fvtxs_qqqq4);
-      os_fvtxn_c24->Fill(0.0,os_fvtxn_qqqq4);
-      os_bbcs_c24_vs_cent->Fill(centrality,os_bbc_qqqq4);
-      os_fvtxs_c24_vs_cent->Fill(centrality,os_fvtxs_qqqq4);
-      os_fvtxn_c24_vs_cent->Fill(centrality,os_fvtxn_qqqq4);
-      os_bbcs_c24_vs_bbcqs->Fill(bbc_qs,os_bbc_qqqq4);
-      os_fvtxs_c24_vs_bbcqs->Fill(bbc_qs,os_fvtxs_qqqq4);
-      os_fvtxn_c24_vs_bbcqs->Fill(bbc_qs,os_fvtxn_qqqq4);
-      os_bbcs_c24_vs_nfvtxs->Fill(d_nFVTXS_clus,os_bbc_qqqq4);
-      os_fvtxs_c24_vs_nfvtxs->Fill(d_nFVTXS_clus,os_fvtxs_qqqq4);
-      os_fvtxn_c24_vs_nfvtxs->Fill(d_nFVTXS_clus,os_fvtxn_qqqq4);
-      // ---
-      //nfvtxt_os_fvtxs_c22->Fill(nfvtxt,os_fvtxs_qq2);
-      //nfvtxt_os_fvtxn_c22->Fill(nfvtxt,os_fvtxn_qq2);
-      nfvtxt_os_fvtxs_c24->Fill(nfvtxt,os_fvtxs_qqqq4);
-      nfvtxt_os_fvtxn_c24->Fill(nfvtxt,os_fvtxn_qqqq4);
-      //nfvtxt_os_fvtxsfvtxn_c22->Fill(nfvtxt,os_fvtxsfvtxn_qq2);
-      nfvtxt_os_fvtxsfvtxn_c24a->Fill(nfvtxt,os_fvtxsfvtxn_qq2*os_fvtxsfvtxn_qq2); // doesn't account for cross terms?
-      nfvtxt_os_fvtxsfvtxn_c24b->Fill(nfvtxt,os_fvtxs_qq2*os_fvtxs_qq2*os_fvtxn_qq2*os_fvtxn_qq2); // over accounts for cross terms?
-      nfvtxt_os_fvtxsfvtxn_c24c->Fill(nfvtxt,os_fvtxsfvtxn_qq2*os_fvtxs_qq2*os_fvtxn_qq2); // stupidly splits the difference?
-      //nfvtxt_os_fvtxsfvtxn_c24d->Fill(nfvtxt,???); // proper calculation will go here if i can figure it out?
+	  float os_fvtxs_tracks_qqqq4 = calc4_event(os_fvtxs_tracks_qx2,os_fvtxs_tracks_qy2,os_fvtxs_tracks_qx4,os_fvtxs_tracks_qy4,os_fvtxs_tracks_qw);
+	  float os_fvtxn_tracks_qqqq4 = calc4_event(os_fvtxn_tracks_qx2,os_fvtxn_tracks_qy2,os_fvtxn_tracks_qx4,os_fvtxn_tracks_qy4,os_fvtxn_tracks_qw);
+	  float os_fvtxc_tracks_qqqq4 = calc4_event(os_fvtxc_tracks_qx2,os_fvtxc_tracks_qy2,os_fvtxc_tracks_qx4,os_fvtxc_tracks_qy4,os_fvtxc_tracks_qw);
+	  nfvtxt_os_fvtxs_tracks_c24->Fill(nfvtxt,os_fvtxs_tracks_qqqq4);
+	  nfvtxt_os_fvtxn_tracks_c24->Fill(nfvtxt,os_fvtxn_tracks_qqqq4);
+	  nfvtxt_os_fvtxc_tracks_c24->Fill(nfvtxt,os_fvtxc_tracks_qqqq4);
 
-      float os_fvtxs_tracks_qqqq4 = calc4_event(os_fvtxs_tracks_qx2,os_fvtxs_tracks_qy2,os_fvtxs_tracks_qx4,os_fvtxs_tracks_qy4,os_fvtxs_tracks_qw);
-      float os_fvtxn_tracks_qqqq4 = calc4_event(os_fvtxn_tracks_qx2,os_fvtxn_tracks_qy2,os_fvtxn_tracks_qx4,os_fvtxn_tracks_qy4,os_fvtxn_tracks_qw);
-      float os_fvtxc_tracks_qqqq4 = calc4_event(os_fvtxc_tracks_qx2,os_fvtxc_tracks_qy2,os_fvtxc_tracks_qx4,os_fvtxc_tracks_qy4,os_fvtxc_tracks_qw);
-      nfvtxt_os_fvtxs_tracks_c24->Fill(nfvtxt,os_fvtxs_tracks_qqqq4);
-      nfvtxt_os_fvtxn_tracks_c24->Fill(nfvtxt,os_fvtxn_tracks_qqqq4);
-      nfvtxt_os_fvtxc_tracks_c24->Fill(nfvtxt,os_fvtxc_tracks_qqqq4);
+	  // cout << "tracks cumulant " << os_fvtxs_tracks_qq2 << endl;
+	  // cout << "tracks qx " << os_fvtxs_tracks_qx2 << endl;
+	  // cout << "tracks qy " << os_fvtxs_tracks_qy2 << endl;
+	  // cout << "tracks qw " << os_fvtxs_tracks_qw << endl;
+	  // nfvtxt_os_fvtxs_tracks_c22->Fill(nfvtxt,os_fvtxs_tracks_qq2);
+	  // nfvtxt_os_fvtxn_tracks_c22->Fill(nfvtxt,os_fvtxn_tracks_qq2);
+	  // nfvtxt_os_fvtxs_tracks_c24->Fill(nfvtxt,os_fvtxs_tracks_qqqq4);
+	  // nfvtxt_os_fvtxn_tracks_c24->Fill(nfvtxt,os_fvtxn_tracks_qqqq4);
+	  //nfvtxt_os_fvtxsfvtxn_tracks_c22->Fill(nfvtxt,os_fvtxsfvtxn_tracks_qq2);
+	  nfvtxt_os_fvtxsfvtxn_tracks_c24a->Fill(nfvtxt,os_fvtxsfvtxn_tracks_qq2*os_fvtxsfvtxn_tracks_qq2); // doesn't account for cross terms
+	  nfvtxt_os_fvtxsfvtxn_tracks_c24b->Fill(nfvtxt,os_fvtxs_tracks_qq2*os_fvtxs_tracks_qq2*os_fvtxn_tracks_qq2*os_fvtxn_tracks_qq2); // v^8 ?
+	  nfvtxt_os_fvtxsfvtxn_tracks_c24c->Fill(nfvtxt,os_fvtxsfvtxn_tracks_qq2*os_fvtxs_tracks_qq2*os_fvtxn_tracks_qq2); // v^6 ?
+	  nfvtxt_os_fvtxsfvtxn_tracks_c24d->Fill(nfvtxt,os_fvtxs_tracks_qq2*os_fvtxn_tracks_qq2); // i think this is right (and tracks shouldn't have autocorrelation issues)
+	  nfvtxt_os_fvtxsfvtxn_tracks_c24->Fill(nfvtxt,os_fvtxs_tracks_qq2*os_fvtxn_tracks_qq2); // use this as an anchor
 
-      // cout << "tracks cumulant " << os_fvtxs_tracks_qq2 << endl;
-      // cout << "tracks qx " << os_fvtxs_tracks_qx2 << endl;
-      // cout << "tracks qy " << os_fvtxs_tracks_qy2 << endl;
-      // cout << "tracks qw " << os_fvtxs_tracks_qw << endl;
-      // nfvtxt_os_fvtxs_tracks_c22->Fill(nfvtxt,os_fvtxs_tracks_qq2);
-      // nfvtxt_os_fvtxn_tracks_c22->Fill(nfvtxt,os_fvtxn_tracks_qq2);
-      // nfvtxt_os_fvtxs_tracks_c24->Fill(nfvtxt,os_fvtxs_tracks_qqqq4);
-      // nfvtxt_os_fvtxn_tracks_c24->Fill(nfvtxt,os_fvtxn_tracks_qqqq4);
-      //nfvtxt_os_fvtxsfvtxn_tracks_c22->Fill(nfvtxt,os_fvtxsfvtxn_tracks_qq2);
-      nfvtxt_os_fvtxsfvtxn_tracks_c24a->Fill(nfvtxt,os_fvtxsfvtxn_tracks_qq2*os_fvtxsfvtxn_tracks_qq2); // doesn't account for cross terms?
-      nfvtxt_os_fvtxsfvtxn_tracks_c24b->Fill(nfvtxt,os_fvtxs_tracks_qq2*os_fvtxs_tracks_qq2*os_fvtxn_tracks_qq2*os_fvtxn_tracks_qq2); // over accounts for cross terms?
-      nfvtxt_os_fvtxsfvtxn_tracks_c24c->Fill(nfvtxt,os_fvtxsfvtxn_tracks_qq2*os_fvtxs_tracks_qq2*os_fvtxn_tracks_qq2); // stupidly splits the difference?
+	  // --- now let's look at some subevent 4pc stuff
+	  TComplex tc_fvtxs_ce0(os_fvtxs_ce0_qx2,os_fvtxs_ce0_qy2);
+	  TComplex tc_fvtxs_ce1(os_fvtxs_ce1_qx2,os_fvtxs_ce1_qy2);
+	  TComplex tc_fvtxn_ce0(os_fvtxn_ce0_qx2,os_fvtxn_ce0_qy2);
+	  TComplex tc_fvtxn_ce1(os_fvtxn_ce1_qx2,os_fvtxn_ce1_qy2);
+	  // --- first
+	  TComplex tc_fvtxns_ce01 = tc_fvtxs_ce0 * tc_fvtxs_ce1 * TComplex::Conjugate(tc_fvtxn_ce0) * TComplex::Conjugate(tc_fvtxn_ce1);
+	  float os_fvtxns_ce01_qqqq4 = tc_fvtxns_ce01.Re();
+	  float norm = os_fvtxs_ce0_qw*os_fvtxs_ce1_qw*os_fvtxn_ce0_qw*os_fvtxn_ce1_qw;
+	  os_fvtxns_ce01_qqqq4 /= norm;
+	  nfvtxt_os_fvtxsfvtxn_ce01_c24->Fill(nfvtxt,os_fvtxns_ce01_qqqq4); // seems redundant but i sort of need an anchor result
+	  nfvtxt_os_fvtxsfvtxn_ce01_c24a->Fill(nfvtxt,os_fvtxns_ce01_qqqq4);
+	  // --- second
+	  tc_fvtxns_ce01 = tc_fvtxs_ce0 * TComplex::Conjugate(tc_fvtxs_ce1) * tc_fvtxn_ce0 * TComplex::Conjugate(tc_fvtxn_ce1);
+	  os_fvtxns_ce01_qqqq4 = tc_fvtxns_ce01.Re();
+	  os_fvtxns_ce01_qqqq4 /= norm;
+	  nfvtxt_os_fvtxsfvtxn_ce01_c24b->Fill(nfvtxt,os_fvtxns_ce01_qqqq4);
+	  // --- third
+	  tc_fvtxns_ce01 = TComplex::Conjugate(tc_fvtxs_ce0) * tc_fvtxs_ce1 * TComplex::Conjugate(tc_fvtxn_ce0) * tc_fvtxn_ce1;
+	  os_fvtxns_ce01_qqqq4 = tc_fvtxns_ce01.Re();
+	  os_fvtxns_ce01_qqqq4 /= norm;
+	  nfvtxt_os_fvtxsfvtxn_ce01_c24c->Fill(nfvtxt,os_fvtxns_ce01_qqqq4);
+	  // --- fourth
+	  tc_fvtxns_ce01 = TComplex::Conjugate(tc_fvtxs_ce0) * TComplex::Conjugate(tc_fvtxs_ce1) * tc_fvtxn_ce0 * tc_fvtxn_ce1;
+	  os_fvtxns_ce01_qqqq4 = tc_fvtxns_ce01.Re();
+	  os_fvtxns_ce01_qqqq4 /= norm;
+	  nfvtxt_os_fvtxsfvtxn_ce01_c24d->Fill(nfvtxt,os_fvtxns_ce01_qqqq4);
+	}
 
-      // --- now let's look at some subevent 4pc stuff
-      TComplex tc_fvtxs_ce0(os_fvtxs_ce0_qx2,os_fvtxs_ce0_qy2);
-      TComplex tc_fvtxs_ce1(os_fvtxs_ce1_qx2,os_fvtxs_ce1_qy2);
-      TComplex tc_fvtxn_ce0(os_fvtxn_ce0_qx2,os_fvtxn_ce0_qy2);
-      TComplex tc_fvtxn_ce1(os_fvtxn_ce1_qx2,os_fvtxn_ce1_qy2);
-      // --- first
-      TComplex tc_fvtxns_ce01 = tc_fvtxs_ce0 * tc_fvtxs_ce1 * TComplex::Conjugate(tc_fvtxn_ce0) * TComplex::Conjugate(tc_fvtxn_ce1);
-      float os_fvtxns_ce01_qqqq4 = tc_fvtxns_ce01.Re();
-      nfvtxt_os_fvtxsfvtxn_ce01_c24->Fill(nfvtxt,os_fvtxns_ce01_qqqq4); // seems redundant but i sort of need an anchor result
-      nfvtxt_os_fvtxsfvtxn_ce01_c24a->Fill(nfvtxt,os_fvtxns_ce01_qqqq4);
-      // --- second
-      tc_fvtxns_ce01 = tc_fvtxs_ce0 * TComplex::Conjugate(tc_fvtxs_ce1) * tc_fvtxn_ce0 * TComplex::Conjugate(tc_fvtxn_ce1);
-      os_fvtxns_ce01_qqqq4 = tc_fvtxns_ce01.Re();
-      nfvtxt_os_fvtxsfvtxn_ce01_c24b->Fill(nfvtxt,os_fvtxns_ce01_qqqq4);
-      // --- third
-      tc_fvtxns_ce01 = TComplex::Conjugate(tc_fvtxs_ce0) * tc_fvtxs_ce1 * TComplex::Conjugate(tc_fvtxn_ce0) * tc_fvtxn_ce1;
-      os_fvtxns_ce01_qqqq4 = tc_fvtxns_ce01.Re();
-      nfvtxt_os_fvtxsfvtxn_ce01_c24c->Fill(nfvtxt,os_fvtxns_ce01_qqqq4);
-      // --- fourth
-      tc_fvtxns_ce01 = TComplex::Conjugate(tc_fvtxs_ce0) * TComplex::Conjugate(tc_fvtxs_ce1) * tc_fvtxn_ce0 * tc_fvtxn_ce1;
-      os_fvtxns_ce01_qqqq4 = tc_fvtxns_ce01.Re();
-      nfvtxt_os_fvtxsfvtxn_ce01_c24d->Fill(nfvtxt,os_fvtxns_ce01_qqqq4);
       // --------------------------------------
       // --- now the standard event plane stuff
       // --------------------------------------
@@ -3875,6 +3906,8 @@ float calc2_event(float Xn, float Yn, float M)
 
 float calc4_event(float Xn, float Yn, float X2n, float Y2n, float M)
 {
+
+  if ( M < 5 ) return -9999;
 
   float Qn2 = Xn*Xn+Yn*Yn;
   float Qn2d = Xn*Xn-Yn*Yn;
