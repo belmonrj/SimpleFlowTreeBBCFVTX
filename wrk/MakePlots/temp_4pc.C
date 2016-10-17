@@ -6,6 +6,9 @@ void temp_4pc()
 {
 
   dohandle(200);
+  dohandle(62);
+  dohandle(39);
+  dohandle(20);
 
 }
 
@@ -25,23 +28,28 @@ void dohandle(int handle)
       return;
     }
 
-  // --- type A (old)
-  TProfile* tp1f_nfvtxt_fvtxns_c22 = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c22");
-  TProfile* tp1f_nfvtxt_fvtxns_c24a = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c24a");
-  docalc(tp1f_nfvtxt_fvtxns_c22,tp1f_nfvtxt_fvtxns_c24a,"mixed_clusters_typeA");
-  // --- type B (old)
-  TProfile* tp1f_nfvtxt_fvtxns_c22 = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c22");
-  TProfile* tp1f_nfvtxt_fvtxns_c24b = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c24b");
-  docalc(tp1f_nfvtxt_fvtxns_c22,tp1f_nfvtxt_fvtxns_c24b,"mixed_clusters_typeB");
-  // --- type C (old)
-  TProfile* tp1f_nfvtxt_fvtxns_c22 = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c22");
-  TProfile* tp1f_nfvtxt_fvtxns_c24c = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c24c");
-  docalc(tp1f_nfvtxt_fvtxns_c22,tp1f_nfvtxt_fvtxns_c24c,"mixed_clusters_typeC");
+  TProfile* two;
+  TProfile* four;
 
-  // --- 4 subevent clusters
-  // TProfile* tp1f_nfvtxt_fvtxns_c22 = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c22");
-  // TProfile* tp1f_nfvtxt_fvtxns_ce01_c24c = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_ce01_c24a");
-  // docalc(tp1f_nfvtxt_fvtxns_c22,tp1f_nfvtxt_fvtxns_ce01_c24c,"4sub_clusters_typeA");
+  // --- type A clusters (v^4 but no autocorrelation corrections)
+  two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c22");
+  four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c24a");
+  docalc(two,four,(const char*)Form("mixed_clusters_typeA_%d",handle));
+
+  // --- type B clusters (v^8 ?  no idea what this really is, but it's not good)
+  two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c22");
+  four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c24b");
+  docalc(two,four,(const char*)Form("mixed_clusters_typeB_%d",handle));
+
+  // --- type C clusters (v^6 ?  no idea what this really is, but it's not good)
+  two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c22");
+  four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c24c");
+  docalc(two,four,(const char*)Form("mixed_clusters_typeC_%d",handle));
+
+  // --- type D clusters (v^4 with autocorrelation corrections, but clusters cause problems for that)
+  two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c22");
+  four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c24d");
+  docalc(two,four,(const char*)Form("mixed_clusters_typeD_%d",handle));
 
 }
 
@@ -72,6 +80,10 @@ void docalc(TProfile* tp1f_c22, TProfile* tp1f_c24a, const char* description)
   line.Draw();
   c1->Print(Form("FigsFour/components_222and4_nfvtxt_%s.png",description));
   c1->Print(Form("FigsFour/components_222and4_nfvtxt_%s.pdf",description));
+  th1d_c22a->SetMaximum(1e-03);
+  th1d_c22a->SetMinimum(-1e-03);
+  c1->Print(Form("FigsFour/components_222and4_nfvtxt_%s_zout.png",description));
+  c1->Print(Form("FigsFour/components_222and4_nfvtxt_%s_zout.pdf",description));
 
   th1d_c22a->Scale(-1.0);
   th1d_c22a->Add(th1d_c24a,1.0);
@@ -81,6 +93,10 @@ void docalc(TProfile* tp1f_c22, TProfile* tp1f_c24a, const char* description)
   line.Draw();
   c1->Print(Form("FigsFour/c24_nfvtxt_%s.png",description));
   c1->Print(Form("FigsFour/c24_nfvtxt_%s.pdf",description));
+  th1d_c22a->SetMaximum(1e-03);
+  th1d_c22a->SetMinimum(-1e-03);
+  c1->Print(Form("FigsFour/c24_nfvtxt_%s_zout.png",description));
+  c1->Print(Form("FigsFour/c24_nfvtxt_%s_zout.pdf",description));
 
   const int nbins = tp1f_c22->GetNbinsX();
   TH1D* th1d_v24a = tp1f_c24a->ProjectionX(Form("th1d_v24a_%s",description));
