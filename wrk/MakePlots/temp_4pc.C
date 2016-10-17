@@ -51,6 +51,26 @@ void dohandle(int handle)
   four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c24d");
   docalc(two,four,(const char*)Form("mixed_clusters_typeD_%d",handle));
 
+  // --- type A clusters with 4 subevents (++--)
+  two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c22");
+  four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_ce01_c24a");
+  docalc(two,four,(const char*)Form("4sub_clusters_typeA_%d",handle));
+
+  // --- type B clusters with 4 subevents (+-+-)
+  two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c22");
+  four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_ce01_c24b");
+  docalc(two,four,(const char*)Form("4sub_clusters_typeB_%d",handle));
+
+  // --- type C clusters with 4 subevents (-+-+)
+  two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c22");
+  four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_ce01_c24c");
+  docalc(two,four,(const char*)Form("4sub_clusters_typeC_%d",handle));
+
+  // --- type D clusters with 4 subevents (--++)
+  two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c22");
+  four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_ce01_c24d");
+  docalc(two,four,(const char*)Form("4sub_clusters_typeD_%d",handle));
+
 }
 
 void docalc(TProfile* tp1f_c22, TProfile* tp1f_c24a, const char* description)
