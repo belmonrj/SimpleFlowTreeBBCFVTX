@@ -51,6 +51,8 @@ void dohandle(int handle)
   four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c24d");
   docalc(two,four,(const char*)Form("mixed_clusters_typeD_%d",handle));
 
+  // ---
+
   // --- type A clusters with 4 subevents (++--)
   two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c22");
   four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_ce01_c24a");
@@ -70,6 +72,45 @@ void dohandle(int handle)
   two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c22");
   four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_ce01_c24d");
   docalc(two,four,(const char*)Form("4sub_clusters_typeD_%d",handle));
+
+  // ---
+
+  // --- type A tracks (v^4 but no autocorrelation corrections)
+  two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_tracks_c22");
+  four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_tracks_c24a");
+  docalc(two,four,(const char*)Form("mixed_tracks_typeA_%d",handle));
+
+  // --- type B tracks (v^8 ?  no idea what this really is, but it's not good)
+  two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_tracks_c22");
+  four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_tracks_c24b");
+  docalc(two,four,(const char*)Form("mixed_tracks_typeB_%d",handle));
+
+  // --- type C tracks (v^6 ?  no idea what this really is, but it's not good)
+  two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_tracks_c22");
+  four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_tracks_c24c");
+  docalc(two,four,(const char*)Form("mixed_tracks_typeC_%d",handle));
+
+  // --- type D tracks (v^4 with autocorrelation corrections, should be okay for tracks???)
+  two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_tracks_c22");
+  four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_tracks_c24d");
+  docalc(two,four,(const char*)Form("mixed_tracks_typeD_%d",handle));
+
+  // ---
+
+  // --- south tracks only
+  two = (TProfile*)file->Get("nfvtxt_os_fvtxs_tracks_c22");
+  four = (TProfile*)file->Get("nfvtxt_os_fvtxs_tracks_c24");
+  docalc(two,four,(const char*)Form("tracks_south_%d",handle));
+
+  // --- north tracks only
+  two = (TProfile*)file->Get("nfvtxt_os_fvtxn_tracks_c22");
+  four = (TProfile*)file->Get("nfvtxt_os_fvtxn_tracks_c24");
+  docalc(two,four,(const char*)Form("tracks_north_%d",handle));
+
+  // --- combined tracks only
+  two = (TProfile*)file->Get("nfvtxt_os_fvtxc_tracks_c22");
+  four = (TProfile*)file->Get("nfvtxt_os_fvtxc_tracks_c24");
+  docalc(two,four,(const char*)Form("tracks_combined_%d",handle));
 
 }
 
