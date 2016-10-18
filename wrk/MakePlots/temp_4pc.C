@@ -6,9 +6,9 @@ void temp_4pc()
 {
 
   dohandle(200);
-  dohandle(62);
-  dohandle(39);
-  dohandle(20);
+  // dohandle(62);
+  // dohandle(39);
+  // dohandle(20);
 
 }
 
@@ -34,22 +34,22 @@ void dohandle(int handle)
   // --- type A clusters (v^4 but no autocorrelation corrections)
   two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c22");
   four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c24a");
-  docalc(two,four,(const char*)Form("mixed_clusters_typeA_%d",handle));
+  //docalc(two,four,(const char*)Form("mixed_clusters_typeA_%d",handle));
 
   // --- type B clusters (v^8 ?  no idea what this really is, but it's not good)
   two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c22");
   four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c24b");
-  docalc(two,four,(const char*)Form("mixed_clusters_typeB_%d",handle));
+  //docalc(two,four,(const char*)Form("mixed_clusters_typeB_%d",handle));
 
   // --- type C clusters (v^6 ?  no idea what this really is, but it's not good)
   two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c22");
   four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c24c");
-  docalc(two,four,(const char*)Form("mixed_clusters_typeC_%d",handle));
+  //docalc(two,four,(const char*)Form("mixed_clusters_typeC_%d",handle));
 
   // --- type D clusters (v^4 with autocorrelation corrections, but clusters cause problems for that)
   two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c22");
   four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c24d");
-  docalc(two,four,(const char*)Form("mixed_clusters_typeD_%d",handle));
+  //docalc(two,four,(const char*)Form("mixed_clusters_typeD_%d",handle));
 
   // ---
 
@@ -78,22 +78,22 @@ void dohandle(int handle)
   // --- type A tracks (v^4 but no autocorrelation corrections)
   two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_tracks_c22");
   four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_tracks_c24a");
-  docalc(two,four,(const char*)Form("mixed_tracks_typeA_%d",handle));
+  //docalc(two,four,(const char*)Form("mixed_tracks_typeA_%d",handle));
 
   // --- type B tracks (v^8 ?  no idea what this really is, but it's not good)
   two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_tracks_c22");
   four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_tracks_c24b");
-  docalc(two,four,(const char*)Form("mixed_tracks_typeB_%d",handle));
+  //docalc(two,four,(const char*)Form("mixed_tracks_typeB_%d",handle));
 
   // --- type C tracks (v^6 ?  no idea what this really is, but it's not good)
   two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_tracks_c22");
   four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_tracks_c24c");
-  docalc(two,four,(const char*)Form("mixed_tracks_typeC_%d",handle));
+  //docalc(two,four,(const char*)Form("mixed_tracks_typeC_%d",handle));
 
   // --- type D tracks (v^4 with autocorrelation corrections, should be okay for tracks???)
   two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_tracks_c22");
   four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_tracks_c24d");
-  docalc(two,four,(const char*)Form("mixed_tracks_typeD_%d",handle));
+  //docalc(two,four,(const char*)Form("mixed_tracks_typeD_%d",handle));
 
   // ---
 
@@ -110,7 +110,17 @@ void dohandle(int handle)
   // --- combined tracks only
   two = (TProfile*)file->Get("nfvtxt_os_fvtxc_tracks_c22");
   four = (TProfile*)file->Get("nfvtxt_os_fvtxc_tracks_c24");
-  docalc(two,four,(const char*)Form("tracks_combined_%d",handle));
+  //docalc(two,four,(const char*)Form("tracks_combined_%d",handle));
+
+  // --- south clusters only
+  two = (TProfile*)file->Get("nfvtxt_os_fvtxs_c22");
+  four = (TProfile*)file->Get("nfvtxt_os_fvtxs_c24");
+  docalc(two,four,(const char*)Form("clusters_south_%d",handle));
+
+  // --- north clusters only
+  two = (TProfile*)file->Get("nfvtxt_os_fvtxn_c22");
+  four = (TProfile*)file->Get("nfvtxt_os_fvtxn_c24");
+  docalc(two,four,(const char*)Form("clusters_north_%d",handle));
 
 }
 
@@ -125,7 +135,7 @@ void docalc(TProfile* tp1f_c22, TProfile* tp1f_c24a, const char* description)
 
   th1d_c22a->Multiply(th1d_c22);
   th1d_c22a->Scale(2.0);
-  th1d_c22a->SetMaximum(1e-05);
+  th1d_c22a->SetMaximum(2e-05);
   th1d_c22a->SetMinimum(-4e-06);
   th1d_c22a->Draw();
   th1d_c24a->SetLineColor(kRed);
@@ -148,8 +158,8 @@ void docalc(TProfile* tp1f_c22, TProfile* tp1f_c24a, const char* description)
 
   th1d_c22a->Scale(-1.0);
   th1d_c22a->Add(th1d_c24a,1.0);
-  th1d_c22a->SetMaximum(1e-05);
-  th1d_c22a->SetMinimum(-1e-05);
+  th1d_c22a->SetMaximum(2e-05);
+  th1d_c22a->SetMinimum(-2e-05);
   th1d_c22a->Draw();
   line.Draw();
   c1->Print(Form("FigsFour/c24_nfvtxt_%s.png",description));
