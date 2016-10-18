@@ -70,19 +70,14 @@ SimpleFlowTreeBBCFVTX::SimpleFlowTreeBBCFVTX():
   _ievent(0),
   _verbosity(0),
   _create_ttree(true),
-  _write_clusters(false),
   _write_bbc(false),
   _write_fvtx(false),
-  _trimmed_tree(false),
-  _write_vtx(true),
   _write_fvtx_clusters(false),
   _output_filename("NULL"),
   _output_file(NULL),
-  _z_vertex_range(30), //cm
   _use_runlist(false),
   _runlist_filename(""),
   _ntp_event(NULL),
-  _ntp_cluster(NULL),
   _utils(NULL),
   tmp_evt(0)
 {
@@ -146,48 +141,15 @@ int SimpleFlowTreeBBCFVTX::Init(PHCompositeNode *topNode)
       _ntp_event -> Branch("d_nFVTXN_clus", &d_nFVTXN_clus, "d_nFVTXN_clus/I");
       _ntp_event -> Branch("d_nFVTXS_clus", &d_nFVTXS_clus, "d_nFVTXS_clus/I");
     }
+    //_ntp_event -> Branch("d_BBCs_Qy",&d_BBCs_Qy,"d_BBCs_Qy[221]/F");
+    //_ntp_event -> Branch("d_BBCs_Qw",&d_BBCs_Qw,"d_BBCs_Qw[221]/F");
+    //now track based arrays
     _ntp_event -> Branch("d_ntrk", &d_ntrk, "d_ntrk/I");
     _ntp_event -> Branch("d_cntpx", &d_cntpx, "d_cntpx[d_ntrk]/F");
     _ntp_event -> Branch("d_cntpy", &d_cntpy, "d_cntpy[d_ntrk]/F");
     _ntp_event -> Branch("d_cntpz", &d_cntpz, "d_cntpz[d_ntrk]/F");
     _ntp_event -> Branch("d_cntpc3sdz", &d_cntpc3sdz, "d_cntpc3sdz[d_ntrk]/F");
     _ntp_event -> Branch("d_cntpc3sdphi", &d_cntpc3sdphi, "d_cntpc3sdphi[d_ntrk]/F");
-    //_ntp_event -> Branch("d_BBCs_Qy",&d_BBCs_Qy,"d_BBCs_Qy[221]/F");
-    //_ntp_event -> Branch("d_BBCs_Qw",&d_BBCs_Qw,"d_BBCs_Qw[221]/F");
-    //now track based arrays
-    if (_write_vtx)
-    {
-      _ntp_event -> Branch("nsegments", &nsegments, "nsegments/I");
-      _ntp_event -> Branch("px", &px, "px[nsegments]/F");
-      _ntp_event -> Branch("py", &py, "py[nsegments]/F");
-      _ntp_event -> Branch("pz", &pz, "pz[nsegments]/F");
-    }
-    if (!_trimmed_tree)
-    {
-      _ntp_event -> Branch("vtx_x", &vtx_x, "vtx_x/F");
-      _ntp_event -> Branch("vtx_y", &vtx_y, "vtx_y/F");
-      //          _ntp_event -> Branch("centrality",&centrality,"centrality/F");
-      _ntp_event -> Branch("eventok", &eventok, "eventok/I");
-      _ntp_event -> Branch("trackID", &trackID, "trackID[nsegments]/I");
-      _ntp_event -> Branch("charge", &charge, "charge[nsegments]/I");
-      _ntp_event -> Branch("chisq", &chisq, "chisq[nsegments]/F");
-      _ntp_event -> Branch("ndf", &ndf, "ndf[nsegments]/I");
-      _ntp_event -> Branch("nhit0", &nhit0, "nhit0[nsegments]/I");
-      _ntp_event -> Branch("nhit1", &nhit0, "nhit0[nsegments]/I");
-      _ntp_event -> Branch("nhit2", &nhit0, "nhit0[nsegments]/I");
-      _ntp_event -> Branch("nhit3", &nhit0, "nhit0[nsegments]/I");
-      _ntp_event -> Branch("dca", &dca, "dca[nsegments]/F");
-      _ntp_event -> Branch("dca2d", &dca2d, "dca2d[nsegments]/F");
-      _ntp_event -> Branch("segmentok", &segmentok, "segmentok[nsegments]/I");
-      _ntp_event -> Branch("svtx_z", &svtx_z, "svtx_z/F");
-      _ntp_event -> Branch("vtxposE_x", &vtxposE_x, "vtxposE_x/F");
-      _ntp_event -> Branch("vtxposE_y", &vtxposE_y, "vtxposE_y/F");
-      _ntp_event -> Branch("vtxposE_z", &vtxposE_z, "vtxposE_z/F");
-      _ntp_event -> Branch("vtxposW_x", &vtxposW_x, "vtxposW_x/F");
-      _ntp_event -> Branch("vtxposW_y", &vtxposW_y, "vtxposW_y/F");
-      _ntp_event -> Branch("vtxposW_z", &vtxposW_z, "vtxposW_z/F");
-
-    }
     if (_write_fvtx)
     {
       //fvtx tracking parameters
@@ -202,10 +164,6 @@ int SimpleFlowTreeBBCFVTX::Init(PHCompositeNode *topNode)
       _ntp_event -> Branch("fDCA_X", &fDCA_X, "fDCA_X[ntracklets]/F");
       _ntp_event -> Branch("fDCA_Y", &fDCA_Y, "fDCA_Y[ntracklets]/F");
     }
-
-    if (_write_clusters)
-      _ntp_cluster = new TNtuple("ntp_cluster", "cluster-wise ntuple",
-                                 "event:layer:x:y:z:adc1:adc2:section:ladder:sensor:lx:ly:lz:size:sizex:sizez:vz");
 
   }
 
@@ -288,23 +246,10 @@ int SimpleFlowTreeBBCFVTX::ResetEvent(PHCompositeNode *topNode)
   bbc_qn        = -9999;
   bbc_qs        = -9999;
   bbc_z         = -9999;
-  vtx_x         = -9999;
-  vtx_y         = -9999;
   vtx_z         = -9999;
   bc_x          = -9999;
   bc_y          = -9999;
-  svtx_z        = -9999;
-  vtxposE_x     = -9999;
-  vtxposE_x     = -9999;
-  vtxposE_y     = -9999;
-  vtxposE_z     = -9999;
-  vtxposW_x     = -9999;
-  vtxposW_y     = -9999;
-  vtxposW_z     = -9999;
-  fvtx_z        = -9999;
-  nsegments     = -9999;
   ntracklets    = -9999;
-  eventok       = -9999;
 
   for (int i = 0; i < 9; i++)
   {
@@ -317,24 +262,6 @@ int SimpleFlowTreeBBCFVTX::ResetEvent(PHCompositeNode *topNode)
   {
     d_BBC_charge[i] = 0.0;
 
-  }
-
-  for (int i = 0; i < N_SVX_TRACK_MAX; i++)
-  {
-    trackID[i]   = -9999;
-    charge[i]    = -9999;
-    chisq[i]     = -9999;
-    ndf[i]       = -9999;
-    nhit0[i]     = -9999;
-    nhit1[i]     = -9999;
-    nhit2[i]     = -9999;
-    nhit3[i]     = -9999;
-    px[i]        = -9999;
-    py[i]        = -9999;
-    pz[i]        = -9999;
-    dca[i]       = -9999;
-    dca2d[i]     = -9999;
-    segmentok[i] = -9999;
   }
 
   for (int i = 0; i < N_FVTX_CLUSTER_MAX; i++)
@@ -410,18 +337,6 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
   // Grab info off of the node tree
   //-------------------------------
 
-  //------------------PreviousEvent--------------------------------
-  PreviousEvent *d_peve = NULL;
-  d_peve    = findNode::getClass<PreviousEvent>(topNode, "PreviousEvent"); // for Tick cut
-  if (d_peve == NULL)
-  {
-
-    std::cout << "SvxQAEventSelection::GetNodes -"
-              << " No PreviousEvent object !" << std::endl;
-
-    return ABORTEVENT;
-  }
-
   TrigLvl1 *triggers = findNode::getClass<TrigLvl1>(topNode, "TrigLvl1");
   if (!triggers)
   {
@@ -446,12 +361,6 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
     cout << PHWHERE << " ERROR::VtxOut not found" << endl;
     return ABORTEVENT;
   }
-  SvxSegmentList *segments = findNode::getClass<SvxSegmentList>(topNode, "SvxSegmentList");
-  if (!segments && _write_vtx)
-  {
-    cout << PHWHERE << " ERROR::SvxSegmentList not found" << endl;
-    return ABORTEVENT;
-  }
 
   TFvtxCompactTrkMap* trkfvtx_map = NULL;
   if (_write_fvtx)
@@ -470,52 +379,19 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
     return ABORTEVENT;
   }
 
-
-
-
-  SvxClusterList *d_svxcls = NULL;
-  d_svxcls = findNode::getClass<SvxClusterList>(topNode, "SvxClusterList");
-  if (d_svxcls == NULL && _write_clusters)
-  {
-    std::cerr << "SvxClusterList node not found.Register SvxReco module" << std::endl;
-    return ABORTEVENT;
-  }
-
   RpSumXYObject* d_rp = findNode::getClass<RpSumXYObject>(topNode, "RpSumXYObject");
-
-  if (!d_rp) {
+  if (!d_rp)
+  {
     if ( _verbosity > 4 ) cout << PHWHERE << "Could not find the RPSumXYObject" << endl;
     //return ABORTEVENT;
   }
 
   BbcRaw *bbcraw = findNode::getClass<BbcRaw>(topNode, "BbcRaw");
-  if (!bbcraw) {
-    cout << "could not find Bbcraw!" << endl;
+  if (!bbcraw)
+  {
+    cout << PHWHERE << "Could not find Bbcraw!" << endl;
     if (_write_bbc)
       return ABORTEVENT;
-  }
-
-
-  int pticks[3] = {0};
-  for ( int i = 0; i < 3; i++ ) pticks[i] = (d_peve != NULL) ? d_peve->get_clockticks(i) : -999;
-
-  bool tick =  ( ( 20 < pticks[0] && pticks[0] < 120) ||
-                 (700 < pticks[1] && pticks[1] < 780) );
-
-
-  bool failed_tick_cut = false;
-
-  if (tick)
-  {
-    if (_verbosity > 1)
-    {
-      std::cout << "SvxQAEventSelection::EventSelection - "
-                << "Failed tick cut. Not a good event!" << std::endl;
-      std::cout << "                                      pticks: "
-                << pticks[0] << " " << pticks[1] << " " << pticks[2] << std::endl;
-    }
-    //return ABORTEVENT;
-    failed_tick_cut = true;// skip SVX Segments if true
   }
 
 
@@ -537,15 +413,12 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
   //---------------------------------------------------------//
 
   PHPoint precise_vertex1 = vertexes->get_Vertex("SVX_PRECISE");
-  vtx_x = precise_vertex1.getX();
-  vtx_y = precise_vertex1.getY();
   vtx_z = precise_vertex1.getZ();
   if (vtx_z != vtx_z) vtx_z = -9999; //NAN check
 
   PHPoint svx_fast = vertexes->get_Vertex("SVX");//seed vertex
   bc_x = svx_fast.getX();//these are actually the beam center
   bc_y = svx_fast.getY();
-  svtx_z = svx_fast.getZ();
 
   // phglobal fields
   centrality  = global->getCentrality();
@@ -609,89 +482,14 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
 
   //int ibbcz_bin = (bbc_z+30.0)/10;//for fvtx eta cuts
 
-  //get the East vertex (if available)
-  PHPoint vtxposE;
-  vtxposE = vertexes->get_Vertex("SVX_PRECISEE");
-  vtxposE_x = vtxposE.getX();
-  vtxposE_y = vtxposE.getY();
-  vtxposE_z = vtxposE.getZ();
-
-  //get the West vertex (if available)
-  PHPoint vtxposW;
-  vtxposW = vertexes->get_Vertex("SVX_PRECISEW");
-  vtxposW_x = vtxposW.getX();
-  vtxposW_y = vtxposW.getY();
-  vtxposW_z = vtxposW.getZ();
 
   //---------------------------------------------------------//
   //  Finished Reading in Global Event Information into Tree
   //---------------------------------------------------------//
 
 
-  //---------------------------------------------------------//
-  //
-  //           Writing out VTX Clusters in nTuple
-  //
-  //---------------------------------------------------------//
-
-
-  if (_write_clusters)
-  {
-    PHPoint default_vertex1 = vertexes->get_Vertex();
-    float default_z = default_vertex1.getZ();//
-
-    for (int iclus = 0; iclus < d_svxcls->get_nClusters(); iclus++)
-    {
-      SvxCluster *clus = d_svxcls->get_Cluster(iclus);
-      if (!clus) continue;
-      float layer = clus->get_layer();
-      float adc1 = clus->get_adc(0);
-      float adc2 = clus->get_adc(1);
-      float x = clus->get_xyz_global(0);
-      float y = clus->get_xyz_global(1);
-      float z = clus->get_xyz_global(2);
-      float lx = clus->get_xyz_local(0);
-      float ly = clus->get_xyz_local(1);
-      float lz = clus->get_xyz_local(2);
-      float section = clus->get_svxSection();
-      float ladder = clus->get_ladder();
-      float sensor = clus->get_sensor();
-      float size = clus->get_size();
-      float sizex = clus->get_xz_size(0);
-      float sizez = clus->get_xz_size(1);
-
-      float clus_data[17] =
-      {
-        _ievent,
-        layer,
-        x,
-        y,
-        z,
-        adc1,
-        adc2,
-        section,
-        ladder,
-        sensor,
-        lx,
-        ly,
-        lz,
-        size,
-        sizex,
-        sizez,
-        default_z
-      };
-
-      _ntp_cluster->Fill(clus_data);
-
-    }
-  }
-  //---------------------------------------------------------//
-  //         Finished writing out VTX Clusters in nTuple
-  //---------------------------------------------------------//
 
   //if(_write_fvtx && !trkfvtx_map) return ABORTEVENT;
-
-  //if( failed_tick_cut && _write_vtx) return ABORTEVENT;
 
   for (int i = 0; i < 9; i++) { //fvtx bbc cnt smd vtx 3+3+1+3+%d
     d_Qx[i] = -9999;
@@ -707,15 +505,6 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
       }
     }
   }
-
-  eventok = is_event_ok(topNode);//only z vertex cut and centrality cut
-
-  if (!eventok)
-  {
-    return ABORTEVENT;
-  }
-
-  //  tmp_evt++;//to keep track of how many events pass event cuts
 
   //---------------------------------------------------------//
   //
@@ -781,7 +570,7 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
 
   //---------------------------------------------------------//
   //
-  //            Writing out BBC and FVTX Raw Objects
+  //            Writing out BBC Raw Objects
   //
   //---------------------------------------------------------//
 
@@ -831,6 +620,15 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
     }
   }
 
+  //---------------------------------------------------------//
+  //                 finished Get BBC Raw
+  //---------------------------------------------------------//
+
+  //---------------------------------------------------------//
+  //
+  //            Get FVTX clusters
+  //
+  //---------------------------------------------------------//
 
   int nfvtx_raw_clus = 0;
   int nfvtxn_raw_clus = 0;
@@ -874,6 +672,10 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
   d_nFVTXN_clus = nfvtxn_raw_clus;
   d_nFVTXS_clus = nfvtxs_raw_clus;
   //cout<<"nfvtxs_raw_clus: "<<nfvtxs_raw_clus <<endl;
+
+  //---------------------------------------------------------//
+  //                 finished Get FVTX Clusters
+  //---------------------------------------------------------//
 
   //---------------------------------------------------------//
   //
@@ -972,73 +774,6 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
   //                 finished Get FVTX Tracks
   //---------------------------------------------------------//
 
-  //---------------------------------------------------------//
-  //
-  //                 Get VTX Tracks
-  //
-  //---------------------------------------------------------//
-
-  if (_write_vtx)
-    nsegments = segments->get_nSegments();
-  //  cout<<"nsegments in this event: "<<nsegments<<endl;
-
-  int igoodseg = 0;
-
-  if (segments && !failed_tick_cut && _write_vtx )
-  {
-
-    for (int isegment = 0; isegment < nsegments; isegment++)
-    {
-
-      SvxSegment *segment = segments->get_segment(isegment);
-
-      if (!is_segment_ok(segment)) continue;
-      if (igoodseg >= N_SVX_TRACK_MAX)
-      {
-        cout << "bumping up againt track limit" << endl;
-        break;
-      }
-      charge[igoodseg] = 0;
-      if (segment->IsPositive())
-      {
-        charge[igoodseg] = +1.0;
-      }
-      else
-      {
-        charge[igoodseg] = -1.0;
-      }
-
-      float ipx = segment->get3MomentumAtPrimaryVertex(0);
-      float ipy = segment->get3MomentumAtPrimaryVertex(1);
-      float ipz = segment->get3MomentumAtPrimaryVertex(2);
-
-      trackID[igoodseg]   = segment->getSegmentID();
-      chisq[igoodseg]     = calc_chisq_fromquality(segment->getSegmentQuality(), segment->getSegmentScore());
-      ndf[igoodseg]       = segment->getNDF();
-      nhit0[igoodseg]     = segment->getNhits(0);
-      nhit1[igoodseg]     = segment->getNhits(1);
-      nhit2[igoodseg]     = segment->getNhits(2);
-      nhit3[igoodseg]     = segment->getNhits(3);
-      dca[igoodseg]       = segment->getDCA();
-      dca2d[igoodseg]     = segment->getDCA2D();
-      px[igoodseg]       = ipx;
-      py[igoodseg]       = ipy;
-      pz[igoodseg]       = ipz;
-      segmentok[igoodseg] = is_segment_ok(segment);
-
-      igoodseg++;
-      //if(!is_segment_ok(segment)) continue;
-
-    }
-  }
-
-  nsegments = igoodseg;
-
-  //---------------------------------------------------------//
-  //                 finished Get VTX Tracks
-  //---------------------------------------------------------//
-
-  //if(nsegments==0) return EVENT_OK; // BAD CUT
 
   //---------------------------------------------------------//
   //
@@ -1142,12 +877,8 @@ int SimpleFlowTreeBBCFVTX::End(PHCompositeNode *topNode)
   _output_file->cd();
 
   if (_create_ttree)
-  {
-    if (!_write_clusters)
-      _ntp_event->Write();
-    else if (_write_clusters)
-      _ntp_cluster->Write();
-  }
+    _ntp_event->Write();
+
   _output_file->Close();
   delete _output_file;
 
@@ -1161,126 +892,7 @@ int SimpleFlowTreeBBCFVTX::End(PHCompositeNode *topNode)
 }
 
 
-bool SimpleFlowTreeBBCFVTX::is_event_ok(PHCompositeNode *topNode)
-{
 
-  if (_verbosity > 1) cout << PHWHERE << "::is_event_ok() - entered." << endl;
-
-  // grab from the node tree
-  //TrigLvl1 *triggers = findNode::getClass<TrigLvl1>(topNode, "TrigLvl1");
-  //if(!triggers)
-  //{
-  //cout<<PHWHERE<<" ERROR::TrigLvl1 not found"<<endl;
-  //return ABORTEVENT;
-  //}
-  PHGlobal *global = findNode::getClass<PHGlobal>(topNode, "PHGlobal");
-  if (!global)
-  {
-    cout << PHWHERE << " ERROR::PHGlobal not found" << endl;
-    return ABORTEVENT;
-  }
-  VtxOut *vertexes = findNode::getClass<VtxOut>(topNode, "VtxOut");
-  if (!vertexes)
-  {
-    cout << PHWHERE << " ERROR::VtxOut not found" << endl;
-    return ABORTEVENT;
-  }
-
-  // --- why not use the class variable?  cut now applied below with vtxout object
-  // --- bbc_z
-  // double bbcz = global->getBbcZVertex();
-  // if(fabs(bbcz) > 30)
-  //   {
-  //     if(_verbosity > 0)
-  //       cout<<"event rejected because bbc z vertex outside of 30 cm"<<endl;
-  //     return false;
-  //   }
-
-  return true;
-
-  // bail on bad centrality
-  float tmpcentrality = global->getCentrality();
-  if ((tmpcentrality < 0.0) || (tmpcentrality > 100.0))
-  {
-    if (_verbosity > 0)
-      cout << "event rejected because of outside of sensible centrality range" << endl;
-    return false;
-  }
-  //if(centrality < 20.0) return false; // peripheral cut
-  if (tmpcentrality > 5.0)
-  {
-    if (_verbosity > 0)
-      cout << "event rejected because outside of 5%% centrality" << endl;
-    return false;
-  }
-  return true;
-
-} // is_event_ok
-
-
-
-
-bool SimpleFlowTreeBBCFVTX::is_segment_ok(SvxSegment *segment)
-{
-  // single particle cuts go here...
-  if (_verbosity > 1) cout << PHWHERE << "::is_segment_ok() - entered." << endl;
-
-  // reject tracks with too few hits...
-  unsigned int nhits = segment->getNhits(0)
-                       + segment->getNhits(1)
-                       + segment->getNhits(2)
-                       + segment->getNhits(3);
-  //cout<<"nhit0: "<<segment->getNhits(0)<<" nhit1: "<<segment->getNhits(1)<<" nhit2: "<<segment->getNhits(2)<<" nhit3: "<<segment->getNhits(3)<<endl;
-  if (nhits < 4)
-  {
-    if (_verbosity > 1)
-      cout << "track rejected because not enough hits" << endl;
-    return false;
-  }
-  //if(segment->getNhits(0)+segment->getNhits(1)!=2)
-  //{
-  //if(_verbosity > 1)
-  //cout<<"track rejected because no hit in b0 and b1"<<endl;
-  //return false;
-  //}
-  // reject tracks with off-vertex dca...
-  if (fabs(segment->getDCA2D()) > 0.03 || fabs(segment->getDCA()) > 0.5)
-  {
-    if (_verbosity > 1)
-      cout << "track rejected because of DCA cut" << endl;
-    return false;
-  }
-  // reject tracks with chisq/ndf<%d...
-  //int ndf = 2*nhits - 5;
-  double px = segment->get3MomentumAtPrimaryVertex(0);
-  double py = segment->get3MomentumAtPrimaryVertex(1);
-  double pt = sqrt(px * px + py * py);
-  float chisqndf = calc_chisq_fromquality(segment->getSegmentQuality(), segment->getSegmentScore());
-  if (!pass_chisq_cut(chisqndf, pt, nhits))
-  {
-    if (_verbosity > 1)
-      cout << "track rejected because chisq cut" << endl;
-    return false;
-  }
-
-  return true;
-}
-
-
-bool SimpleFlowTreeBBCFVTX::pass_chisq_cut(double chisq, double pt, int nhits)
-{
-  if (nhits == 3)
-  {
-    if ((pt < 1.0) && (chisq < 3)) return true;
-    if ((pt > 1.0) && (chisq < 2)) return true;
-  }
-  else if (nhits == 4)
-  {
-    if (chisq < 2) return true;
-  }
-
-  return false;
-}
 
 bool SimpleFlowTreeBBCFVTX::is_run_in_list(int runnumber)
 {
@@ -1369,16 +981,3 @@ bool SimpleFlowTreeBBCFVTX::pass_eta_cut(float eta, int bbcz_bin)
   return false;
 }
 
-
-float SimpleFlowTreeBBCFVTX::calc_chisq_fromquality(float quality, float score)
-{
-  float chisq = quality - score / 100.;
-  chisq = 1 / chisq - 2.0;
-  if (chisq < 0)
-  {
-    //if(_verbosity > 0)
-    //cout << "WARNING!! calc_chisq_fromquality(" << quality << "," << score <<") gives chisq/ndf=" << chisq << endl;
-    return 99999;
-  }
-  return chisq;
-}
