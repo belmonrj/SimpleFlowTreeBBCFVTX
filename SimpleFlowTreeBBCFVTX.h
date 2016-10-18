@@ -23,18 +23,10 @@
 
 
 // global variables for array sizes
-static const int NDET = 8; // number of detectors (which ones?)
-static const int NHAR = 3; // number of harmonics (1,2,3)
-static const int NMUL = 6; // ?
-static const int NZPS = 10; // number of zbins
-static const int NORD = 12; // ?
-static const int NZED = 10; // matching for PHCentralTracks, not currently used
-static const int NMAT = 8; // ?
-static const int NPAR = 20; // ?
 //static const int N_FVTX_CLUSTER_MAX = 750; // maximum number of fvtx clusters, may need to be changed for larger systems
 static const int N_FVTX_CLUSTER_MAX = 4000; // what's the largest possible number?
-static const int N_SVX_TRACK_MAX = 10; // seems really small??
-static const int N_CTRK_MAX = 75;
+static const int N_CTRK_MAX = 75; // max number of PHCentralTracks
+static const int N_FTRK_MAX = 75; // max number of FVTX tracks
 
 class Fun4AllHistoManager;
 class BbcCalib;
@@ -68,6 +60,7 @@ class SimpleFlowTreeBBCFVTX: public SubsysReco
 
   // --- set methods for variousthings to write out to trees/ntuples
   void set_write_bbc(bool b){_write_bbc = b;}
+  void set_write_cnt(bool b){_write_cnt = b;}
   void set_write_fvtx(bool b){_write_fvtx = b;}
   void set_write_fvtx_clusters(bool b){_write_fvtx_clusters = b;}
   bool is_run_in_list(int runnumber);
@@ -90,6 +83,7 @@ class SimpleFlowTreeBBCFVTX: public SubsysReco
   Fun4AllHistoManager* HistoManager;
 
   bool _write_bbc;
+  bool _write_cnt;
   bool _write_fvtx;
   bool _write_fvtx_clusters;
   /// module output filename
@@ -158,14 +152,14 @@ class SimpleFlowTreeBBCFVTX: public SubsysReco
 
   // if (_write_fvtx)
   int ntracklets;
-  float fphi[75];
-  float feta[75];
-  float fthe[75];
-  float fchisq[75];
-  int farm[75];
-  int fnhits[75];
-  float fDCA_X[75];
-  float fDCA_Y[75];
+  float fphi[N_FTRK_MAX];
+  float feta[N_FTRK_MAX];
+  float fthe[N_FTRK_MAX];
+  float fchisq[N_FTRK_MAX];
+  int farm[N_FTRK_MAX];
+  int fnhits[N_FTRK_MAX];
+  float fDCA_X[N_FTRK_MAX];
+  float fDCA_Y[N_FTRK_MAX];
 
 
   //-- Other variables

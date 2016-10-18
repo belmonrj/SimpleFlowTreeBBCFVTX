@@ -71,6 +71,7 @@ SimpleFlowTreeBBCFVTX::SimpleFlowTreeBBCFVTX():
   _verbosity(0),
   _create_ttree(true),
   _write_bbc(false),
+  _write_cnt(false),
   _write_fvtx(false),
   _write_fvtx_clusters(false),
   _output_filename("NULL"),
@@ -131,6 +132,8 @@ int SimpleFlowTreeBBCFVTX::Init(PHCompositeNode *topNode)
       _ntp_event -> Branch("bbc_qn", &bbc_qn, "bbc_qn/F");
       _ntp_event -> Branch("bbc_qs", &bbc_qs, "bbc_qs/F");
       _ntp_event -> Branch("d_BBC_charge", &d_BBC_charge, "d_BBC_charge[128]/F");
+      //_ntp_event -> Branch("d_BBCs_Qy",&d_BBCs_Qy,"d_BBCs_Qy[221]/F");
+      //_ntp_event -> Branch("d_BBCs_Qw",&d_BBCs_Qw,"d_BBCs_Qw[221]/F");
     }
     if (_write_fvtx_clusters)
     {
@@ -141,15 +144,16 @@ int SimpleFlowTreeBBCFVTX::Init(PHCompositeNode *topNode)
       _ntp_event -> Branch("d_nFVTXN_clus", &d_nFVTXN_clus, "d_nFVTXN_clus/I");
       _ntp_event -> Branch("d_nFVTXS_clus", &d_nFVTXS_clus, "d_nFVTXS_clus/I");
     }
-    //_ntp_event -> Branch("d_BBCs_Qy",&d_BBCs_Qy,"d_BBCs_Qy[221]/F");
-    //_ntp_event -> Branch("d_BBCs_Qw",&d_BBCs_Qw,"d_BBCs_Qw[221]/F");
     //now track based arrays
-    _ntp_event -> Branch("d_ntrk", &d_ntrk, "d_ntrk/I");
-    _ntp_event -> Branch("d_cntpx", &d_cntpx, "d_cntpx[d_ntrk]/F");
-    _ntp_event -> Branch("d_cntpy", &d_cntpy, "d_cntpy[d_ntrk]/F");
-    _ntp_event -> Branch("d_cntpz", &d_cntpz, "d_cntpz[d_ntrk]/F");
-    _ntp_event -> Branch("d_cntpc3sdz", &d_cntpc3sdz, "d_cntpc3sdz[d_ntrk]/F");
-    _ntp_event -> Branch("d_cntpc3sdphi", &d_cntpc3sdphi, "d_cntpc3sdphi[d_ntrk]/F");
+    if (_write_cnt)
+    {
+      _ntp_event -> Branch("d_ntrk", &d_ntrk, "d_ntrk/I");
+      _ntp_event -> Branch("d_cntpx", &d_cntpx, "d_cntpx[d_ntrk]/F");
+      _ntp_event -> Branch("d_cntpy", &d_cntpy, "d_cntpy[d_ntrk]/F");
+      _ntp_event -> Branch("d_cntpz", &d_cntpz, "d_cntpz[d_ntrk]/F");
+      _ntp_event -> Branch("d_cntpc3sdz", &d_cntpc3sdz, "d_cntpc3sdz[d_ntrk]/F");
+      _ntp_event -> Branch("d_cntpc3sdphi", &d_cntpc3sdphi, "d_cntpc3sdphi[d_ntrk]/F");
+    }
     if (_write_fvtx)
     {
       //fvtx tracking parameters
@@ -744,7 +748,7 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
 
       //float DCA_R      = sqrt((DCA_x*DCA_x) + (DCA_y*DCA_y));
 
-      if (ntr < 74)
+      if (ntr < N_FTRK_MAX)
       {
         feta[ntr]   = eta;
         fthe[ntr]   = the;
