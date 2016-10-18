@@ -1,5 +1,4 @@
 #include "SimpleFlowTreeBBCFVTX.h"
-#include "Run16RoughMatchingPC3.h"
 
 #include <cmath>
 #include <algorithm>
@@ -62,22 +61,27 @@ using namespace std;
 
 
 // --- class constructor
-SimpleFlowTreeBBCFVTX::SimpleFlowTreeBBCFVTX(): SubsysReco("VTXULTRALIGHTRECO")
+SimpleFlowTreeBBCFVTX::SimpleFlowTreeBBCFVTX():
+  SubsysReco("SIMPLEFLOWTREEBBCFVTX"),
+  _ievent(0),
+  _verbosity(0),
+  _create_ttree(true),
+  _write_clusters(false),
+  _write_bbc(false),
+  _write_fvtx(false),
+  _trimmed_tree(false),
+  _write_vtx(true),
+  _write_fvtx_clusters(false),
+  _output_filename("NULL"),
+  _output_file(NULL),
+  _z_vertex_range(30), //cm
+  _use_runlist(false),
+  _runlist_filename(""),
+  _ntp_event(NULL),
+  _ntp_cluster(NULL),
+  tmp_evt(0)
 {
-  _ievent = 0;
-  tmp_evt = 0;
-  _verbosity = 0;
-  _z_vertex_range = 30;//cm
-  _ntp_event = NULL;
-  _output_filename = "NULL";
-  _output_file = NULL;
-  _create_ttree = true;
-  _write_bbc = false;
-  _trimmed_tree = false;
-  _write_vtx = true;
-  _write_fvtx_clusters = false;
-  _write_clusters = false;
-  _write_fvtx = false;
+  ResetEvent(NULL);
 
   m_bbccalib = new BbcCalib();
   m_bbcgeo   = new BbcGeo();
@@ -103,102 +107,102 @@ int SimpleFlowTreeBBCFVTX::Init(PHCompositeNode *topNode)
 
   _output_file = new TFile(_output_filename.c_str(), "RECREATE");
 
-  if(_create_ttree)
+  if (_create_ttree)
+  {
+    _ntp_event = new TTree("ntp_event", "event-wise ntuple");
+    _ntp_event->SetAutoFlush(1000);
+    _ntp_event -> Branch("event", &event, "event/F");
+    _ntp_event -> Branch("bbc_z", &bbc_z, "bbc_z/F");
+    _ntp_event -> Branch("centrality", &centrality, "centrality/F");
+    _ntp_event -> Branch("npc1", &npc1, "npc1/I");
+    _ntp_event -> Branch("trigger_scaled", &trigger_scaled, "trigger_scaled/i");
+    _ntp_event -> Branch("trigger_live", &trigger_live, "trigger_live/i");
+    _ntp_event -> Branch("d_Qx", &d_Qx, "d_Qx[9]/F");
+    _ntp_event -> Branch("d_Qy", &d_Qy, "d_Qy[9]/F");
+    _ntp_event -> Branch("d_Qw", &d_Qw, "d_Qw[9]/F");
+    _ntp_event -> Branch("bc_x", &bc_x, "bc_x/F");
+    _ntp_event -> Branch("bc_y", &bc_y, "bc_y/F");
+    _ntp_event -> Branch("vtx_z", &vtx_z, "vtx_z/F");
+    _ntp_event -> Branch("fvtx_x", &FVTX_X, "fvtx_x/F");
+    _ntp_event -> Branch("fvtx_y", &FVTX_Y, "fvtx_y/F");
+    _ntp_event -> Branch("fvtx_z", &FVTX_Z, "fvtx_z/F");
+    if (_write_bbc)
     {
-      _ntp_event = new TTree("ntp_event","event-wise ntuple");
-      _ntp_event->SetAutoFlush(1000);
-      _ntp_event -> Branch("event",&event,"event/F");
-      _ntp_event -> Branch("bbc_z",&bbc_z,"bbc_z/F");
-      _ntp_event -> Branch("centrality",&centrality,"centrality/F");
-      _ntp_event -> Branch("npc1",&npc1,"npc1/I");
-      _ntp_event -> Branch("trigger_scaled",&trigger_scaled,"trigger_scaled/i");
-      _ntp_event -> Branch("trigger_live",&trigger_live,"trigger_live/i");
-      _ntp_event -> Branch("d_Qx",&d_Qx,"d_Qx[9]/F");
-      _ntp_event -> Branch("d_Qy",&d_Qy,"d_Qy[9]/F");
-      _ntp_event -> Branch("d_Qw",&d_Qw,"d_Qw[9]/F");
-      _ntp_event -> Branch("bc_x",&bc_x,"bc_x/F");
-      _ntp_event -> Branch("bc_y",&bc_y,"bc_y/F");
-      _ntp_event -> Branch("vtx_z",&vtx_z,"vtx_z/F");
-      _ntp_event -> Branch("fvtx_x",&FVTX_X,"fvtx_x/F");
-      _ntp_event -> Branch("fvtx_y",&FVTX_Y,"fvtx_y/F");
-      _ntp_event -> Branch("fvtx_z",&FVTX_Z,"fvtx_z/F");
-      if(_write_bbc)
-        {
-          _ntp_event -> Branch("bbc_qn",&bbc_qn,"bbc_qn/F");
-          _ntp_event -> Branch("bbc_qs",&bbc_qs,"bbc_qs/F");
-          _ntp_event -> Branch("d_BBC_charge",&d_BBC_charge,"d_BBC_charge[128]/F");
-        }
-      if(_write_fvtx_clusters)
-        {
-          _ntp_event -> Branch("d_nFVTX_clus",&d_nFVTX_clus,"d_nFVTX_clus/I");
-          _ntp_event -> Branch("d_FVTX_x",&d_FVTX_x,"d_FVTX_x[d_nFVTX_clus]/F");
-          _ntp_event -> Branch("d_FVTX_y",&d_FVTX_y,"d_FVTX_y[d_nFVTX_clus]/F");
-          _ntp_event -> Branch("d_FVTX_z",&d_FVTX_z,"d_FVTX_z[d_nFVTX_clus]/F");
-          _ntp_event -> Branch("d_nFVTXN_clus",&d_nFVTXN_clus,"d_nFVTXN_clus/I");
-          _ntp_event -> Branch("d_nFVTXS_clus",&d_nFVTXS_clus,"d_nFVTXS_clus/I");
-        }
-      _ntp_event -> Branch("d_ntrk",&d_ntrk,"d_ntrk/I");
-      _ntp_event -> Branch("d_cntpx",&d_cntpx,"d_cntpx[d_ntrk]/F");
-      _ntp_event -> Branch("d_cntpy",&d_cntpy,"d_cntpy[d_ntrk]/F");
-      _ntp_event -> Branch("d_cntpz",&d_cntpz,"d_cntpz[d_ntrk]/F");
-      _ntp_event -> Branch("d_cntpc3sdz",&d_cntpc3sdz,"d_cntpc3sdz[d_ntrk]/F");
-      _ntp_event -> Branch("d_cntpc3sdphi",&d_cntpc3sdphi,"d_cntpc3sdphi[d_ntrk]/F");
-      //_ntp_event -> Branch("d_BBCs_Qy",&d_BBCs_Qy,"d_BBCs_Qy[221]/F");
-      //_ntp_event -> Branch("d_BBCs_Qw",&d_BBCs_Qw,"d_BBCs_Qw[221]/F");
-      //now track based arrays
-      if(_write_vtx)
-        {
-          _ntp_event -> Branch("nsegments",&nsegments,"nsegments/I");
-          _ntp_event -> Branch("px",&px,"px[nsegments]/F");
-          _ntp_event -> Branch("py",&py,"py[nsegments]/F");
-          _ntp_event -> Branch("pz",&pz,"pz[nsegments]/F");
-        }
-      if(!_trimmed_tree)
-        {
-          _ntp_event -> Branch("vtx_x",&vtx_x,"vtx_x/F");
-          _ntp_event -> Branch("vtx_y",&vtx_y,"vtx_y/F");
-          //          _ntp_event -> Branch("centrality",&centrality,"centrality/F");
-          _ntp_event -> Branch("eventok",&eventok,"eventok/I");
-          _ntp_event -> Branch("trackID",&trackID,"trackID[nsegments]/I");
-          _ntp_event -> Branch("charge",&charge,"charge[nsegments]/I");
-          _ntp_event -> Branch("chisq",&chisq,"chisq[nsegments]/F");
-          _ntp_event -> Branch("ndf",&ndf,"ndf[nsegments]/I");
-          _ntp_event -> Branch("nhit0",&nhit0,"nhit0[nsegments]/I");
-          _ntp_event -> Branch("nhit1",&nhit0,"nhit0[nsegments]/I");
-          _ntp_event -> Branch("nhit2",&nhit0,"nhit0[nsegments]/I");
-          _ntp_event -> Branch("nhit3",&nhit0,"nhit0[nsegments]/I");
-          _ntp_event -> Branch("dca",&dca,"dca[nsegments]/F");
-          _ntp_event -> Branch("dca2d",&dca2d,"dca2d[nsegments]/F");
-          _ntp_event -> Branch("segmentok",&segmentok,"segmentok[nsegments]/I");
-          _ntp_event -> Branch("svtx_z",&svtx_z,"svtx_z/F");
-          _ntp_event -> Branch("vtxposE_x",&vtxposE_x,"vtxposE_x/F");
-          _ntp_event -> Branch("vtxposE_y",&vtxposE_y,"vtxposE_y/F");
-          _ntp_event -> Branch("vtxposE_z",&vtxposE_z,"vtxposE_z/F");
-          _ntp_event -> Branch("vtxposW_x",&vtxposW_x,"vtxposW_x/F");
-          _ntp_event -> Branch("vtxposW_y",&vtxposW_y,"vtxposW_y/F");
-          _ntp_event -> Branch("vtxposW_z",&vtxposW_z,"vtxposW_z/F");
-
-        }
-      if(_write_fvtx)
-        {
-          //fvtx tracking parameters
-          //_ntp_event -> Branch("fvtx_z",&fvtx_z,"fvtx_z/F");
-          _ntp_event -> Branch("ntracklets",&ntracklets,"ntracklets/I");
-          _ntp_event -> Branch("feta",&feta,"feta[ntracklets]/F");
-          _ntp_event -> Branch("fthe",&fthe,"fthe[ntracklets]/F");
-          _ntp_event -> Branch("fphi",&fphi,"fphi[ntracklets]/F");
-          _ntp_event -> Branch("fchisq",&fchisq,"fchisq[ntracklets]/F");
-          _ntp_event -> Branch("farm",&farm,"farm[ntracklets]/I");
-          _ntp_event -> Branch("fnhits",&fnhits,"fnhits[ntracklets]/I");
-          _ntp_event -> Branch("fDCA_X",&fDCA_X,"fDCA_X[ntracklets]/F");
-          _ntp_event -> Branch("fDCA_Y",&fDCA_Y,"fDCA_Y[ntracklets]/F");
-        }
-
-      if(_write_clusters)
-        _ntp_cluster = new TNtuple("ntp_cluster","cluster-wise ntuple",
-                                   "event:layer:x:y:z:adc1:adc2:section:ladder:sensor:lx:ly:lz:size:sizex:sizez:vz");
+      _ntp_event -> Branch("bbc_qn", &bbc_qn, "bbc_qn/F");
+      _ntp_event -> Branch("bbc_qs", &bbc_qs, "bbc_qs/F");
+      _ntp_event -> Branch("d_BBC_charge", &d_BBC_charge, "d_BBC_charge[128]/F");
+    }
+    if (_write_fvtx_clusters)
+    {
+      _ntp_event -> Branch("d_nFVTX_clus", &d_nFVTX_clus, "d_nFVTX_clus/I");
+      _ntp_event -> Branch("d_FVTX_x", &d_FVTX_x, "d_FVTX_x[d_nFVTX_clus]/F");
+      _ntp_event -> Branch("d_FVTX_y", &d_FVTX_y, "d_FVTX_y[d_nFVTX_clus]/F");
+      _ntp_event -> Branch("d_FVTX_z", &d_FVTX_z, "d_FVTX_z[d_nFVTX_clus]/F");
+      _ntp_event -> Branch("d_nFVTXN_clus", &d_nFVTXN_clus, "d_nFVTXN_clus/I");
+      _ntp_event -> Branch("d_nFVTXS_clus", &d_nFVTXS_clus, "d_nFVTXS_clus/I");
+    }
+    _ntp_event -> Branch("d_ntrk", &d_ntrk, "d_ntrk/I");
+    _ntp_event -> Branch("d_cntpx", &d_cntpx, "d_cntpx[d_ntrk]/F");
+    _ntp_event -> Branch("d_cntpy", &d_cntpy, "d_cntpy[d_ntrk]/F");
+    _ntp_event -> Branch("d_cntpz", &d_cntpz, "d_cntpz[d_ntrk]/F");
+    _ntp_event -> Branch("d_cntpc3sdz", &d_cntpc3sdz, "d_cntpc3sdz[d_ntrk]/F");
+    _ntp_event -> Branch("d_cntpc3sdphi", &d_cntpc3sdphi, "d_cntpc3sdphi[d_ntrk]/F");
+    //_ntp_event -> Branch("d_BBCs_Qy",&d_BBCs_Qy,"d_BBCs_Qy[221]/F");
+    //_ntp_event -> Branch("d_BBCs_Qw",&d_BBCs_Qw,"d_BBCs_Qw[221]/F");
+    //now track based arrays
+    if (_write_vtx)
+    {
+      _ntp_event -> Branch("nsegments", &nsegments, "nsegments/I");
+      _ntp_event -> Branch("px", &px, "px[nsegments]/F");
+      _ntp_event -> Branch("py", &py, "py[nsegments]/F");
+      _ntp_event -> Branch("pz", &pz, "pz[nsegments]/F");
+    }
+    if (!_trimmed_tree)
+    {
+      _ntp_event -> Branch("vtx_x", &vtx_x, "vtx_x/F");
+      _ntp_event -> Branch("vtx_y", &vtx_y, "vtx_y/F");
+      //          _ntp_event -> Branch("centrality",&centrality,"centrality/F");
+      _ntp_event -> Branch("eventok", &eventok, "eventok/I");
+      _ntp_event -> Branch("trackID", &trackID, "trackID[nsegments]/I");
+      _ntp_event -> Branch("charge", &charge, "charge[nsegments]/I");
+      _ntp_event -> Branch("chisq", &chisq, "chisq[nsegments]/F");
+      _ntp_event -> Branch("ndf", &ndf, "ndf[nsegments]/I");
+      _ntp_event -> Branch("nhit0", &nhit0, "nhit0[nsegments]/I");
+      _ntp_event -> Branch("nhit1", &nhit0, "nhit0[nsegments]/I");
+      _ntp_event -> Branch("nhit2", &nhit0, "nhit0[nsegments]/I");
+      _ntp_event -> Branch("nhit3", &nhit0, "nhit0[nsegments]/I");
+      _ntp_event -> Branch("dca", &dca, "dca[nsegments]/F");
+      _ntp_event -> Branch("dca2d", &dca2d, "dca2d[nsegments]/F");
+      _ntp_event -> Branch("segmentok", &segmentok, "segmentok[nsegments]/I");
+      _ntp_event -> Branch("svtx_z", &svtx_z, "svtx_z/F");
+      _ntp_event -> Branch("vtxposE_x", &vtxposE_x, "vtxposE_x/F");
+      _ntp_event -> Branch("vtxposE_y", &vtxposE_y, "vtxposE_y/F");
+      _ntp_event -> Branch("vtxposE_z", &vtxposE_z, "vtxposE_z/F");
+      _ntp_event -> Branch("vtxposW_x", &vtxposW_x, "vtxposW_x/F");
+      _ntp_event -> Branch("vtxposW_y", &vtxposW_y, "vtxposW_y/F");
+      _ntp_event -> Branch("vtxposW_z", &vtxposW_z, "vtxposW_z/F");
 
     }
+    if (_write_fvtx)
+    {
+      //fvtx tracking parameters
+      //_ntp_event -> Branch("fvtx_z",&fvtx_z,"fvtx_z/F");
+      _ntp_event -> Branch("ntracklets", &ntracklets, "ntracklets/I");
+      _ntp_event -> Branch("feta", &feta, "feta[ntracklets]/F");
+      _ntp_event -> Branch("fthe", &fthe, "fthe[ntracklets]/F");
+      _ntp_event -> Branch("fphi", &fphi, "fphi[ntracklets]/F");
+      _ntp_event -> Branch("fchisq", &fchisq, "fchisq[ntracklets]/F");
+      _ntp_event -> Branch("farm", &farm, "farm[ntracklets]/I");
+      _ntp_event -> Branch("fnhits", &fnhits, "fnhits[ntracklets]/I");
+      _ntp_event -> Branch("fDCA_X", &fDCA_X, "fDCA_X[ntracklets]/F");
+      _ntp_event -> Branch("fDCA_Y", &fDCA_Y, "fDCA_Y[ntracklets]/F");
+    }
+
+    if (_write_clusters)
+      _ntp_cluster = new TNtuple("ntp_cluster", "cluster-wise ntuple",
+                                 "event:layer:x:y:z:adc1:adc2:section:ladder:sensor:lx:ly:lz:size:sizex:sizez:vz");
+
+  }
 
   return EVENT_OK;
 }
@@ -211,22 +215,22 @@ int SimpleFlowTreeBBCFVTX::InitRun(PHCompositeNode *topNode)
   int runnumber = 0;
 
   RunHeader *rh = findNode::getClass<RunHeader>(topNode, "RunHeader");
-  if(!rh)
-    {
-      cout<<PHWHERE<<" ERROR::RunHeader not found"<<endl;
-      return ABORTEVENT;
-    }
+  if (!rh)
+  {
+    cout << PHWHERE << " ERROR::RunHeader not found" << endl;
+    return ABORTEVENT;
+  }
   else
-    {
-      runnumber = rh->get_RunNumber();
-    }
+  {
+    runnumber = rh->get_RunNumber();
+  }
 
   recoConsts *rc = recoConsts::instance();
   int icalibversion = 4002; // after Run5 and Field_ON
 
   rc->set_IntFlag("BBCCALIBVERSION", icalibversion);
 
-  if(m_bbccalib){
+  if (m_bbccalib) {
     PHTimeStamp TimeStp = rc->get_TimeStamp();
     int BBCCALIBVERSION = rc->get_IntFlag("BBCCALIBVERSION");
     cout << "SvxRpSumXYReco::InitRun - restored constants are for " << TimeStp << endl;
@@ -268,56 +272,56 @@ int SimpleFlowTreeBBCFVTX::ResetEvent(PHCompositeNode *topNode)
   ntracklets    = -9999;
   eventok       = -9999;
 
-  for(int i = 0; i < 9; i++)
+  for (int i = 0; i < 9; i++)
+  {
+    d_Qx[i] = -9999;
+    d_Qy[i] = -9999;
+    d_Qw[i] = 0;
+  }
+
+  for (int i = 0; i < 128; i++)
+  {
+    d_BBC_charge[i] = 0.0;
+
+  }
+
+  for (int i = 0; i < N_SVX_TRACK_MAX; i++)
+  {
+    trackID[i]   = -9999;
+    charge[i]    = -9999;
+    chisq[i]     = -9999;
+    ndf[i]       = -9999;
+    nhit0[i]     = -9999;
+    nhit1[i]     = -9999;
+    nhit2[i]     = -9999;
+    nhit3[i]     = -9999;
+    px[i]        = -9999;
+    py[i]        = -9999;
+    pz[i]        = -9999;
+    dca[i]       = -9999;
+    dca2d[i]     = -9999;
+    segmentok[i] = -9999;
+  }
+
+  for (int i = 0; i < N_FVTX_CLUSTER_MAX; i++)
+  {
+    d_FVTX_x[i] = -9999;
+    d_FVTX_y[i] = -9999;
+    d_FVTX_z[i] = -9999;
+  }
+
+  if (_write_fvtx)
+    for (int i = 0; i < 75; i++)
     {
-      d_Qx[i] = -9999;
-      d_Qy[i] = -9999;
-      d_Qw[i] = 0;
+      farm[i]      = -9999;
+      fphi[i]      = -9999;
+      feta[i]      = -9999;
+      fthe[i]      = -9999;
+      fchisq[i]    = -9999;
+      fnhits[i]    = -9999;
+      fDCA_X[i]    = -9999;
+      fDCA_Y[i]    = -9999;
     }
-
-  for(int i = 0; i < 128; i++)
-    {
-      d_BBC_charge[i] = 0.0;
-
-    }
-
-  for(int i = 0; i <N_SVX_TRACK_MAX; i++)
-    {
-      trackID[i]   = -9999;
-      charge[i]    = -9999;
-      chisq[i]     = -9999;
-      ndf[i]       = -9999;
-      nhit0[i]     = -9999;
-      nhit1[i]     = -9999;
-      nhit2[i]     = -9999;
-      nhit3[i]     = -9999;
-      px[i]        = -9999;
-      py[i]        = -9999;
-      pz[i]        = -9999;
-      dca[i]       = -9999;
-      dca2d[i]     = -9999;
-      segmentok[i] = -9999;
-    }
-
-  for(int i = 0; i < N_FVTX_CLUSTER_MAX; i++)
-    {
-      d_FVTX_x[i] = -9999;
-      d_FVTX_y[i] = -9999;
-      d_FVTX_z[i] = -9999;
-    }
-
-  if(_write_fvtx)
-    for(int i = 0; i < 75; i++)
-      {
-        farm[i]      = -9999;
-        fphi[i]      = -9999;
-        feta[i]      = -9999;
-        fthe[i]      = -9999;
-        fchisq[i]    = -9999;
-        fnhits[i]    = -9999;
-        fDCA_X[i]    = -9999;
-        fDCA_Y[i]    = -9999;
-      }
 
   return EVENT_OK;
 
@@ -330,7 +334,7 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
 {
 
   if (_verbosity > 1) cout << PHWHERE << "::process_event() - entered on event #" << _ievent << endl;
-  else if ((_ievent)%10000 == 0) cout << PHWHERE << "::process_event() - event #" << _ievent << endl;
+  else if ((_ievent) % 10000 == 0) cout << PHWHERE << "::process_event() - event #" << _ievent << endl;
 
   // advance event counter
   _ievent++;
@@ -346,26 +350,26 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
   int runnumber = 0;
 
   RunHeader *rh = findNode::getClass<RunHeader>(topNode, "RunHeader");
-  if(!rh)
+  if (!rh)
+  {
+    cout << PHWHERE << " ERROR::RunHeader not found" << endl;
+    return ABORTEVENT;
+  }
+  else
+  {
+    runnumber = rh->get_RunNumber();
+  }
+
+  if (_use_runlist)
+  {
+    if (is_run_in_list(runnumber) == false)
     {
-      cout<<PHWHERE<<" ERROR::RunHeader not found"<<endl;
+      if (_verbosity > 1) {
+        cout << endl << "ABORTING RUN, Run number: " << runnumber << " is not in the run list" << endl << endl;
+      }
       return ABORTEVENT;
     }
-  else
-    {
-      runnumber = rh->get_RunNumber();
-    }
-
-  if(_use_runlist)
-    {
-      if(is_run_in_list(runnumber)==false)
-        {
-          if(_verbosity > 1){
-            cout<<endl<<"ABORTING RUN, Run number: "<<runnumber<<" is not in the run list"<<endl<<endl;
-          }
-          return ABORTEVENT;
-        }
-    }
+  }
 
 
   //-------------------------------
@@ -376,61 +380,61 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
   PreviousEvent *d_peve = NULL;
   d_peve    = findNode::getClass<PreviousEvent>(topNode, "PreviousEvent"); // for Tick cut
   if (d_peve == NULL)
-    {
+  {
 
-      std::cout << "SvxQAEventSelection::GetNodes -"
-                << " No PreviousEvent object !" << std::endl;
+    std::cout << "SvxQAEventSelection::GetNodes -"
+              << " No PreviousEvent object !" << std::endl;
 
-      return ABORTEVENT;
-    }
+    return ABORTEVENT;
+  }
 
   TrigLvl1 *triggers = findNode::getClass<TrigLvl1>(topNode, "TrigLvl1");
-  if(!triggers)
-    {
-      cout<<PHWHERE<<" ERROR::TrigLvl1 not found"<<endl;
-      return ABORTEVENT;
-    }
+  if (!triggers)
+  {
+    cout << PHWHERE << " ERROR::TrigLvl1 not found" << endl;
+    return ABORTEVENT;
+  }
   PHGlobal *global = findNode::getClass<PHGlobal>(topNode, "PHGlobal");
-  if(!global)
-    {
-      cout<<PHWHERE<<" ERROR::PHGlobal not found"<<endl;
-      return ABORTEVENT;
-    }
+  if (!global)
+  {
+    cout << PHWHERE << " ERROR::PHGlobal not found" << endl;
+    return ABORTEVENT;
+  }
   EventHeader *evthead = findNode::getClass<EventHeader>(topNode, "EventHeader");
-  if(!evthead)
-    {
-      cout<<PHWHERE<<" ERROR::EventHeader not found"<<endl;
-      return ABORTEVENT;
-    }
+  if (!evthead)
+  {
+    cout << PHWHERE << " ERROR::EventHeader not found" << endl;
+    return ABORTEVENT;
+  }
   VtxOut *vertexes = findNode::getClass<VtxOut>(topNode, "VtxOut");
-  if(!vertexes)
-    {
-      cout<<PHWHERE<<" ERROR::VtxOut not found"<<endl;
-      return ABORTEVENT;
-    }
+  if (!vertexes)
+  {
+    cout << PHWHERE << " ERROR::VtxOut not found" << endl;
+    return ABORTEVENT;
+  }
   SvxSegmentList *segments = findNode::getClass<SvxSegmentList>(topNode, "SvxSegmentList");
-  if(!segments && _write_vtx)
-    {
-      cout<<PHWHERE<<" ERROR::SvxSegmentList not found"<<endl;
-      return ABORTEVENT;
-    }
+  if (!segments && _write_vtx)
+  {
+    cout << PHWHERE << " ERROR::SvxSegmentList not found" << endl;
+    return ABORTEVENT;
+  }
 
   TFvtxCompactTrkMap* trkfvtx_map = NULL;
-  if(_write_fvtx)
-    {
-      trkfvtx_map = findNode::getClass<TFvtxCompactTrkMap>(topNode,"TFvtxCompactTrkMap");
-      if(!trkfvtx_map){
-        cerr << PHWHERE << " No TFvtxCompactTrkMap object !" << endl;
-        return ABORTEVENT;
-      }
-    }
-
-  TFvtxCompactCoordMap* fvtx_coord_map = findNode::getClass<TFvtxCompactCoordMap>(topNode,"TFvtxCompactCoordMap");
-  if(!fvtx_coord_map && _write_fvtx_clusters)
-    {
-      cout<<PHWHERE<<" ERROR::TFvtxCompactCoordMap not found"<<endl;
+  if (_write_fvtx)
+  {
+    trkfvtx_map = findNode::getClass<TFvtxCompactTrkMap>(topNode, "TFvtxCompactTrkMap");
+    if (!trkfvtx_map) {
+      cerr << PHWHERE << " No TFvtxCompactTrkMap object !" << endl;
       return ABORTEVENT;
     }
+  }
+
+  TFvtxCompactCoordMap* fvtx_coord_map = findNode::getClass<TFvtxCompactCoordMap>(topNode, "TFvtxCompactCoordMap");
+  if (!fvtx_coord_map && _write_fvtx_clusters)
+  {
+    cout << PHWHERE << " ERROR::TFvtxCompactCoordMap not found" << endl;
+    return ABORTEVENT;
+  }
 
 
 
@@ -438,22 +442,22 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
   SvxClusterList *d_svxcls = NULL;
   d_svxcls = findNode::getClass<SvxClusterList>(topNode, "SvxClusterList");
   if (d_svxcls == NULL && _write_clusters)
-    {
-      std::cerr << "SvxClusterList node not found.Register SvxReco module" << std::endl;
-      return ABORTEVENT;
-    }
+  {
+    std::cerr << "SvxClusterList node not found.Register SvxReco module" << std::endl;
+    return ABORTEVENT;
+  }
 
   RpSumXYObject* d_rp = findNode::getClass<RpSumXYObject>(topNode, "RpSumXYObject");
 
-  if(!d_rp){
-    if ( _verbosity > 4 ) cout<< PHWHERE << "Could not find the RPSumXYObject"<< endl;
+  if (!d_rp) {
+    if ( _verbosity > 4 ) cout << PHWHERE << "Could not find the RPSumXYObject" << endl;
     //return ABORTEVENT;
   }
 
-  BbcRaw *bbcraw=findNode::getClass<BbcRaw>(topNode,"BbcRaw");
-  if(!bbcraw){
+  BbcRaw *bbcraw = findNode::getClass<BbcRaw>(topNode, "BbcRaw");
+  if (!bbcraw) {
     cout << "could not find Bbcraw!" << endl;
-    if(_write_bbc)
+    if (_write_bbc)
       return ABORTEVENT;
   }
 
@@ -468,17 +472,17 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
   bool failed_tick_cut = false;
 
   if (tick)
+  {
+    if (_verbosity > 1)
     {
-      if(_verbosity > 1)
-        {
-          std::cout << "SvxQAEventSelection::EventSelection - "
-                    << "Failed tick cut. Not a good event!" << std::endl;
-          std::cout << "                                      pticks: "
-                    << pticks[0] << " " << pticks[1] << " " << pticks[2] << std::endl;
-        }
-      //return ABORTEVENT;
-      failed_tick_cut = true;// skip SVX Segments if true
+      std::cout << "SvxQAEventSelection::EventSelection - "
+                << "Failed tick cut. Not a good event!" << std::endl;
+      std::cout << "                                      pticks: "
+                << pticks[0] << " " << pticks[1] << " " << pticks[2] << std::endl;
     }
+    //return ABORTEVENT;
+    failed_tick_cut = true;// skip SVX Segments if true
+  }
 
 
   //---------------------------------------------------------//
@@ -491,7 +495,7 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
   vtx_x = precise_vertex1.getX();
   vtx_y = precise_vertex1.getY();
   vtx_z = precise_vertex1.getZ();
-  if(vtx_z!=vtx_z) vtx_z = -9999;//NAN check
+  if (vtx_z != vtx_z) vtx_z = -9999; //NAN check
 
   PHPoint svx_fast = vertexes->get_Vertex("SVX");//seed vertex
   bc_x = svx_fast.getX();//these are actually the beam center
@@ -528,10 +532,10 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
 
   unsigned int passes_trigger = trigger_scaled & accepted_triggers;
   if ( passes_trigger == 0 )
-    {
-      if ( _verbosity > 0 ) cout << "trigger rejected" << endl;
-      // return ABORTEVENT;
-    }
+  {
+    if ( _verbosity > 0 ) cout << "trigger rejected" << endl;
+    // return ABORTEVENT;
+  }
   else if ( _verbosity > 0 ) cout << "trigger accepted" << endl;
 
 
@@ -555,10 +559,10 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
   if ( runnumber >= 456652 && runnumber <= 458167 ) zvtx = FVTX_Z;
   // if ( fabs(zvtx) > _z_vertex_range )
   if ( !( fabs(bbc_z) < _z_vertex_range || fabs(FVTX_Z) < _z_vertex_range ) )
-    {
-      if ( _verbosity > 0 ) cout << "rejecting event because of bad vertex " << zvtx << " cm" << endl;
-      return ABORTEVENT;
-    }
+  {
+    if ( _verbosity > 0 ) cout << "rejecting event because of bad vertex " << zvtx << " cm" << endl;
+    return ABORTEVENT;
+  }
   else if ( _verbosity > 0 ) cout << "event accepted vertex is " << zvtx << " cm" << endl;
 
   if ( _verbosity > 1 ) cout << "FVTX vertex points: " << FVTX_X << " " << FVTX_Y << " " << FVTX_Z << endl;
@@ -595,56 +599,56 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
   //---------------------------------------------------------//
 
 
-  if(_write_clusters)
+  if (_write_clusters)
+  {
+    PHPoint default_vertex1 = vertexes->get_Vertex();
+    float default_z = default_vertex1.getZ();//
+
+    for (int iclus = 0; iclus < d_svxcls->get_nClusters(); iclus++)
     {
-      PHPoint default_vertex1 = vertexes->get_Vertex();
-      float default_z = default_vertex1.getZ();//
+      SvxCluster *clus = d_svxcls->get_Cluster(iclus);
+      if (!clus) continue;
+      float layer = clus->get_layer();
+      float adc1 = clus->get_adc(0);
+      float adc2 = clus->get_adc(1);
+      float x = clus->get_xyz_global(0);
+      float y = clus->get_xyz_global(1);
+      float z = clus->get_xyz_global(2);
+      float lx = clus->get_xyz_local(0);
+      float ly = clus->get_xyz_local(1);
+      float lz = clus->get_xyz_local(2);
+      float section = clus->get_svxSection();
+      float ladder = clus->get_ladder();
+      float sensor = clus->get_sensor();
+      float size = clus->get_size();
+      float sizex = clus->get_xz_size(0);
+      float sizez = clus->get_xz_size(1);
 
-      for (int iclus = 0; iclus < d_svxcls->get_nClusters(); iclus++)
-        {
-          SvxCluster *clus = d_svxcls->get_Cluster(iclus);
-          if (!clus) continue;
-          float layer = clus->get_layer();
-          float adc1 = clus->get_adc(0);
-          float adc2 = clus->get_adc(1);
-          float x = clus->get_xyz_global(0);
-          float y = clus->get_xyz_global(1);
-          float z = clus->get_xyz_global(2);
-          float lx = clus->get_xyz_local(0);
-          float ly = clus->get_xyz_local(1);
-          float lz = clus->get_xyz_local(2);
-          float section = clus->get_svxSection();
-          float ladder = clus->get_ladder();
-          float sensor = clus->get_sensor();
-          float size = clus->get_size();
-          float sizex = clus->get_xz_size(0);
-          float sizez = clus->get_xz_size(1);
+      float clus_data[17] =
+      {
+        _ievent,
+        layer,
+        x,
+        y,
+        z,
+        adc1,
+        adc2,
+        section,
+        ladder,
+        sensor,
+        lx,
+        ly,
+        lz,
+        size,
+        sizex,
+        sizez,
+        default_z
+      };
 
-          float clus_data[17] =
-            {
-              _ievent,
-              layer,
-              x,
-              y,
-              z,
-              adc1,
-              adc2,
-              section,
-              ladder,
-              sensor,
-              lx,
-              ly,
-              lz,
-              size,
-              sizex,
-              sizez,
-              default_z
-            };
+      _ntp_cluster->Fill(clus_data);
 
-          _ntp_cluster->Fill(clus_data);
-
-        }
     }
+  }
   //---------------------------------------------------------//
   //         Finished writing out VTX Clusters in nTuple
   //---------------------------------------------------------//
@@ -653,16 +657,16 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
 
   //if( failed_tick_cut && _write_vtx) return ABORTEVENT;
 
-  for(int i=0; i<9; i++){//fvtx bbc cnt smd vtx 3+3+1+3+%d
+  for (int i = 0; i < 9; i++) { //fvtx bbc cnt smd vtx 3+3+1+3+%d
     d_Qx[i] = -9999;
     d_Qy[i] = -9999;
     d_Qw[i] = 0.0;
   }
 
   float sumxy_fvtx[3][8][3];
-  for(int ihar=0; ihar<3; ihar++){//fvtx bbc cnt smd vtx 3+3+1+3+%d
-    for(int idet=0; idet<8; idet++){
-      for(int ixy=0; ixy<3; ixy++){
+  for (int ihar = 0; ihar < 3; ihar++) { //fvtx bbc cnt smd vtx 3+3+1+3+%d
+    for (int idet = 0; idet < 8; idet++) {
+      for (int ixy = 0; ixy < 3; ixy++) {
         sumxy_fvtx[ihar][idet][ixy] = 0.0;
       }
     }
@@ -671,9 +675,9 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
   eventok = is_event_ok(topNode);//only z vertex cut and centrality cut
 
   if (!eventok)
-    {
-      return ABORTEVENT;
-    }
+  {
+    return ABORTEVENT;
+  }
 
   //  tmp_evt++;//to keep track of how many events pass event cuts
 
@@ -683,25 +687,25 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
   //
   //---------------------------------------------------------//
 
-  for(int idet=62; idet<68; idet++){
-    for(int ihar=0; ihar<3; ihar++){
+  for (int idet = 62; idet < 68; idet++) {
+    for (int ihar = 0; ihar < 3; ihar++) {
       int idcode = -9999;
 
-      if(idet<65) idcode = RP::calcIdCode(RP::ID_MPC,idet-62, ihar);
-      else idcode = RP::calcIdCode(RP::ID_BBC,idet-65, ihar);
+      if (idet < 65) idcode = RP::calcIdCode(RP::ID_MPC, idet - 62, ihar);
+      else idcode = RP::calcIdCode(RP::ID_BBC, idet - 65, ihar);
 
-      if(idcode>=0 && d_rp){
+      if (idcode >= 0 && d_rp) {
         RpSnglSumXY *s_rp = d_rp->getRpSumXY(idcode);
 
-        if(idet==62){//MPC
-          d_Qx[ihar*3+idet-62]=s_rp->QVector(0);
-          d_Qy[ihar*3+idet-62]=s_rp->QVector(1);
-          d_Qw[ihar*3+idet-62]=s_rp->Weight();
+        if (idet == 62) { //MPC
+          d_Qx[ihar * 3 + idet - 62] = s_rp->QVector(0);
+          d_Qy[ihar * 3 + idet - 62] = s_rp->QVector(1);
+          d_Qw[ihar * 3 + idet - 62] = s_rp->Weight();
         }
-        if(idet==65){//BBC
-          d_Qx[ihar*3+idet-65+2]=s_rp->QVector(0);
-          d_Qy[ihar*3+idet-65+2]=s_rp->QVector(1);
-          d_Qw[ihar*3+idet-65+2]=s_rp->Weight();
+        if (idet == 65) { //BBC
+          d_Qx[ihar * 3 + idet - 65 + 2] = s_rp->QVector(0);
+          d_Qy[ihar * 3 + idet - 65 + 2] = s_rp->QVector(1);
+          d_Qw[ihar * 3 + idet - 65 + 2] = s_rp->Weight();
         }
       }
     }
@@ -710,27 +714,27 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
   //cout<<RP::ID_FVT<<endl;
   //south
 
-  for(int idet=0; idet<20; idet++){
-    for(int ihar=0; ihar<3; ihar++){
-      int idcode = RP::calcIdCode(RP::ID_FVT,idet, ihar);
+  for (int idet = 0; idet < 20; idet++) {
+    for (int ihar = 0; ihar < 3; ihar++) {
+      int idcode = RP::calcIdCode(RP::ID_FVT, idet, ihar);
 
-      if(idcode>=0 && d_rp){
+      if (idcode >= 0 && d_rp) {
         RpSnglSumXY *s_rp = d_rp->getRpSumXY(idcode);
-        int ifvtx = idet%5;
-        if(ifvtx<4){//-1.0-3.0
-          sumxy_fvtx[ihar][0][0]+=s_rp->QVector(0);//compiling the 20 FVTX event planes
-          sumxy_fvtx[ihar][0][1]+=s_rp->QVector(1);
-          sumxy_fvtx[ihar][0][2]+=s_rp->Weight();
+        int ifvtx = idet % 5;
+        if (ifvtx < 4) { //-1.0-3.0
+          sumxy_fvtx[ihar][0][0] += s_rp->QVector(0); //compiling the 20 FVTX event planes
+          sumxy_fvtx[ihar][0][1] += s_rp->QVector(1);
+          sumxy_fvtx[ihar][0][2] += s_rp->Weight();
         }
       }
     }
   }
 
-  for(int ihar=0; ihar<3; ihar++){
+  for (int ihar = 0; ihar < 3; ihar++) {
     //for(int idet=0; idet<8; idet++){
-    d_Qx[ihar*3+1]=sumxy_fvtx[ihar][0][0];
-    d_Qy[ihar*3+1]=sumxy_fvtx[ihar][0][1];
-    d_Qw[ihar*3+1]=sumxy_fvtx[ihar][0][2];
+    d_Qx[ihar * 3 + 1] = sumxy_fvtx[ihar][0][0];
+    d_Qy[ihar * 3 + 1] = sumxy_fvtx[ihar][0][1];
+    d_Qw[ihar * 3 + 1] = sumxy_fvtx[ihar][0][2];
     //}
   }
 
@@ -745,90 +749,90 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
   //
   //---------------------------------------------------------//
 
-  if(_write_bbc)
+  if (_write_bbc)
+  {
+    if (bbcraw)
     {
-      if(bbcraw)
+      for ( int ipmt = 0; ipmt < 128; ++ipmt )
+      {
+
+        short iadc    = bbcraw->get_Adc(ipmt);
+        short itdc    = bbcraw->get_Tdc0(ipmt);
+        //float tdc1=bbcraw->get_Tdc1(ipmt);
+        float itime0  = m_bbccalib->getHitTime0(ipmt, itdc, iadc);
+        float icharge = m_bbccalib->getCharge(ipmt, iadc);
+        if ( ( itime0 <= 0 || icharge <= 0 ) && verbosity > 8 )
         {
-          for ( int ipmt = 0; ipmt < 128; ++ipmt )
-            {
-
-              short iadc    = bbcraw->get_Adc(ipmt);
-              short itdc    = bbcraw->get_Tdc0(ipmt);
-              //float tdc1=bbcraw->get_Tdc1(ipmt);
-              float itime0  = m_bbccalib->getHitTime0(ipmt,itdc,iadc);
-              float icharge = m_bbccalib->getCharge(ipmt,iadc);
-              if ( ( itime0 <=0 || icharge <=0 ) && verbosity > 8 )
-                {
-                  // --- this happens A LOT
-                  cout << "EITHER SIDE!!!" << endl;
-                  cout << "For event number " << _ievent-1
-                       << " and BBC tube number " << ipmt
-                       << " the time is " << itime0
-                       << " and the charge is " << icharge
-                       << endl;
-                }
-              if ( icharge <= 0 && itime0 >=0 )
-                {
-                  // --- this never happens
-                  cout << "THIS SHOULDN'T BE HAPPENING" << endl;
-                  cout << "For event number " << _ievent-1
-                       << " and BBC tube number " << ipmt
-                       << " the time is " << itime0
-                       << " and the charge is " << icharge
-                       << endl;
-                }
-              if ( itime0 <= 0 ) icharge -= 10000.0;
-              //float ibbc_x  = m_bbcgeo->getX(ipmt);
-              //float ibbc_y  = m_bbcgeo->getY(ipmt);
-              //float ibbc_z  = m_bbcgeo->getZ(ipmt);
-              //cout<<"d_pmt_x["<<ipmt<<"] = "<<ibbc_x<<";"<<endl;
-              //cout<<"d_pmt_y["<<ipmt<<"] = "<<ibbc_y<<";"<<endl;
-              //cout<<"d_pmt_z["<<ipmt<<"] = "<<ibbc_z<<";"<<endl;
-
-              d_BBC_charge[ipmt] = icharge;
-
-            }//end of ipmt loop
+          // --- this happens A LOT
+          cout << "EITHER SIDE!!!" << endl;
+          cout << "For event number " << _ievent - 1
+               << " and BBC tube number " << ipmt
+               << " the time is " << itime0
+               << " and the charge is " << icharge
+               << endl;
         }
+        if ( icharge <= 0 && itime0 >= 0 )
+        {
+          // --- this never happens
+          cout << "THIS SHOULDN'T BE HAPPENING" << endl;
+          cout << "For event number " << _ievent - 1
+               << " and BBC tube number " << ipmt
+               << " the time is " << itime0
+               << " and the charge is " << icharge
+               << endl;
+        }
+        if ( itime0 <= 0 ) icharge -= 10000.0;
+        //float ibbc_x  = m_bbcgeo->getX(ipmt);
+        //float ibbc_y  = m_bbcgeo->getY(ipmt);
+        //float ibbc_z  = m_bbcgeo->getZ(ipmt);
+        //cout<<"d_pmt_x["<<ipmt<<"] = "<<ibbc_x<<";"<<endl;
+        //cout<<"d_pmt_y["<<ipmt<<"] = "<<ibbc_y<<";"<<endl;
+        //cout<<"d_pmt_z["<<ipmt<<"] = "<<ibbc_z<<";"<<endl;
+
+        d_BBC_charge[ipmt] = icharge;
+
+      }//end of ipmt loop
     }
+  }
 
 
   int nfvtx_raw_clus = 0;
   int nfvtxn_raw_clus = 0;
   int nfvtxs_raw_clus = 0;
   if ( fvtx_coord_map )
+  {
+    TFvtxCompactCoordMap::iterator _iter( fvtx_coord_map->range() );
+    while ( TFvtxCompactCoordMap::const_pointer fvtx_ptr = _iter.next() )
     {
-      TFvtxCompactCoordMap::iterator _iter( fvtx_coord_map->range() );
-      while( TFvtxCompactCoordMap::const_pointer fvtx_ptr = _iter.next() )
-        {
-          TFvtxCompactCoord* fvtxcoord = fvtx_ptr->get();
-          PHPoint fvtx_coord_point = fvtxcoord->get_coord_midpoint();
-          //int iarm = fvtxcoord->get_arm();
-          float fvtx_x = fvtx_coord_point.getX();
-          float fvtx_y = fvtx_coord_point.getY();
-          float fvtx_z = fvtx_coord_point.getZ();
-          //float fvtx_r = sqrt(pow(fvtx_x,2.0)+pow(fvtx_y,2.0));
-          if( (fabs(fvtx_x)>999) ||(fabs(fvtx_y)>999) || (fabs(fvtx_z)>999)) continue;
-          //float fvtx_the = atan2(fvtx_r,fvtx_z-vtx_z);
-          //float fvtx_phi = atan2(fvtx_y,fvtx_x);
-          //float fvtx_eta = -log(tan(0.5*fvtx_the));
-          //if(fvtx_z < 0)
-          //{
-          if(nfvtx_raw_clus >= N_FVTX_CLUSTER_MAX)
-            {
-              cout<<"butting against the max fvtx cluster size " << nfvtx_raw_clus << "/" << N_FVTX_CLUSTER_MAX << ", breaking"<<endl;
-              break;
-            }
-          d_FVTX_x[nfvtx_raw_clus] = fvtx_x;
-          d_FVTX_y[nfvtx_raw_clus] = fvtx_y;
-          d_FVTX_z[nfvtx_raw_clus] = fvtx_z;
-          ++nfvtx_raw_clus;
-          if ( fvtx_z > 0 ) ++nfvtxn_raw_clus;
-          if ( fvtx_z < 0 ) ++nfvtxs_raw_clus;
-          //cout<<"fvtx_eta: "<<fvtx_eta<<endl;
-          //} // south
+      TFvtxCompactCoord* fvtxcoord = fvtx_ptr->get();
+      PHPoint fvtx_coord_point = fvtxcoord->get_coord_midpoint();
+      //int iarm = fvtxcoord->get_arm();
+      float fvtx_x = fvtx_coord_point.getX();
+      float fvtx_y = fvtx_coord_point.getY();
+      float fvtx_z = fvtx_coord_point.getZ();
+      //float fvtx_r = sqrt(pow(fvtx_x,2.0)+pow(fvtx_y,2.0));
+      if ( (fabs(fvtx_x) > 999) || (fabs(fvtx_y) > 999) || (fabs(fvtx_z) > 999)) continue;
+      //float fvtx_the = atan2(fvtx_r,fvtx_z-vtx_z);
+      //float fvtx_phi = atan2(fvtx_y,fvtx_x);
+      //float fvtx_eta = -log(tan(0.5*fvtx_the));
+      //if(fvtx_z < 0)
+      //{
+      if (nfvtx_raw_clus >= N_FVTX_CLUSTER_MAX)
+      {
+        cout << "butting against the max fvtx cluster size " << nfvtx_raw_clus << "/" << N_FVTX_CLUSTER_MAX << ", breaking" << endl;
+        break;
+      }
+      d_FVTX_x[nfvtx_raw_clus] = fvtx_x;
+      d_FVTX_y[nfvtx_raw_clus] = fvtx_y;
+      d_FVTX_z[nfvtx_raw_clus] = fvtx_z;
+      ++nfvtx_raw_clus;
+      if ( fvtx_z > 0 ) ++nfvtxn_raw_clus;
+      if ( fvtx_z < 0 ) ++nfvtxs_raw_clus;
+      //cout<<"fvtx_eta: "<<fvtx_eta<<endl;
+      //} // south
 
-        } // while loop over iterator
-    } // check on fvtx_coord_map
+    } // while loop over iterator
+  } // check on fvtx_coord_map
 
   d_nFVTX_clus = nfvtx_raw_clus;
   d_nFVTXN_clus = nfvtxn_raw_clus;
@@ -845,70 +849,70 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
   int ntr = 0;
 
   if ( trkfvtx_map && _write_fvtx )
+  {
+    TFvtxCompactTrkMap::const_iterator trk_iter = trkfvtx_map->range();
+    while ( TFvtxCompactTrkMap::const_pointer trk_ptr = trk_iter.next() )
     {
-      TFvtxCompactTrkMap::const_iterator trk_iter = trkfvtx_map->range();
-      while ( TFvtxCompactTrkMap::const_pointer trk_ptr = trk_iter.next() )
-        {
 
-          TFvtxCompactTrk* fvtx_trk = trk_ptr->get();
+      TFvtxCompactTrk* fvtx_trk = trk_ptr->get();
 
-          float the = fvtx_trk->get_fvtx_theta();
-          float eta = fvtx_trk->get_fvtx_eta();
-          float phi = fvtx_trk->get_fvtx_phi();
-          int   arm = (int)fvtx_trk->get_arm();
-          float fvtx_x      = fvtx_trk->get_fvtx_vtx().getX();
-          float fvtx_y      = fvtx_trk->get_fvtx_vtx().getY();
-          float fvtx_z      = fvtx_trk->get_fvtx_vtx().getZ();
-          int   nfhits      = (int)fvtx_trk->get_nhits();
+      float the = fvtx_trk->get_fvtx_theta();
+      float eta = fvtx_trk->get_fvtx_eta();
+      float phi = fvtx_trk->get_fvtx_phi();
+      int   arm = (int)fvtx_trk->get_arm();
+      float fvtx_x      = fvtx_trk->get_fvtx_vtx().getX();
+      float fvtx_y      = fvtx_trk->get_fvtx_vtx().getY();
+      float fvtx_z      = fvtx_trk->get_fvtx_vtx().getZ();
+      int   nfhits      = (int)fvtx_trk->get_nhits();
 
-          float vertex_z = bbc_z;
-          if ( FVTX_Z > -999 ) vertex_z = FVTX_Z;
-          float DCA_x      = fvtx_x + tan(the)*cos(phi)*(vertex_z - fvtx_z);
-          float DCA_y      = fvtx_y + tan(the)*sin(phi)*(vertex_z - fvtx_z);
-          //cout<<"nfhits: "<<nfhits<<endl;
+      float vertex_z = bbc_z;
+      if ( FVTX_Z > -999 ) vertex_z = FVTX_Z;
+      float DCA_x      = fvtx_x + tan(the) * cos(phi) * (vertex_z - fvtx_z);
+      float DCA_y      = fvtx_y + tan(the) * sin(phi) * (vertex_z - fvtx_z);
+      //cout<<"nfhits: "<<nfhits<<endl;
 
-          //use this code of you want to figure out which layers have the hits
-          /*      short nhits = 0;
-                  for (int i=0; i<8; i++)
-                  nhits += has_hit(i);
-                  for (int i=0; i<4; i++)
-                  nhits += has_svxhit(i);
-                  return nhits;
-          */
-          //if(the==0 || phi==0 || fvtx_x==0 || fvtx_y==0 || fvtx_z==0) continue;
-          //if(the==0) continue;
+      //use this code of you want to figure out which layers have the hits
+      /*      short nhits = 0;
+              for (int i=0; i<8; i++)
+              nhits += has_hit(i);
+              for (int i=0; i<4; i++)
+              nhits += has_svxhit(i);
+              return nhits;
+      */
+      //if(the==0 || phi==0 || fvtx_x==0 || fvtx_y==0 || fvtx_z==0) continue;
+      //if(the==0) continue;
 
-          //if ( nfhits < 3 ) continue;
-          //if ( !pass_eta_cut(eta,ibbcz_bin) ) continue;
-          if ( fvtx_trk->get_chi2_ndf() > 5 ) continue;
-          if ( fabs(DCA_x-0.3) > 2.0 || fabs(DCA_y-0.02) > 2.0 ) continue;
+      //if ( nfhits < 3 ) continue;
+      //if ( !pass_eta_cut(eta,ibbcz_bin) ) continue;
+      if ( fvtx_trk->get_chi2_ndf() > 5 ) continue;
+      if ( fabs(DCA_x - 0.3) > 2.0 || fabs(DCA_y - 0.02) > 2.0 ) continue;
 
 
-          //float DCA_R      = sqrt((DCA_x*DCA_x) + (DCA_y*DCA_y));
+      //float DCA_R      = sqrt((DCA_x*DCA_x) + (DCA_y*DCA_y));
 
-          if(ntr < 74)
-            {
-              feta[ntr]   = eta;
-              fthe[ntr]   = the;
-              fphi[ntr]   = phi;
-              fchisq[ntr] = fvtx_trk->get_chi2_ndf();
-              farm[ntr]   = arm;
-              fnhits[ntr] = nfhits;
-              fDCA_X[ntr] = DCA_x;
-              fDCA_Y[ntr] = DCA_y;
-            }
-          else
-            {
-              cout<<"butting up against the boundary of fvtx tracks"<<endl;
-              break;
-            }
-          //short_chi2 = fvtx_trk->get_short_chi2_ndf();
-          //chi2       = fvtx_trk->get_chi2_ndf();
+      if (ntr < 74)
+      {
+        feta[ntr]   = eta;
+        fthe[ntr]   = the;
+        fphi[ntr]   = phi;
+        fchisq[ntr] = fvtx_trk->get_chi2_ndf();
+        farm[ntr]   = arm;
+        fnhits[ntr] = nfhits;
+        fDCA_X[ntr] = DCA_x;
+        fDCA_Y[ntr] = DCA_y;
+      }
+      else
+      {
+        cout << "butting up against the boundary of fvtx tracks" << endl;
+        break;
+      }
+      //short_chi2 = fvtx_trk->get_short_chi2_ndf();
+      //chi2       = fvtx_trk->get_chi2_ndf();
 
-          ++ntr;
+      ++ntr;
 
-        } // end while loop over tracks
-    } // check on fvtx track map
+    } // end while loop over tracks
+  } // check on fvtx track map
 
   ntracklets = ntr;
 
@@ -922,59 +926,59 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
   //
   //---------------------------------------------------------//
 
-  if(_write_vtx)
+  if (_write_vtx)
     nsegments = segments->get_nSegments();
   //  cout<<"nsegments in this event: "<<nsegments<<endl;
 
   int igoodseg = 0;
 
-  if(segments && !failed_tick_cut && _write_vtx )
+  if (segments && !failed_tick_cut && _write_vtx )
+  {
+
+    for (int isegment = 0; isegment < nsegments; isegment++)
     {
 
-      for(int isegment = 0; isegment < nsegments; isegment++)
-        {
+      SvxSegment *segment = segments->get_segment(isegment);
 
-          SvxSegment *segment = segments->get_segment(isegment);
+      if (!is_segment_ok(segment)) continue;
+      if (igoodseg >= N_SVX_TRACK_MAX)
+      {
+        cout << "bumping up againt track limit" << endl;
+        break;
+      }
+      charge[igoodseg] = 0;
+      if (segment->IsPositive())
+      {
+        charge[igoodseg] = +1.0;
+      }
+      else
+      {
+        charge[igoodseg] = -1.0;
+      }
 
-          if(!is_segment_ok(segment)) continue;
-          if(igoodseg >= N_SVX_TRACK_MAX)
-            {
-              cout<<"bumping up againt track limit"<<endl;
-              break;
-            }
-          charge[igoodseg] = 0;
-          if(segment->IsPositive())
-            {
-              charge[igoodseg] = +1.0;
-            }
-          else
-            {
-              charge[igoodseg] = -1.0;
-            }
+      float ipx = segment->get3MomentumAtPrimaryVertex(0);
+      float ipy = segment->get3MomentumAtPrimaryVertex(1);
+      float ipz = segment->get3MomentumAtPrimaryVertex(2);
 
-          float ipx = segment->get3MomentumAtPrimaryVertex(0);
-          float ipy = segment->get3MomentumAtPrimaryVertex(1);
-          float ipz = segment->get3MomentumAtPrimaryVertex(2);
+      trackID[igoodseg]   = segment->getSegmentID();
+      chisq[igoodseg]     = calc_chisq_fromquality(segment->getSegmentQuality(), segment->getSegmentScore());
+      ndf[igoodseg]       = segment->getNDF();
+      nhit0[igoodseg]     = segment->getNhits(0);
+      nhit1[igoodseg]     = segment->getNhits(1);
+      nhit2[igoodseg]     = segment->getNhits(2);
+      nhit3[igoodseg]     = segment->getNhits(3);
+      dca[igoodseg]       = segment->getDCA();
+      dca2d[igoodseg]     = segment->getDCA2D();
+      px[igoodseg]       = ipx;
+      py[igoodseg]       = ipy;
+      pz[igoodseg]       = ipz;
+      segmentok[igoodseg] = is_segment_ok(segment);
 
-          trackID[igoodseg]   = segment->getSegmentID();
-          chisq[igoodseg]     = calc_chisq_fromquality(segment->getSegmentQuality(),segment->getSegmentScore());
-          ndf[igoodseg]       = segment->getNDF();
-          nhit0[igoodseg]     = segment->getNhits(0);
-          nhit1[igoodseg]     = segment->getNhits(1);
-          nhit2[igoodseg]     = segment->getNhits(2);
-          nhit3[igoodseg]     = segment->getNhits(3);
-          dca[igoodseg]       = segment->getDCA();
-          dca2d[igoodseg]     = segment->getDCA2D();
-          px[igoodseg]       = ipx;
-          py[igoodseg]       = ipy;
-          pz[igoodseg]       = ipz;
-          segmentok[igoodseg] = is_segment_ok(segment);
+      igoodseg++;
+      //if(!is_segment_ok(segment)) continue;
 
-          igoodseg++;
-	  //if(!is_segment_ok(segment)) continue;
-
-        }
     }
+  }
 
   nsegments = igoodseg;
 
@@ -985,60 +989,62 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
   //if(nsegments==0) return EVENT_OK; // BAD CUT
 
   d_ntrk = 0;
-  PHCentralTrack *ctrk = findNode::getClass<PHCentralTrack>(topNode,"PHCentralTrack");
+  PHCentralTrack *ctrk = findNode::getClass<PHCentralTrack>(topNode, "PHCentralTrack");
   if ( ctrk )
+  {
+    int ntrk = ctrk->get_npart();
+    if ( ntrk > N_CTRK_MAX )
     {
-      int ntrk = ctrk->get_npart();
-      if ( ntrk > N_CTRK_MAX )
-        {
-          cout << PHWHERE << " WARNING: too many tracks, skipping event" << endl;
-          return ABORTEVENT;
-        }
-      int counter = 0;
-      for ( int itrk = 0; itrk < ntrk; ++itrk)
-        {
+      cout << PHWHERE << " WARNING: too many tracks, skipping event" << endl;
+      return ABORTEVENT;
+    }
+    int counter = 0;
+    for ( int itrk = 0; itrk < ntrk; ++itrk)
+    {
 
-          PHSnglCentralTrack *strk = ctrk->get_track(itrk);
+      PHSnglCentralTrack *strk = ctrk->get_track(itrk);
 
-          float mom         = strk->get_mom();
-          float zed         = strk->get_zed();
-          int quality       = strk->get_quality();
-          if ( mom < 0.0 || mom > 50.0 ) continue;
-          if ( fabs(zed) < 3.0 || fabs(zed) > 70.0 ) continue;
-          if ( quality != 63 && quality != 31 ) continue;
+      float mom         = strk->get_mom();
+      float zed         = strk->get_zed();
+      int quality       = strk->get_quality();
+      if ( mom < 0.0 || mom > 50.0 ) continue;
+      if ( fabs(zed) < 3.0 || fabs(zed) > 70.0 ) continue;
+      if ( quality != 63 && quality != 31 ) continue;
 
-          float px = strk->get_px();
-          float py = strk->get_py();
-          float pz = strk->get_pz();
+      float px = strk->get_px();
+      float py = strk->get_py();
+      float pz = strk->get_pz();
 
-          int arm = 0;
-          if ( px > 0 ) arm = 1;
+      int arm = 0;
+      if ( px > 0 ) arm = 1;
 
-          int charge = strk->get_charge();
+      // int charge = strk->get_charge();
 
-          float pc3dphi = strk->get_pc3dphi();
-          float pc3dz = strk->get_pc3dz();
+      float pc3dphi = strk->get_pc3dphi();
+      float pc3dz = strk->get_pc3dz();
 
-          if ( pc3dphi < -9990 || pc3dz < -9990 ) continue;
+      if ( pc3dphi < -9990 || pc3dz < -9990 ) continue;
 
-          float pc3sdphi = calcsdphi(pc3dphi, arm, charge, mom);
-          float pc3sdz = calcsdz(pc3dz, arm, charge, mom);
+      // float pc3sdphi = calcsdphi(pc3dphi, arm, charge, mom);
+      // float pc3sdz = calcsdz(pc3dz, arm, charge, mom);
+      float pc3sdphi = strk->get_pc3sdphi();
+      float pc3sdz = strk->get_pc3sdz();
 
-          if ( fabs(pc3sdphi) > 3.0 || fabs(pc3sdz) > 3.0 ) continue;
+      if ( fabs(pc3sdphi) > 3.0 || fabs(pc3sdz) > 3.0 ) continue;
 
-          d_cntpx[counter] = px;
-          d_cntpy[counter] = py;
-          d_cntpz[counter] = pz;
-          d_cntpc3sdz[counter] = pc3sdz;
-          d_cntpc3sdphi[counter] = pc3sdphi;
+      d_cntpx[counter] = px;
+      d_cntpy[counter] = py;
+      d_cntpz[counter] = pz;
+      d_cntpc3sdz[counter] = pc3sdz;
+      d_cntpc3sdphi[counter] = pc3sdphi;
 
-          ++counter;
+      ++counter;
 
-        } // loop over tracks
+    } // loop over tracks
 
-      d_ntrk = counter;
+    d_ntrk = counter;
 
-    } // check on track pointer
+  } // check on track pointer
 
   if ( _create_ttree ) _ntp_event->Fill();
 
@@ -1058,17 +1064,17 @@ int SimpleFlowTreeBBCFVTX::End(PHCompositeNode *topNode)
 {
   if (_verbosity > 1) cout << PHWHERE << "::End() - entered." << endl;
 
-  cout<<"total events: "<<_ievent<<" fraction passing vtx cut: "<<tmp_evt*1.0/_ievent<<endl;
+  cout << "total events: " << _ievent << " fraction passing vtx cut: " << tmp_evt * 1.0 / _ievent << endl;
 
   _output_file->cd();
 
-  if(_create_ttree)
-    {
-      if(!_write_clusters)
-        _ntp_event->Write();
-      else if(_write_clusters)
-        _ntp_cluster->Write();
-    }
+  if (_create_ttree)
+  {
+    if (!_write_clusters)
+      _ntp_event->Write();
+    else if (_write_clusters)
+      _ntp_cluster->Write();
+  }
   _output_file->Close();
   delete _output_file;
 
@@ -1095,17 +1101,17 @@ bool SimpleFlowTreeBBCFVTX::is_event_ok(PHCompositeNode *topNode)
   //return ABORTEVENT;
   //}
   PHGlobal *global = findNode::getClass<PHGlobal>(topNode, "PHGlobal");
-  if(!global)
-    {
-      cout<<PHWHERE<<" ERROR::PHGlobal not found"<<endl;
-      return ABORTEVENT;
-    }
+  if (!global)
+  {
+    cout << PHWHERE << " ERROR::PHGlobal not found" << endl;
+    return ABORTEVENT;
+  }
   VtxOut *vertexes = findNode::getClass<VtxOut>(topNode, "VtxOut");
-  if(!vertexes)
-    {
-      cout<<PHWHERE<<" ERROR::VtxOut not found"<<endl;
-      return ABORTEVENT;
-    }
+  if (!vertexes)
+  {
+    cout << PHWHERE << " ERROR::VtxOut not found" << endl;
+    return ABORTEVENT;
+  }
 
   // --- why not use the class variable?  cut now applied below with vtxout object
   // --- bbc_z
@@ -1121,19 +1127,19 @@ bool SimpleFlowTreeBBCFVTX::is_event_ok(PHCompositeNode *topNode)
 
   // bail on bad centrality
   float tmpcentrality = global->getCentrality();
-  if((tmpcentrality < 0.0)||(tmpcentrality > 100.0))
-    {
-      if(_verbosity > 0)
-        cout<<"event rejected because of outside of sensible centrality range"<<endl;
-      return false;
-    }
+  if ((tmpcentrality < 0.0) || (tmpcentrality > 100.0))
+  {
+    if (_verbosity > 0)
+      cout << "event rejected because of outside of sensible centrality range" << endl;
+    return false;
+  }
   //if(centrality < 20.0) return false; // peripheral cut
-  if(tmpcentrality > 5.0)
-    {
-      if(_verbosity > 0)
-        cout<<"event rejected because outside of 5%% centrality"<<endl;
-      return false;
-    }
+  if (tmpcentrality > 5.0)
+  {
+    if (_verbosity > 0)
+      cout << "event rejected because outside of 5%% centrality" << endl;
+    return false;
+  }
   return true;
 
 } // is_event_ok
@@ -1148,16 +1154,16 @@ bool SimpleFlowTreeBBCFVTX::is_segment_ok(SvxSegment *segment)
 
   // reject tracks with too few hits...
   unsigned int nhits = segment->getNhits(0)
-    + segment->getNhits(1)
-    + segment->getNhits(2)
-    + segment->getNhits(3);
+                       + segment->getNhits(1)
+                       + segment->getNhits(2)
+                       + segment->getNhits(3);
   //cout<<"nhit0: "<<segment->getNhits(0)<<" nhit1: "<<segment->getNhits(1)<<" nhit2: "<<segment->getNhits(2)<<" nhit3: "<<segment->getNhits(3)<<endl;
-  if(nhits < 4)
-    {
-      if(_verbosity > 1)
-        cout<<"track rejected because not enough hits"<<endl;
-      return false;
-    }
+  if (nhits < 4)
+  {
+    if (_verbosity > 1)
+      cout << "track rejected because not enough hits" << endl;
+    return false;
+  }
   //if(segment->getNhits(0)+segment->getNhits(1)!=2)
   //{
   //if(_verbosity > 1)
@@ -1165,24 +1171,24 @@ bool SimpleFlowTreeBBCFVTX::is_segment_ok(SvxSegment *segment)
   //return false;
   //}
   // reject tracks with off-vertex dca...
-  if(fabs(segment->getDCA2D()) > 0.03 || fabs(segment->getDCA())> 0.5)
-    {
-      if(_verbosity > 1)
-        cout<<"track rejected because of DCA cut"<<endl;
-      return false;
-    }
+  if (fabs(segment->getDCA2D()) > 0.03 || fabs(segment->getDCA()) > 0.5)
+  {
+    if (_verbosity > 1)
+      cout << "track rejected because of DCA cut" << endl;
+    return false;
+  }
   // reject tracks with chisq/ndf<%d...
   //int ndf = 2*nhits - 5;
   double px = segment->get3MomentumAtPrimaryVertex(0);
   double py = segment->get3MomentumAtPrimaryVertex(1);
-  double pt = sqrt(px*px+py*py);
-  float chisqndf = calc_chisq_fromquality(segment->getSegmentQuality(),segment->getSegmentScore());
-  if(!pass_chisq_cut(chisqndf,pt,nhits))
-    {
-      if(_verbosity > 1)
-        cout<<"track rejected because chisq cut"<<endl;
-      return false;
-    }
+  double pt = sqrt(px * px + py * py);
+  float chisqndf = calc_chisq_fromquality(segment->getSegmentQuality(), segment->getSegmentScore());
+  if (!pass_chisq_cut(chisqndf, pt, nhits))
+  {
+    if (_verbosity > 1)
+      cout << "track rejected because chisq cut" << endl;
+    return false;
+  }
 
   return true;
 }
@@ -1190,15 +1196,15 @@ bool SimpleFlowTreeBBCFVTX::is_segment_ok(SvxSegment *segment)
 
 bool SimpleFlowTreeBBCFVTX::pass_chisq_cut(double chisq, double pt, int nhits)
 {
-  if(nhits == 3)
-    {
-      if((pt < 1.0)&&(chisq<3)) return true;
-      if((pt > 1.0)&&(chisq<2)) return true;
-    }
-  else if(nhits == 4)
-    {
-      if(chisq<2) return true;
-    }
+  if (nhits == 3)
+  {
+    if ((pt < 1.0) && (chisq < 3)) return true;
+    if ((pt > 1.0) && (chisq < 2)) return true;
+  }
+  else if (nhits == 4)
+  {
+    if (chisq < 2) return true;
+  }
 
   return false;
 }
@@ -1208,10 +1214,10 @@ bool SimpleFlowTreeBBCFVTX::is_run_in_list(int runnumber)
   ifstream runlist;
   runlist.open(_runlist_filename.c_str());
   int run_num;
-  while(1){
-    if(!runlist.good()) break;
+  while (1) {
+    if (!runlist.good()) break;
     runlist >> run_num;
-    if(run_num==runnumber)
+    if (run_num == runnumber)
       return true;
   }
   return false;
@@ -1220,72 +1226,72 @@ bool SimpleFlowTreeBBCFVTX::is_run_in_list(int runnumber)
 //these vaules were obtained from ana note 1162
 bool SimpleFlowTreeBBCFVTX::pass_eta_cut(float eta, int bbcz_bin)
 {
-  if(bbcz_bin==0)
-    {
-      if(eta > 1.9 && eta < 3.2)
-        return true;
-    }
-  if(bbcz_bin==1)
-    {
-      if(eta > -1.7 && eta < -0.8)
-        return true;
-      if(eta > 1.7 && eta < 3.2)
-        return true;
-    }
-  if(bbcz_bin==2)
-    {
-      if(eta > -2.1 && eta < -0.7)
-        return true;
-      if(eta > 1.5 && eta < 3.1)
-        return true;
-    }
-  if(bbcz_bin==3)
-    {
-      if(eta > -2.4 && eta < -0.9)
-        return true;
-      if(eta > 1.3 && eta < 3.0)
-        return true;
-    }
-  if(bbcz_bin==4)
-    {
-      if(eta > -2.6 && eta < -1.0)
-        return true;
-      if(eta > 1.2 && eta < 2.8)
-        return true;
-    }
-  if(bbcz_bin==5)
-    {
-      if(eta > -2.8 && eta < -1.2)
-        return true;
-      if(eta > 1.0 && eta < 2.6)
-        return true;
-    }
-  if(bbcz_bin==6)
-    {
-      if(eta > -3.0 && eta < -1.3)
-        return true;
-      if(eta > 0.9 && eta < 2.4)
-        return true;
-    }
-  if(bbcz_bin==7)
-    {
-      if(eta > -3.1 && eta < -1.4)
-        return true;
-      if(eta > 0.7 && eta < 2.1)
-        return true;
-    }
-  if(bbcz_bin==8)
-    {
-      if(eta > -3.2 && eta < -1.5)
-        return true;
-      if(eta > 0.7 && eta < 1.6)
-        return true;
-    }
-  if(bbcz_bin==9)
-    {
-      if(eta > -3.3 && eta < -1.8)
-        return true;
-    }
+  if (bbcz_bin == 0)
+  {
+    if (eta > 1.9 && eta < 3.2)
+      return true;
+  }
+  if (bbcz_bin == 1)
+  {
+    if (eta > -1.7 && eta < -0.8)
+      return true;
+    if (eta > 1.7 && eta < 3.2)
+      return true;
+  }
+  if (bbcz_bin == 2)
+  {
+    if (eta > -2.1 && eta < -0.7)
+      return true;
+    if (eta > 1.5 && eta < 3.1)
+      return true;
+  }
+  if (bbcz_bin == 3)
+  {
+    if (eta > -2.4 && eta < -0.9)
+      return true;
+    if (eta > 1.3 && eta < 3.0)
+      return true;
+  }
+  if (bbcz_bin == 4)
+  {
+    if (eta > -2.6 && eta < -1.0)
+      return true;
+    if (eta > 1.2 && eta < 2.8)
+      return true;
+  }
+  if (bbcz_bin == 5)
+  {
+    if (eta > -2.8 && eta < -1.2)
+      return true;
+    if (eta > 1.0 && eta < 2.6)
+      return true;
+  }
+  if (bbcz_bin == 6)
+  {
+    if (eta > -3.0 && eta < -1.3)
+      return true;
+    if (eta > 0.9 && eta < 2.4)
+      return true;
+  }
+  if (bbcz_bin == 7)
+  {
+    if (eta > -3.1 && eta < -1.4)
+      return true;
+    if (eta > 0.7 && eta < 2.1)
+      return true;
+  }
+  if (bbcz_bin == 8)
+  {
+    if (eta > -3.2 && eta < -1.5)
+      return true;
+    if (eta > 0.7 && eta < 1.6)
+      return true;
+  }
+  if (bbcz_bin == 9)
+  {
+    if (eta > -3.3 && eta < -1.8)
+      return true;
+  }
 
   return false;
 }
@@ -1293,13 +1299,13 @@ bool SimpleFlowTreeBBCFVTX::pass_eta_cut(float eta, int bbcz_bin)
 
 float SimpleFlowTreeBBCFVTX::calc_chisq_fromquality(float quality, float score)
 {
-  float chisq = quality - score/100.;
-  chisq = 1/chisq-2.0;
+  float chisq = quality - score / 100.;
+  chisq = 1 / chisq - 2.0;
   if (chisq < 0)
-    {
-      //if(_verbosity > 0)
-      //cout << "WARNING!! calc_chisq_fromquality(" << quality << "," << score <<") gives chisq/ndf=" << chisq << endl;
-      return 99999;
-    }
+  {
+    //if(_verbosity > 0)
+    //cout << "WARNING!! calc_chisq_fromquality(" << quality << "," << score <<") gives chisq/ndf=" << chisq << endl;
+    return 99999;
+  }
   return chisq;
 }
