@@ -111,8 +111,8 @@ void flatten(int runNumber, int passNumber)
   // char outFile1[300];
   // sprintf(outFile1,"%s%d%s","SpecialProjects/RootFiles/svrb_",runNumber,".root");
   TFile* tf_histo_inn = NULL;
-  if ( passNumber > 0 ) tf_histo_inn = TFile::Open(Form("SpecialProjects/RootFiles/weight_run%d_pass%d.root",runNumber,passNumber-1)); // need null for pass zero
-  TFile* tf_histo_out = new TFile(Form("SpecialProjects/RootFiles/weight_run%d_pass%d.root",runNumber,passNumber),"recreate");
+  if ( passNumber > 0 ) tf_histo_inn = TFile::Open(Form("SpecialProjects/RootFiles/ftweight_run%d_pass%d.root",runNumber,passNumber-1)); // need null for pass zero
+  TFile* tf_histo_out = new TFile(Form("SpecialProjects/RootFiles/ftweight_run%d_pass%d.root",runNumber,passNumber),"recreate");
   if ( !tf_histo_out )
     {
       cout << "FATAL ERROR: Unable to create output file!" << endl;
@@ -585,12 +585,12 @@ void flatten(int runNumber, int passNumber)
           for(int iclus = 0; iclus < d_nFVTX_clus; iclus++)
             {
               // --- offset
-              float fvtx_x      = d_FVTX_x[iclus] - vtx_x;
-              float fvtx_y      = d_FVTX_y[iclus] - vtx_y;
+              float fvtx_x      = d_FVTX_x[iclus];// - vtx_x;
+              float fvtx_y      = d_FVTX_y[iclus];// - vtx_y;
               float fvtx_z      = d_FVTX_z[iclus] - vtx_z;
 
               // --- rotation
-              fvtx_x = fvtx_z*sin(-beam_angle) + fvtx_x*cos(-beam_angle);
+              //fvtx_x = fvtx_z*sin(-beam_angle) + fvtx_x*cos(-beam_angle);
 
               double fvtx_r = sqrt(pow(fvtx_x,2.0)+pow(fvtx_y,2.0));
               double fvtx_the = atan2(fvtx_r,fvtx_z);
@@ -667,14 +667,19 @@ void flatten(int runNumber, int passNumber)
 
 	  //cout << "uncorrected phi is " << phi << endl;
 
-	  float x = cos(phi);
-	  float y = sin(phi);
-	  float theta = 2*atan(exp(-eta));
-	  float z = sin(theta);
+	  float the = 2*atan(exp(-eta));
+	  float x = sin(the)*cos(phi);
+	  float y = sin(the)*sin(phi);
+	  float z = cos(the);
 
+	  //cout << "eta is " << eta << " theta is " << the << " z is " << z << endl;
+
+	  //cout << "raw x is " << x << endl;
 	  x = x - vtx_x;
+	  //cout << "offset x is " << x << endl;
 	  x = z*sin(-beam_angle) + x*cos(-beam_angle);
-	  phi = atan2(y,x);
+	  //cout << "offset and rotated x is " << x << endl;
+	  //phi = atan2(y,x);
 
 	  //cout << "corrected phi is " << phi << endl;
 
