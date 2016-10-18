@@ -62,7 +62,7 @@ using namespace std;
 
 
 // --- class constructor
-VTX_event_plane_reco::VTX_event_plane_reco(): SubsysReco("VTXULTRALIGHTRECO")
+SimpleFlowTreeBBCFVTX::SimpleFlowTreeBBCFVTX(): SubsysReco("VTXULTRALIGHTRECO")
 {
   _ievent = 0;
   tmp_evt = 0;
@@ -86,7 +86,7 @@ VTX_event_plane_reco::VTX_event_plane_reco(): SubsysReco("VTXULTRALIGHTRECO")
 
 
 // --- class destructor
-VTX_event_plane_reco::~VTX_event_plane_reco()
+SimpleFlowTreeBBCFVTX::~SimpleFlowTreeBBCFVTX()
 {
   delete m_bbccalib;
   delete m_bbcgeo;
@@ -94,7 +94,7 @@ VTX_event_plane_reco::~VTX_event_plane_reco()
 
 
 // --- Init method, part of Fun4All inheriance
-int VTX_event_plane_reco::Init(PHCompositeNode *topNode)
+int SimpleFlowTreeBBCFVTX::Init(PHCompositeNode *topNode)
 {
 
   ResetEvent(topNode); // is this needed?
@@ -205,7 +205,7 @@ int VTX_event_plane_reco::Init(PHCompositeNode *topNode)
 
 
 // --- InitRun, part of Fun4All inheritance
-int VTX_event_plane_reco::InitRun(PHCompositeNode *topNode)
+int SimpleFlowTreeBBCFVTX::InitRun(PHCompositeNode *topNode)
 {
 
   int runnumber = 0;
@@ -238,7 +238,7 @@ int VTX_event_plane_reco::InitRun(PHCompositeNode *topNode)
 
 
 // --- ResetEvent, part of Fun4All inheritance, called after every event by Fun4All
-int VTX_event_plane_reco::ResetEvent(PHCompositeNode *topNode)
+int SimpleFlowTreeBBCFVTX::ResetEvent(PHCompositeNode *topNode)
 {
   if (_verbosity > 1) cout << PHWHERE << "::ResetEvent() - entered." << endl;
 
@@ -326,7 +326,7 @@ int VTX_event_plane_reco::ResetEvent(PHCompositeNode *topNode)
 
 
 // --- process_event, inherited from Fun4All, does the main part of the analysis on an event by event basis
-int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
+int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
 {
 
   if (_verbosity > 1) cout << PHWHERE << "::process_event() - entered on event #" << _ievent << endl;
@@ -1054,7 +1054,7 @@ int VTX_event_plane_reco::process_event(PHCompositeNode *topNode)
 
 
 
-int VTX_event_plane_reco::End(PHCompositeNode *topNode)
+int SimpleFlowTreeBBCFVTX::End(PHCompositeNode *topNode)
 {
   if (_verbosity > 1) cout << PHWHERE << "::End() - entered." << endl;
 
@@ -1082,7 +1082,7 @@ int VTX_event_plane_reco::End(PHCompositeNode *topNode)
 }
 
 
-bool VTX_event_plane_reco::is_event_ok(PHCompositeNode *topNode)
+bool SimpleFlowTreeBBCFVTX::is_event_ok(PHCompositeNode *topNode)
 {
 
   if (_verbosity > 1) cout << PHWHERE << "::is_event_ok() - entered." << endl;
@@ -1141,7 +1141,7 @@ bool VTX_event_plane_reco::is_event_ok(PHCompositeNode *topNode)
 
 
 
-bool VTX_event_plane_reco::is_segment_ok(SvxSegment *segment)
+bool SimpleFlowTreeBBCFVTX::is_segment_ok(SvxSegment *segment)
 {
   // single particle cuts go here...
   if (_verbosity > 1) cout << PHWHERE << "::is_segment_ok() - entered." << endl;
@@ -1188,7 +1188,7 @@ bool VTX_event_plane_reco::is_segment_ok(SvxSegment *segment)
 }
 
 
-bool VTX_event_plane_reco::pass_chisq_cut(double chisq, double pt, int nhits)
+bool SimpleFlowTreeBBCFVTX::pass_chisq_cut(double chisq, double pt, int nhits)
 {
   if(nhits == 3)
     {
@@ -1203,7 +1203,7 @@ bool VTX_event_plane_reco::pass_chisq_cut(double chisq, double pt, int nhits)
   return false;
 }
 
-bool VTX_event_plane_reco::is_run_in_list(int runnumber)
+bool SimpleFlowTreeBBCFVTX::is_run_in_list(int runnumber)
 {
   ifstream runlist;
   runlist.open(_runlist_filename.c_str());
@@ -1218,7 +1218,7 @@ bool VTX_event_plane_reco::is_run_in_list(int runnumber)
 }
 
 //these vaules were obtained from ana note 1162
-bool VTX_event_plane_reco::pass_eta_cut(float eta, int bbcz_bin)
+bool SimpleFlowTreeBBCFVTX::pass_eta_cut(float eta, int bbcz_bin)
 {
   if(bbcz_bin==0)
     {
@@ -1291,7 +1291,7 @@ bool VTX_event_plane_reco::pass_eta_cut(float eta, int bbcz_bin)
 }
 
 
-float VTX_event_plane_reco::calc_chisq_fromquality(float quality, float score)
+float SimpleFlowTreeBBCFVTX::calc_chisq_fromquality(float quality, float score)
 {
   float chisq = quality - score/100.;
   chisq = 1/chisq-2.0;

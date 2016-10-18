@@ -1,5 +1,5 @@
-#ifndef __VTXEVENTPLANERECO_H__
-#define __VTXEVENTPLANERECO_H__
+#ifndef __SIMPLEFLOWTREEBBCFVTX_H__
+#define __SIMPLEFLOWTREEBBCFVTX_H__
 
 // standard includes
 #include <string>
@@ -42,11 +42,11 @@ class BbcGeo;
 class TVector3;
 class TLorentzVector;
 
-class VTX_event_plane_reco: public SubsysReco
+class SimpleFlowTreeBBCFVTX: public SubsysReco
 {
  public:
-  VTX_event_plane_reco();
-  virtual ~VTX_event_plane_reco();
+  SimpleFlowTreeBBCFVTX();
+  virtual ~SimpleFlowTreeBBCFVTX();
 
   /// Fun4All calls...
   int  Init         (PHCompositeNode *topNode);
