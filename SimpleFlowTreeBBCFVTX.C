@@ -434,32 +434,21 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
   trigger_live = triggers->get_lvl1_triglive();
 
   // // --- these numbers taken from run 16 run control log
-  unsigned int trigger_FVTXNSBBCScentral = 0x00100000;
-  unsigned int trigger_FVTXNSBBCS        = 0x00400000;
-  unsigned int trigger_BBCLL1narrowcent  = 0x00000008;
-  unsigned int trigger_BBCLL1narrow      = 0x00000010;
+  // unsigned int trigger_FVTXNSBBCScentral = 0x00100000;
+  // unsigned int trigger_FVTXNSBBCS        = 0x00400000;
+  // unsigned int trigger_BBCLL1narrowcent  = 0x00000008;
+  // unsigned int trigger_BBCLL1narrow      = 0x00000010;
 
-  unsigned int accepted_triggers = 0;
-  // accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS | trigger_BBCLL1narrowcent | trigger_BBCLL1narrow ;
-  // --- Run16dAu200
-  if ( runnumber >= 454774 && runnumber <= 455639 ) accepted_triggers = trigger_BBCLL1narrowcent | trigger_BBCLL1narrow;
-  // --- Run16dAu62
-  if ( runnumber >= 455792 && runnumber <= 456283 ) accepted_triggers = trigger_BBCLL1narrowcent | trigger_BBCLL1narrow;
-  // --- Run16dAu20
-  if ( runnumber >= 456652 && runnumber <= 457298 ) accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS;
-  // --- Run16dAu39
-  if ( runnumber >= 457634 && runnumber <= 458167 ) accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS;
-
-
-
-  unsigned int passes_trigger = trigger_scaled & accepted_triggers;
-  if ( passes_trigger == 0 )
-  {
-    if ( _verbosity > 0 ) cout << "trigger rejected" << endl;
-    // return ABORTEVENT;
-  }
-  else if ( _verbosity > 0 ) cout << "trigger accepted" << endl;
-
+  // unsigned int accepted_triggers = 0;
+  // // accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS | trigger_BBCLL1narrowcent | trigger_BBCLL1narrow ;
+  // // --- Run16dAu200
+  // if ( runnumber >= 454774 && runnumber <= 455639 ) accepted_triggers = trigger_BBCLL1narrowcent | trigger_BBCLL1narrow;
+  // // --- Run16dAu62
+  // if ( runnumber >= 455792 && runnumber <= 456283 ) accepted_triggers = trigger_BBCLL1narrowcent | trigger_BBCLL1narrow;
+  // // --- Run16dAu20
+  // if ( runnumber >= 456652 && runnumber <= 457298 ) accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS;
+  // // --- Run16dAu39
+  // if ( runnumber >= 457634 && runnumber <= 458167 ) accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS;
 
 
 
@@ -859,8 +848,6 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
 
 
   if ( _create_ttree ) _ntp_event->Fill();
-
-  ResetEvent(topNode);
 
   if ( _verbosity > 0 ) cout << "sucessfully processed this event" << endl;
 
