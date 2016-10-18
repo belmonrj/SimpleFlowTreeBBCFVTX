@@ -749,408 +749,410 @@ void flatten(int runNumber, int rp_recal_pass)
 
   // --- docalib
 
-  TProfile* bbcs_v2_west_docalib = new TProfile(Form("bbcs_v2_west_docalib"),Form("bbcs_v2_west_docalib"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_v2_east_docalib = new TProfile(Form("bbcs_v2_east_docalib"),Form("bbcs_v2_east_docalib"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_v2_both_docalib = new TProfile(Form("bbcs_v2_both_docalib"),Form("bbcs_v2_both_docalib"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_v2_west_docalib = new TProfile(Form("bbcs_v2_west_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_v2_east_docalib = new TProfile(Form("bbcs_v2_east_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_v2_both_docalib = new TProfile(Form("bbcs_v2_both_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* fvtxs_v2_west_docalib = new TProfile(Form("fvtxs_v2_west_docalib"),Form("fvtxs_v2_west_docalib"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_v2_east_docalib = new TProfile(Form("fvtxs_v2_east_docalib"),Form("fvtxs_v2_east_docalib"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_v2_both_docalib = new TProfile(Form("fvtxs_v2_both_docalib"),Form("fvtxs_v2_both_docalib"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_v2_west_docalib = new TProfile(Form("fvtxs_v2_west_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_v2_east_docalib = new TProfile(Form("fvtxs_v2_east_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_v2_both_docalib = new TProfile(Form("fvtxs_v2_both_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* fvtxs0_v2_west_docalib = new TProfile(Form("fvtxs0_v2_west_docalib"),Form("fvtxs0_v2_west_docalib"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs0_v2_east_docalib = new TProfile(Form("fvtxs0_v2_east_docalib"),Form("fvtxs0_v2_east_docalib"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs0_v2_both_docalib = new TProfile(Form("fvtxs0_v2_both_docalib"),Form("fvtxs0_v2_both_docalib"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs0_v2_west_docalib = new TProfile(Form("fvtxs0_v2_west_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs0_v2_east_docalib = new TProfile(Form("fvtxs0_v2_east_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs0_v2_both_docalib = new TProfile(Form("fvtxs0_v2_both_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* fvtxs1_v2_west_docalib = new TProfile(Form("fvtxs1_v2_west_docalib"),Form("fvtxs1_v2_west_docalib"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs1_v2_east_docalib = new TProfile(Form("fvtxs1_v2_east_docalib"),Form("fvtxs1_v2_east_docalib"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs1_v2_both_docalib = new TProfile(Form("fvtxs1_v2_both_docalib"),Form("fvtxs1_v2_both_docalib"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs1_v2_west_docalib = new TProfile(Form("fvtxs1_v2_west_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs1_v2_east_docalib = new TProfile(Form("fvtxs1_v2_east_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs1_v2_both_docalib = new TProfile(Form("fvtxs1_v2_both_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* fvtxs2_v2_west_docalib = new TProfile(Form("fvtxs2_v2_west_docalib"),Form("fvtxs2_v2_west_docalib"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs2_v2_east_docalib = new TProfile(Form("fvtxs2_v2_east_docalib"),Form("fvtxs2_v2_east_docalib"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs2_v2_both_docalib = new TProfile(Form("fvtxs2_v2_both_docalib"),Form("fvtxs2_v2_both_docalib"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs2_v2_west_docalib = new TProfile(Form("fvtxs2_v2_west_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs2_v2_east_docalib = new TProfile(Form("fvtxs2_v2_east_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs2_v2_both_docalib = new TProfile(Form("fvtxs2_v2_both_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* fvtxs3_v2_west_docalib = new TProfile(Form("fvtxs3_v2_west_docalib"),Form("fvtxs3_v2_west_docalib"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs3_v2_east_docalib = new TProfile(Form("fvtxs3_v2_east_docalib"),Form("fvtxs3_v2_east_docalib"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs3_v2_both_docalib = new TProfile(Form("fvtxs3_v2_both_docalib"),Form("fvtxs3_v2_both_docalib"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs3_v2_west_docalib = new TProfile(Form("fvtxs3_v2_west_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs3_v2_east_docalib = new TProfile(Form("fvtxs3_v2_east_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs3_v2_both_docalib = new TProfile(Form("fvtxs3_v2_both_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* bbcs_v3_west_docalib = new TProfile(Form("bbcs_v3_west_docalib"),Form("bbcs_v3_west_docalib"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_v3_east_docalib = new TProfile(Form("bbcs_v3_east_docalib"),Form("bbcs_v3_east_docalib"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_v3_both_docalib = new TProfile(Form("bbcs_v3_both_docalib"),Form("bbcs_v3_both_docalib"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_v3_west_docalib = new TProfile(Form("bbcs_v3_west_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_v3_east_docalib = new TProfile(Form("bbcs_v3_east_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_v3_both_docalib = new TProfile(Form("bbcs_v3_both_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* fvtxs_v3_west_docalib = new TProfile(Form("fvtxs_v3_west_docalib"),Form("fvtxs_v3_west_docalib"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_v3_east_docalib = new TProfile(Form("fvtxs_v3_east_docalib"),Form("fvtxs_v3_east_docalib"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_v3_both_docalib = new TProfile(Form("fvtxs_v3_both_docalib"),Form("fvtxs_v3_both_docalib"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_v3_west_docalib = new TProfile(Form("fvtxs_v3_west_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_v3_east_docalib = new TProfile(Form("fvtxs_v3_east_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_v3_both_docalib = new TProfile(Form("fvtxs_v3_both_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* bbcs_v4_4Psi2_west_docalib = new TProfile(Form("bbcs_v4_4Psi2_west_docalib"),Form("bbcs_v4_4Psi2_west_docalib"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_v4_4Psi2_east_docalib = new TProfile(Form("bbcs_v4_4Psi2_east_docalib"),Form("bbcs_v4_4Psi2_east_docalib"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_v4_4Psi2_both_docalib = new TProfile(Form("bbcs_v4_4Psi2_both_docalib"),Form("bbcs_v4_4Psi2_both_docalib"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_v4_4Psi2_west_docalib = new TProfile(Form("bbcs_v4_4Psi2_west_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_v4_4Psi2_east_docalib = new TProfile(Form("bbcs_v4_4Psi2_east_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_v4_4Psi2_both_docalib = new TProfile(Form("bbcs_v4_4Psi2_both_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* fvtxs_v4_4Psi2_west_docalib = new TProfile(Form("fvtxs_v4_4Psi2_west_docalib"),Form("fvtxs_v4_4Psi2_west_docalib"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_v4_4Psi2_east_docalib = new TProfile(Form("fvtxs_v4_4Psi2_east_docalib"),Form("fvtxs_v4_4Psi2_east_docalib"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_v4_4Psi2_both_docalib = new TProfile(Form("fvtxs_v4_4Psi2_both_docalib"),Form("fvtxs_v4_4Psi2_both_docalib"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_v4_4Psi2_west_docalib = new TProfile(Form("fvtxs_v4_4Psi2_west_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_v4_4Psi2_east_docalib = new TProfile(Form("fvtxs_v4_4Psi2_east_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_v4_4Psi2_both_docalib = new TProfile(Form("fvtxs_v4_4Psi2_both_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* fvtxn_v2_west_docalib = new TProfile(Form("fvtxn_v2_west_docalib"),Form("fvtxn_v2_west_docalib"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxn_v2_east_docalib = new TProfile(Form("fvtxn_v2_east_docalib"),Form("fvtxn_v2_east_docalib"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxn_v2_both_docalib = new TProfile(Form("fvtxn_v2_both_docalib"),Form("fvtxn_v2_both_docalib"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxn_v2_west_docalib = new TProfile(Form("fvtxn_v2_west_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxn_v2_east_docalib = new TProfile(Form("fvtxn_v2_east_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxn_v2_both_docalib = new TProfile(Form("fvtxn_v2_both_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* fvtxn_v3_west_docalib = new TProfile(Form("fvtxn_v3_west_docalib"),Form("fvtxn_v3_west_docalib"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxn_v3_east_docalib = new TProfile(Form("fvtxn_v3_east_docalib"),Form("fvtxn_v3_east_docalib"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxn_v3_both_docalib = new TProfile(Form("fvtxn_v3_both_docalib"),Form("fvtxn_v3_both_docalib"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxn_v3_west_docalib = new TProfile(Form("fvtxn_v3_west_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxn_v3_east_docalib = new TProfile(Form("fvtxn_v3_east_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxn_v3_both_docalib = new TProfile(Form("fvtxn_v3_both_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* fvtxn_v4_4Psi2_west_docalib = new TProfile(Form("fvtxn_v4_4Psi2_west_docalib"),Form("fvtxn_v4_4Psi2_west_docalib"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxn_v4_4Psi2_east_docalib = new TProfile(Form("fvtxn_v4_4Psi2_east_docalib"),Form("fvtxn_v4_4Psi2_east_docalib"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxn_v4_4Psi2_both_docalib = new TProfile(Form("fvtxn_v4_4Psi2_both_docalib"),Form("fvtxn_v4_4Psi2_both_docalib"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxn_v4_4Psi2_west_docalib = new TProfile(Form("fvtxn_v4_4Psi2_west_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxn_v4_4Psi2_east_docalib = new TProfile(Form("fvtxn_v4_4Psi2_east_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxn_v4_4Psi2_both_docalib = new TProfile(Form("fvtxn_v4_4Psi2_both_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
 
   // --- dcnw (docalib noweight)
 
-  TProfile* bbcs_v2_west_dcnw = new TProfile(Form("bbcs_v2_west_dcnw"),Form("bbcs_v2_west_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_v2_east_dcnw = new TProfile(Form("bbcs_v2_east_dcnw"),Form("bbcs_v2_east_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_v2_both_dcnw = new TProfile(Form("bbcs_v2_both_dcnw"),Form("bbcs_v2_both_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_v2_west_dcnw = new TProfile(Form("bbcs_v2_west_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_v2_east_dcnw = new TProfile(Form("bbcs_v2_east_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_v2_both_dcnw = new TProfile(Form("bbcs_v2_both_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* fvtxs_v2_west_dcnw = new TProfile(Form("fvtxs_v2_west_dcnw"),Form("fvtxs_v2_west_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_v2_east_dcnw = new TProfile(Form("fvtxs_v2_east_dcnw"),Form("fvtxs_v2_east_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_v2_both_dcnw = new TProfile(Form("fvtxs_v2_both_dcnw"),Form("fvtxs_v2_both_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_v2_west_dcnw = new TProfile(Form("fvtxs_v2_west_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_v2_east_dcnw = new TProfile(Form("fvtxs_v2_east_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_v2_both_dcnw = new TProfile(Form("fvtxs_v2_both_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* fvtxs0_v2_west_dcnw = new TProfile(Form("fvtxs0_v2_west_dcnw"),Form("fvtxs0_v2_west_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs0_v2_east_dcnw = new TProfile(Form("fvtxs0_v2_east_dcnw"),Form("fvtxs0_v2_east_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs0_v2_both_dcnw = new TProfile(Form("fvtxs0_v2_both_dcnw"),Form("fvtxs0_v2_both_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs0_v2_west_dcnw = new TProfile(Form("fvtxs0_v2_west_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs0_v2_east_dcnw = new TProfile(Form("fvtxs0_v2_east_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs0_v2_both_dcnw = new TProfile(Form("fvtxs0_v2_both_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* fvtxs1_v2_west_dcnw = new TProfile(Form("fvtxs1_v2_west_dcnw"),Form("fvtxs1_v2_west_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs1_v2_east_dcnw = new TProfile(Form("fvtxs1_v2_east_dcnw"),Form("fvtxs1_v2_east_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs1_v2_both_dcnw = new TProfile(Form("fvtxs1_v2_both_dcnw"),Form("fvtxs1_v2_both_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs1_v2_west_dcnw = new TProfile(Form("fvtxs1_v2_west_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs1_v2_east_dcnw = new TProfile(Form("fvtxs1_v2_east_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs1_v2_both_dcnw = new TProfile(Form("fvtxs1_v2_both_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* fvtxs2_v2_west_dcnw = new TProfile(Form("fvtxs2_v2_west_dcnw"),Form("fvtxs2_v2_west_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs2_v2_east_dcnw = new TProfile(Form("fvtxs2_v2_east_dcnw"),Form("fvtxs2_v2_east_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs2_v2_both_dcnw = new TProfile(Form("fvtxs2_v2_both_dcnw"),Form("fvtxs2_v2_both_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs2_v2_west_dcnw = new TProfile(Form("fvtxs2_v2_west_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs2_v2_east_dcnw = new TProfile(Form("fvtxs2_v2_east_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs2_v2_both_dcnw = new TProfile(Form("fvtxs2_v2_both_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* fvtxs3_v2_west_dcnw = new TProfile(Form("fvtxs3_v2_west_dcnw"),Form("fvtxs3_v2_west_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs3_v2_east_dcnw = new TProfile(Form("fvtxs3_v2_east_dcnw"),Form("fvtxs3_v2_east_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs3_v2_both_dcnw = new TProfile(Form("fvtxs3_v2_both_dcnw"),Form("fvtxs3_v2_both_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs3_v2_west_dcnw = new TProfile(Form("fvtxs3_v2_west_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs3_v2_east_dcnw = new TProfile(Form("fvtxs3_v2_east_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs3_v2_both_dcnw = new TProfile(Form("fvtxs3_v2_both_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* bbcs_v3_west_dcnw = new TProfile(Form("bbcs_v3_west_dcnw"),Form("bbcs_v3_west_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_v3_east_dcnw = new TProfile(Form("bbcs_v3_east_dcnw"),Form("bbcs_v3_east_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_v3_both_dcnw = new TProfile(Form("bbcs_v3_both_dcnw"),Form("bbcs_v3_both_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_v3_west_dcnw = new TProfile(Form("bbcs_v3_west_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_v3_east_dcnw = new TProfile(Form("bbcs_v3_east_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_v3_both_dcnw = new TProfile(Form("bbcs_v3_both_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* fvtxs_v3_west_dcnw = new TProfile(Form("fvtxs_v3_west_dcnw"),Form("fvtxs_v3_west_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_v3_east_dcnw = new TProfile(Form("fvtxs_v3_east_dcnw"),Form("fvtxs_v3_east_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_v3_both_dcnw = new TProfile(Form("fvtxs_v3_both_dcnw"),Form("fvtxs_v3_both_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_v3_west_dcnw = new TProfile(Form("fvtxs_v3_west_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_v3_east_dcnw = new TProfile(Form("fvtxs_v3_east_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_v3_both_dcnw = new TProfile(Form("fvtxs_v3_both_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* bbcs_v4_4Psi2_west_dcnw = new TProfile(Form("bbcs_v4_4Psi2_west_dcnw"),Form("bbcs_v4_4Psi2_west_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_v4_4Psi2_east_dcnw = new TProfile(Form("bbcs_v4_4Psi2_east_dcnw"),Form("bbcs_v4_4Psi2_east_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_v4_4Psi2_both_dcnw = new TProfile(Form("bbcs_v4_4Psi2_both_dcnw"),Form("bbcs_v4_4Psi2_both_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_v4_4Psi2_west_dcnw = new TProfile(Form("bbcs_v4_4Psi2_west_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_v4_4Psi2_east_dcnw = new TProfile(Form("bbcs_v4_4Psi2_east_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_v4_4Psi2_both_dcnw = new TProfile(Form("bbcs_v4_4Psi2_both_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* fvtxs_v4_4Psi2_west_dcnw = new TProfile(Form("fvtxs_v4_4Psi2_west_dcnw"),Form("fvtxs_v4_4Psi2_west_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_v4_4Psi2_east_dcnw = new TProfile(Form("fvtxs_v4_4Psi2_east_dcnw"),Form("fvtxs_v4_4Psi2_east_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_v4_4Psi2_both_dcnw = new TProfile(Form("fvtxs_v4_4Psi2_both_dcnw"),Form("fvtxs_v4_4Psi2_both_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_v4_4Psi2_west_dcnw = new TProfile(Form("fvtxs_v4_4Psi2_west_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_v4_4Psi2_east_dcnw = new TProfile(Form("fvtxs_v4_4Psi2_east_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_v4_4Psi2_both_dcnw = new TProfile(Form("fvtxs_v4_4Psi2_both_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* fvtxn_v2_west_dcnw = new TProfile(Form("fvtxn_v2_west_dcnw"),Form("fvtxn_v2_west_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxn_v2_east_dcnw = new TProfile(Form("fvtxn_v2_east_dcnw"),Form("fvtxn_v2_east_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxn_v2_both_dcnw = new TProfile(Form("fvtxn_v2_both_dcnw"),Form("fvtxn_v2_both_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxn_v2_west_dcnw = new TProfile(Form("fvtxn_v2_west_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxn_v2_east_dcnw = new TProfile(Form("fvtxn_v2_east_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxn_v2_both_dcnw = new TProfile(Form("fvtxn_v2_both_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* fvtxn_v3_west_dcnw = new TProfile(Form("fvtxn_v3_west_dcnw"),Form("fvtxn_v3_west_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxn_v3_east_dcnw = new TProfile(Form("fvtxn_v3_east_dcnw"),Form("fvtxn_v3_east_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxn_v3_both_dcnw = new TProfile(Form("fvtxn_v3_both_dcnw"),Form("fvtxn_v3_both_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxn_v3_west_dcnw = new TProfile(Form("fvtxn_v3_west_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxn_v3_east_dcnw = new TProfile(Form("fvtxn_v3_east_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxn_v3_both_dcnw = new TProfile(Form("fvtxn_v3_both_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* fvtxn_v4_4Psi2_west_dcnw = new TProfile(Form("fvtxn_v4_4Psi2_west_dcnw"),Form("fvtxn_v4_4Psi2_west_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxn_v4_4Psi2_east_dcnw = new TProfile(Form("fvtxn_v4_4Psi2_east_dcnw"),Form("fvtxn_v4_4Psi2_east_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxn_v4_4Psi2_both_dcnw = new TProfile(Form("fvtxn_v4_4Psi2_both_dcnw"),Form("fvtxn_v4_4Psi2_both_dcnw"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxn_v4_4Psi2_west_dcnw = new TProfile(Form("fvtxn_v4_4Psi2_west_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxn_v4_4Psi2_east_dcnw = new TProfile(Form("fvtxn_v4_4Psi2_east_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxn_v4_4Psi2_both_dcnw = new TProfile(Form("fvtxn_v4_4Psi2_both_dcnw"),"",15, 0.0, 3.0, -1.1, 1.1);
 
   // ---------------------------------------------------------------------------------------------------------
   // --- COME BACK HERE FOR 2PC HISTOGRAMS
 
-  TProfile* bbcs_d22_west = new TProfile(Form("bbcs_d22_west"),Form("bbcs_d22_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_d22_east = new TProfile(Form("bbcs_d22_east"),Form("bbcs_d22_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_d22_both = new TProfile(Form("bbcs_d22_both"),Form("bbcs_d22_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_d22_west = new TProfile(Form("bbcs_d22_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_d22_east = new TProfile(Form("bbcs_d22_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_d22_both = new TProfile(Form("bbcs_d22_both"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* fvtxs_d22_west = new TProfile(Form("fvtxs_d22_west"),Form("fvtxs_d22_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_d22_east = new TProfile(Form("fvtxs_d22_east"),Form("fvtxs_d22_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_d22_both = new TProfile(Form("fvtxs_d22_both"),Form("fvtxs_d22_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_d22_west = new TProfile(Form("fvtxs_d22_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_d22_east = new TProfile(Form("fvtxs_d22_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_d22_both = new TProfile(Form("fvtxs_d22_both"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* bbcs_d32_west = new TProfile(Form("bbcs_d32_west"),Form("bbcs_d32_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_d32_east = new TProfile(Form("bbcs_d32_east"),Form("bbcs_d32_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_d32_both = new TProfile(Form("bbcs_d32_both"),Form("bbcs_d32_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_d32_west = new TProfile(Form("bbcs_d32_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_d32_east = new TProfile(Form("bbcs_d32_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_d32_both = new TProfile(Form("bbcs_d32_both"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* fvtxs_d32_west = new TProfile(Form("fvtxs_d32_west"),Form("fvtxs_d32_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_d32_east = new TProfile(Form("fvtxs_d32_east"),Form("fvtxs_d32_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_d32_both = new TProfile(Form("fvtxs_d32_both"),Form("fvtxs_d32_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_d32_west = new TProfile(Form("fvtxs_d32_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_d32_east = new TProfile(Form("fvtxs_d32_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_d32_both = new TProfile(Form("fvtxs_d32_both"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* bbcs_sin22_west = new TProfile(Form("bbcs_sin22_west"),Form("bbcs_sin22_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_sin22_east = new TProfile(Form("bbcs_sin22_east"),Form("bbcs_sin22_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_sin22_both = new TProfile(Form("bbcs_sin22_both"),Form("bbcs_sin22_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_sin22_west = new TProfile(Form("bbcs_sin22_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_sin22_east = new TProfile(Form("bbcs_sin22_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_sin22_both = new TProfile(Form("bbcs_sin22_both"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* fvtxs_sin22_west = new TProfile(Form("fvtxs_sin22_west"),Form("fvtxs_sin22_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_sin22_east = new TProfile(Form("fvtxs_sin22_east"),Form("fvtxs_sin22_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_sin22_both = new TProfile(Form("fvtxs_sin22_both"),Form("fvtxs_sin22_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_sin22_west = new TProfile(Form("fvtxs_sin22_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_sin22_east = new TProfile(Form("fvtxs_sin22_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_sin22_both = new TProfile(Form("fvtxs_sin22_both"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* bbcs_sin32_west = new TProfile(Form("bbcs_sin32_west"),Form("bbcs_sin32_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_sin32_east = new TProfile(Form("bbcs_sin32_east"),Form("bbcs_sin32_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_sin32_both = new TProfile(Form("bbcs_sin32_both"),Form("bbcs_sin32_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_sin32_west = new TProfile(Form("bbcs_sin32_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_sin32_east = new TProfile(Form("bbcs_sin32_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_sin32_both = new TProfile(Form("bbcs_sin32_both"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* fvtxs_sin32_west = new TProfile(Form("fvtxs_sin32_west"),Form("fvtxs_sin32_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_sin32_east = new TProfile(Form("fvtxs_sin32_east"),Form("fvtxs_sin32_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_sin32_both = new TProfile(Form("fvtxs_sin32_both"),Form("fvtxs_sind32_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_sin32_west = new TProfile(Form("fvtxs_sin32_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_sin32_east = new TProfile(Form("fvtxs_sin32_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_sin32_both = new TProfile(Form("fvtxs_sin32_both"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* bbcs_cos22_west = new TProfile(Form("bbcs_cos22_west"),Form("bbcs_cos22_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_cos22_east = new TProfile(Form("bbcs_cos22_east"),Form("bbcs_cos22_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_cos22_both = new TProfile(Form("bbcs_cos22_both"),Form("bbcs_cos22_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_cos22_west = new TProfile(Form("bbcs_cos22_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_cos22_east = new TProfile(Form("bbcs_cos22_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_cos22_both = new TProfile(Form("bbcs_cos22_both"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* fvtxs_cos22_west = new TProfile(Form("fvtxs_cos22_west"),Form("fvtxs_cos22_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_cos22_east = new TProfile(Form("fvtxs_cos22_east"),Form("fvtxs_cos22_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_cos22_both = new TProfile(Form("fvtxs_cos22_both"),Form("fvtxs_cos22_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_cos22_west = new TProfile(Form("fvtxs_cos22_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_cos22_east = new TProfile(Form("fvtxs_cos22_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_cos22_both = new TProfile(Form("fvtxs_cos22_both"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* bbcs_cos32_west = new TProfile(Form("bbcs_cos32_west"),Form("bbcs_cos32_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_cos32_east = new TProfile(Form("bbcs_cos32_east"),Form("bbcs_cos32_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_cos32_both = new TProfile(Form("bbcs_cos32_both"),Form("bbcs_cos32_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_cos32_west = new TProfile(Form("bbcs_cos32_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_cos32_east = new TProfile(Form("bbcs_cos32_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_cos32_both = new TProfile(Form("bbcs_cos32_both"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* fvtxs_cos32_west = new TProfile(Form("fvtxs_cos32_west"),Form("fvtxs_cos32_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_cos32_east = new TProfile(Form("fvtxs_cos32_east"),Form("fvtxs_cos32_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_cos32_both = new TProfile(Form("fvtxs_cos32_both"),Form("fvtxs_cos32_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_cos32_west = new TProfile(Form("fvtxs_cos32_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_cos32_east = new TProfile(Form("fvtxs_cos32_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_cos32_both = new TProfile(Form("fvtxs_cos32_both"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* bbcs_c22 = new TProfile(Form("bbcs_c22"),Form("bbcs_c22"),1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* fvtxs_c22 = new TProfile(Form("fvtxs_c22"),Form("fvtxs_c22"),1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* bbcs_c32 = new TProfile(Form("bbcs_c32"),Form("bbcs_c32"),1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* fvtxs_c32 = new TProfile(Form("fvtxs_c32"),Form("fvtxs_c32"),1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* bbcs_c22 = new TProfile(Form("bbcs_c22"),"",1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* fvtxs_c22 = new TProfile(Form("fvtxs_c22"),"",1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* bbcs_c32 = new TProfile(Form("bbcs_c32"),"",1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* fvtxs_c32 = new TProfile(Form("fvtxs_c32"),"",1, -0.5, 0.5, -1.1, 1.1);
 
-  TProfile* bbcs_sin22 = new TProfile(Form("bbcs_sin22"),Form("bbcs_sin22"),1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* fvtxs_sin22 = new TProfile(Form("fvtxs_sin22"),Form("fvtxs_sin22"),1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* bbcs_sin32 = new TProfile(Form("bbcs_sin32"),Form("bbcs_sin32"),1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* fvtxs_sin32 = new TProfile(Form("fvtxs_sin32"),Form("fvtxs_sin32"),1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* bbcs_sin22 = new TProfile(Form("bbcs_sin22"),"",1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* fvtxs_sin22 = new TProfile(Form("fvtxs_sin22"),"",1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* bbcs_sin32 = new TProfile(Form("bbcs_sin32"),"",1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* fvtxs_sin32 = new TProfile(Form("fvtxs_sin32"),"",1, -0.5, 0.5, -1.1, 1.1);
 
-  TProfile* bbcs_cos22 = new TProfile(Form("bbcs_cos22"),Form("bbcs_cos22"),1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* fvtxs_cos22 = new TProfile(Form("fvtxs_cos22"),Form("fvtxs_cos22"),1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* bbcs_cos32 = new TProfile(Form("bbcs_cos32"),Form("bbcs_cos32"),1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* fvtxs_cos32 = new TProfile(Form("fvtxs_cos32"),Form("fvtxs_cos32"),1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* bbcs_cos22 = new TProfile(Form("bbcs_cos22"),"",1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* fvtxs_cos22 = new TProfile(Form("fvtxs_cos22"),"",1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* bbcs_cos32 = new TProfile(Form("bbcs_cos32"),"",1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* fvtxs_cos32 = new TProfile(Form("fvtxs_cos32"),"",1, -0.5, 0.5, -1.1, 1.1);
 
   // ---------------------------------------------------------------------------------------------------------
 
-  TProfile* os_bbcs_d22_west = new TProfile(Form("os_bbcs_d22_west"),Form("os_bbcs_d22_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_bbcs_d22_east = new TProfile(Form("os_bbcs_d22_east"),Form("os_bbcs_d22_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_bbcs_d22_both = new TProfile(Form("os_bbcs_d22_both"),Form("os_bbcs_d22_both"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_d22_west = new TProfile(Form("os_fvtxs_d22_west"),Form("os_fvtxs_d22_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_d22_east = new TProfile(Form("os_fvtxs_d22_east"),Form("os_fvtxs_d22_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_d22_both = new TProfile(Form("os_fvtxs_d22_both"),Form("os_fvtxs_d22_both"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_d22_west = new TProfile(Form("os_fvtxn_d22_west"),Form("os_fvtxn_d22_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_d22_east = new TProfile(Form("os_fvtxn_d22_east"),Form("os_fvtxn_d22_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_d22_both = new TProfile(Form("os_fvtxn_d22_both"),Form("os_fvtxn_d22_both"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_tracks_d22_west = new TProfile(Form("os_fvtxs_tracks_d22_west"),Form("os_fvtxs_tracks_d22_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_tracks_d22_east = new TProfile(Form("os_fvtxs_tracks_d22_east"),Form("os_fvtxs_tracks_d22_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_tracks_d22_both = new TProfile(Form("os_fvtxs_tracks_d22_both"),Form("os_fvtxs_tracks_d22_both"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_tracks_d22_west = new TProfile(Form("os_fvtxn_tracks_d22_west"),Form("os_fvtxn_tracks_d22_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_tracks_d22_east = new TProfile(Form("os_fvtxn_tracks_d22_east"),Form("os_fvtxn_tracks_d22_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_tracks_d22_both = new TProfile(Form("os_fvtxn_tracks_d22_both"),Form("os_fvtxn_tracks_d22_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_bbcs_d22_west = new TProfile(Form("os_bbcs_d22_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_bbcs_d22_east = new TProfile(Form("os_bbcs_d22_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_bbcs_d22_both = new TProfile(Form("os_bbcs_d22_both"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_d22_west = new TProfile(Form("os_fvtxs_d22_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_d22_east = new TProfile(Form("os_fvtxs_d22_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_d22_both = new TProfile(Form("os_fvtxs_d22_both"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_d22_west = new TProfile(Form("os_fvtxn_d22_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_d22_east = new TProfile(Form("os_fvtxn_d22_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_d22_both = new TProfile(Form("os_fvtxn_d22_both"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_tracks_d22_west = new TProfile(Form("os_fvtxs_tracks_d22_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_tracks_d22_east = new TProfile(Form("os_fvtxs_tracks_d22_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_tracks_d22_both = new TProfile(Form("os_fvtxs_tracks_d22_both"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_tracks_d22_west = new TProfile(Form("os_fvtxn_tracks_d22_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_tracks_d22_east = new TProfile(Form("os_fvtxn_tracks_d22_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_tracks_d22_both = new TProfile(Form("os_fvtxn_tracks_d22_both"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* os_bbcs_d32_west = new TProfile(Form("os_bbcs_d32_west"),Form("os_bbcs_d32_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_bbcs_d32_east = new TProfile(Form("os_bbcs_d32_east"),Form("os_bbcs_d32_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_bbcs_d32_both = new TProfile(Form("os_bbcs_d32_both"),Form("os_bbcs_d32_both"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_d32_west = new TProfile(Form("os_fvtxs_d32_west"),Form("os_fvtxs_d32_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_d32_east = new TProfile(Form("os_fvtxs_d32_east"),Form("os_fvtxs_d32_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_d32_both = new TProfile(Form("os_fvtxs_d32_both"),Form("os_fvtxs_d32_both"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_d32_west = new TProfile(Form("os_fvtxn_d32_west"),Form("os_fvtxn_d32_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_d32_east = new TProfile(Form("os_fvtxn_d32_east"),Form("os_fvtxn_d32_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_d32_both = new TProfile(Form("os_fvtxn_d32_both"),Form("os_fvtxn_d32_both"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_tracks_d32_west = new TProfile(Form("os_fvtxs_tracks_d32_west"),Form("os_fvtxs_tracks_d32_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_tracks_d32_east = new TProfile(Form("os_fvtxs_tracks_d32_east"),Form("os_fvtxs_tracks_d32_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_tracks_d32_both = new TProfile(Form("os_fvtxs_tracks_d32_both"),Form("os_fvtxs_tracks_d32_both"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_tracks_d32_west = new TProfile(Form("os_fvtxn_tracks_d32_west"),Form("os_fvtxn_tracks_d32_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_tracks_d32_east = new TProfile(Form("os_fvtxn_tracks_d32_east"),Form("os_fvtxn_tracks_d32_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_tracks_d32_both = new TProfile(Form("os_fvtxn_tracks_d32_both"),Form("os_fvtxn_tracks_d32_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_bbcs_d32_west = new TProfile(Form("os_bbcs_d32_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_bbcs_d32_east = new TProfile(Form("os_bbcs_d32_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_bbcs_d32_both = new TProfile(Form("os_bbcs_d32_both"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_d32_west = new TProfile(Form("os_fvtxs_d32_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_d32_east = new TProfile(Form("os_fvtxs_d32_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_d32_both = new TProfile(Form("os_fvtxs_d32_both"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_d32_west = new TProfile(Form("os_fvtxn_d32_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_d32_east = new TProfile(Form("os_fvtxn_d32_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_d32_both = new TProfile(Form("os_fvtxn_d32_both"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_tracks_d32_west = new TProfile(Form("os_fvtxs_tracks_d32_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_tracks_d32_east = new TProfile(Form("os_fvtxs_tracks_d32_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_tracks_d32_both = new TProfile(Form("os_fvtxs_tracks_d32_both"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_tracks_d32_west = new TProfile(Form("os_fvtxn_tracks_d32_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_tracks_d32_east = new TProfile(Form("os_fvtxn_tracks_d32_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_tracks_d32_both = new TProfile(Form("os_fvtxn_tracks_d32_both"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* os_bbcs_sin22_west = new TProfile(Form("os_bbcs_sin22_west"),Form("os_bbcs_sin22_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_bbcs_sin22_east = new TProfile(Form("os_bbcs_sin22_east"),Form("os_bbcs_sin22_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_bbcs_sin22_both = new TProfile(Form("os_bbcs_sin22_both"),Form("os_bbcs_sin22_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_bbcs_sin22_west = new TProfile(Form("os_bbcs_sin22_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_bbcs_sin22_east = new TProfile(Form("os_bbcs_sin22_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_bbcs_sin22_both = new TProfile(Form("os_bbcs_sin22_both"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* os_fvtxs_sin22_west = new TProfile(Form("os_fvtxs_sin22_west"),Form("os_fvtxs_sin22_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_sin22_east = new TProfile(Form("os_fvtxs_sin22_east"),Form("os_fvtxs_sin22_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_sin22_both = new TProfile(Form("os_fvtxs_sin22_both"),Form("os_fvtxs_sin22_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_sin22_west = new TProfile(Form("os_fvtxs_sin22_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_sin22_east = new TProfile(Form("os_fvtxs_sin22_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_sin22_both = new TProfile(Form("os_fvtxs_sin22_both"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* os_fvtxn_sin22_west = new TProfile(Form("os_fvtxn_sin22_west"),Form("os_fvtxn_sin22_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_sin22_east = new TProfile(Form("os_fvtxn_sin22_east"),Form("os_fvtxn_sin22_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_sin22_both = new TProfile(Form("os_fvtxn_sin22_both"),Form("os_fvtxn_sin22_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_sin22_west = new TProfile(Form("os_fvtxn_sin22_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_sin22_east = new TProfile(Form("os_fvtxn_sin22_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_sin22_both = new TProfile(Form("os_fvtxn_sin22_both"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* os_bbcs_sin32_west = new TProfile(Form("os_bbcs_sin32_west"),Form("os_bbcs_sin32_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_bbcs_sin32_east = new TProfile(Form("os_bbcs_sin32_east"),Form("os_bbcs_sin32_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_bbcs_sin32_both = new TProfile(Form("os_bbcs_sin32_both"),Form("os_bbcs_sin32_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_bbcs_sin32_west = new TProfile(Form("os_bbcs_sin32_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_bbcs_sin32_east = new TProfile(Form("os_bbcs_sin32_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_bbcs_sin32_both = new TProfile(Form("os_bbcs_sin32_both"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* os_fvtxs_sin32_west = new TProfile(Form("os_fvtxs_sin32_west"),Form("os_fvtxs_sin32_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_sin32_east = new TProfile(Form("os_fvtxs_sin32_east"),Form("os_fvtxs_sin32_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_sin32_both = new TProfile(Form("os_fvtxs_sin32_both"),Form("os_fvtxs_sind32_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_sin32_west = new TProfile(Form("os_fvtxs_sin32_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_sin32_east = new TProfile(Form("os_fvtxs_sin32_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_sin32_both = new TProfile(Form("os_fvtxs_sin32_both"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* os_fvtxn_sin32_west = new TProfile(Form("os_fvtxn_sin32_west"),Form("os_fvtxn_sin32_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_sin32_east = new TProfile(Form("os_fvtxn_sin32_east"),Form("os_fvtxn_sin32_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_sin32_both = new TProfile(Form("os_fvtxn_sin32_both"),Form("os_fvtxn_sind32_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_sin32_west = new TProfile(Form("os_fvtxn_sin32_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_sin32_east = new TProfile(Form("os_fvtxn_sin32_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_sin32_both = new TProfile(Form("os_fvtxn_sin32_both"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* os_bbcs_cos22_west = new TProfile(Form("os_bbcs_cos22_west"),Form("os_bbcs_cos22_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_bbcs_cos22_east = new TProfile(Form("os_bbcs_cos22_east"),Form("os_bbcs_cos22_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_bbcs_cos22_both = new TProfile(Form("os_bbcs_cos22_both"),Form("os_bbcs_cos22_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_bbcs_cos22_west = new TProfile(Form("os_bbcs_cos22_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_bbcs_cos22_east = new TProfile(Form("os_bbcs_cos22_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_bbcs_cos22_both = new TProfile(Form("os_bbcs_cos22_both"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* os_fvtxs_cos22_west = new TProfile(Form("os_fvtxs_cos22_west"),Form("os_fvtxs_cos22_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_cos22_east = new TProfile(Form("os_fvtxs_cos22_east"),Form("os_fvtxs_cos22_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_cos22_both = new TProfile(Form("os_fvtxs_cos22_both"),Form("os_fvtxs_cos22_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_cos22_west = new TProfile(Form("os_fvtxs_cos22_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_cos22_east = new TProfile(Form("os_fvtxs_cos22_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_cos22_both = new TProfile(Form("os_fvtxs_cos22_both"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* os_fvtxn_cos22_west = new TProfile(Form("os_fvtxn_cos22_west"),Form("os_fvtxn_cos22_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_cos22_east = new TProfile(Form("os_fvtxn_cos22_east"),Form("os_fvtxn_cos22_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_cos22_both = new TProfile(Form("os_fvtxn_cos22_both"),Form("os_fvtxn_cos22_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_cos22_west = new TProfile(Form("os_fvtxn_cos22_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_cos22_east = new TProfile(Form("os_fvtxn_cos22_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_cos22_both = new TProfile(Form("os_fvtxn_cos22_both"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* os_bbcs_cos32_west = new TProfile(Form("os_bbcs_cos32_west"),Form("os_bbcs_cos32_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_bbcs_cos32_east = new TProfile(Form("os_bbcs_cos32_east"),Form("os_bbcs_cos32_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_bbcs_cos32_both = new TProfile(Form("os_bbcs_cos32_both"),Form("os_bbcs_cos32_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_bbcs_cos32_west = new TProfile(Form("os_bbcs_cos32_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_bbcs_cos32_east = new TProfile(Form("os_bbcs_cos32_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_bbcs_cos32_both = new TProfile(Form("os_bbcs_cos32_both"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* os_fvtxs_cos32_west = new TProfile(Form("os_fvtxs_cos32_west"),Form("os_fvtxs_cos32_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_cos32_east = new TProfile(Form("os_fvtxs_cos32_east"),Form("os_fvtxs_cos32_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_cos32_both = new TProfile(Form("os_fvtxs_cos32_both"),Form("os_fvtxs_cos32_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_cos32_west = new TProfile(Form("os_fvtxs_cos32_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_cos32_east = new TProfile(Form("os_fvtxs_cos32_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_cos32_both = new TProfile(Form("os_fvtxs_cos32_both"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* os_fvtxn_cos32_west = new TProfile(Form("os_fvtxn_cos32_west"),Form("os_fvtxn_cos32_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_cos32_east = new TProfile(Form("os_fvtxn_cos32_east"),Form("os_fvtxn_cos32_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_cos32_both = new TProfile(Form("os_fvtxn_cos32_both"),Form("os_fvtxn_cos32_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_cos32_west = new TProfile(Form("os_fvtxn_cos32_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_cos32_east = new TProfile(Form("os_fvtxn_cos32_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_cos32_both = new TProfile(Form("os_fvtxn_cos32_both"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* os_bbcs_c22 = new TProfile(Form("os_bbcs_c22"),Form("os_bbcs_c22"),1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxs_c22 = new TProfile(Form("os_fvtxs_c22"),Form("os_fvtxs_c22"),1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxn_c22 = new TProfile(Form("os_fvtxn_c22"),Form("os_fvtxn_c22"),1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxs_ce01_c22 = new TProfile(Form("os_fvtxs_ce01_c22"),     "" ,1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxn_ce01_c22 = new TProfile(Form("os_fvtxn_ce01_c22"),     "" ,1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxs_tracks_c22 = new TProfile(Form("os_fvtxs_tracks_c22"),     "" ,1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxn_tracks_c22 = new TProfile(Form("os_fvtxn_tracks_c22"),     "" ,1, -0.5, 0.5, -1.1, 1.1);
-  //TProfile* os_fvtxc_tracks_c22 = new TProfile(Form("os_fvtxc_tracks_c22"),     "" ,1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_bbcs_c32 = new TProfile(Form("os_bbcs_c32"),Form("os_bbcs_c32"),1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxs_c32 = new TProfile(Form("os_fvtxs_c32"),Form("os_fvtxs_c32"),1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxn_c32 = new TProfile(Form("os_fvtxn_c32"),Form("os_fvtxn_c32"),1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxs_ce01_c32 = new TProfile(Form("os_fvtxs_ce01_c32"),     "" ,1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxn_ce01_c32 = new TProfile(Form("os_fvtxn_ce01_c32"),     "" ,1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxs_tracks_c32 = new TProfile(Form("os_fvtxs_tracks_c32"),     "" ,1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxn_tracks_c32 = new TProfile(Form("os_fvtxn_tracks_c32"),     "" ,1, -0.5, 0.5, -1.1, 1.1);
-  //TProfile* os_fvtxc_tracks_c32 = new TProfile(Form("os_fvtxc_tracks_c32"),     "" ,1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_bbcs_c22 = new TProfile(Form("os_bbcs_c22"),"",1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxs_c22 = new TProfile(Form("os_fvtxs_c22"),"",1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxn_c22 = new TProfile(Form("os_fvtxn_c22"),"",1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxs_ce01_c22 = new TProfile(Form("os_fvtxs_ce01_c22"),"" ,1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxn_ce01_c22 = new TProfile(Form("os_fvtxn_ce01_c22"),"" ,1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxs_tracks_c22 = new TProfile(Form("os_fvtxs_tracks_c22"),"" ,1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxn_tracks_c22 = new TProfile(Form("os_fvtxn_tracks_c22"),"" ,1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxc_tracks_c22 = new TProfile(Form("os_fvtxc_tracks_c22"),"" ,1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxa_tracks_c22 = new TProfile(Form("os_fvtxa_tracks_c22"),"" ,1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_bbcs_c32 = new TProfile(Form("os_bbcs_c32"),"",1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxs_c32 = new TProfile(Form("os_fvtxs_c32"),"",1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxn_c32 = new TProfile(Form("os_fvtxn_c32"),"",1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxs_ce01_c32 = new TProfile(Form("os_fvtxs_ce01_c32"),"" ,1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxn_ce01_c32 = new TProfile(Form("os_fvtxn_ce01_c32"),"" ,1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxs_tracks_c32 = new TProfile(Form("os_fvtxs_tracks_c32"),"" ,1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxn_tracks_c32 = new TProfile(Form("os_fvtxn_tracks_c32"),"" ,1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxc_tracks_c32 = new TProfile(Form("os_fvtxc_tracks_c32"),"" ,1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxa_tracks_c32 = new TProfile(Form("os_fvtxa_tracks_c32"),"" ,1, -0.5, 0.5, -1.1, 1.1);
 
-  TProfile* os_bbcs_sin22 = new TProfile(Form("os_bbcs_sin22"),Form("os_bbcs_sin22"),1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxs_sin22 = new TProfile(Form("os_fvtxs_sin22"),Form("os_fvtxs_sin22"),1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxn_sin22 = new TProfile(Form("os_fvtxn_sin22"),Form("os_fvtxn_sin22"),1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxs_tracks_sin22 = new TProfile(Form("os_fvtxs_tracks_sin22"),     "" ,1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxn_tracks_sin22 = new TProfile(Form("os_fvtxn_tracks_sin22"),     "" ,1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_bbcs_sin32 = new TProfile(Form("os_bbcs_sin32"),Form("os_bbcs_sin32"),1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxs_sin32 = new TProfile(Form("os_fvtxs_sin32"),Form("os_fvtxs_sin32"),1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxn_sin32 = new TProfile(Form("os_fvtxn_sin32"),Form("os_fvtxn_sin32"),1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxs_tracks_sin32 = new TProfile(Form("os_fvtxs_tracks_sin32"),     "" ,1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxn_tracks_sin32 = new TProfile(Form("os_fvtxn_tracks_sin32"),     "" ,1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_bbcs_sin22 = new TProfile(Form("os_bbcs_sin22"),"",1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxs_sin22 = new TProfile(Form("os_fvtxs_sin22"),"",1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxn_sin22 = new TProfile(Form("os_fvtxn_sin22"),"",1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxs_tracks_sin22 = new TProfile(Form("os_fvtxs_tracks_sin22"),"" ,1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxn_tracks_sin22 = new TProfile(Form("os_fvtxn_tracks_sin22"),"" ,1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_bbcs_sin32 = new TProfile(Form("os_bbcs_sin32"),"",1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxs_sin32 = new TProfile(Form("os_fvtxs_sin32"),"",1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxn_sin32 = new TProfile(Form("os_fvtxn_sin32"),"",1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxs_tracks_sin32 = new TProfile(Form("os_fvtxs_tracks_sin32"),"" ,1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxn_tracks_sin32 = new TProfile(Form("os_fvtxn_tracks_sin32"),"" ,1, -0.5, 0.5, -1.1, 1.1);
 
-  TProfile* os_bbcs_cos22 = new TProfile(Form("os_bbcs_cos22"),Form("os_bbcs_cos22"),1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxs_cos22 = new TProfile(Form("os_fvtxs_cos22"),Form("os_fvtxs_cos22"),1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxn_cos22 = new TProfile(Form("os_fvtxn_cos22"),Form("os_fvtxn_cos22"),1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_bbcs_cos22 = new TProfile(Form("os_bbcs_cos22"),  "",1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxs_cos22 = new TProfile(Form("os_fvtxs_cos22"),"",1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxn_cos22 = new TProfile(Form("os_fvtxn_cos22"),"",1, -0.5, 0.5, -1.1, 1.1);
   TProfile* os_fvtxs_tracks_cos22 = new TProfile(Form("os_fvtxs_tracks_cos22"),     "" ,1, -0.5, 0.5, -1.1, 1.1);
   TProfile* os_fvtxn_tracks_cos22 = new TProfile(Form("os_fvtxn_tracks_cos22"),     "" ,1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_bbcs_cos32 = new TProfile(Form("os_bbcs_cos32"),Form("os_bbcs_cos32"),1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxs_cos32 = new TProfile(Form("os_fvtxs_cos32"),Form("os_fvtxs_cos32"),1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxn_cos32 = new TProfile(Form("os_fvtxn_cos32"),Form("os_fvtxn_cos32"),1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_bbcs_cos32 = new TProfile(Form("os_bbcs_cos32"),  "",1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxs_cos32 = new TProfile(Form("os_fvtxs_cos32"),"",1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxn_cos32 = new TProfile(Form("os_fvtxn_cos32"),"",1, -0.5, 0.5, -1.1, 1.1);
   TProfile* os_fvtxs_tracks_cos32 = new TProfile(Form("os_fvtxs_tracks_cos32"),     "" ,1, -0.5, 0.5, -1.1, 1.1);
   TProfile* os_fvtxn_tracks_cos32 = new TProfile(Form("os_fvtxn_tracks_cos32"),     "" ,1, -0.5, 0.5, -1.1, 1.1);
 
-  TProfile* os_bbcsfvtxs_c22 = new TProfile(Form("os_bbcsfvtxs_c22"),Form("os_bbcsfvtxs_c22"),1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_bbcsfvtxs_c32 = new TProfile(Form("os_bbcsfvtxs_c32"),Form("os_bbcsfvtxs_c32"),1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_bbcsfvtxn_c22 = new TProfile(Form("os_bbcsfvtxn_c22"),Form("os_bbcsfvtxn_c22"),1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_bbcsfvtxn_c32 = new TProfile(Form("os_bbcsfvtxn_c32"),Form("os_bbcsfvtxn_c32"),1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxsfvtxn_c22 = new TProfile(Form("os_fvtxsfvtxn_c22"),Form("os_fvtxsfvtxn_c22"),1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxsfvtxn_c32 = new TProfile(Form("os_fvtxsfvtxn_c32"),Form("os_fvtxsfvtxn_c32"),1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_bbcsfvtxs_c22 = new TProfile(Form("os_bbcsfvtxs_c22"),"",1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_bbcsfvtxs_c32 = new TProfile(Form("os_bbcsfvtxs_c32"),"",1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_bbcsfvtxn_c22 = new TProfile(Form("os_bbcsfvtxn_c22"),"",1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_bbcsfvtxn_c32 = new TProfile(Form("os_bbcsfvtxn_c32"),"",1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxsfvtxn_c22 = new TProfile(Form("os_fvtxsfvtxn_c22"),"",1, -0.5, 0.5, -1.1, 1.1);
+  TProfile* os_fvtxsfvtxn_c32 = new TProfile(Form("os_fvtxsfvtxn_c32"),"",1, -0.5, 0.5, -1.1, 1.1);
   TProfile* os_fvtxsfvtxn_tracks_c22 = new TProfile(Form("os_fvtxsfvtxn_tracks_c22"),"",1, -0.5, 0.5, -1.1, 1.1);
   TProfile* os_fvtxsfvtxn_tracks_c32 = new TProfile(Form("os_fvtxsfvtxn_tracks_c32"),"",1, -0.5, 0.5, -1.1, 1.1);
 
-  TH1D* os_bbcs_1dPsi2 = new TH1D(Form("os_bbcs_1dPsi2"),Form("os_bbcs_1dPsi2"),220,-4.1,4.1); // weird binning from elsewhere, leave the same to match
-  TH1D* os_bbcs_1dPsi3 = new TH1D(Form("os_bbcs_1dPsi3"),Form("os_bbcs_1dPsi3"),220,-4.1,4.1); // weird binning from elsewhere, leave the same to match
-  TH1D* os_fvtxs_1dPsi2 = new TH1D(Form("os_fvtxs_1dPsi2"),Form("os_fvtxs_1dPsi2"),200,-4.1,4.1); // weird binning from elsewhere, leave the same to match
-  TH1D* os_fvtxs_1dPsi3 = new TH1D(Form("os_fvtxs_1dPsi3"),Form("os_fvtxs_1dPsi3"),200,-4.1,4.1); // weird binning from elsewhere, leave the same to match
-  TH1D* os_fvtxn_1dPsi2 = new TH1D(Form("os_fvtxn_1dPsi2"),Form("os_fvtxn_1dPsi2"),200,-4.1,4.1); // weird binning from elsewhere, leave the same to match
-  TH1D* os_fvtxn_1dPsi3 = new TH1D(Form("os_fvtxn_1dPsi3"),Form("os_fvtxn_1dPsi3"),200,-4.1,4.1); // weird binning from elsewhere, leave the same to match
+  TH1D* os_bbcs_1dPsi2 = new TH1D(Form("os_bbcs_1dPsi2"),"",220,-4.1,4.1); // weird binning from elsewhere, leave the same to match
+  TH1D* os_bbcs_1dPsi3 = new TH1D(Form("os_bbcs_1dPsi3"),"",220,-4.1,4.1); // weird binning from elsewhere, leave the same to match
+  TH1D* os_fvtxs_1dPsi2 = new TH1D(Form("os_fvtxs_1dPsi2"),"",200,-4.1,4.1); // weird binning from elsewhere, leave the same to match
+  TH1D* os_fvtxs_1dPsi3 = new TH1D(Form("os_fvtxs_1dPsi3"),"",200,-4.1,4.1); // weird binning from elsewhere, leave the same to match
+  TH1D* os_fvtxn_1dPsi2 = new TH1D(Form("os_fvtxn_1dPsi2"),"",200,-4.1,4.1); // weird binning from elsewhere, leave the same to match
+  TH1D* os_fvtxn_1dPsi3 = new TH1D(Form("os_fvtxn_1dPsi3"),"",200,-4.1,4.1); // weird binning from elsewhere, leave the same to match
   TH1D* os_fvtxs_tracks_1dPsi2 = new TH1D(Form("os_fvtxs_tracks_1dPsi2"),     "" ,200,-4.1,4.1); // weird binning from elsewhere, leave the same to match
   TH1D* os_fvtxs_tracks_1dPsi3 = new TH1D(Form("os_fvtxs_tracks_1dPsi3"),     "" ,200,-4.1,4.1); // weird binning from elsewhere, leave the same to match
   TH1D* os_fvtxn_tracks_1dPsi2 = new TH1D(Form("os_fvtxn_tracks_1dPsi2"),     "" ,200,-4.1,4.1); // weird binning from elsewhere, leave the same to match
   TH1D* os_fvtxn_tracks_1dPsi3 = new TH1D(Form("os_fvtxn_tracks_1dPsi3"),     "" ,200,-4.1,4.1); // weird binning from elsewhere, leave the same to match
 
-  TProfile* os_bbcs_v2_west = new TProfile(Form("os_bbcs_v2_west"),Form("os_bbcs_v2_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_bbcs_v2_east = new TProfile(Form("os_bbcs_v2_east"),Form("os_bbcs_v2_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_bbcs_v2_both = new TProfile(Form("os_bbcs_v2_both"),Form("os_bbcs_v2_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_bbcs_v2_west = new TProfile(Form("os_bbcs_v2_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_bbcs_v2_east = new TProfile(Form("os_bbcs_v2_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_bbcs_v2_both = new TProfile(Form("os_bbcs_v2_both"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* os_fvtxs_v2_west = new TProfile(Form("os_fvtxs_v2_west"),Form("os_fvtxs_v2_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_v2_east = new TProfile(Form("os_fvtxs_v2_east"),Form("os_fvtxs_v2_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_v2_both = new TProfile(Form("os_fvtxs_v2_both"),Form("os_fvtxs_v2_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_v2_west = new TProfile(Form("os_fvtxs_v2_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_v2_east = new TProfile(Form("os_fvtxs_v2_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_v2_both = new TProfile(Form("os_fvtxs_v2_both"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* os_fvtxn_v2_west = new TProfile(Form("os_fvtxn_v2_west"),Form("os_fvtxn_v2_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_v2_east = new TProfile(Form("os_fvtxn_v2_east"),Form("os_fvtxn_v2_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_v2_both = new TProfile(Form("os_fvtxn_v2_both"),Form("os_fvtxn_v2_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_v2_west = new TProfile(Form("os_fvtxn_v2_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_v2_east = new TProfile(Form("os_fvtxn_v2_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_v2_both = new TProfile(Form("os_fvtxn_v2_both"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* os_bbcs_v3_west = new TProfile(Form("os_bbcs_v3_west"),Form("os_bbcs_v3_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_bbcs_v3_east = new TProfile(Form("os_bbcs_v3_east"),Form("os_bbcs_v3_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_bbcs_v3_both = new TProfile(Form("os_bbcs_v3_both"),Form("os_bbcs_v3_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_bbcs_v3_west = new TProfile(Form("os_bbcs_v3_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_bbcs_v3_east = new TProfile(Form("os_bbcs_v3_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_bbcs_v3_both = new TProfile(Form("os_bbcs_v3_both"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* os_fvtxs_v3_west = new TProfile(Form("os_fvtxs_v3_west"),Form("os_fvtxs_v3_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_v3_east = new TProfile(Form("os_fvtxs_v3_east"),Form("os_fvtxs_v3_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_v3_both = new TProfile(Form("os_fvtxs_v3_both"),Form("os_fvtxs_v3_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_v3_west = new TProfile(Form("os_fvtxs_v3_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_v3_east = new TProfile(Form("os_fvtxs_v3_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxs_v3_both = new TProfile(Form("os_fvtxs_v3_both"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* os_fvtxn_v3_west = new TProfile(Form("os_fvtxn_v3_west"),Form("os_fvtxn_v3_west"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_v3_east = new TProfile(Form("os_fvtxn_v3_east"),Form("os_fvtxn_v3_east"),15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_v3_both = new TProfile(Form("os_fvtxn_v3_both"),Form("os_fvtxn_v3_both"),15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_v3_west = new TProfile(Form("os_fvtxn_v3_west"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_v3_east = new TProfile(Form("os_fvtxn_v3_east"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* os_fvtxn_v3_both = new TProfile(Form("os_fvtxn_v3_both"),"",15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* os_bbcs_c24 = new TProfile(Form("os_bbcs_c24"),Form("os_bbcs_c24"),1,-0.5,0.5,-1.1,1.1);
-  TProfile* os_fvtxs_c24 = new TProfile(Form("os_fvtxs_c24"),Form("os_fvtxs_c24"),1,-0.5,0.5,-1.1,1.1);
-  TProfile* os_fvtxn_c24 = new TProfile(Form("os_fvtxn_c24"),Form("os_fvtxn_c24"),1,-0.5,0.5,-1.1,1.1);
-  TProfile* os_bbcs_c24_vs_cent = new TProfile(Form("os_bbcs_c24_vs_cent"),Form("os_bbcs_c24_vs_cent"),101,-0.5,100.5,-1.1,1.1);
-  TProfile* os_fvtxs_c24_vs_cent = new TProfile(Form("os_fvtxs_c24_vs_cent"),Form("os_fvtxs_c24_vs_cent"),101,-0.5,100.5,-1.1,1.1);
-  TProfile* os_fvtxn_c24_vs_cent = new TProfile(Form("os_fvtxn_c24_vs_cent"),Form("os_fvtxn_c24_vs_cent"),101,-0.5,100.5,-1.1,1.1);
-  TProfile* os_bbcs_c24_vs_bbcqs = new TProfile(Form("os_bbcs_c24_vs_bbcqs"),Form("os_bbcs_c24_vs_bbcqs"),200,0,200,-1.1,1.1);
-  TProfile* os_fvtxs_c24_vs_bbcqs = new TProfile(Form("os_fvtxs_c24_vs_bbcqs"),Form("os_fvtxs_c24_vs_bbcqs"),200,0,200,-1.1,1.1);
-  TProfile* os_fvtxn_c24_vs_bbcqs = new TProfile(Form("os_fvtxn_c24_vs_bbcqs"),Form("os_fvtxn_c24_vs_bbcqs"),200,0,200,-1.1,1.1);
-  TProfile* os_bbcs_c24_vs_nfvtxs = new TProfile(Form("os_bbcs_c24_vs_nfvtxs"),Form("os_bbcs_c24_vs_nfvtxs"),1000,-0.5,999.5,-1.1,1.1);
-  TProfile* os_fvtxs_c24_vs_nfvtxs = new TProfile(Form("os_fvtxs_c24_vs_nfvtxs"),Form("os_fvtxs_c24_vs_nfvtxs"),1000,-0.5,999.5,-1.1,1.1);
-  TProfile* os_fvtxn_c24_vs_nfvtxs = new TProfile(Form("os_fvtxn_c24_vs_nfvtxs"),Form("os_fvtxn_c24_vs_nfvtxs"),1000,-0.5,999.5,-1.1,1.1);
-  TProfile* os_bbcs_d24_in_both = new TProfile(Form("os_bbcs_d24_in_both"),Form("os_bbcs_d24_in_both"),15,0.0,3.0,-1.1,1.1);
-  TProfile* os_fvtxs_d24_in_both = new TProfile(Form("os_fvtxs_d24_in_both"),Form("os_fvtxs_d24_in_both"),15,0.0,3.0,-1.1,1.1);
-  TProfile* os_fvtxn_d24_in_both = new TProfile(Form("os_fvtxn_d24_in_both"),Form("os_fvtxn_d24_in_both"),15,0.0,3.0,-1.1,1.1);
-  TProfile* os_bbcs_d24_out_both = new TProfile(Form("os_bbcs_d24_out_both"),Form("os_bbcs_d24_out_both"),15,0.0,3.0,-1.1,1.1);
-  TProfile* os_fvtxs_d24_out_both = new TProfile(Form("os_fvtxs_d24_out_both"),Form("os_fvtxs_d24_out_both"),15,0.0,3.0,-1.1,1.1);
-  TProfile* os_fvtxn_d24_out_both = new TProfile(Form("os_fvtxn_d24_out_both"),Form("os_fvtxn_d24_out_both"),15,0.0,3.0,-1.1,1.1);
+  TProfile* os_bbcs_c24 = new TProfile(Form("os_bbcs_c24"),"",1,-0.5,0.5,-1.1,1.1);
+  TProfile* os_fvtxs_c24 = new TProfile(Form("os_fvtxs_c24"),"",1,-0.5,0.5,-1.1,1.1);
+  TProfile* os_fvtxn_c24 = new TProfile(Form("os_fvtxn_c24"),"",1,-0.5,0.5,-1.1,1.1);
+  TProfile* os_bbcs_c24_vs_cent = new TProfile(Form("os_bbcs_c24_vs_cent"),"",101,-0.5,100.5,-1.1,1.1);
+  TProfile* os_fvtxs_c24_vs_cent = new TProfile(Form("os_fvtxs_c24_vs_cent"),"",101,-0.5,100.5,-1.1,1.1);
+  TProfile* os_fvtxn_c24_vs_cent = new TProfile(Form("os_fvtxn_c24_vs_cent"),"",101,-0.5,100.5,-1.1,1.1);
+  TProfile* os_bbcs_c24_vs_bbcqs = new TProfile(Form("os_bbcs_c24_vs_bbcqs"),"",200,0,200,-1.1,1.1);
+  TProfile* os_fvtxs_c24_vs_bbcqs = new TProfile(Form("os_fvtxs_c24_vs_bbcqs"),"",200,0,200,-1.1,1.1);
+  TProfile* os_fvtxn_c24_vs_bbcqs = new TProfile(Form("os_fvtxn_c24_vs_bbcqs"),"",200,0,200,-1.1,1.1);
+  TProfile* os_bbcs_c24_vs_nfvtxs = new TProfile(Form("os_bbcs_c24_vs_nfvtxs"),"",1000,-0.5,999.5,-1.1,1.1);
+  TProfile* os_fvtxs_c24_vs_nfvtxs = new TProfile(Form("os_fvtxs_c24_vs_nfvtxs"),"",1000,-0.5,999.5,-1.1,1.1);
+  TProfile* os_fvtxn_c24_vs_nfvtxs = new TProfile(Form("os_fvtxn_c24_vs_nfvtxs"),"",1000,-0.5,999.5,-1.1,1.1);
+  TProfile* os_bbcs_d24_in_both = new TProfile(Form("os_bbcs_d24_in_both"),"",15,0.0,3.0,-1.1,1.1);
+  TProfile* os_fvtxs_d24_in_both = new TProfile(Form("os_fvtxs_d24_in_both"),"",15,0.0,3.0,-1.1,1.1);
+  TProfile* os_fvtxn_d24_in_both = new TProfile(Form("os_fvtxn_d24_in_both"),"",15,0.0,3.0,-1.1,1.1);
+  TProfile* os_bbcs_d24_out_both = new TProfile(Form("os_bbcs_d24_out_both"),"",15,0.0,3.0,-1.1,1.1);
+  TProfile* os_fvtxs_d24_out_both = new TProfile(Form("os_fvtxs_d24_out_both"),"",15,0.0,3.0,-1.1,1.1);
+  TProfile* os_fvtxn_d24_out_both = new TProfile(Form("os_fvtxn_d24_out_both"),"",15,0.0,3.0,-1.1,1.1);
 
-  TProfile* npc1_bbcs_v2 = new TProfile(Form("npc1_bbcs_v2"),Form("npc1_bbcs_v2"),61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_fvtxs_v2 = new TProfile(Form("npc1_fvtxs_v2"),Form("npc1_fvtxs_v2"),61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_fvtxn_v2 = new TProfile(Form("npc1_fvtxn_v2"),Form("npc1_fvtxn_v2"),61, -0.5, 60.5, -1.1, 1.1);
-  //TProfile* npc1_os_cnt_c22 = new TProfile(Form("npc1_os_cnt_c22"),Form("npc1_os_cnt_c22"),61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_bbcs_c22 = new TProfile(Form("npc1_os_bbcs_c22"),Form("npc1_os_bbcs_c22"),61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_fvtxs_c22 = new TProfile(Form("npc1_os_fvtxs_c22"),Form("npc1_os_fvtxs_c22"),61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_fvtxn_c22 = new TProfile(Form("npc1_os_fvtxn_c22"),Form("npc1_os_fvtxn_c22"),61, -0.5, 60.5, -1.1, 1.1);
+  TProfile* npc1_bbcs_v2 = new TProfile(Form("npc1_bbcs_v2"),"",61, -0.5, 60.5, -1.1, 1.1);
+  TProfile* npc1_fvtxs_v2 = new TProfile(Form("npc1_fvtxs_v2"),"",61, -0.5, 60.5, -1.1, 1.1);
+  TProfile* npc1_fvtxn_v2 = new TProfile(Form("npc1_fvtxn_v2"),"",61, -0.5, 60.5, -1.1, 1.1);
+  //TProfile* npc1_os_cnt_c22 = new TProfile(Form("npc1_os_cnt_c22"),"",61, -0.5, 60.5, -1.1, 1.1);
+  TProfile* npc1_os_bbcs_c22 = new TProfile(Form("npc1_os_bbcs_c22"),"",61, -0.5, 60.5, -1.1, 1.1);
+  TProfile* npc1_os_fvtxs_c22 = new TProfile(Form("npc1_os_fvtxs_c22"),"",61, -0.5, 60.5, -1.1, 1.1);
+  TProfile* npc1_os_fvtxn_c22 = new TProfile(Form("npc1_os_fvtxn_c22"),"",61, -0.5, 60.5, -1.1, 1.1);
   TProfile* npc1_os_fvtxs_tracks_c22 = new TProfile(Form("npc1_os_fvtxs_tracks_c22"),     "" ,61, -0.5, 60.5, -1.1, 1.1);
   TProfile* npc1_os_fvtxn_tracks_c22 = new TProfile(Form("npc1_os_fvtxn_tracks_c22"),     "" ,61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_cntbbcs_c22 = new TProfile(Form("npc1_os_cntbbcs_c22"),Form("npc1_os_cntbbcs_c22"),61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_cntfvtxs_c22 = new TProfile(Form("npc1_os_cntfvtxs_c22"),Form("npc1_os_cntfvtxs_c22"),61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_cntfvtxn_c22 = new TProfile(Form("npc1_os_cntfvtxn_c22"),Form("npc1_os_cntfvtxn_c22"),61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_bbcsfvtxs_c22 = new TProfile(Form("npc1_os_bbcsfvtxs_c22"),Form("npc1_os_bbcsfvtxs_c22"),61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_bbcsfvtxn_c22 = new TProfile(Form("npc1_os_bbcsfvtxn_c22"),Form("npc1_os_bbcsfvtxn_c22"),61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_fvtxsfvtxn_c22 = new TProfile(Form("npc1_os_fvtxsfvtxn_c22"),Form("npc1_os_fvtxsfvtxn_c22"),61, -0.5, 60.5, -1.1, 1.1);
+  TProfile* npc1_os_cntbbcs_c22 = new TProfile(Form("npc1_os_cntbbcs_c22"),"",61, -0.5, 60.5, -1.1, 1.1);
+  TProfile* npc1_os_cntfvtxs_c22 = new TProfile(Form("npc1_os_cntfvtxs_c22"),"",61, -0.5, 60.5, -1.1, 1.1);
+  TProfile* npc1_os_cntfvtxn_c22 = new TProfile(Form("npc1_os_cntfvtxn_c22"),"",61, -0.5, 60.5, -1.1, 1.1);
+  TProfile* npc1_os_bbcsfvtxs_c22 = new TProfile(Form("npc1_os_bbcsfvtxs_c22"),"",61, -0.5, 60.5, -1.1, 1.1);
+  TProfile* npc1_os_bbcsfvtxn_c22 = new TProfile(Form("npc1_os_bbcsfvtxn_c22"),"",61, -0.5, 60.5, -1.1, 1.1);
+  TProfile* npc1_os_fvtxsfvtxn_c22 = new TProfile(Form("npc1_os_fvtxsfvtxn_c22"),"",61, -0.5, 60.5, -1.1, 1.1);
   TProfile* npc1_os_fvtxsfvtxn_tracks_c22 = new TProfile(Form("npc1_os_fvtxsfvtxn_tracks_c22"),"",61, -0.5, 60.5, -1.1, 1.1);
 
-  TProfile* npc1_bbcs_v3 = new TProfile(Form("npc1_bbcs_v3"),Form("npc1_bbcs_v3"),61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_fvtxs_v3 = new TProfile(Form("npc1_fvtxs_v3"),Form("npc1_fvtxs_v3"),61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_fvtxn_v3 = new TProfile(Form("npc1_fvtxn_v3"),Form("npc1_fvtxn_v3"),61, -0.5, 60.5, -1.1, 1.1);
-  //TProfile* npc1_os_cnt_c32 = new TProfile(Form("npc1_os_cnt_c32"),Form("npc1_os_cnt_c32"),61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_bbcs_c32 = new TProfile(Form("npc1_os_bbcs_c32"),Form("npc1_os_bbcs_c32"),61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_fvtxs_c32 = new TProfile(Form("npc1_os_fvtxs_c32"),Form("npc1_os_fvtxs_c32"),61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_fvtxn_c32 = new TProfile(Form("npc1_os_fvtxn_c32"),Form("npc1_os_fvtxn_c32"),61, -0.5, 60.5, -1.1, 1.1);
+  TProfile* npc1_bbcs_v3 = new TProfile(Form("npc1_bbcs_v3"),"",61, -0.5, 60.5, -1.1, 1.1);
+  TProfile* npc1_fvtxs_v3 = new TProfile(Form("npc1_fvtxs_v3"),"",61, -0.5, 60.5, -1.1, 1.1);
+  TProfile* npc1_fvtxn_v3 = new TProfile(Form("npc1_fvtxn_v3"),"",61, -0.5, 60.5, -1.1, 1.1);
+  //TProfile* npc1_os_cnt_c32 = new TProfile(Form("npc1_os_cnt_c32"),"",61, -0.5, 60.5, -1.1, 1.1);
+  TProfile* npc1_os_bbcs_c32 = new TProfile(Form("npc1_os_bbcs_c32"),"",61, -0.5, 60.5, -1.1, 1.1);
+  TProfile* npc1_os_fvtxs_c32 = new TProfile(Form("npc1_os_fvtxs_c32"),"",61, -0.5, 60.5, -1.1, 1.1);
+  TProfile* npc1_os_fvtxn_c32 = new TProfile(Form("npc1_os_fvtxn_c32"),"",61, -0.5, 60.5, -1.1, 1.1);
   TProfile* npc1_os_fvtxs_tracks_c32 = new TProfile(Form("npc1_os_fvtxs_tracks_c32"),     "" ,61, -0.5, 60.5, -1.1, 1.1);
   TProfile* npc1_os_fvtxn_tracks_c32 = new TProfile(Form("npc1_os_fvtxn_tracks_c32"),     "" ,61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_cntbbcs_c32 = new TProfile(Form("npc1_os_cntbbcs_c32"),Form("npc1_os_cntbbcs_c32"),61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_cntfvtxs_c32 = new TProfile(Form("npc1_os_cntfvtxs_c32"),Form("npc1_os_cntfvtxs_c32"),61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_cntfvtxn_c32 = new TProfile(Form("npc1_os_cntfvtxn_c32"),Form("npc1_os_cntfvtxn_c32"),61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_bbcsfvtxs_c32 = new TProfile(Form("npc1_os_bbcsfvtxs_c32"),Form("npc1_os_bbcsfvtxs_c32"),61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_bbcsfvtxn_c32 = new TProfile(Form("npc1_os_bbcsfvtxn_c32"),Form("npc1_os_bbcsfvtxn_c32"),61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_fvtxsfvtxn_c32 = new TProfile(Form("npc1_os_fvtxsfvtxn_c32"),Form("npc1_os_fvtxsfvtxn_c32"),61, -0.5, 60.5, -1.1, 1.1);
+  TProfile* npc1_os_cntbbcs_c32 = new TProfile(Form("npc1_os_cntbbcs_c32"),"",61, -0.5, 60.5, -1.1, 1.1);
+  TProfile* npc1_os_cntfvtxs_c32 = new TProfile(Form("npc1_os_cntfvtxs_c32"),"",61, -0.5, 60.5, -1.1, 1.1);
+  TProfile* npc1_os_cntfvtxn_c32 = new TProfile(Form("npc1_os_cntfvtxn_c32"),"",61, -0.5, 60.5, -1.1, 1.1);
+  TProfile* npc1_os_bbcsfvtxs_c32 = new TProfile(Form("npc1_os_bbcsfvtxs_c32"),"",61, -0.5, 60.5, -1.1, 1.1);
+  TProfile* npc1_os_bbcsfvtxn_c32 = new TProfile(Form("npc1_os_bbcsfvtxn_c32"),"",61, -0.5, 60.5, -1.1, 1.1);
+  TProfile* npc1_os_fvtxsfvtxn_c32 = new TProfile(Form("npc1_os_fvtxsfvtxn_c32"),"",61, -0.5, 60.5, -1.1, 1.1);
   TProfile* npc1_os_fvtxsfvtxn_tracks_c32 = new TProfile(Form("npc1_os_fvtxsfvtxn_tracks_c32"),"",61, -0.5, 60.5, -1.1, 1.1);
 
-  TProfile* nfvtxt_bbcs_v2 = new TProfile(Form("nfvtxt_bbcs_v2"),Form("nfvtxt_bbcs_v2"),80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_fvtxs_v2 = new TProfile(Form("nfvtxt_fvtxs_v2"),Form("nfvtxt_fvtxs_v2"),80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_fvtxn_v2 = new TProfile(Form("nfvtxt_fvtxn_v2"),Form("nfvtxt_fvtxn_v2"),80, -0.5, 79.5, -1.1, 1.1);
-  //TProfile* nfvtxt_os_cnt_c22 = new TProfile(Form("nfvtxt_os_cnt_c22"),Form("nfvtxt_os_cnt_c22"),80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_bbcs_c22 = new TProfile(Form("nfvtxt_os_bbcs_c22"),Form("nfvtxt_os_bbcs_c22"),80, -0.5, 79.5, -1.1, 1.1);
-  //TProfile* nfvtxt_os_fvtxs_c22 = new TProfile(Form("nfvtxt_os_fvtxs_c22"),Form("nfvtxt_os_fvtxs_c22"),80, -0.5, 79.5, -1.1, 1.1);
-  //TProfile* nfvtxt_os_fvtxn_c22 = new TProfile(Form("nfvtxt_os_fvtxn_c22"),Form("nfvtxt_os_fvtxn_c22"),80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_cntbbcs_c22 = new TProfile(Form("nfvtxt_os_cntbbcs_c22"),Form("nfvtxt_os_cntbbcs_c22"),80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_cntfvtxs_c22 = new TProfile(Form("nfvtxt_os_cntfvtxs_c22"),Form("nfvtxt_os_cntfvtxs_c22"),80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_cntfvtxn_c22 = new TProfile(Form("nfvtxt_os_cntfvtxn_c22"),Form("nfvtxt_os_cntfvtxn_c22"),80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_bbcsfvtxs_c22 = new TProfile(Form("nfvtxt_os_bbcsfvtxs_c22"),Form("nfvtxt_os_bbcsfvtxs_c22"),80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_bbcsfvtxn_c22 = new TProfile(Form("nfvtxt_os_bbcsfvtxn_c22"),Form("nfvtxt_os_bbcsfvtxn_c22"),80, -0.5, 79.5, -1.1, 1.1);
+  TProfile* nfvtxt_bbcs_v2 = new TProfile(Form("nfvtxt_bbcs_v2"),"",80, -0.5, 79.5, -1.1, 1.1);
+  TProfile* nfvtxt_fvtxs_v2 = new TProfile(Form("nfvtxt_fvtxs_v2"),"",80, -0.5, 79.5, -1.1, 1.1);
+  TProfile* nfvtxt_fvtxn_v2 = new TProfile(Form("nfvtxt_fvtxn_v2"),"",80, -0.5, 79.5, -1.1, 1.1);
+  //TProfile* nfvtxt_os_cnt_c22 = new TProfile(Form("nfvtxt_os_cnt_c22"),"",80, -0.5, 79.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_bbcs_c22 = new TProfile(Form("nfvtxt_os_bbcs_c22"),"",80, -0.5, 79.5, -1.1, 1.1);
+  //TProfile* nfvtxt_os_fvtxs_c22 = new TProfile(Form("nfvtxt_os_fvtxs_c22"),"",80, -0.5, 79.5, -1.1, 1.1);
+  //TProfile* nfvtxt_os_fvtxn_c22 = new TProfile(Form("nfvtxt_os_fvtxn_c22"),"",80, -0.5, 79.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_cntbbcs_c22 = new TProfile(Form("nfvtxt_os_cntbbcs_c22"),"",80, -0.5, 79.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_cntfvtxs_c22 = new TProfile(Form("nfvtxt_os_cntfvtxs_c22"),"",80, -0.5, 79.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_cntfvtxn_c22 = new TProfile(Form("nfvtxt_os_cntfvtxn_c22"),"",80, -0.5, 79.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_bbcsfvtxs_c22 = new TProfile(Form("nfvtxt_os_bbcsfvtxs_c22"),"",80, -0.5, 79.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_bbcsfvtxn_c22 = new TProfile(Form("nfvtxt_os_bbcsfvtxn_c22"),"",80, -0.5, 79.5, -1.1, 1.1);
   /// ---
   TProfile* nfvtxt_os_fvtxs_c22 = new TProfile(Form("nfvtxt_os_fvtxs_c22"),"",80, -0.5, 79.5, -1.1, 1.1);
   TProfile* nfvtxt_os_fvtxn_c22 = new TProfile(Form("nfvtxt_os_fvtxn_c22"),"",80, -0.5, 79.5, -1.1, 1.1);
@@ -1226,74 +1228,74 @@ void flatten(int runNumber, int rp_recal_pass)
   TProfile* nfvtxc_os_fvtxsfvtxn_ce01_c24c = new TProfile(Form("nfvtxc_os_fvtxsfvtxn_ce01_c24c"),"",200, -0.5, 1999.5, -1.1, 1.1);
   TProfile* nfvtxc_os_fvtxsfvtxn_ce01_c24d = new TProfile(Form("nfvtxc_os_fvtxsfvtxn_ce01_c24d"),"",200, -0.5, 1999.5, -1.1, 1.1);
 
-  TProfile* nfvtxt_bbcs_v3 = new TProfile(Form("nfvtxt_bbcs_v3"),Form("nfvtxt_bbcs_v3"),80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_fvtxs_v3 = new TProfile(Form("nfvtxt_fvtxs_v3"),Form("nfvtxt_fvtxs_v3"),80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_fvtxn_v3 = new TProfile(Form("nfvtxt_fvtxn_v3"),Form("nfvtxt_fvtxn_v3"),80, -0.5, 79.5, -1.1, 1.1);
-  //TProfile* nfvtxt_os_cnt_c32 = new TProfile(Form("nfvtxt_os_cnt_c32"),Form("nfvtxt_os_cnt_c32"),80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_bbcs_c32 = new TProfile(Form("nfvtxt_os_bbcs_c32"),Form("nfvtxt_os_bbcs_c32"),80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_fvtxs_c32 = new TProfile(Form("nfvtxt_os_fvtxs_c32"),Form("nfvtxt_os_fvtxs_c32"),80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_fvtxn_c32 = new TProfile(Form("nfvtxt_os_fvtxn_c32"),Form("nfvtxt_os_fvtxn_c32"),80, -0.5, 79.5, -1.1, 1.1);
+  TProfile* nfvtxt_bbcs_v3 = new TProfile(Form("nfvtxt_bbcs_v3"),"",80, -0.5, 79.5, -1.1, 1.1);
+  TProfile* nfvtxt_fvtxs_v3 = new TProfile(Form("nfvtxt_fvtxs_v3"),"",80, -0.5, 79.5, -1.1, 1.1);
+  TProfile* nfvtxt_fvtxn_v3 = new TProfile(Form("nfvtxt_fvtxn_v3"),"",80, -0.5, 79.5, -1.1, 1.1);
+  //TProfile* nfvtxt_os_cnt_c32 = new TProfile(Form("nfvtxt_os_cnt_c32"),"",80, -0.5, 79.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_bbcs_c32 = new TProfile(Form("nfvtxt_os_bbcs_c32"),"",80, -0.5, 79.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_fvtxs_c32 = new TProfile(Form("nfvtxt_os_fvtxs_c32"),"",80, -0.5, 79.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_fvtxn_c32 = new TProfile(Form("nfvtxt_os_fvtxn_c32"),"",80, -0.5, 79.5, -1.1, 1.1);
   TProfile* nfvtxt_os_fvtxs_ce01_c32 = new TProfile(Form("nfvtxt_os_fvtxs_ce01_c32"),    "",80, -0.5, 79.5, -1.1, 1.1);
   TProfile* nfvtxt_os_fvtxn_ce01_c32 = new TProfile(Form("nfvtxt_os_fvtxn_ce01_c32"),    "",80, -0.5, 79.5, -1.1, 1.1);
   TProfile* nfvtxt_os_fvtxs_tracks_c32 = new TProfile(Form("nfvtxt_os_fvtxs_tracks_c32"),"",80, -0.5, 79.5, -1.1, 1.1);
   TProfile* nfvtxt_os_fvtxn_tracks_c32 = new TProfile(Form("nfvtxt_os_fvtxn_tracks_c32"),"",80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_cntbbcs_c32 = new TProfile(Form("nfvtxt_os_cntbbcs_c32"),Form("nfvtxt_os_cntbbcs_c32"),80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_cntfvtxs_c32 = new TProfile(Form("nfvtxt_os_cntfvtxs_c32"),Form("nfvtxt_os_cntfvtxs_c32"),80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_cntfvtxn_c32 = new TProfile(Form("nfvtxt_os_cntfvtxn_c32"),Form("nfvtxt_os_cntfvtxn_c32"),80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_bbcsfvtxs_c32 = new TProfile(Form("nfvtxt_os_bbcsfvtxs_c32"),Form("nfvtxt_os_bbcsfvtxs_c32"),80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_bbcsfvtxn_c32 = new TProfile(Form("nfvtxt_os_bbcsfvtxn_c32"),Form("nfvtxt_os_bbcsfvtxn_c32"),80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_fvtxsfvtxn_c32 = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_c32"),Form("nfvtxt_os_fvtxsfvtxn_c32"),80, -0.5, 79.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_cntbbcs_c32 = new TProfile(Form("nfvtxt_os_cntbbcs_c32"),"",80, -0.5, 79.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_cntfvtxs_c32 = new TProfile(Form("nfvtxt_os_cntfvtxs_c32"),"",80, -0.5, 79.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_cntfvtxn_c32 = new TProfile(Form("nfvtxt_os_cntfvtxn_c32"),"",80, -0.5, 79.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_bbcsfvtxs_c32 = new TProfile(Form("nfvtxt_os_bbcsfvtxs_c32"),"",80, -0.5, 79.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_bbcsfvtxn_c32 = new TProfile(Form("nfvtxt_os_bbcsfvtxn_c32"),"",80, -0.5, 79.5, -1.1, 1.1);
+  TProfile* nfvtxt_os_fvtxsfvtxn_c32 = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_c32"),"",80, -0.5, 79.5, -1.1, 1.1);
 
   // --- now we'll do some pseudorapidity depenence
-  TProfile* bbcs_v2eta_west_docalib = new TProfile(Form("bbcs_v2eta_west_docalib"),Form("bbcs_v2eta_west_docalib"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* bbcs_v2eta_east_docalib = new TProfile(Form("bbcs_v2eta_east_docalib"),Form("bbcs_v2eta_east_docalib"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* bbcs_v2eta_both_docalib = new TProfile(Form("bbcs_v2eta_both_docalib"),Form("bbcs_v2eta_both_docalib"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* fvtxs_v2eta_west_docalib = new TProfile(Form("fvtxs_v2eta_west_docalib"),Form("fvtxs_v2eta_west_docalib"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* fvtxs_v2eta_east_docalib = new TProfile(Form("fvtxs_v2eta_east_docalib"),Form("fvtxs_v2eta_east_docalib"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* fvtxs_v2eta_both_docalib = new TProfile(Form("fvtxs_v2eta_both_docalib"),Form("fvtxs_v2eta_both_docalib"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* fvtxn_v2eta_west_docalib = new TProfile(Form("fvtxn_v2eta_west_docalib"),Form("fvtxn_v2eta_west_docalib"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* fvtxn_v2eta_east_docalib = new TProfile(Form("fvtxn_v2eta_east_docalib"),Form("fvtxn_v2eta_east_docalib"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* fvtxn_v2eta_both_docalib = new TProfile(Form("fvtxn_v2eta_both_docalib"),Form("fvtxn_v2eta_both_docalib"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* bbcs_v3eta_west_docalib = new TProfile(Form("bbcs_v3eta_west_docalib"),Form("bbcs_v3eta_west_docalib"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* bbcs_v3eta_east_docalib = new TProfile(Form("bbcs_v3eta_east_docalib"),Form("bbcs_v3eta_east_docalib"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* bbcs_v3eta_both_docalib = new TProfile(Form("bbcs_v3eta_both_docalib"),Form("bbcs_v3eta_both_docalib"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* fvtxs_v3eta_west_docalib = new TProfile(Form("fvtxs_v3eta_west_docalib"),Form("fvtxs_v3eta_west_docalib"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* fvtxs_v3eta_east_docalib = new TProfile(Form("fvtxs_v3eta_east_docalib"),Form("fvtxs_v3eta_east_docalib"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* fvtxs_v3eta_both_docalib = new TProfile(Form("fvtxs_v3eta_both_docalib"),Form("fvtxs_v3eta_both_docalib"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* fvtxn_v3eta_west_docalib = new TProfile(Form("fvtxn_v3eta_west_docalib"),Form("fvtxn_v3eta_west_docalib"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* fvtxn_v3eta_east_docalib = new TProfile(Form("fvtxn_v3eta_east_docalib"),Form("fvtxn_v3eta_east_docalib"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* fvtxn_v3eta_both_docalib = new TProfile(Form("fvtxn_v3eta_both_docalib"),Form("fvtxn_v3eta_both_docalib"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* bbcs_v2eta_west_docalib = new TProfile(Form("bbcs_v2eta_west_docalib"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* bbcs_v2eta_east_docalib = new TProfile(Form("bbcs_v2eta_east_docalib"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* bbcs_v2eta_both_docalib = new TProfile(Form("bbcs_v2eta_both_docalib"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* fvtxs_v2eta_west_docalib = new TProfile(Form("fvtxs_v2eta_west_docalib"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* fvtxs_v2eta_east_docalib = new TProfile(Form("fvtxs_v2eta_east_docalib"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* fvtxs_v2eta_both_docalib = new TProfile(Form("fvtxs_v2eta_both_docalib"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* fvtxn_v2eta_west_docalib = new TProfile(Form("fvtxn_v2eta_west_docalib"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* fvtxn_v2eta_east_docalib = new TProfile(Form("fvtxn_v2eta_east_docalib"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* fvtxn_v2eta_both_docalib = new TProfile(Form("fvtxn_v2eta_both_docalib"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* bbcs_v3eta_west_docalib = new TProfile(Form("bbcs_v3eta_west_docalib"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* bbcs_v3eta_east_docalib = new TProfile(Form("bbcs_v3eta_east_docalib"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* bbcs_v3eta_both_docalib = new TProfile(Form("bbcs_v3eta_both_docalib"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* fvtxs_v3eta_west_docalib = new TProfile(Form("fvtxs_v3eta_west_docalib"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* fvtxs_v3eta_east_docalib = new TProfile(Form("fvtxs_v3eta_east_docalib"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* fvtxs_v3eta_both_docalib = new TProfile(Form("fvtxs_v3eta_both_docalib"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* fvtxn_v3eta_west_docalib = new TProfile(Form("fvtxn_v3eta_west_docalib"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* fvtxn_v3eta_east_docalib = new TProfile(Form("fvtxn_v3eta_east_docalib"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* fvtxn_v3eta_both_docalib = new TProfile(Form("fvtxn_v3eta_both_docalib"),"",32, -3.2, 3.2, -1.1, 1.1);
   // ---
-  TProfile* os_bbcs_d22eta_west = new TProfile(Form("os_bbcs_d22eta_west"),Form("os_bbcs_d22eta_west"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_bbcs_d22eta_east = new TProfile(Form("os_bbcs_d22eta_east"),Form("os_bbcs_d22eta_east"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_bbcs_d22eta_both = new TProfile(Form("os_bbcs_d22eta_both"),Form("os_bbcs_d22eta_both"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxs_d22eta_west = new TProfile(Form("os_fvtxs_d22eta_west"),Form("os_fvtxs_d22eta_west"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxs_d22eta_east = new TProfile(Form("os_fvtxs_d22eta_east"),Form("os_fvtxs_d22eta_east"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxs_d22eta_both = new TProfile(Form("os_fvtxs_d22eta_both"),Form("os_fvtxs_d22eta_both"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxn_d22eta_west = new TProfile(Form("os_fvtxn_d22eta_west"),Form("os_fvtxn_d22eta_west"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxn_d22eta_east = new TProfile(Form("os_fvtxn_d22eta_east"),Form("os_fvtxn_d22eta_east"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxn_d22eta_both = new TProfile(Form("os_fvtxn_d22eta_both"),Form("os_fvtxn_d22eta_both"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxs_tracks_d22eta_west = new TProfile(Form("os_fvtxs_tracks_d22eta_west"),Form("os_fvtxs_tracks_d22eta_west"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxs_tracks_d22eta_east = new TProfile(Form("os_fvtxs_tracks_d22eta_east"),Form("os_fvtxs_tracks_d22eta_east"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxs_tracks_d22eta_both = new TProfile(Form("os_fvtxs_tracks_d22eta_both"),Form("os_fvtxs_tracks_d22eta_both"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxn_tracks_d22eta_west = new TProfile(Form("os_fvtxn_tracks_d22eta_west"),Form("os_fvtxn_tracks_d22eta_west"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxn_tracks_d22eta_east = new TProfile(Form("os_fvtxn_tracks_d22eta_east"),Form("os_fvtxn_tracks_d22eta_east"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxn_tracks_d22eta_both = new TProfile(Form("os_fvtxn_tracks_d22eta_both"),Form("os_fvtxn_tracks_d22eta_both"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_bbcs_d32eta_west = new TProfile(Form("os_bbcs_d32eta_west"),Form("os_bbcs_d32eta_west"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_bbcs_d32eta_east = new TProfile(Form("os_bbcs_d32eta_east"),Form("os_bbcs_d32eta_east"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_bbcs_d32eta_both = new TProfile(Form("os_bbcs_d32eta_both"),Form("os_bbcs_d32eta_both"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxs_d32eta_west = new TProfile(Form("os_fvtxs_d32eta_west"),Form("os_fvtxs_d32eta_west"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxs_d32eta_east = new TProfile(Form("os_fvtxs_d32eta_east"),Form("os_fvtxs_d32eta_east"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxs_d32eta_both = new TProfile(Form("os_fvtxs_d32eta_both"),Form("os_fvtxs_d32eta_both"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxn_d32eta_west = new TProfile(Form("os_fvtxn_d32eta_west"),Form("os_fvtxn_d32eta_west"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxn_d32eta_east = new TProfile(Form("os_fvtxn_d32eta_east"),Form("os_fvtxn_d32eta_east"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxn_d32eta_both = new TProfile(Form("os_fvtxn_d32eta_both"),Form("os_fvtxn_d32eta_both"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxs_tracks_d32eta_west = new TProfile(Form("os_fvtxs_tracks_d32eta_west"),Form("os_fvtxs_tracks_d32eta_west"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxs_tracks_d32eta_east = new TProfile(Form("os_fvtxs_tracks_d32eta_east"),Form("os_fvtxs_tracks_d32eta_east"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxs_tracks_d32eta_both = new TProfile(Form("os_fvtxs_tracks_d32eta_both"),Form("os_fvtxs_tracks_d32eta_both"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxn_tracks_d32eta_west = new TProfile(Form("os_fvtxn_tracks_d32eta_west"),Form("os_fvtxn_tracks_d32eta_west"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxn_tracks_d32eta_east = new TProfile(Form("os_fvtxn_tracks_d32eta_east"),Form("os_fvtxn_tracks_d32eta_east"),32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxn_tracks_d32eta_both = new TProfile(Form("os_fvtxn_tracks_d32eta_both"),Form("os_fvtxn_tracks_d32eta_both"),32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_bbcs_d22eta_west = new TProfile(Form("os_bbcs_d22eta_west"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_bbcs_d22eta_east = new TProfile(Form("os_bbcs_d22eta_east"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_bbcs_d22eta_both = new TProfile(Form("os_bbcs_d22eta_both"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxs_d22eta_west = new TProfile(Form("os_fvtxs_d22eta_west"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxs_d22eta_east = new TProfile(Form("os_fvtxs_d22eta_east"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxs_d22eta_both = new TProfile(Form("os_fvtxs_d22eta_both"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxn_d22eta_west = new TProfile(Form("os_fvtxn_d22eta_west"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxn_d22eta_east = new TProfile(Form("os_fvtxn_d22eta_east"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxn_d22eta_both = new TProfile(Form("os_fvtxn_d22eta_both"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxs_tracks_d22eta_west = new TProfile(Form("os_fvtxs_tracks_d22eta_west"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxs_tracks_d22eta_east = new TProfile(Form("os_fvtxs_tracks_d22eta_east"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxs_tracks_d22eta_both = new TProfile(Form("os_fvtxs_tracks_d22eta_both"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxn_tracks_d22eta_west = new TProfile(Form("os_fvtxn_tracks_d22eta_west"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxn_tracks_d22eta_east = new TProfile(Form("os_fvtxn_tracks_d22eta_east"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxn_tracks_d22eta_both = new TProfile(Form("os_fvtxn_tracks_d22eta_both"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_bbcs_d32eta_west = new TProfile(Form("os_bbcs_d32eta_west"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_bbcs_d32eta_east = new TProfile(Form("os_bbcs_d32eta_east"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_bbcs_d32eta_both = new TProfile(Form("os_bbcs_d32eta_both"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxs_d32eta_west = new TProfile(Form("os_fvtxs_d32eta_west"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxs_d32eta_east = new TProfile(Form("os_fvtxs_d32eta_east"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxs_d32eta_both = new TProfile(Form("os_fvtxs_d32eta_both"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxn_d32eta_west = new TProfile(Form("os_fvtxn_d32eta_west"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxn_d32eta_east = new TProfile(Form("os_fvtxn_d32eta_east"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxn_d32eta_both = new TProfile(Form("os_fvtxn_d32eta_both"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxs_tracks_d32eta_west = new TProfile(Form("os_fvtxs_tracks_d32eta_west"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxs_tracks_d32eta_east = new TProfile(Form("os_fvtxs_tracks_d32eta_east"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxs_tracks_d32eta_both = new TProfile(Form("os_fvtxs_tracks_d32eta_both"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxn_tracks_d32eta_west = new TProfile(Form("os_fvtxn_tracks_d32eta_west"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxn_tracks_d32eta_east = new TProfile(Form("os_fvtxn_tracks_d32eta_east"),"",32, -3.2, 3.2, -1.1, 1.1);
+  TProfile* os_fvtxn_tracks_d32eta_both = new TProfile(Form("os_fvtxn_tracks_d32eta_both"),"",32, -3.2, 3.2, -1.1, 1.1);
 
   // ---------------------------------------------------------------------------------------------------------
 
