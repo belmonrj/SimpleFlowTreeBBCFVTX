@@ -11,6 +11,7 @@
 #include "TOAD.h"
 
 #include <TMath.h>
+#include <TString.h>
 
 #include <TLorentzVector.h>
 #include <TVector3.h>
@@ -51,6 +52,9 @@
 
 #include <PreviousEvent.h>
 
+#include "dAuBES_utils.h"
+
+
 // ------------------------
 #include "PHCentralTrack.h"
 #include "PHSnglCentralTrack.h"
@@ -79,6 +83,7 @@ SimpleFlowTreeBBCFVTX::SimpleFlowTreeBBCFVTX():
   _runlist_filename(""),
   _ntp_event(NULL),
   _ntp_cluster(NULL),
+  _utils(NULL),
   tmp_evt(0)
 {
   ResetEvent(NULL);
@@ -204,6 +209,9 @@ int SimpleFlowTreeBBCFVTX::Init(PHCompositeNode *topNode)
 
   }
 
+
+
+
   return EVENT_OK;
 }
 
@@ -236,6 +244,32 @@ int SimpleFlowTreeBBCFVTX::InitRun(PHCompositeNode *topNode)
     cout << "SvxRpSumXYReco::InitRun - restored constants are for " << TimeStp << endl;
     m_bbccalib->restore(TimeStp, BBCCALIBVERSION);
   }
+
+
+  // Setup the utility class
+  // This is done in init run so that the collision system can be
+  // determined from the run number
+  TString _collsys = "Run16dAu200"; // default to 200 GeV
+  // --- Run16dAu200
+  if ( runnumber >= 454774 && runnumber <= 455639 )
+    _collsys = "Run16dAu200";
+  // --- Run16dAu62
+  if ( runnumber >= 455792 && runnumber <= 456283 )
+    _collsys = "Run16dAu62";
+  // --- Run16dAu20
+  if ( runnumber >= 456652 && runnumber <= 457298 )
+    _collsys = "Run16dAu20";
+  // --- Run16dAu39
+  if ( runnumber >= 457634 && runnumber <= 458167 )
+    _collsys = "Run16dAu39";
+
+  // if it already exists, delete it and recreate it
+  if (_utils)
+    delete _utils;
+
+  _utils = new dAuBES_utils(_collsys, true);
+  // _utils->is_sim(_is_sim);
+
 
   return EVENT_OK;
 }
@@ -487,6 +521,17 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
 
   //---------------------------------------------------------//
   //
+  //         Make Event Selection
+  //
+  //---------------------------------------------------------//
+
+  if (!_utils->is_event_ok(topNode))
+    return EVENT_OK;
+
+
+
+  //---------------------------------------------------------//
+  //
   //         Reading in Global Event Information into Tree
   //
   //---------------------------------------------------------//
@@ -554,19 +599,10 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
 
   // cout << endl;
   // cout << "--- starting vertex checking ---" << endl;
-  float zvtx = -9999;
-  if ( runnumber >= 454744 && runnumber <= 456283 ) zvtx = bbc_z;
-  if ( runnumber >= 456652 && runnumber <= 458167 ) zvtx = FVTX_Z;
-  // if ( fabs(zvtx) > _z_vertex_range )
-  if ( !( fabs(bbc_z) < _z_vertex_range || fabs(FVTX_Z) < _z_vertex_range ) )
-  {
-    if ( _verbosity > 0 ) cout << "rejecting event because of bad vertex " << zvtx << " cm" << endl;
-    return ABORTEVENT;
-  }
-  else if ( _verbosity > 0 ) cout << "event accepted vertex is " << zvtx << " cm" << endl;
+  float zvtx = _utils->get_vrtx(topNode);
+
 
   if ( _verbosity > 1 ) cout << "FVTX vertex points: " << FVTX_X << " " << FVTX_Y << " " << FVTX_Z << endl;
-  // cout << "FVTX_Z is " << FVTX_Z << endl;
 
 
 
@@ -856,6 +892,10 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
 
       TFvtxCompactTrk* fvtx_trk = trk_ptr->get();
 
+      //-- Only write out good fvtx tracks
+      if ( !_utils->is_fvtx_track_ok(fvtx_trk, zvtx) )
+        continue;
+
       float the = fvtx_trk->get_fvtx_theta();
       float eta = fvtx_trk->get_fvtx_eta();
       float phi = fvtx_trk->get_fvtx_phi();
@@ -864,6 +904,18 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
       float fvtx_y      = fvtx_trk->get_fvtx_vtx().getY();
       float fvtx_z      = fvtx_trk->get_fvtx_vtx().getZ();
       int   nfhits      = (int)fvtx_trk->get_nhits();
+
+      // fix total momentum to 1.0 (for rotating due to beamtilt)
+      double px = 1.0 * TMath::Sin(the) * TMath::Cos(phi);
+      double py = 1.0 * TMath::Sin(the) * TMath::Sin(phi);
+      double pz = 1.0 * TMath::Cos(the);
+
+      // rotate based on beamtilt
+      px = _utils->rotate_x(px, pz);
+      pz = _utils->rotate_z(px, pz);
+      phi = TMath::ATan2(py, px);
+      the = TMath::ACos(pz / TMath::Sqrt(px * px + py * py + pz * pz));
+
 
       float vertex_z = bbc_z;
       if ( FVTX_Z > -999 ) vertex_z = FVTX_Z;
@@ -988,6 +1040,12 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
 
   //if(nsegments==0) return EVENT_OK; // BAD CUT
 
+  //---------------------------------------------------------//
+  //
+  //                 Get CNT Tracks
+  //
+  //---------------------------------------------------------//
+
   d_ntrk = 0;
   PHCentralTrack *ctrk = findNode::getClass<PHCentralTrack>(topNode, "PHCentralTrack");
   if ( ctrk )
@@ -1004,6 +1062,11 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
 
       PHSnglCentralTrack *strk = ctrk->get_track(itrk);
 
+      //-- Only write out good PHCentralTracks
+      if ( !_utils->is_cnt_track_ok(strk) )
+        continue;
+
+
       float mom         = strk->get_mom();
       float zed         = strk->get_zed();
       int quality       = strk->get_quality();
@@ -1015,8 +1078,13 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
       float py = strk->get_py();
       float pz = strk->get_pz();
 
-      int arm = 0;
-      if ( px > 0 ) arm = 1;
+      // int arm = 0;
+      // if ( px > 0 ) arm = 1;
+
+      // rotate based on beamtilt
+      px = _utils->rotate_x(px, pz);
+      pz = _utils->rotate_z(px, pz);
+
 
       // int charge = strk->get_charge();
 
@@ -1045,6 +1113,11 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
     d_ntrk = counter;
 
   } // check on track pointer
+
+  //---------------------------------------------------------//
+  //                 finished Get CNT Tracks
+  //---------------------------------------------------------//
+
 
   if ( _create_ttree ) _ntp_event->Fill();
 

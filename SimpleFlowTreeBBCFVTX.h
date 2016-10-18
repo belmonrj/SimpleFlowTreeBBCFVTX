@@ -41,6 +41,8 @@ class BbcCalib;
 class BbcGeo;
 class TVector3;
 class TLorentzVector;
+class dAuBES_utils;
+
 
 class SimpleFlowTreeBBCFVTX: public SubsysReco
 {
@@ -123,6 +125,9 @@ class SimpleFlowTreeBBCFVTX: public SubsysReco
   //BBC objects to recalibrate BBCs event plane
   BbcCalib *m_bbccalib;
   BbcGeo   *m_bbcgeo;
+
+  dAuBES_utils* _utils;            ///< Utilities class
+
 
   int tmp_evt;
   //ntp event variables
