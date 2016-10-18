@@ -2477,29 +2477,29 @@ void flatten(int runNumber, int rp_recal_pass)
       float os_fvtxs_ce0_qy2 = fvtxs_qy2[6] - os_fvtxs_ce0_qw*mean[icent][izvtx][1][fvtxs0_nw_index][1];
       float os_fvtxs_ce0_qx3 = fvtxs_qx3[6] - os_fvtxs_ce0_qw*mean[icent][izvtx][2][fvtxs0_nw_index][0];
       float os_fvtxs_ce0_qy3 = fvtxs_qy3[6] - os_fvtxs_ce0_qw*mean[icent][izvtx][2][fvtxs0_nw_index][1];
-      float os_fvtxs_ce0_qx4 = fvtxs_qx4[6] - os_fvtxs_ce0_qw*mean[icent][izvtx][3][fvtxs0_nw_index][0];
-      float os_fvtxs_ce0_qy4 = fvtxs_qy4[6] - os_fvtxs_ce0_qw*mean[icent][izvtx][3][fvtxs0_nw_index][1];
+      // float os_fvtxs_ce0_qx4 = fvtxs_qx4[6] - os_fvtxs_ce0_qw*mean[icent][izvtx][3][fvtxs0_nw_index][0];
+      // float os_fvtxs_ce0_qy4 = fvtxs_qy4[6] - os_fvtxs_ce0_qw*mean[icent][izvtx][3][fvtxs0_nw_index][1];
       float os_fvtxs_ce1_qw = fvtxs_qw[7];
       float os_fvtxs_ce1_qx2 = fvtxs_qx2[7] - os_fvtxs_ce1_qw*mean[icent][izvtx][1][fvtxs1_nw_index][0];
       float os_fvtxs_ce1_qy2 = fvtxs_qy2[7] - os_fvtxs_ce1_qw*mean[icent][izvtx][1][fvtxs1_nw_index][1];
       float os_fvtxs_ce1_qx3 = fvtxs_qx3[7] - os_fvtxs_ce1_qw*mean[icent][izvtx][2][fvtxs1_nw_index][0];
       float os_fvtxs_ce1_qy3 = fvtxs_qy3[7] - os_fvtxs_ce1_qw*mean[icent][izvtx][2][fvtxs1_nw_index][1];
-      float os_fvtxs_ce1_qx4 = fvtxs_qx4[7] - os_fvtxs_ce1_qw*mean[icent][izvtx][3][fvtxs1_nw_index][0];
-      float os_fvtxs_ce1_qy4 = fvtxs_qy4[7] - os_fvtxs_ce1_qw*mean[icent][izvtx][3][fvtxs1_nw_index][1];
+      // float os_fvtxs_ce1_qx4 = fvtxs_qx4[7] - os_fvtxs_ce1_qw*mean[icent][izvtx][3][fvtxs1_nw_index][0];
+      // float os_fvtxs_ce1_qy4 = fvtxs_qy4[7] - os_fvtxs_ce1_qw*mean[icent][izvtx][3][fvtxs1_nw_index][1];
       float os_fvtxn_ce0_qw = fvtxn_qw[6];
       float os_fvtxn_ce0_qx2 = fvtxn_qx2[6] - os_fvtxn_ce0_qw*mean[icent][izvtx][1][fvtxn0_nw_index][0];
       float os_fvtxn_ce0_qy2 = fvtxn_qy2[6] - os_fvtxn_ce0_qw*mean[icent][izvtx][1][fvtxn0_nw_index][1];
       float os_fvtxn_ce0_qx3 = fvtxn_qx3[6] - os_fvtxn_ce0_qw*mean[icent][izvtx][2][fvtxn0_nw_index][0];
       float os_fvtxn_ce0_qy3 = fvtxn_qy3[6] - os_fvtxn_ce0_qw*mean[icent][izvtx][2][fvtxn0_nw_index][1];
-      float os_fvtxn_ce0_qx4 = fvtxn_qx4[6] - os_fvtxn_ce0_qw*mean[icent][izvtx][3][fvtxn0_nw_index][0];
-      float os_fvtxn_ce0_qy4 = fvtxn_qy4[6] - os_fvtxn_ce0_qw*mean[icent][izvtx][3][fvtxn0_nw_index][1];
+      // float os_fvtxn_ce0_qx4 = fvtxn_qx4[6] - os_fvtxn_ce0_qw*mean[icent][izvtx][3][fvtxn0_nw_index][0];
+      // float os_fvtxn_ce0_qy4 = fvtxn_qy4[6] - os_fvtxn_ce0_qw*mean[icent][izvtx][3][fvtxn0_nw_index][1];
       float os_fvtxn_ce1_qw = fvtxn_qw[7];
       float os_fvtxn_ce1_qx2 = fvtxn_qx2[7] - os_fvtxn_ce1_qw*mean[icent][izvtx][1][fvtxn1_nw_index][0];
       float os_fvtxn_ce1_qy2 = fvtxn_qy2[7] - os_fvtxn_ce1_qw*mean[icent][izvtx][1][fvtxn1_nw_index][1];
       float os_fvtxn_ce1_qx3 = fvtxn_qx3[7] - os_fvtxn_ce1_qw*mean[icent][izvtx][2][fvtxn1_nw_index][0];
       float os_fvtxn_ce1_qy3 = fvtxn_qy3[7] - os_fvtxn_ce1_qw*mean[icent][izvtx][2][fvtxn1_nw_index][1];
-      float os_fvtxn_ce1_qx4 = fvtxn_qx4[7] - os_fvtxn_ce1_qw*mean[icent][izvtx][3][fvtxn1_nw_index][0];
-      float os_fvtxn_ce1_qy4 = fvtxn_qy4[7] - os_fvtxn_ce1_qw*mean[icent][izvtx][3][fvtxn1_nw_index][1];
+      // float os_fvtxn_ce1_qx4 = fvtxn_qx4[7] - os_fvtxn_ce1_qw*mean[icent][izvtx][3][fvtxn1_nw_index][0];
+      // float os_fvtxn_ce1_qy4 = fvtxn_qy4[7] - os_fvtxn_ce1_qw*mean[icent][izvtx][3][fvtxn1_nw_index][1];
       // ---
       float os_fvtxs_ce01_qq2 = ( os_fvtxs_ce0_qx2*os_fvtxs_ce1_qx2 + os_fvtxs_ce0_qy2*os_fvtxs_ce1_qy2 ) / ( os_fvtxs_ce0_qw*os_fvtxs_ce1_qw );
       float os_fvtxs_ce01_qq3 = ( os_fvtxs_ce0_qx3*os_fvtxs_ce1_qx3 + os_fvtxs_ce0_qy3*os_fvtxs_ce1_qy3 ) / ( os_fvtxs_ce0_qw*os_fvtxs_ce1_qw );
@@ -3295,6 +3295,12 @@ void flatten(int runNumber, int rp_recal_pass)
               nfvtxt_bbcs_v3->Fill(nfvtxt,cos(3.0*(phi_angle-os_bbc_psi3)));
               nfvtxt_fvtxs_v3->Fill(nfvtxt,cos(3.0*(phi_angle-os_fvtxs_psi3)));
               nfvtxt_fvtxn_v3->Fill(nfvtxt,cos(3.0*(phi_angle-os_fvtxn_psi3)));
+              nfvtxc_bbcs_v2->Fill(nfvtxc,cos(2.0*(phi_angle-os_bbc_psi2)));
+              nfvtxc_fvtxs_v2->Fill(nfvtxc,cos(2.0*(phi_angle-os_fvtxs_psi2)));
+              nfvtxc_fvtxn_v2->Fill(nfvtxc,cos(2.0*(phi_angle-os_fvtxn_psi2)));
+              nfvtxc_bbcs_v3->Fill(nfvtxc,cos(3.0*(phi_angle-os_bbc_psi3)));
+              nfvtxc_fvtxs_v3->Fill(nfvtxc,cos(3.0*(phi_angle-os_fvtxs_psi3)));
+              nfvtxc_fvtxn_v3->Fill(nfvtxc,cos(3.0*(phi_angle-os_fvtxn_psi3)));
 
               // ------------------------------------------------------------
 
