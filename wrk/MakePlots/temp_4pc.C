@@ -110,17 +110,22 @@ void dohandle(int handle)
   // --- combined tracks only
   two = (TProfile*)file->Get("nfvtxt_os_fvtxc_tracks_c22");
   four = (TProfile*)file->Get("nfvtxt_os_fvtxc_tracks_c24");
-  //docalc(two,four,(const char*)Form("tracks_combined_%d",handle));
+  docalc(two,four,(const char*)Form("tracks_combined_%d",handle));
 
   // --- south clusters only
-  two = (TProfile*)file->Get("nfvtxt_os_fvtxs_c22");
-  four = (TProfile*)file->Get("nfvtxt_os_fvtxs_c24");
+  two = (TProfile*)file->Get("nfvtxc_os_fvtxs_c22");
+  four = (TProfile*)file->Get("nfvtxc_os_fvtxs_c24");
   docalc(two,four,(const char*)Form("clusters_south_%d",handle));
 
   // --- north clusters only
-  two = (TProfile*)file->Get("nfvtxt_os_fvtxn_c22");
-  four = (TProfile*)file->Get("nfvtxt_os_fvtxn_c24");
+  two = (TProfile*)file->Get("nfvtxc_os_fvtxn_c22");
+  four = (TProfile*)file->Get("nfvtxc_os_fvtxn_c24");
   docalc(two,four,(const char*)Form("clusters_north_%d",handle));
+
+  // --- combined clusters only
+  two = (TProfile*)file->Get("nfvtxc_os_fvtxc_c22");
+  four = (TProfile*)file->Get("nfvtxc_os_fvtxc_c24");
+  docalc(two,four,(const char*)Form("clusters_combined_%d",handle));
 
 }
 
