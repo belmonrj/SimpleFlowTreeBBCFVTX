@@ -24,10 +24,10 @@ using std::vector;
 void InputData(vector<string> &indata);
 #endif
 
-void RunMyMacro(const char *modulemacro = "Run_TestmyMpcEx.C",  // your anataxi macro name
+void RunMyMacro(const char *modulemacro = "Run_SimpleFlowTreeBBCFVTX.C",  // your anataxi macro name
                 const char *outfile     = "output_test.root",   // <module_name>_<run>-<sequence>.root
                 const int nevnt         = 10000,               // number of events
-                const char *system      = "Run15pp200MPCPlusMBPro104") // system type
+                const char *system      = "Run16dAu200CAnVXMBP107") // system type
 {
 
   string cntfile = "NONE";
