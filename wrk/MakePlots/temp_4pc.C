@@ -1,6 +1,6 @@
 void dohandle(int);
 
-void docalc(TProfile*, TProfile*, const char*);
+void docalc(TProfile*, TProfile*, const char*, const char*, int);
 
 void temp_4pc()
 {
@@ -56,22 +56,22 @@ void dohandle(int handle)
   // --- type A clusters with 4 subevents (++--)
   two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c22");
   four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_ce01_c24a");
-  docalc(two,four,(const char*)Form("4sub_clusters_typeA_%d",handle));
+  //docalc(two,four,(const char*)Form("4sub_clusters_typeA_%d",handle));
 
   // --- type B clusters with 4 subevents (+-+-)
   two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c22");
   four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_ce01_c24b");
-  docalc(two,four,(const char*)Form("4sub_clusters_typeB_%d",handle));
+  //docalc(two,four,(const char*)Form("4sub_clusters_typeB_%d",handle));
 
   // --- type C clusters with 4 subevents (-+-+)
   two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c22");
   four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_ce01_c24c");
-  docalc(two,four,(const char*)Form("4sub_clusters_typeC_%d",handle));
+  //docalc(two,four,(const char*)Form("4sub_clusters_typeC_%d",handle));
 
   // --- type D clusters with 4 subevents (--++)
   two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c22");
   four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_ce01_c24d");
-  docalc(two,four,(const char*)Form("4sub_clusters_typeD_%d",handle));
+  //docalc(two,four,(const char*)Form("4sub_clusters_typeD_%d",handle));
 
   // ---
 
@@ -96,41 +96,47 @@ void dohandle(int handle)
   //docalc(two,four,(const char*)Form("mixed_tracks_typeD_%d",handle));
 
   // ---
+  // ---
+  // ---
 
   // --- south tracks only
   two = (TProfile*)file->Get("nfvtxt_os_fvtxs_tracks_c22");
   four = (TProfile*)file->Get("nfvtxt_os_fvtxs_tracks_c24");
-  docalc(two,four,(const char*)Form("tracks_south_%d",handle));
+  docalc(two,four,"tracks","south",handle);
 
   // --- north tracks only
   two = (TProfile*)file->Get("nfvtxt_os_fvtxn_tracks_c22");
   four = (TProfile*)file->Get("nfvtxt_os_fvtxn_tracks_c24");
-  docalc(two,four,(const char*)Form("tracks_north_%d",handle));
+  docalc(two,four,"tracks","north",handle);
 
   // --- combined tracks only
   two = (TProfile*)file->Get("nfvtxt_os_fvtxc_tracks_c22");
   four = (TProfile*)file->Get("nfvtxt_os_fvtxc_tracks_c24");
-  docalc(two,four,(const char*)Form("tracks_combined_%d",handle));
+  docalc(two,four,"tracks","combined",handle);
 
   // --- south clusters only
   two = (TProfile*)file->Get("nfvtxc_os_fvtxs_c22");
   four = (TProfile*)file->Get("nfvtxc_os_fvtxs_c24");
-  docalc(two,four,(const char*)Form("clusters_south_%d",handle));
+  docalc(two,four,"clusters","south",handle);
 
   // --- north clusters only
   two = (TProfile*)file->Get("nfvtxc_os_fvtxn_c22");
   four = (TProfile*)file->Get("nfvtxc_os_fvtxn_c24");
-  docalc(two,four,(const char*)Form("clusters_north_%d",handle));
+  docalc(two,four,"clusters","north",handle);
 
   // --- combined clusters only
   two = (TProfile*)file->Get("nfvtxc_os_fvtxc_c22");
   four = (TProfile*)file->Get("nfvtxc_os_fvtxc_c24");
-  docalc(two,four,(const char*)Form("clusters_combined_%d",handle));
+  docalc(two,four,"clusters","combined",handle);
+
 
 }
 
-void docalc(TProfile* tp1f_c22, TProfile* tp1f_c24a, const char* description)
+void docalc(TProfile* tp1f_c22, TProfile* tp1f_c24a, const char* type, const char* side, int handle)
 {
+
+  char description[100];
+  sprintf(description,"%s_%s_%d",type,side,handle);
 
   cout << "description is " << description << endl;
 
@@ -143,6 +149,7 @@ void docalc(TProfile* tp1f_c22, TProfile* tp1f_c24a, const char* description)
   th1d_c22a->SetMaximum(2e-05);
   th1d_c22a->SetMinimum(-4e-06);
   th1d_c22a->Draw();
+  th1d_c22a->GetXaxis()->SetTitle(Form("N_{%s}^{%s}",type,side));
   th1d_c24a->SetLineColor(kRed);
   th1d_c24a->Draw("same");
   TLegend leg1(0.68,0.68,0.88,0.88);
@@ -200,10 +207,10 @@ void docalc(TProfile* tp1f_c22, TProfile* tp1f_c24a, const char* description)
   th1d_vn_22->SetLineColor(kRed);
 
   th1d_v24a->Draw();
-  th1d_v24a->GetXaxis()->SetTitle("N_{tracks}^{FVTX}");
+  th1d_v24a->GetXaxis()->SetTitle(Form("N_{%s}^{%s}",type,side));
   th1d_v24a->GetYaxis()->SetTitle("v_{2}{}");
-  th1d_v24a->SetMaximum(0.1);
-  th1d_v24a->SetMinimum(-0.01);
+  th1d_v24a->SetMaximum(0.2);
+  th1d_v24a->SetMinimum(-0.02);
   TLegend leg(0.68,0.68,0.88,0.88);
   leg.AddEntry(th1d_vn_22,"v_{2}{2}","el");
   leg.AddEntry(th1d_v24a,"v_{2}{4}","el");
