@@ -1,6 +1,6 @@
 void dohandle(int);
 
-void docalc(TProfile*, TProfile*, const char*, const char*, int);
+void docalc(TProfile*, TProfile*, const char*, const char*, const char*, int);
 
 void temp_4pc()
 {
@@ -32,68 +32,38 @@ void dohandle(int handle)
   TProfile* four;
 
   // --- type A clusters (v^4 but no autocorrelation corrections)
-  two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c22");
-  four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c24a");
-  //docalc(two,four,(const char*)Form("mixed_clusters_typeA_%d",handle));
-
-  // --- type B clusters (v^8 ?  no idea what this really is, but it's not good)
-  two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c22");
-  four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c24b");
-  //docalc(two,four,(const char*)Form("mixed_clusters_typeB_%d",handle));
-
-  // --- type C clusters (v^6 ?  no idea what this really is, but it's not good)
-  two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c22");
-  four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c24c");
-  //docalc(two,four,(const char*)Form("mixed_clusters_typeC_%d",handle));
+  two = (TProfile*)file->Get("nfvtxc_os_fvtxsfvtxn_c22");
+  four = (TProfile*)file->Get("nfvtxc_os_fvtxsfvtxn_c24a");
+  docalc(two,four,"clusters","mixed","2subA",handle);
 
   // --- type D clusters (v^4 with autocorrelation corrections, but clusters cause problems for that)
-  two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c22");
-  four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c24d");
-  //docalc(two,four,(const char*)Form("mixed_clusters_typeD_%d",handle));
+  two = (TProfile*)file->Get("nfvtxc_os_fvtxsfvtxn_c22");
+  four = (TProfile*)file->Get("nfvtxc_os_fvtxsfvtxn_c24d");
+  docalc(two,four,"clusters","mixed","2subD",handle);
 
   // ---
 
   // --- type A clusters with 4 subevents (++--)
   two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c22");
   four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_ce01_c24a");
-  //docalc(two,four,(const char*)Form("4sub_clusters_typeA_%d",handle));
-
-  // --- type B clusters with 4 subevents (+-+-)
-  two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c22");
-  four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_ce01_c24b");
-  //docalc(two,four,(const char*)Form("4sub_clusters_typeB_%d",handle));
-
-  // --- type C clusters with 4 subevents (-+-+)
-  two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c22");
-  four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_ce01_c24c");
-  //docalc(two,four,(const char*)Form("4sub_clusters_typeC_%d",handle));
+  docalc(two,four,"clusters","mixed","4subA",handle);
 
   // --- type D clusters with 4 subevents (--++)
   two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c22");
   four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_ce01_c24d");
-  //docalc(two,four,(const char*)Form("4sub_clusters_typeD_%d",handle));
+  docalc(two,four,"clusters","mixed","4subD",handle);
 
   // ---
 
   // --- type A tracks (v^4 but no autocorrelation corrections)
   two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_tracks_c22");
   four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_tracks_c24a");
-  //docalc(two,four,(const char*)Form("mixed_tracks_typeA_%d",handle));
-
-  // --- type B tracks (v^8 ?  no idea what this really is, but it's not good)
-  two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_tracks_c22");
-  four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_tracks_c24b");
-  //docalc(two,four,(const char*)Form("mixed_tracks_typeB_%d",handle));
-
-  // --- type C tracks (v^6 ?  no idea what this really is, but it's not good)
-  two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_tracks_c22");
-  four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_tracks_c24c");
-  //docalc(two,four,(const char*)Form("mixed_tracks_typeC_%d",handle));
+  docalc(two,four,"tracks","mixed","2subA",handle);
 
   // --- type D tracks (v^4 with autocorrelation corrections, should be okay for tracks???)
   two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_tracks_c22");
   four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_tracks_c24d");
-  //docalc(two,four,(const char*)Form("mixed_tracks_typeD_%d",handle));
+  docalc(two,four,"tracks","mixed","2subD",handle);
 
   // ---
   // ---
@@ -102,41 +72,41 @@ void dohandle(int handle)
   // --- south tracks only
   two = (TProfile*)file->Get("nfvtxt_os_fvtxs_tracks_c22");
   four = (TProfile*)file->Get("nfvtxt_os_fvtxs_tracks_c24");
-  docalc(two,four,"tracks","south",handle);
+  docalc(two,four,"tracks","south","1sub",handle);
 
   // --- north tracks only
   two = (TProfile*)file->Get("nfvtxt_os_fvtxn_tracks_c22");
   four = (TProfile*)file->Get("nfvtxt_os_fvtxn_tracks_c24");
-  docalc(two,four,"tracks","north",handle);
+  docalc(two,four,"tracks","north","1sub",handle);
 
   // --- combined tracks only
   two = (TProfile*)file->Get("nfvtxt_os_fvtxc_tracks_c22");
   four = (TProfile*)file->Get("nfvtxt_os_fvtxc_tracks_c24");
-  docalc(two,four,"tracks","combined",handle);
+  docalc(two,four,"tracks","combined","1sub",handle);
 
   // --- south clusters only
   two = (TProfile*)file->Get("nfvtxc_os_fvtxs_c22");
   four = (TProfile*)file->Get("nfvtxc_os_fvtxs_c24");
-  docalc(two,four,"clusters","south",handle);
+  docalc(two,four,"clusters","south","1sub",handle);
 
   // --- north clusters only
   two = (TProfile*)file->Get("nfvtxc_os_fvtxn_c22");
   four = (TProfile*)file->Get("nfvtxc_os_fvtxn_c24");
-  docalc(two,four,"clusters","north",handle);
+  docalc(two,four,"clusters","north","1sub",handle);
 
   // --- combined clusters only
   two = (TProfile*)file->Get("nfvtxc_os_fvtxc_c22");
   four = (TProfile*)file->Get("nfvtxc_os_fvtxc_c24");
-  docalc(two,four,"clusters","combined",handle);
+  docalc(two,four,"clusters","combined","1sub",handle);
 
 
 }
 
-void docalc(TProfile* tp1f_c22, TProfile* tp1f_c24a, const char* type, const char* side, int handle)
+void docalc(TProfile* tp1f_c22, TProfile* tp1f_c24a, const char* type, const char* side, const char* detail, int handle)
 {
 
   char description[100];
-  sprintf(description,"%s_%s_%d",type,side,handle);
+  sprintf(description,"%s_%s_%s_%d",type,side,detail,handle);
 
   cout << "description is " << description << endl;
 
