@@ -2305,129 +2305,123 @@ void flatten(int runNumber, int rp_recal_pass)
           cout<<"from clusters: " <<fvtxs_qx2[0]<<" "<<fvtxs_qy2[0]<<" "<<fvtxs_qw[0]<<endl;
         }
 
-      for ( int ic = 0; ic < NMUL; ic++ )
+      for ( int ih = 1; ih < NHAR; ih++ )
 	{
-	  for (int ih=1; ih<NHAR; ih++)
+	  for (int id = 0; id < NDET; id++ )
 	    {
-	      for (int id=0; id<NDET; id++)
+	      if(sumxy[ih][id][2]>0)
 		{
-		  if(sumxy[ih][id][2]>0)
-		    {
-		      //float psi = atan2(sumxy[ih][id][1],sumxy[ih][id][0])/2.0;
-		      float psi = atan2(sumxy[ih][id][1],sumxy[ih][id][0])/float(ih+1);
-		      if ( DIAG ) cout<<"RAW: for id: "<<id<<" psi: "<<psi<<endl;
-		      psi_bf[ic][ih][id]->Fill(izvtx,psi);
-		    } // check on weight
-		} // detectors
-	    } // harmonics
-	} // centrality bins
+		  //float psi = atan2(sumxy[ih][id][1],sumxy[ih][id][0])/2.0;
+		  float psi = atan2(sumxy[ih][id][1],sumxy[ih][id][0])/float(ih+1);
+		  if ( DIAG ) cout<<"RAW: for id: "<<id<<" psi: "<<psi<<endl;
+		  psi_bf[ic][ih][id]->Fill(izvtx,psi);
+		} // check on weight
+	    } // detectors
+	} // harmonics
 
       //------------------------------------------------------------//
       //                Flattening iteration                        //
       //------------------------------------------------------------//
       //int icent = 0;
-      for ( int ic = 0; ic < NMUL; ic++ )
+      for ( int ih = 1; ih < NHAR; ih++ )
 	{
-	  for ( int ih = 1; ih < NHAR; ih++ )
+	  for( int id = 0; id < NDET; id++ )
 	    {
-	      for( int id = 0; id < NDET; id++ )
+	      if ( sumxy[ih][id][2] > 0.0 )
 		{
-		  if ( sumxy[ih][id][2] > 0.0 )
+		  sumxy[ih][id][3]=atan2(sumxy[ih][id][1],sumxy[ih][id][0])/(ih+1.0);
+		  if (rp_recal_pass>0) dis[icent][ih][id]->Fill(izvtx,sumxy[ih][id][3]*(ih+1.0));
+		}
+	      if ( sumxy[ih][id][2] > 0.0 ) // check on weight (x,y,w,psi)
+		{
+		  for ( int ib = 0; ib < 2; ib++ )
 		    {
-		      sumxy[ih][id][3]=atan2(sumxy[ih][id][1],sumxy[ih][id][0])/(ih+1.0);
-		      if (rp_recal_pass>0) dis[ic][ih][id]->Fill(izvtx,sumxy[ih][id][3]*(ih+1.0));
-		    }
-		  if ( sumxy[ih][id][2] > 0.0 ) // check on weight (x,y,w,psi)
-		    {
-		      for ( int ib = 0; ib < 2; ib++ )
-			{
-			  sumxy[ih][id][ib]/=sumxy[ih][id][2]; // normalize to the weight
-			  //if(ih==1 && id==0 && ib==0 && sumxy[ih][id][ib]>1) cout<<sumxy[ih][id][ib]<<endl;
-			  if ( rp_recal_pass > 0 )
-			    {
-			      ave[ic][izvtx][ih][id]->Fill(ib+0.0,sumxy[ih][id][ib]);
-			      if(id==0 && DIAG) cout<<"filled ave: "<<ih<<" "<<id<<" "<<ib<<" with: "<<sumxy[ih][id][ib]<<endl;
-			      if(ib==0) qx[ic][ih][id]->Fill(izvtx,sumxy[ih][id][0]);
-			      if(ib==1) qy[ic][ih][id]->Fill(izvtx,sumxy[ih][id][1]);
-			    } // pass > 0
-			  float sxy=sumxy[ih][id][ib];
-			  float mxy=mean[ic][izvtx][ih][id][ib]; // for recentering qx and qy (???)
-			  float wxy=widt[ic][izvtx][ih][id][ib]; // for recentering qx and qy (???)
-
-			  //if(ic==0 && izvtx==0 && ih==1 && id==0) cout<<ib<<" "<<sxy<<" "<<mxy<<" "<<wxy<<endl;
-			  sumxy[ih][id][ib]=(sxy-mxy)/wxy; // recentered by mean and renormalized to width
-			  if ( rp_recal_pass > 0 )
-			    {
-			      ave[ic][izvtx][ih][id]->Fill(ib+2.0,sumxy[ih][id][ib]);  // ib+2 to avoid overlap
-			      if(id==0 && DIAG) cout<<"filled ave2: "<<ih<<" "<<id<<" "<<ib<<" with: "<<sumxy[ih][id][ib]<<endl;
-			      if(ib==0) qx[ic][ih][id]->Fill(izvtx+NZPS,sumxy[ih][id][0]);
-			      if(ib==1) qy[ic][ih][id]->Fill(izvtx+NZPS,sumxy[ih][id][1]);
-			    } // pass > 0
-			} // if weight > 0
-
-		      sumxy[ih][id][3]=atan2(sumxy[ih][id][1],sumxy[ih][id][0])/(ih+1.0);
+		      sumxy[ih][id][ib]/=sumxy[ih][id][2]; // normalize to the weight
+		      //if(ih==1 && id==0 && ib==0 && sumxy[ih][id][ib]>1) cout<<sumxy[ih][id][ib]<<endl;
 		      if ( rp_recal_pass > 0 )
 			{
-			  // fill histogram with psi calculated with recenter q vectors(??)
-			  dis[ic][ih][id]->Fill(izvtx+NZPS,sumxy[ih][id][3]*(ih+1.0));
-			  // my own simpler version of the above histogram
-			  psi_mf[ic][ih][id]->Fill(izvtx,sumxy[ih][id][3]);
-			}
+			  ave[icent][izvtx][ih][id]->Fill(ib+0.0,sumxy[ih][id][ib]);
+			  if(id==0 && DIAG) cout<<"filled ave: "<<ih<<" "<<id<<" "<<ib<<" with: "<<sumxy[ih][id][ib]<<endl;
+			  if(ib==0) qx[icent][ih][id]->Fill(izvtx,sumxy[ih][id][0]);
+			  if(ib==1) qy[icent][ih][id]->Fill(izvtx,sumxy[ih][id][1]);
+			} // pass > 0
+		      float sxy=sumxy[ih][id][ib];
+		      float mxy=mean[icent][izvtx][ih][id][ib]; // for recentering qx and qy (???)
+		      float wxy=widt[icent][izvtx][ih][id][ib]; // for recentering qx and qy (???)
 
-		      float psi = sumxy[ih][id][3]*(ih+1.0);
-		      if ( ih == 1 && id == 0 && DIAG )  cout<<"psi-1 bbc: "<<psi<<endl;
-		      float dp = 0.0;
-		      // --- flattening part, fourier components of psi distribution
-		      for (int io=0; io<NORD; io++)
+		      //if(ic==0 && izvtx==0 && ih==1 && id==0) cout<<ib<<" "<<sxy<<" "<<mxy<<" "<<wxy<<endl;
+		      sumxy[ih][id][ib]=(sxy-mxy)/wxy; // recentered by mean and renormalized to width
+		      if ( rp_recal_pass > 0 )
 			{
-			  float cc=cos((io+1.0)*psi);
-			  float ss=sin((io+1.0)*psi);
-			  // first set of fourier components of psi
-			  if (rp_recal_pass>0) flt[ic][izvtx][ih][id]->Fill(io+0.0,cc);
-			  if (rp_recal_pass>0) flt[ic][izvtx][ih][id]->Fill(io+NORD,ss);
-			  // --- four means fourier
-			  float aa=four[ic][izvtx][ih][id][0][io]; // mean cos
-			  float bb=four[ic][izvtx][ih][id][1][io]; // mean sin
-			  // dp is offset to psi, aa and bb are zero in first pass, non zero later
-			  dp+=(aa*ss-bb*cc)*2.0/(io+1.0); // ( trig identity cos(A+B) = cosAsinB - cosBsinA )
-			} // orders
-		      psi += dp; // shift psi by...
-		      psi = atan2(sin(psi),cos(psi)); // trick to readjust the range
-		      if ( ih == 1 && id == 0 && DIAG )  cout<<"psi-2 bbc: "<<psi<<endl;
-		      for (int io=0; io<NORD; io++)
-			{
-			  float cc=cos((io+1.0)*psi);
-			  float ss=sin((io+1.0)*psi);
-			  // --- fourier components of modified psi
-			  if (rp_recal_pass>0) flt[ic][izvtx][ih][id]->Fill(io+NORD*2.0,cc);
-			  if (rp_recal_pass>0) flt[ic][izvtx][ih][id]->Fill(io+NORD*3.0,ss);
-			}
-		      sumxy[ih][id][3]=psi/(ih+1.0);
-		      if ( rp_recal_pass > 0 ) dis[ic][ih][id]->Fill(izvtx+NZPS*2.0,sumxy[ih][id][3]*(ih+1.0));
-		    } // end if weight > 0
-		  else
+			  ave[icent][izvtx][ih][id]->Fill(ib+2.0,sumxy[ih][id][ib]);  // ib+2 to avoid overlap
+			  if(id==0 && DIAG) cout<<"filled ave2: "<<ih<<" "<<id<<" "<<ib<<" with: "<<sumxy[ih][id][ib]<<endl;
+			  if(ib==0) qx[icent][ih][id]->Fill(izvtx+NZPS,sumxy[ih][id][0]);
+			  if(ib==1) qy[icent][ih][id]->Fill(izvtx+NZPS,sumxy[ih][id][1]);
+			} // pass > 0
+		    } // if weight > 0
+
+		  sumxy[ih][id][3]=atan2(sumxy[ih][id][1],sumxy[ih][id][0])/(ih+1.0);
+		  if ( rp_recal_pass > 0 )
 		    {
-		      sumxy[ih][id][3]=-9999.9;
-		    } // otherwise set psi to some crazy number
-		} // detectors
-	    } // harmonics
-	} // centrality bins
+		      // fill histogram with psi calculated with recenter q vectors(??)
+		      dis[icent][ih][id]->Fill(izvtx+NZPS,sumxy[ih][id][3]*(ih+1.0));
+		      // my own simpler version of the above histogram
+		      psi_mf[icent][ih][id]->Fill(izvtx,sumxy[ih][id][3]);
+		    }
+
+		  float psi = sumxy[ih][id][3]*(ih+1.0);
+		  if ( ih == 1 && id == 0 && DIAG )  cout<<"psi-1 bbc: "<<psi<<endl;
+		  float dp = 0.0;
+		  // --- flattening part, fourier components of psi distribution
+		  for (int io=0; io<NORD; io++)
+		    {
+		      float cc=cos((io+1.0)*psi);
+		      float ss=sin((io+1.0)*psi);
+		      // first set of fourier components of psi
+		      if (rp_recal_pass>0) flt[icent][izvtx][ih][id]->Fill(io+0.0,cc);
+		      if (rp_recal_pass>0) flt[icent][izvtx][ih][id]->Fill(io+NORD,ss);
+		      // --- four means fourier
+		      float aa=four[icent][izvtx][ih][id][0][io]; // mean cos
+		      float bb=four[icent][izvtx][ih][id][1][io]; // mean sin
+		      // dp is offset to psi, aa and bb are zero in first pass, non zero later
+		      dp+=(aa*ss-bb*cc)*2.0/(io+1.0); // ( trig identity cos(A+B) = cosAsinB - cosBsinA )
+		    } // orders
+		  psi += dp; // shift psi by...
+		  psi = atan2(sin(psi),cos(psi)); // trick to readjust the range
+		  if ( ih == 1 && id == 0 && DIAG )  cout<<"psi-2 bbc: "<<psi<<endl;
+		  for (int io=0; io<NORD; io++)
+		    {
+		      float cc=cos((io+1.0)*psi);
+		      float ss=sin((io+1.0)*psi);
+		      // --- fourier components of modified psi
+		      if (rp_recal_pass>0) flt[icent][izvtx][ih][id]->Fill(io+NORD*2.0,cc);
+		      if (rp_recal_pass>0) flt[icent][izvtx][ih][id]->Fill(io+NORD*3.0,ss);
+		    }
+		  sumxy[ih][id][3]=psi/(ih+1.0);
+		  if ( rp_recal_pass > 0 ) dis[icent][ih][id]->Fill(izvtx+NZPS*2.0,sumxy[ih][id][3]*(ih+1.0));
+		} // end if weight > 0
+	      else
+		{
+		  sumxy[ih][id][3]=-9999.9;
+		} // otherwise set psi to some crazy number
+	    } // detectors
+	} // harmonics
+
+
+
       if ( DIAG ) cout<<"bbc_rp2: "<<sumxy[1][0][3]<<endl;
 
-      for ( int ic = 0; ic < NMUL; ic++ )
+      for ( int ih = 1; ih < NHAR; ih++ )
 	{
-	  for ( int ih = 1; ih < NHAR; ih++ )
+	  for ( int id = 0; id < NDET; id++ )
 	    {
-	      for ( int id = 0; id < NDET; id++ )
+	      if ( sumxy[ih][id][2] > 0 )
 		{
-		  if ( sumxy[ih][id][2] > 0 )
-		    {
-		      psi_af[ic][ih][id]->Fill(izvtx,sumxy[ih][id][3]);
-		      if ( DIAG ) cout<<"CORR: for id: "<<id<<" psi: "<<sumxy[ih][id][3]<<endl;
-		    } // check on weight
-		} // detectors
-	    } // harmonics
-	} // centrality bins
+		  psi_af[ic][ih][id]->Fill(izvtx,sumxy[ih][id][3]);
+		  if ( DIAG ) cout<<"CORR: for id: "<<id<<" psi: "<<sumxy[ih][id][3]<<endl;
+		} // check on weight
+	    } // detectors
+	} // harmonics
       // ---
       // --- now going to calculate v2
       // ---
@@ -3791,7 +3785,7 @@ void flatten(int runNumber, int rp_recal_pass)
   cout << "Events with vertex disagreement = " << bad_vertex_counter << " (" << (float)bad_vertex_counter/(float)event_counter << ")" << endl;
   cout << "Gap cuts applied " << gapcut_counter << "/" << cluster_counter << " (" << (float)gapcut_counter/(float)cluster_counter << ")" << endl;
 
-  if(rp_recal_pass<3 && rp_recal_pass>0)
+  if ( rp_recal_pass < 3 && rp_recal_pass > 0 )
     {
       // --- previous pass calib file is named above, rename it here
       sprintf(calibfile,"output/flattening_data/flattening_%d_%d.dat",runNumber,rp_recal_pass);
