@@ -1555,16 +1555,41 @@ void flatten(int runNumber, int rp_recal_pass)
           continue;
         }
 
+      int icent = -1;
       if ( centrality > -1 )
         {
           // if ( energyflag == 200 && centrality > 5  ) continue;
           // if ( energyflag == 62  && centrality > 10 ) continue;
           // if ( energyflag == 20  && centrality > 20 ) continue;
           // if ( energyflag == 39  && centrality > 20 ) continue;
-          if ( energyflag == 200 && centrality > 5  ) continue;
-          if ( energyflag == 62  && centrality > 5  ) continue;
-          if ( energyflag == 20  && centrality > 20 ) continue;
-          if ( energyflag == 39  && centrality > 10 ) continue;
+          // if ( energyflag == 200 && centrality > 5  ) icent = 0;
+          // if ( energyflag == 62  && centrality > 5  ) icent = 0;
+          // if ( energyflag == 20  && centrality > 20 ) icent = 0;
+          // if ( energyflag == 39  && centrality > 10 ) icent = 0;
+          if ( energyflag == 200 || energyflag == 62 )
+	    {
+	      if ( centrality <= 5 ) icent = 0;
+	      else if ( centrality <= 10 ) icent = 1;
+	      else if ( centrality <= 20 ) icent = 2;
+	      else if ( centrality <= 40 ) icent = 3;
+	      else if ( centrality <= 60 ) icent = 4;
+	      else if ( centrality <= 88 ) icent = 5;
+	    }
+          if ( energyflag == 39  )
+	    {
+	      if ( centrality <= 10 ) icent = 0;
+	      else if ( centrality <= 20 ) icent = 1;
+	      else if ( centrality <= 40 ) icent = 2;
+	      else if ( centrality <= 60 ) icent = 3;
+	      else if ( centrality <= 88 ) icent = 4;
+	    }
+          if ( energyflag == 39  )
+	    {
+	      if ( centrality <= 20 ) icent = 0;
+	      else if ( centrality <= 40 ) icent = 1;
+	      else if ( centrality <= 60 ) icent = 2;
+	      else if ( centrality <= 88 ) icent = 3;
+	    }
         }
 
       double ZVTX = -9999;
