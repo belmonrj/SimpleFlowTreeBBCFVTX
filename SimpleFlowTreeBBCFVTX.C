@@ -95,6 +95,7 @@ SimpleFlowTreeBBCFVTX::~SimpleFlowTreeBBCFVTX()
 {
   delete m_bbccalib;
   delete m_bbcgeo;
+  if ( _utils ) delete _utils;
 }
 
 
@@ -225,10 +226,7 @@ int SimpleFlowTreeBBCFVTX::InitRun(PHCompositeNode *topNode)
   if ( runnumber >= 457634 && runnumber <= 458167 )
     _collsys = "Run16dAu39";
 
-  // if it already exists, delete it and recreate it
-  if (_utils)
-    delete _utils;
-
+  // --- delete this pointer in EndRun
   _utils = new dAuBES_utils(_collsys, true);
   // _utils->is_sim(_is_sim);
 
@@ -858,6 +856,11 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
 
 
 
+int SimpleFlowTreeBBCFVTX::EndRun(PHCompositeNode *topNode)
+{
+  if ( _utils ) delete _utils;
+  return EVENT_OK;
+}
 
 int SimpleFlowTreeBBCFVTX::End(PHCompositeNode *topNode)
 {

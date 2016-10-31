@@ -48,6 +48,7 @@ class SimpleFlowTreeBBCFVTX: public SubsysReco
   int  process_event(PHCompositeNode *topNode);
   int  ResetEvent   (PHCompositeNode *topNode);
   int  End          (PHCompositeNode *topNode);
+  int  EndRun       (PHCompositeNode *topNode);
   void Verbosity    (int verbosity) {_verbosity = verbosity;}
 
   /// Single particle ntuple output...
