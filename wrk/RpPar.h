@@ -32,7 +32,7 @@ static const int NDET = 30; // number of detectors (see below)
 // 28 -- FVTXN tracks inner
 // 29 -- FVTXN tracks outer
 static const int NHAR = 4; // number of harmonics (1, 2, 3)
-static const int NMUL = 1; // Multiplicity bins (centrality selections)
+static const int NMUL = 6; // centrality bins 0-5, 5-10, 10-20, 20-40, 40-60, 60-88
 static const int NZPS = 10; // number of z-vertex bins for flattening (very important for FVTX, maybe not so important for BBC)
 static const int NORD = 12; // number of orders for fourier fit of Psi2 distribution (sin and cos?)
 // --- all below here are irrelevant for now?
