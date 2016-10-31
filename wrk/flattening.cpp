@@ -2105,8 +2105,9 @@ void flatten(int runNumber, int rp_recal_pass)
       // --- first fvtx track loop
       for ( int i = 0; i < nfvtxt; ++i )
 	{
-	  float phi = fphi[i]; // no need to deal with rotation
-	  float eta = feta[i]; // no need to deal with rotation
+	  // --- rotation now done in trees
+	  float phi = fphi[i];
+	  float eta = feta[i];
 
 	  bool is_south = ( eta < 0 );
 	  bool is_south_inner = ( eta > -2 && eta < 0 );
@@ -3078,17 +3079,10 @@ void flatten(int runNumber, int rp_recal_pass)
               // --- finished with nodetree part, now doing docalib part
               // -------------------------------------------------------
 
-
-
-              // --- rotation on single particles here
-              px = pz*sin(-beam_angle) + px*cos(-beam_angle);
-              float phi_angle = TMath::ATan2(py,px);
-              float pt_angle = sqrt(px*px+py*py);
-
-              if ( pt_angle < 0.2 || pt_angle > 5.0 ) continue; // pt cut added 2016-06-30
-
-              float pr = sqrt(px*px+py*py);
-              double theta = atan2(pr,pz);
+	      // --- rotation now done in trees
+              float phi_angle = phi0;
+              float pt_angle = pt;
+              double theta = atan2(pt,pz);
               double eta = -log(tan(theta/2));
               //cout << "pz is " << pz << " and eta is " << eta << endl;
 
