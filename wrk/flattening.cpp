@@ -774,13 +774,20 @@ void flatten(int runNumber, int rp_recal_pass)
   TProfile* fvtxs_v2_both_docalib_cent[NMUL];
   TProfile* bbcs_v2eta_both_docalib_cent[NMUL];
   TProfile* fvtxs_v2eta_both_docalib_cent[NMUL];
+  TProfile* tp1f_reso2_BBC_CNT_cent[NMUL];
+  TProfile* tp1f_reso2_BBC_FVTX_cent[NMUL];
+  TProfile* tp1f_reso2_CNT_FVTX_cent[NMUL];
   for ( int ic = 0; ic < NMUL; ++ic )
     {
       bbcs_v2_both_docalib_cent[ic] = new TProfile(Form("bbcs_v2_both_docalib_cent%d",ic),"",15, 0.0, 3.0, -1.1, 1.1);
       fvtxs_v2_both_docalib_cent[ic] = new TProfile(Form("fvtxs_v2_both_docalib_cent%d",ic),"",15, 0.0, 3.0, -1.1, 1.1);
       bbcs_v2eta_both_docalib_cent[ic] = new TProfile(Form("bbcs_v2eta_both_docalib_cent%d",ic),"",32, -3.2, 3.2, -1.1, 1.1);
       fvtxs_v2eta_both_docalib_cent[ic] = new TProfile(Form("fvtxs_v2eta_both_docalib_cent%d",ic),"",32, -3.2, 3.2, -1.1, 1.1);
+      tp1f_reso2_BBC_CNT_cent[ic] = new TProfile(Form("tp1f_reso2_BBC_CNT_cent%d",ic),"",1,-0.5,0.5,-1e6,1e6,"");
+      tp1f_reso2_BBC_FVTX_cent[ic] = new TProfile(Form("tp1f_reso2_BBC_FVTX_cent%d",ic),"",1,-0.5,0.5,-1e6,1e6,"");
+      tp1f_reso2_CNT_FVTX_cent[ic] = new TProfile(Form("tp1f_reso2_CNT_FVTX_cent%d",ic),"",1,-0.5,0.5,-1e6,1e6,"");
     }
+
 
 
   TProfile* bbcs_v2_west_docalib = new TProfile(Form("bbcs_v2_west_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
@@ -3014,7 +3021,10 @@ void flatten(int runNumber, int rp_recal_pass)
       // ---
       // --- resolution histograms
       // ---
+      tp1f_reso2_BBC_FVTX_cent[icent]->Fill(0.0,cos(2*(bbc_south_psi2_docalib-fvtx_south_psi2_docalib)));
 
+      if ( icent == 0 )
+      {
       // --- BBC and FVTX south
       tp1f_reso2_BBC_FVTX->Fill(0.0,cos(2*(bbc_south_psi2_docalib-fvtx_south_psi2_docalib)));
       tp1f_reso3_BBC_FVTX->Fill(0.0,cos(3*(bbc_south_psi3_docalib-fvtx_south_psi3_docalib)));
@@ -3092,7 +3102,7 @@ void flatten(int runNumber, int rp_recal_pass)
       tp1f_nw_reso42_BBC_FVTX->Fill(0.0,cos(4*(bbc_south_psi2_dcnw-fvtx_south_psi2_dcnw)));
       tp1f_nw_reso42_BBC_FVTXN->Fill(0.0,cos(4*(bbc_south_psi2_dcnw-fvtx_north_psi2_dcnw)));
       tp1f_nw_reso42_FVTXS_FVTXN->Fill(0.0,cos(4*(fvtx_south_psi2_dcnw-fvtx_north_psi2_dcnw)));
-
+      } // check on most central bin
       // ----------------------------------------------------------------------------
 
       //start of vtx stand alone track loop
@@ -3423,6 +3433,7 @@ void flatten(int runNumber, int rp_recal_pass)
                       double cosbbc_dphi2_docalib = TMath::Cos(2*bbc_dphi2_docalib);
 		      bbcs_v2_both_docalib_cent[icent]->Fill(pt_angle,cosbbc_dphi2_docalib);
                       bbcs_v2eta_both_docalib_cent[icent]->Fill(eta,cosbbc_dphi2_docalib);
+                      tp1f_reso2_BBC_CNT_cent[icent]->Fill(0.0,cosbbc_dphi2_docalib);
 		      if ( icent == 0 )
 		      {
                       bbcs_v2_both_docalib->Fill(pt_angle,cosbbc_dphi2_docalib);
@@ -3502,6 +3513,7 @@ void flatten(int runNumber, int rp_recal_pass)
                   double cosfvtx_dphi2_docalib = TMath::Cos(2*fvtx_dphi2_docalib);
 		  fvtxs_v2_both_docalib_cent[icent]->Fill(pt_angle,cosfvtx_dphi2_docalib);
                   fvtxs_v2eta_both_docalib_cent[icent]->Fill(eta,cosfvtx_dphi2_docalib);
+                  tp1f_reso2_CNT_FVTX_cent[icent]->Fill(0.0,cosfvtx_dphi2_docalib);
 		  if ( icent == 0 )
 		  {
                   fvtxs_v2_both_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
