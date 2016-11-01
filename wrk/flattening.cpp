@@ -770,6 +770,15 @@ void flatten(int runNumber, int rp_recal_pass)
 
   // --- docalib
 
+  TProfile* bbcs_v2_both_docalib_cent[NMUL];
+  TProfile* fvtxs_v2_both_docalib_cent[NMUL];
+  for ( int ic = 0; ic < NMUL; ++ic )
+    {
+      bbcs_v2_both_docalib_cent[ic] = new TProfile(Form("bbcs_v2_both_docalib_cent%d",ic),"",15, 0.0, 3.0, -1.1, 1.1);
+      fvtxs_v2_both_docalib_cent[ic] = new TProfile(Form("fvtxs_v2_both_docalib_cent%d",ic),"",15, 0.0, 3.0, -1.1, 1.1);
+    }
+
+
   TProfile* bbcs_v2_west_docalib = new TProfile(Form("bbcs_v2_west_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
   TProfile* bbcs_v2_east_docalib = new TProfile(Form("bbcs_v2_east_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
   TProfile* bbcs_v2_both_docalib = new TProfile(Form("bbcs_v2_both_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
@@ -1558,14 +1567,6 @@ void flatten(int runNumber, int rp_recal_pass)
       int icent = -1;
       if ( centrality > -1 )
         {
-          // if ( energyflag == 200 && centrality > 5  ) continue;
-          // if ( energyflag == 62  && centrality > 10 ) continue;
-          // if ( energyflag == 20  && centrality > 20 ) continue;
-          // if ( energyflag == 39  && centrality > 20 ) continue;
-          // if ( energyflag == 200 && centrality > 5  ) icent = 0;
-          // if ( energyflag == 62  && centrality > 5  ) icent = 0;
-          // if ( energyflag == 20  && centrality > 20 ) icent = 0;
-          // if ( energyflag == 39  && centrality > 10 ) icent = 0;
           if ( energyflag == 200 || energyflag == 62 )
 	    {
 	      if ( centrality <= 5 ) icent = 0;
