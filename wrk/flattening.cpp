@@ -3412,6 +3412,7 @@ void flatten(int runNumber, int rp_recal_pass)
                       double bbc_dphi2_docalib = phi_angle - bbc_south_psi2_docalib;
                       double cosbbc_dphi2_docalib = TMath::Cos(2*bbc_dphi2_docalib);
                       bbcs_v2_both_docalib->Fill(pt_angle,cosbbc_dphi2_docalib);
+		      bbcs_v2_both_docalib_cent[icent]->Fill(pt_angle,cosbbc_dphi2_docalib);
                       if ( dcarm == 1 ) bbcs_v2_west_docalib->Fill(pt_angle,cosbbc_dphi2_docalib);
                       if ( dcarm == 0 ) bbcs_v2_east_docalib->Fill(pt_angle,cosbbc_dphi2_docalib);
                       // --- 3rd harmonic
@@ -3486,6 +3487,7 @@ void flatten(int runNumber, int rp_recal_pass)
                   double fvtx_dphi2_docalib = phi_angle - fvtx_south_psi2_docalib;
                   double cosfvtx_dphi2_docalib = TMath::Cos(2*fvtx_dphi2_docalib);
                   fvtxs_v2_both_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
+		  fvtxs_v2_both_docalib_cent[icent]->Fill(pt_angle,cosfvtx_dphi2_docalib);
                   if ( dcarm == 1 ) fvtxs_v2_west_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
                   if ( dcarm == 0 ) fvtxs_v2_east_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
                   // --- 3rd harmonic
