@@ -2340,7 +2340,7 @@ void flatten(int runNumber, int rp_recal_pass)
 		  //float psi = atan2(sumxy[ih][id][1],sumxy[ih][id][0])/2.0;
 		  float psi = atan2(sumxy[ih][id][1],sumxy[ih][id][0])/float(ih+1);
 		  if ( DIAG ) cout<<"RAW: for id: "<<id<<" psi: "<<psi<<endl;
-		  psi_bf[ic][ih][id]->Fill(izvtx,psi);
+		  psi_bf[icent][ih][id]->Fill(izvtx,psi);
 		} // check on weight
 	    } // detectors
 	} // harmonics
@@ -2443,7 +2443,7 @@ void flatten(int runNumber, int rp_recal_pass)
 	    {
 	      if ( sumxy[ih][id][2] > 0 )
 		{
-		  psi_af[ic][ih][id]->Fill(izvtx,sumxy[ih][id][3]);
+		  psi_af[icent][ih][id]->Fill(izvtx,sumxy[ih][id][3]);
 		  if ( DIAG ) cout<<"CORR: for id: "<<id<<" psi: "<<sumxy[ih][id][3]<<endl;
 		} // check on weight
 	    } // detectors
