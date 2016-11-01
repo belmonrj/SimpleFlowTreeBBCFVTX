@@ -1596,6 +1596,12 @@ void flatten(int runNumber, int rp_recal_pass)
 	      else if ( centrality <= 88 ) icent = 3;
 	    }
         }
+      if ( icent < 0 || icent > 5 )
+	{
+	  if ( verbosity > 0 ) cout << "Well this is embarrassing.  icent is " << icent << " because centrality is " << centrality << endl;
+          ++bad_cent_counter;
+	  continue;
+	}
 
       double ZVTX = -9999;
       if ( runNumber >= 454774 && runNumber <= 456283 ) ZVTX = d_bbcz;
@@ -1763,7 +1769,7 @@ void flatten(int runNumber, int rp_recal_pass)
           if ( energyflag == 62  && bbc_nw_qw < 40.0 ) continue;
           if ( energyflag == 20  && bbc_nw_qw < 25.0 ) continue;
           if ( energyflag == 39  && bbc_nw_qw < 30.0 ) continue;
-          ++bad_cent_counter;
+          // ++bad_cent_counter; // this may not count correctly depending on what you want
         }
 
       if ( say_event )
