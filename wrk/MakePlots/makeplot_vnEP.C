@@ -346,6 +346,17 @@ void doenergy(int energy, int harmonic)
   c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%deta_fvtxsbbcs.pdf",energy,harmonic));
   c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%deta_fvtxsbbcs.png",energy,harmonic));
 
+  // --- clean
+  hvneta_bbcs->SetBinContent(1,-9);
+  hvneta_bbcs->SetBinContent(12,-9);
+  hvneta_bbcs->SetBinContent(21,-9);
+  hvneta_bbcs->SetBinContent(32,-9);
+  hvneta_fvtxs->SetBinContent(21,-9);
+  hvneta_fvtxs->SetBinContent(32,-9);
+
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%deta_cleaned_fvtxsbbcs.pdf",energy,harmonic));
+  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%deta_cleaned_fvtxsbbcs.png",energy,harmonic));
+
   delete c1;
 
   if ( harmonic == 3 ) hvn_fvtxs = xhvn_fvtxs;
