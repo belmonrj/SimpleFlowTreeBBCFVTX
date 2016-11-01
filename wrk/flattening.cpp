@@ -3735,8 +3735,8 @@ void flatten(int runNumber, int rp_recal_pass)
               else if ( eta < 0 ) ns = 1;
               // cout << "eta is " << eta << " and ns is " << ns << " and nn is " << nn << endl;
 
-              bbcs_v2eta_east_docalib_cent[icent]->Fill(eta, cos(2*(phi-bbc_south_psi2_docalib)) );
-              fvtxn_v2eta_east_docalib_cent[icent]->Fill(eta, cos(2*(phi-fvtx_south_psi2_docalib)) );
+              bbcs_v2eta_both_docalib_cent[icent]->Fill(eta, cos(2*(phi-bbc_south_psi2_docalib)) );
+              fvtxs_v2eta_both_docalib_cent[icent]->Fill(eta, cos(2*(phi-fvtx_south_psi2_docalib)) );
 
 	      if ( icent == 0 )
 	      {
