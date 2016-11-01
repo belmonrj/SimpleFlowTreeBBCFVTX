@@ -772,10 +772,14 @@ void flatten(int runNumber, int rp_recal_pass)
 
   TProfile* bbcs_v2_both_docalib_cent[NMUL];
   TProfile* fvtxs_v2_both_docalib_cent[NMUL];
+  TProfile* bbcs_v2eta_both_docalib_cent[NMUL];
+  TProfile* fvtxs_v2eta_both_docalib_cent[NMUL];
   for ( int ic = 0; ic < NMUL; ++ic )
     {
       bbcs_v2_both_docalib_cent[ic] = new TProfile(Form("bbcs_v2_both_docalib_cent%d",ic),"",15, 0.0, 3.0, -1.1, 1.1);
       fvtxs_v2_both_docalib_cent[ic] = new TProfile(Form("fvtxs_v2_both_docalib_cent%d",ic),"",15, 0.0, 3.0, -1.1, 1.1);
+      bbcs_v2eta_both_docalib_cent[ic] = new TProfile(Form("bbcs_v2eta_both_docalib_cent%d",ic),"",32, -3.2, 3.2, -1.1, 1.1);
+      fvtxs_v2eta_both_docalib_cent[ic] = new TProfile(Form("fvtxs_v2eta_both_docalib_cent%d",ic),"",32, -3.2, 3.2, -1.1, 1.1);
     }
 
 
@@ -3411,8 +3415,11 @@ void flatten(int runNumber, int rp_recal_pass)
                       // --- 2nd harmonic
                       double bbc_dphi2_docalib = phi_angle - bbc_south_psi2_docalib;
                       double cosbbc_dphi2_docalib = TMath::Cos(2*bbc_dphi2_docalib);
-                      bbcs_v2_both_docalib->Fill(pt_angle,cosbbc_dphi2_docalib);
 		      bbcs_v2_both_docalib_cent[icent]->Fill(pt_angle,cosbbc_dphi2_docalib);
+                      bbcs_v2eta_both_docalib_cent[icent]->Fill(eta,cosbbc_dphi2_docalib);
+		      if ( icent == 0 )
+		      {
+                      bbcs_v2_both_docalib->Fill(pt_angle,cosbbc_dphi2_docalib);
                       if ( dcarm == 1 ) bbcs_v2_west_docalib->Fill(pt_angle,cosbbc_dphi2_docalib);
                       if ( dcarm == 0 ) bbcs_v2_east_docalib->Fill(pt_angle,cosbbc_dphi2_docalib);
                       // --- 3rd harmonic
@@ -3450,9 +3457,10 @@ void flatten(int runNumber, int rp_recal_pass)
                       bbcs_v3eta_both_docalib->Fill(eta,cosbbc_dphi3_docalib);
                       if ( dcarm == 1 ) bbcs_v3eta_west_docalib->Fill(eta,cosbbc_dphi3_docalib);
                       if ( dcarm == 0 ) bbcs_v3eta_east_docalib->Fill(eta,cosbbc_dphi3_docalib);
+		      } // check on icent == 0 (most central selection and energy dependent)
                     } // check on bbc EP
                   // ---
-                  if(-4.0<bbc_south_psi2_dcnw && bbc_south_psi2_dcnw<4.0)
+                  if ( -4.0 < bbc_south_psi2_dcnw && bbc_south_psi2_dcnw < 4.0 && icent == 0 )
                     {
                       // --- 2nd harmonic
                       double bbc_dphi2_dcnw = phi_angle - bbc_south_psi2_dcnw;
@@ -3481,13 +3489,16 @@ void flatten(int runNumber, int rp_recal_pass)
 
               if(!fvtx_clusters) continue;
               //fvtx all layers
-              if(-4.0<fvtx_south_psi2_docalib && fvtx_south_psi2_docalib<4.0)
+              if ( -4.0 < fvtx_south_psi2_docalib && fvtx_south_psi2_docalib < 4.0 )
                 {
                   // --- 2nd harmonic
                   double fvtx_dphi2_docalib = phi_angle - fvtx_south_psi2_docalib;
                   double cosfvtx_dphi2_docalib = TMath::Cos(2*fvtx_dphi2_docalib);
-                  fvtxs_v2_both_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
 		  fvtxs_v2_both_docalib_cent[icent]->Fill(pt_angle,cosfvtx_dphi2_docalib);
+                  fvtxs_v2eta_both_docalib_cent[icent]->Fill(eta,cosfvtx_dphi2_docalib);
+		  if ( icent == 0 )
+		  {
+                  fvtxs_v2_both_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
                   if ( dcarm == 1 ) fvtxs_v2_west_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
                   if ( dcarm == 0 ) fvtxs_v2_east_docalib->Fill(pt_angle,cosfvtx_dphi2_docalib);
                   // --- 3rd harmonic
@@ -3525,9 +3536,10 @@ void flatten(int runNumber, int rp_recal_pass)
                   fvtxs_v3eta_both_docalib->Fill(eta,cosfvtx_dphi3_docalib);
                   if ( dcarm == 1 ) fvtxs_v3eta_west_docalib->Fill(eta,cosfvtx_dphi3_docalib);
                   if ( dcarm == 0 ) fvtxs_v3eta_east_docalib->Fill(eta,cosfvtx_dphi3_docalib);
-                }
+		  } // check on most central bin
+                } // check on valid range for event plane
               // --- now dcnw
-              if(-4.0<fvtx_south_psi2_dcnw && fvtx_south_psi2_dcnw<4.0)
+              if ( -4.0 < fvtx_south_psi2_dcnw && fvtx_south_psi2_dcnw < 4.0 && icent == 0 )
                 {
                   // --- 2nd harmonic
                   double fvtx_dphi2_dcnw = phi_angle - fvtx_south_psi2_dcnw;
@@ -3556,7 +3568,7 @@ void flatten(int runNumber, int rp_recal_pass)
               // --- North
 
               //fvtx all layers
-              if(-4.0<fvtx_north_psi2_docalib && fvtx_north_psi2_docalib<4.0)
+              if ( -4.0 < fvtx_north_psi2_docalib && fvtx_north_psi2_docalib < 4.0 && icent == 0 )
                 {
                   // --- 2nd harmonic
                   double fvtx_dphi2_docalib = phi_angle - fvtx_north_psi2_docalib;
@@ -3601,7 +3613,7 @@ void flatten(int runNumber, int rp_recal_pass)
                   if ( dcarm == 0 ) fvtxn_v3eta_east_docalib->Fill(eta,cosfvtx_dphi3_docalib);
                 }
               // --- now dcnw
-              if(-4.0<fvtx_north_psi2_dcnw && fvtx_north_psi2_dcnw<4.0)
+              if ( -4.0 < fvtx_north_psi2_dcnw && fvtx_north_psi2_dcnw < 4.0 && icent == 0 )
                 {
                   // --- 2nd harmonic
                   double fvtx_dphi2_dcnw = phi_angle - fvtx_north_psi2_dcnw;
@@ -3630,7 +3642,7 @@ void flatten(int runNumber, int rp_recal_pass)
               // --- now fvtx layers
 
               //fvtx layer 0
-              if(-4.0<fvtx0_south_psi2_docalib && fvtx0_south_psi2_docalib<4.0)
+              if ( -4.0 < fvtx0_south_psi2_docalib && fvtx0_south_psi2_docalib < 4.0 && icent == 0 )
                 {
                   double fvtx_dphi2_docalib = phi_angle - fvtx0_south_psi2_docalib;
                   double cosfvtx_dphi2_docalib = TMath::Cos(2*fvtx_dphi2_docalib);
@@ -3640,7 +3652,7 @@ void flatten(int runNumber, int rp_recal_pass)
                 }
 
               //fvtx layer 1
-              if(-4.0<fvtx1_south_psi2_docalib && fvtx1_south_psi2_docalib<4.0)
+              if ( -4.0 < fvtx1_south_psi2_docalib && fvtx1_south_psi2_docalib < 4.0 && icent == 0 )
                 {
                   double fvtx_dphi2_docalib = phi_angle - fvtx1_south_psi2_docalib;
                   double cosfvtx_dphi2_docalib = TMath::Cos(2*fvtx_dphi2_docalib);
@@ -3650,7 +3662,7 @@ void flatten(int runNumber, int rp_recal_pass)
                 }
 
               //fvtx layer 2
-              if(-4.0<fvtx2_south_psi2_docalib && fvtx2_south_psi2_docalib<4.0)
+              if ( -4.0 < fvtx2_south_psi2_docalib && fvtx2_south_psi2_docalib < 4.0 && icent == 0 )
                 {
                   double fvtx_dphi2_docalib = phi_angle - fvtx2_south_psi2_docalib;
                   double cosfvtx_dphi2_docalib = TMath::Cos(2*fvtx_dphi2_docalib);
@@ -3660,7 +3672,7 @@ void flatten(int runNumber, int rp_recal_pass)
                 }
 
               //fvtx layer 3
-              if(-4.0<fvtx3_south_psi2_docalib && fvtx3_south_psi2_docalib<4.0)
+              if ( -4.0 < fvtx3_south_psi2_docalib && fvtx3_south_psi2_docalib < 4.0 && icent == 0 )
                 {
                   double fvtx_dphi2_docalib = phi_angle - fvtx3_south_psi2_docalib;
                   double cosfvtx_dphi2_docalib = TMath::Cos(2*fvtx_dphi2_docalib);
@@ -3672,7 +3684,7 @@ void flatten(int runNumber, int rp_recal_pass)
               // --- now fvtx layers
 
               //fvtx layer 0
-              if(-4.0<fvtx0_south_psi2_dcnw && fvtx0_south_psi2_dcnw<4.0)
+              if ( -4.0 < fvtx0_south_psi2_dcnw && fvtx0_south_psi2_dcnw < 4.0 && icent == 0 )
                 {
                   double fvtx_dphi2_dcnw = phi_angle - fvtx0_south_psi2_dcnw;
                   double cosfvtx_dphi2_dcnw = TMath::Cos(2*fvtx_dphi2_dcnw);
@@ -3682,7 +3694,7 @@ void flatten(int runNumber, int rp_recal_pass)
                 }
 
               //fvtx layer 1
-              if(-4.0<fvtx1_south_psi2_dcnw && fvtx1_south_psi2_dcnw<4.0)
+              if ( -4.0 < fvtx1_south_psi2_dcnw && fvtx1_south_psi2_dcnw < 4.0 && icent == 0 )
                 {
                   double fvtx_dphi2_dcnw = phi_angle - fvtx1_south_psi2_dcnw;
                   double cosfvtx_dphi2_dcnw = TMath::Cos(2*fvtx_dphi2_dcnw);
@@ -3692,7 +3704,7 @@ void flatten(int runNumber, int rp_recal_pass)
                 }
 
               //fvtx layer 2
-              if(-4.0<fvtx2_south_psi2_dcnw && fvtx2_south_psi2_dcnw<4.0)
+              if ( -4.0 < fvtx2_south_psi2_dcnw && fvtx2_south_psi2_dcnw < 4.0 && icent == 0 )
                 {
                   double fvtx_dphi2_dcnw = phi_angle - fvtx2_south_psi2_dcnw;
                   double cosfvtx_dphi2_dcnw = TMath::Cos(2*fvtx_dphi2_dcnw);
@@ -3702,7 +3714,7 @@ void flatten(int runNumber, int rp_recal_pass)
                 }
 
               //fvtx layer 3
-              if(-4.0<fvtx3_south_psi2_dcnw && fvtx3_south_psi2_dcnw<4.0)
+              if ( -4.0 < fvtx3_south_psi2_dcnw && fvtx3_south_psi2_dcnw < 4.0 && icent == 0 )
                 {
                   double fvtx_dphi2_dcnw = phi_angle - fvtx3_south_psi2_dcnw;
                   double cosfvtx_dphi2_dcnw = TMath::Cos(2*fvtx_dphi2_dcnw);
@@ -3723,6 +3735,11 @@ void flatten(int runNumber, int rp_recal_pass)
               else if ( eta < 0 ) ns = 1;
               // cout << "eta is " << eta << " and ns is " << ns << " and nn is " << nn << endl;
 
+              bbcs_v2eta_east_docalib_cent[icent]->Fill(eta, cos(2*(phi-bbc_south_psi2_docalib)) );
+              fvtxn_v2eta_east_docalib_cent[icent]->Fill(eta, cos(2*(phi-fvtx_south_psi2_docalib)) );
+
+	      if ( icent == 0 )
+	      {
               double cosbbc_dphi2_docalib = cos(2*(phi-bbc_south_psi2_docalib));
               bbcs_v2eta_both_docalib->Fill(eta,cosbbc_dphi2_docalib);
               bbcs_v2eta_west_docalib->Fill(eta,cosbbc_dphi2_docalib);
@@ -3801,8 +3818,8 @@ void flatten(int runNumber, int rp_recal_pass)
               os_fvtxn_tracks_d32eta_both->Fill(eta,os_fvtxn_tracks_uq3);
               os_fvtxn_tracks_d32eta_west->Fill(eta,os_fvtxn_tracks_uq3);
               os_fvtxn_tracks_d32eta_east->Fill(eta,os_fvtxn_tracks_uq3);
-
-            }
+	      } // check on most central bin
+            } // loop over fvtx tracks
 
 
         } // check on tracks
