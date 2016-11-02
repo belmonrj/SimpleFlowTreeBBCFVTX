@@ -22,9 +22,9 @@ void doenergy(int energy, int harmonic, int centbin)
 
   // ---
 
-  TProfile* tp1f_bbc_fvtx = (TProfile*)file->Get(Form("tp1f_reso%d_BBC_FVTX",harmonic));
-  TProfile* tp1f_bbc_cnt = (TProfile*)file->Get(Form("tp1f_reso%d_BBC_CNT",harmonic));
-  TProfile* tp1f_cnt_fvtx = (TProfile*)file->Get(Form("tp1f_reso%d_CNT_FVTX",harmonic));
+  TProfile* tp1f_bbc_fvtx = (TProfile*)file->Get(Form("tp1f_reso%d_BBC_FVTX_cent%d",harmonic,centbin));
+  TProfile* tp1f_bbc_cnt = (TProfile*)file->Get(Form("tp1f_reso%d_BBC_CNT_cent%d",harmonic,centbin));
+  TProfile* tp1f_cnt_fvtx = (TProfile*)file->Get(Form("tp1f_reso%d_CNT_FVTX_cent%d",harmonic,centbin));
 
   float float_bbc_fvtx = tp1f_bbc_fvtx->GetBinContent(1);
   float float_bbc_cnt = tp1f_bbc_cnt->GetBinContent(1);
@@ -59,7 +59,7 @@ void doenergy(int energy, int harmonic, int centbin)
 
   // ---
 
-  TProfile* hvn_fvtxs = (TProfile*)file->Get(Form("fvtxs_v%d_both_docalib",harmonic));
+  TProfile* hvn_fvtxs = (TProfile*)file->Get(Form("fvtxs_v%d_both_docalib_cent%d",harmonic,centbin));
   hvn_fvtxs->Scale(1.0/reso_fvtx);
   hvn_fvtxs->Draw();
   // the 62 GeV is actually 62.4 and the 20 GeV is actually 19.6, so need to modify
@@ -92,7 +92,7 @@ void doenergy(int energy, int harmonic, int centbin)
   c1->Print(Form("FigsHarmonicCoefficient/centbins_run16dau%d_v%d_fvtxs_cent%d.pdf",energy,harmonic,centbin));
   c1->Print(Form("FigsHarmonicCoefficient/centbins_run16dau%d_v%d_fvtxs_cent%d.png",energy,harmonic,centbin));
 
-  TProfile* hvn_bbcs = (TProfile*)file->Get(Form("bbcs_v%d_both_docalib",harmonic));
+  TProfile* hvn_bbcs = (TProfile*)file->Get(Form("bbcs_v%d_both_docalib_cent%d",harmonic,centbin));
   hvn_bbcs->SetLineColor(kRed);
   hvn_bbcs->Scale(1.0/reso_bbc);
   hvn_bbcs->Draw("same");
@@ -123,7 +123,7 @@ void doenergy(int energy, int harmonic, int centbin)
 
   // --- now eta plots
 
-  TProfile* hvneta_bbcs = (TProfile*)file->Get(Form("bbcs_v%deta_both_docalib",harmonic));
+  TProfile* hvneta_bbcs = (TProfile*)file->Get(Form("bbcs_v%deta_both_docalib_cent%d",harmonic,centbin));
   hvneta_bbcs->SetLineColor(kBlack);
   hvneta_bbcs->Scale(1.0/reso_bbc);
   hvneta_bbcs->Draw();
@@ -153,7 +153,7 @@ void doenergy(int energy, int harmonic, int centbin)
   c1->Print(Form("FigsHarmonicCoefficient/centbins_run16dau%d_v%deta_bbcs_cent%d.pdf",energy,harmonic,centbin));
   c1->Print(Form("FigsHarmonicCoefficient/centbins_run16dau%d_v%deta_bbcs_cent%d.png",energy,harmonic,centbin));
 
-  TProfile* hvneta_fvtxs = (TProfile*)file->Get(Form("fvtxs_v%deta_both_docalib",harmonic));
+  TProfile* hvneta_fvtxs = (TProfile*)file->Get(Form("fvtxs_v%deta_both_docalib_cent%d",harmonic,centbin));
   hvneta_fvtxs->SetLineColor(kBlue);
   hvneta_fvtxs->Scale(1.0/reso_fvtx);
   hvneta_fvtxs->Draw("same");
