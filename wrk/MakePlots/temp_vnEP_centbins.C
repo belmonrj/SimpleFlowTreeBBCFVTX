@@ -6,11 +6,11 @@ void diagnostic(int, int);
 void temp_vnEP_centbins()
 {
 
-  doenergy(62,2);
+  doenergy(62,2,0);
 
 }
 
-void doenergy(int energy, int harmonic)
+void doenergy(int energy, int harmonic, int centbin)
 {
 
   gStyle->SetOptTitle(1);
@@ -89,8 +89,8 @@ void doenergy(int energy, int harmonic)
   hvn_fvtxs->GetYaxis()->SetTitleOffset(1.25);
 
 
-  c1->Print(Form("FigsHarmonicCoefficient/centbins_run16dau%d_v%d_fvtxs.pdf",energy,harmonic));
-  c1->Print(Form("FigsHarmonicCoefficient/centbins_run16dau%d_v%d_fvtxs.png",energy,harmonic));
+  c1->Print(Form("FigsHarmonicCoefficient/centbins_run16dau%d_v%d_fvtxs_cent%d.pdf",energy,harmonic,centbin));
+  c1->Print(Form("FigsHarmonicCoefficient/centbins_run16dau%d_v%d_fvtxs_cent%d.png",energy,harmonic,centbin));
 
   TProfile* hvn_bbcs = (TProfile*)file->Get(Form("bbcs_v%d_both_docalib",harmonic));
   hvn_bbcs->SetLineColor(kRed);
@@ -110,8 +110,8 @@ void doenergy(int energy, int harmonic)
   leg->SetTextSize(0.05);
   leg->Draw();
 
-  c1->Print(Form("FigsHarmonicCoefficient/centbins_run16dau%d_v%d_fvtxsbbcs.pdf",energy,harmonic));
-  c1->Print(Form("FigsHarmonicCoefficient/centbins_run16dau%d_v%d_fvtxsbbcs.png",energy,harmonic));
+  c1->Print(Form("FigsHarmonicCoefficient/centbins_run16dau%d_v%d_fvtxsbbcs_cent%d.pdf",energy,harmonic,centbin));
+  c1->Print(Form("FigsHarmonicCoefficient/centbins_run16dau%d_v%d_fvtxsbbcs_cent%d.png",energy,harmonic,centbin));
 
 
 
@@ -150,8 +150,8 @@ void doenergy(int energy, int harmonic)
   leta->SetTextSize(0.05);
   leta->Draw();
 
-  c1->Print(Form("FigsHarmonicCoefficient/centbins_run16dau%d_v%deta_bbcs.pdf",energy,harmonic));
-  c1->Print(Form("FigsHarmonicCoefficient/centbins_run16dau%d_v%deta_bbcs.png",energy,harmonic));
+  c1->Print(Form("FigsHarmonicCoefficient/centbins_run16dau%d_v%deta_bbcs_cent%d.pdf",energy,harmonic,centbin));
+  c1->Print(Form("FigsHarmonicCoefficient/centbins_run16dau%d_v%deta_bbcs_cent%d.png",energy,harmonic,centbin));
 
   TProfile* hvneta_fvtxs = (TProfile*)file->Get(Form("fvtxs_v%deta_both_docalib",harmonic));
   hvneta_fvtxs->SetLineColor(kBlue);
@@ -160,8 +160,8 @@ void doenergy(int energy, int harmonic)
   leta->AddEntry(hvneta_fvtxs,"FVTXS","el");
   leta->Draw();
 
-  c1->Print(Form("FigsHarmonicCoefficient/centbins_run16dau%d_v%deta_fvtxsbbcs.pdf",energy,harmonic));
-  c1->Print(Form("FigsHarmonicCoefficient/centbins_run16dau%d_v%deta_fvtxsbbcs.png",energy,harmonic));
+  c1->Print(Form("FigsHarmonicCoefficient/centbins_run16dau%d_v%deta_fvtxsbbcs_cent%d.pdf",energy,harmonic,centbin));
+  c1->Print(Form("FigsHarmonicCoefficient/centbins_run16dau%d_v%deta_fvtxsbbcs_cent%d.png",energy,harmonic,centbin));
 
   // --- clean
   hvneta_bbcs->SetBinContent(1,-9);
@@ -171,8 +171,8 @@ void doenergy(int energy, int harmonic)
   hvneta_fvtxs->SetBinContent(21,-9);
   hvneta_fvtxs->SetBinContent(32,-9);
 
-  c1->Print(Form("FigsHarmonicCoefficient/centbins_run16dau%d_v%deta_cleaned_fvtxsbbcs.pdf",energy,harmonic));
-  c1->Print(Form("FigsHarmonicCoefficient/centbins_run16dau%d_v%deta_cleaned_fvtxsbbcs.png",energy,harmonic));
+  c1->Print(Form("FigsHarmonicCoefficient/centbins_run16dau%d_v%deta_cleaned_fvtxsbbcs_cent%d.pdf",energy,harmonic,centbin));
+  c1->Print(Form("FigsHarmonicCoefficient/centbins_run16dau%d_v%deta_cleaned_fvtxsbbcs_cent%d.png",energy,harmonic,centbin));
 
   delete c1;
 
