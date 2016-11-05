@@ -57,6 +57,8 @@ float calc4_event(float, float, float, float, float);
 
 float calccossum2_event(TComplex&, TComplex&, float);
 float calcsinsum2_event(TComplex&, TComplex&, float);
+float calccos3_event(TComplex&, TComplex&, float);
+float calcsin3_event(TComplex&, TComplex&, float);
 
 
 using namespace std;
@@ -1346,16 +1348,27 @@ float calc2_event(float Xn, float Yn, float M)
 
 float calccossum2_event(TComplex& Qn, TComplex& Q2n, float M)
 {
-  TComplex result = (Qn*Qn) - Q2n;
+  TComplex result = Qn*Qn - Q2n;
   return result.Re();
 }
 
 float calcsinsum2_event(TComplex& Qn, TComplex& Q2n, float M)
 {
-  TComplex result = (Qn*Qn) - Q2n;
+  TComplex result = Qn*Qn - Q2n;
   return result.Im();
 }
 
+float calccos3_event(TComplex& Qn, TComplex& Q2n, float M)
+{
+  TComplex result = Qn*TComplex::Conjugate(Qn)*TComplex::Conjugate(Qn) - Qn*TComplex::Conjugate(Q2n);
+  return result.Re();
+}
+
+float calcsin3_event(TComplex& Qn, TComplex& Q2n, float M)
+{
+  TComplex result = Qn*TComplex::Conjugate(Qn)*TComplex::Conjugate(Qn) - Qn*TComplex::Conjugate(Q2n);
+  return result.Im();
+}
 
 float calc4_event(float Xn, float Yn, float X2n, float Y2n, float M)
 {
