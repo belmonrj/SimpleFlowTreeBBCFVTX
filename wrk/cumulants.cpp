@@ -1087,6 +1087,10 @@ void flatten(int runNumber, int rp_recal_pass)
       float os_fvtxs_sinsum2 = calcsinsum2_event(tc_fvtxs_Q2,tc_fvtxs_Q4,os_fvtxs_qw);
       nfvtxt_os_fvtxs_cossum22->Fill(nfvtxt,os_fvtxs_cossum2);
       nfvtxt_os_fvtxs_sinsum22->Fill(nfvtxt,os_fvtxs_sinsum2);
+      float os_fvtxs_cos23 = calccos3_event(tc_fvtxs_Q2,tc_fvtxs_Q4,os_fvtxs_qw);
+      float os_fvtxs_sin23 = calcsin3_event(tc_fvtxs_Q2,tc_fvtxs_Q4,os_fvtxs_qw);
+      nfvtxt_os_fvtxs_cos23->Fill(nfvtxt,os_fvtxs_cos23);
+      nfvtxt_os_fvtxs_sin23->Fill(nfvtxt,os_fvtxs_sin23);
 
       float os_fvtxn_qw = fvtxn_qw[0];
       float os_fvtxn_qx2 = fvtxn_qx2[0];
@@ -1106,6 +1110,10 @@ void flatten(int runNumber, int rp_recal_pass)
       float os_fvtxn_sinsum2 = calcsinsum2_event(tc_fvtxn_Q2,tc_fvtxn_Q4,os_fvtxn_qw);
       nfvtxt_os_fvtxn_cossum22->Fill(nfvtxt,os_fvtxn_cossum2);
       nfvtxt_os_fvtxn_sinsum22->Fill(nfvtxt,os_fvtxn_sinsum2);
+      float os_fvtxn_cos23 = calccos3_event(tc_fvtxn_Q2,tc_fvtxn_Q4,os_fvtxn_qw);
+      float os_fvtxn_sin23 = calcsin3_event(tc_fvtxn_Q2,tc_fvtxn_Q4,os_fvtxn_qw);
+      nfvtxt_os_fvtxn_cos23->Fill(nfvtxt,os_fvtxn_cos23);
+      nfvtxt_os_fvtxn_sin23->Fill(nfvtxt,os_fvtxn_sin23);
 
       // --- eta dependent clusters
 
@@ -1158,6 +1166,10 @@ void flatten(int runNumber, int rp_recal_pass)
       float os_fvtxs_tracks_sinsum2 = calcsinsum2_event(tc_fvtxs_tracks_Q2,tc_fvtxs_tracks_Q4,os_fvtxs_tracks_qw);
       nfvtxt_os_fvtxs_tracks_cossum22->Fill(nfvtxt,os_fvtxs_tracks_cossum2);
       nfvtxt_os_fvtxs_tracks_sinsum22->Fill(nfvtxt,os_fvtxs_tracks_sinsum2);
+      float os_fvtxs_tracks_cos23 = calccos3_event(tc_fvtxs_tracks_Q2,tc_fvtxs_tracks_Q4,os_fvtxs_tracks_qw);
+      float os_fvtxs_tracks_sin23 = calcsin3_event(tc_fvtxs_tracks_Q2,tc_fvtxs_tracks_Q4,os_fvtxs_tracks_qw);
+      nfvtxt_os_fvtxs_tracks_cos23->Fill(nfvtxt,os_fvtxs_tracks_cos23);
+      nfvtxt_os_fvtxs_tracks_sin23->Fill(nfvtxt,os_fvtxs_tracks_sin23);
 
       float os_fvtxn_tracks_qw = fvtxn_tracks_qw[0];
       float os_fvtxn_tracks_qx2 = fvtxn_tracks_qx2[0];
@@ -1177,6 +1189,10 @@ void flatten(int runNumber, int rp_recal_pass)
       float os_fvtxn_tracks_sinsum2 = calcsinsum2_event(tc_fvtxn_tracks_Q2,tc_fvtxn_tracks_Q4,os_fvtxn_tracks_qw);
       nfvtxt_os_fvtxn_tracks_cossum22->Fill(nfvtxt,os_fvtxn_tracks_cossum2);
       nfvtxt_os_fvtxn_tracks_sinsum22->Fill(nfvtxt,os_fvtxn_tracks_sinsum2);
+      float os_fvtxn_tracks_cos23 = calccos3_event(tc_fvtxn_tracks_Q2,tc_fvtxn_tracks_Q4,os_fvtxn_tracks_qw);
+      float os_fvtxn_tracks_sin23 = calcsin3_event(tc_fvtxn_tracks_Q2,tc_fvtxn_tracks_Q4,os_fvtxn_tracks_qw);
+      nfvtxt_os_fvtxn_tracks_cos23->Fill(nfvtxt,os_fvtxn_tracks_cos23);
+      nfvtxt_os_fvtxn_tracks_sin23->Fill(nfvtxt,os_fvtxn_tracks_sin23);
 
       // --- combined fvtx clusters
 
@@ -1198,6 +1214,10 @@ void flatten(int runNumber, int rp_recal_pass)
       float os_fvtxc_sinsum2 = calcsinsum2_event(tc_fvtxc_Q2,tc_fvtxc_Q4,os_fvtxc_qw);
       nfvtxt_os_fvtxc_cossum22->Fill(nfvtxt,os_fvtxc_cossum2);
       nfvtxt_os_fvtxc_sinsum22->Fill(nfvtxt,os_fvtxc_sinsum2);
+      float os_fvtxc_cos23 = calccos3_event(tc_fvtxc_Q2,tc_fvtxc_Q4,os_fvtxc_qw);
+      float os_fvtxc_sin23 = calcsin3_event(tc_fvtxc_Q2,tc_fvtxc_Q4,os_fvtxc_qw);
+      nfvtxt_os_fvtxc_cos23->Fill(nfvtxt,os_fvtxc_cos23);
+      nfvtxt_os_fvtxc_sin23->Fill(nfvtxt,os_fvtxc_sin23);
 
       // --- combined fvtx tracks
 
@@ -1219,6 +1239,10 @@ void flatten(int runNumber, int rp_recal_pass)
       float os_fvtxc_tracks_sinsum2 = calcsinsum2_event(tc_fvtxc_tracks_Q2,tc_fvtxc_tracks_Q4,os_fvtxc_tracks_qw);
       nfvtxt_os_fvtxc_tracks_cossum22->Fill(nfvtxt,os_fvtxc_tracks_cossum2);
       nfvtxt_os_fvtxc_tracks_sinsum22->Fill(nfvtxt,os_fvtxc_tracks_sinsum2);
+      float os_fvtxc_tracks_cos23 = calccos3_event(tc_fvtxc_tracks_Q2,tc_fvtxc_tracks_Q4,os_fvtxc_tracks_qw);
+      float os_fvtxc_tracks_sin23 = calcsin3_event(tc_fvtxc_tracks_Q2,tc_fvtxc_tracks_Q4,os_fvtxc_tracks_qw);
+      nfvtxt_os_fvtxc_tracks_cos23->Fill(nfvtxt,os_fvtxc_tracks_cos23);
+      nfvtxt_os_fvtxc_tracks_sin23->Fill(nfvtxt,os_fvtxc_tracks_sin23);
 
       // --- have a look at some different correlations
 
