@@ -6,7 +6,7 @@ void temp_4pc()
 {
 
   dohandle(200);
-  // dohandle(62);
+  dohandle(62);
   // dohandle(39);
   // dohandle(20);
 
@@ -32,42 +32,48 @@ void dohandle(int handle)
   TProfile* four;
 
   // --- type A clusters (v^4 but no autocorrelation corrections)
-  two = (TProfile*)file->Get("nfvtxc_os_fvtxsfvtxn_c22");
-  four = (TProfile*)file->Get("nfvtxc_os_fvtxsfvtxn_c24a");
-  docalc(two,four,"clusters","mixed","2subA",handle);
+  two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c22");
+  four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c24a");
+  //docalc(two,four,"clusters","mixed","2subA",handle); // bad
+
+  //return;
 
   // --- type D clusters (v^4 with autocorrelation corrections, but clusters cause problems for that)
-  two = (TProfile*)file->Get("nfvtxc_os_fvtxsfvtxn_c22");
-  four = (TProfile*)file->Get("nfvtxc_os_fvtxsfvtxn_c24d");
-  docalc(two,four,"clusters","mixed","2subD",handle);
+  two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c22");
+  four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c24d");
+  //docalc(two,four,"clusters","mixed","2subD",handle); // bad
 
   // ---
 
   // --- type A clusters with 4 subevents (++--)
   two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c22");
   four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_ce01_c24a");
-  docalc(two,four,"clusters","mixed","4subA",handle);
+  //docalc(two,four,"clusters","mixed","4subA",handle); // almost right but horrible statistics
 
   // --- type D clusters with 4 subevents (--++)
   two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_c22");
   four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_ce01_c24d");
-  docalc(two,four,"clusters","mixed","4subD",handle);
+  //docalc(two,four,"clusters","mixed","4subD",handle); // almost right but horrible statistics
 
   // ---
 
   // --- type A tracks (v^4 but no autocorrelation corrections)
   two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_tracks_c22");
   four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_tracks_c24a");
-  docalc(two,four,"tracks","mixed","2subA",handle);
+  //docalc(two,four,"tracks","mixed","2subA",handle); // bad
 
   // --- type D tracks (v^4 with autocorrelation corrections, should be okay for tracks???)
   two = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_tracks_c22");
   four = (TProfile*)file->Get("nfvtxt_os_fvtxsfvtxn_tracks_c24d");
-  docalc(two,four,"tracks","mixed","2subD",handle);
+  //docalc(two,four,"tracks","mixed","2subD",handle); // shockingly bad, so bad it makes me wonder if there's a bug
+
+  //  return;
 
   // ---
   // ---
   // ---
+
+  // there's no hope left for me
 
   // --- south tracks only
   two = (TProfile*)file->Get("nfvtxt_os_fvtxs_tracks_c22");
@@ -116,8 +122,8 @@ void docalc(TProfile* tp1f_c22, TProfile* tp1f_c24a, const char* type, const cha
 
   th1d_c22a->Multiply(th1d_c22);
   th1d_c22a->Scale(2.0);
-  th1d_c22a->SetMaximum(2e-05);
-  th1d_c22a->SetMinimum(-4e-06);
+  th1d_c22a->SetMaximum(2e-04);
+  th1d_c22a->SetMinimum(-2e-05);
   th1d_c22a->Draw();
   th1d_c22a->GetXaxis()->SetTitle(Form("N_{%s}^{%s}",type,side));
   th1d_c24a->SetLineColor(kRed);
@@ -134,20 +140,20 @@ void docalc(TProfile* tp1f_c22, TProfile* tp1f_c24a, const char* type, const cha
   c1->Print(Form("FigsFour/components_222and4_nfvtxt_%s.png",description));
   c1->Print(Form("FigsFour/components_222and4_nfvtxt_%s.pdf",description));
   th1d_c22a->SetMaximum(1e-03);
-  th1d_c22a->SetMinimum(-1e-03);
+  th1d_c22a->SetMinimum(-1e-04);
   c1->Print(Form("FigsFour/components_222and4_nfvtxt_%s_zout.png",description));
   c1->Print(Form("FigsFour/components_222and4_nfvtxt_%s_zout.pdf",description));
 
   th1d_c22a->Scale(-1.0);
   th1d_c22a->Add(th1d_c24a,1.0);
-  th1d_c22a->SetMaximum(2e-05);
-  th1d_c22a->SetMinimum(-2e-05);
+  th1d_c22a->SetMaximum(5e-05);
+  th1d_c22a->SetMinimum(-5e-05);
   th1d_c22a->Draw();
   line.Draw();
   c1->Print(Form("FigsFour/c24_nfvtxt_%s.png",description));
   c1->Print(Form("FigsFour/c24_nfvtxt_%s.pdf",description));
-  th1d_c22a->SetMaximum(1e-03);
-  th1d_c22a->SetMinimum(-1e-03);
+  th1d_c22a->SetMaximum(2e-04);
+  th1d_c22a->SetMinimum(-2e-04);
   c1->Print(Form("FigsFour/c24_nfvtxt_%s_zout.png",description));
   c1->Print(Form("FigsFour/c24_nfvtxt_%s_zout.pdf",description));
 
