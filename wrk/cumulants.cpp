@@ -71,12 +71,9 @@ bool DIAG = false;
 
 
 int get_fvtx_layer(float);
-void initialize_pmt_position();
-int get_pmt_layer(int);
 void flatten(int, int);
 float calc2_event(float, float, float);
 float calc4_event(float, float, float, float, float);
-float calc4_track_flag(float, float, float, float, float, float, float, float, float, bool);
 
 
 using namespace std;
@@ -1288,37 +1285,3 @@ float calc4_event(float Xn, float Yn, float X2n, float Y2n, float M)
 }
 
 
-float calc4_track_flag(float xn, float yn, float x2n, float y2n, float Xn, float Yn, float X2n, float Y2n, float M, bool is_POI_in_RP)
-{
-
-  if ( is_POI_in_RP )
-    {
-      float one   = (xn*Xn + yn*Yn)*(Xn*Xn + Yn*Yn);
-      float two   = x2n*Xn*Xn - x2n*Yn*Yn + 2*y2n*Xn*Yn;
-      float three = xn*Xn*X2n + xn*Yn*Y2n - yn*(X2n*Yn - Xn*Y2n);
-      float four  = 2*M*(xn*Xn + yn*Yn);
-      float five  = 2*(Xn*Xn + Yn*Yn);
-      float six   = 7*(xn*Xn + yn*Yn);
-      float seven = xn*Xn + yn*Yn;
-      float eight = x2n*X2n + y2n*Y2n;
-      float nine = 2*(xn*Xn + yn*Yn);
-      // ---
-      float numerator = one - two - three - four - five + six - seven + eight + nine + 2*M - 6;
-      float denominator = (M-1)*(M-2)*(M-3);
-      // ---
-      return numerator/denominator;
-    }
-  else
-    {
-      float one   = (xn*Xn + yn*Yn)*(Xn*Xn + Yn*Yn);
-      float three = xn*Xn*X2n + xn*Yn*Y2n - yn*(X2n*Yn - Xn*Y2n);
-      float four  = 2*M*(xn*Xn + yn*Yn);
-      float nine = 2*(xn*Xn + yn*Yn);
-      // ---
-      float numerator = one - three - four + nine;
-      float denominator = M*(M-1)*(M-2);
-      // ---
-      return numerator/denominator;
-    }
-
-}
