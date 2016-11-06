@@ -1364,6 +1364,7 @@ int get_fvtx_layer(float z)
 
 float calc2_event(float Xn, float Yn, float M)
 {
+  if ( M < 2 ) return -9999;
   float numerator = Xn*Xn + Yn*Yn - M;
   float denominator = M*(M-1);
   return numerator/denominator;
@@ -1372,32 +1373,44 @@ float calc2_event(float Xn, float Yn, float M)
 
 float calccossum2_event(TComplex& Qn, TComplex& Q2n, float M)
 {
+  if ( M < 2 ) return -9999;
   TComplex result = Qn*Qn - Q2n;
-  return result.Re();
+  float numerator = result.Re();
+  float denominator = M*(M-1);
+  return numerator/denominator;
 }
 
 float calcsinsum2_event(TComplex& Qn, TComplex& Q2n, float M)
 {
+  if ( M < 2 ) return -9999;
   TComplex result = Qn*Qn - Q2n;
-  return result.Im();
+  float numerator = result.Im();
+  float denominator = M*(M-1);
+  return numerator/denominator;
 }
 
 float calccos3_event(TComplex& Qn, TComplex& Q2n, float M)
 {
+  if ( M < 3 ) return -9999;
   TComplex result = Qn*TComplex::Conjugate(Qn)*TComplex::Conjugate(Qn) - Qn*TComplex::Conjugate(Q2n);
-  return result.Re();
+  float numerator = result.Re();
+  float denominator = M*(M-1)*(M-2);
+  return numerator/denominator;
 }
 
 float calcsin3_event(TComplex& Qn, TComplex& Q2n, float M)
 {
+  if ( M < 3 ) return -9999;
   TComplex result = Qn*TComplex::Conjugate(Qn)*TComplex::Conjugate(Qn) - Qn*TComplex::Conjugate(Q2n);
-  return result.Im();
+  float numerator = result.Im();
+  float denominator = M*(M-1)*(M-2);
+  return numerator/denominator;
 }
 
 float calc4_event(float Xn, float Yn, float X2n, float Y2n, float M)
 {
 
-  if ( M < 5 ) return -9999;
+  if ( M < 4 ) return -9999;
 
   float Qn2 = Xn*Xn+Yn*Yn;
   float Qn2d = Xn*Xn-Yn*Yn;
