@@ -1,5 +1,7 @@
 void takehistograms(TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*);
 
+void calc_corr_four(double,double,double,double,double,double,double,double);
+
 void temp_new_4pc()
 {
 
@@ -33,6 +35,7 @@ void takehistograms
 
   int nbinsx = tp1f_four->GetNbinsX();
   const int nbins = nbinsx;
+
   double four[nbins];
   double two[nbins];
   double cos1[nbins];
@@ -44,8 +47,15 @@ void takehistograms
 
   double x[nbins]; // generic x-axis, multiplicity in our case for now
 
+  double corr_c2[nbins];
+  double corr_c4[nbins];
+  double uncorr_c4[nbins];
+
   for ( int i = 0; i < nbins; ++i )
     {
+      // --- xaxis
+      x[i] = tp1f_four->GetBinCenter(i+1);
+      // --- components
       four[i]    = tp1f_four->GetBinContent(i+1);
       two[i]     = tp1f_two->GetBinContent(i+1);
       cos1[i]    = tp1f_cos1->GetBinContent(i+1);
@@ -54,7 +64,10 @@ void takehistograms
       sinsum2[i] = tp1f_sinsum2->GetBinContent(i+1);
       cos3[i]    = tp1f_cos3->GetBinContent(i+1);
       sin3[i]    = tp1f_sin3->GetBinContent(i+1);
-
+      // --- some corrections...
+      uncorr_c4[i] = four[i] - 2*two[i]*two[i]; // not very useful but have for completeness
+      corr_c2[i] = two[i] - cos1[i]*cos1[i] - sin1[i]*sin1[i]; // simple enough it doesn't need it's own function
+      corr_c4[i] = calc_corr_four(); // come back to this asap
     }
 
 }
