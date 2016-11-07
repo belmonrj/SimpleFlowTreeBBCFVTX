@@ -94,7 +94,7 @@ double calc_corr_four(double four, double two, double cos1, double sin1, double 
   double corr_term5 = 4*cossum2*(cos1*cos1 - sin1*sin1);
   double corr_term6 = 8*sinsum2*sin1*cos1;
   double corr_term7 = 8*two*(cos1*cos1 + sin1*sin1);
-  double corr_term8 = 6*(cos1*cos1 + sin1*sin1);
+  double corr_term8 = 6*(cos1*cos1 + sin1*sin1)*(cos1*cos1 + sin1*sin1);
   double result = uncorr - corr_term1 + corr_term2 - corr_term3 - corr_term4 + corr_term5 + corr_term6 + corr_term7 - corr_term8;
   return result;
 }
