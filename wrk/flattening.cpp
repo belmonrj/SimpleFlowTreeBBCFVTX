@@ -3677,8 +3677,9 @@ void flatten(int runNumber, int rp_recal_pass)
                 } // check on psi
 
 
-	      for(int jtrk=0; jtrk< d_ntrk; jtrk++)
+	      for ( int jtrk = 0; jtrk < d_ntrk; jtrk++ )
 		{
+		  if ( itrk == jtrk ) continue; // AUTOCORRELATIONS!!!
 		  //nfvtxt_CME_PosPos_fvtxsEP;
 		  float px2    = d_px[jtrk];
 		  float py2    = d_py[jtrk];
