@@ -1346,6 +1346,16 @@ void flatten(int runNumber, int rp_recal_pass)
   TProfile* os_fvtxn_tracks_d32eta_east = new TProfile(Form("os_fvtxn_tracks_d32eta_east"),"",32, -3.2, 3.2, -1.1, 1.1);
   TProfile* os_fvtxn_tracks_d32eta_both = new TProfile(Form("os_fvtxn_tracks_d32eta_both"),"",32, -3.2, 3.2, -1.1, 1.1);
 
+  //TProfile* nfvtxt_CME_fvtxsEP = new TProfile(Form("nfvtxt_CME_fvtxsEP"),"",80, -0.5, 79.5, -1.1, 1.1);
+  TProfile* nfvtxt_CME_PosPos_fvtxsEP = new TProfile(Form("nfvtxt_CME_PosPos_fvtxsEP"),"",80, -0.5, 79.5, -1.1, 1.1);
+  TProfile* nfvtxt_CME_NegNeg_fvtxsEP = new TProfile(Form("nfvtxt_CME_NegNeg_fvtxsEP"),"",80, -0.5, 79.5, -1.1, 1.1);
+  TProfile* nfvtxt_CME_PosNeg_fvtxsEP = new TProfile(Form("nfvtxt_CME_PosNeg_fvtxsEP"),"",80, -0.5, 79.5, -1.1, 1.1);
+  TProfile* nfvtxt_CME_NegPos_fvtxsEP = new TProfile(Form("nfvtxt_CME_NegPos_fvtxsEP"),"",80, -0.5, 79.5, -1.1, 1.1);
+  TProfile* nfvtxt_CME_EastPosWestPos_fvtxsEP = new TProfile(Form("nfvtxt_CME_EastPosWestPos_fvtxsEP"),"",80, -0.5, 79.5, -1.1, 1.1);
+  TProfile* nfvtxt_CME_EastNegWestNeg_fvtxsEP = new TProfile(Form("nfvtxt_CME_EastNegWestNeg_fvtxsEP"),"",80, -0.5, 79.5, -1.1, 1.1);
+  TProfile* nfvtxt_CME_EastPosWestNeg_fvtxsEP = new TProfile(Form("nfvtxt_CME_EastPosWestNeg_fvtxsEP"),"",80, -0.5, 79.5, -1.1, 1.1);
+  TProfile* nfvtxt_CME_EastNegWestPos_fvtxsEP = new TProfile(Form("nfvtxt_CME_EastNegWestPos_fvtxsEP"),"",80, -0.5, 79.5, -1.1, 1.1);
+
   // ---------------------------------------------------------------------------------------------------------
 
 
@@ -1506,7 +1516,7 @@ void flatten(int runNumber, int rp_recal_pass)
       // --- break and continue statements should happen much, much earlier --------------------
       if(rp_recal_pass<1 || rp_recal_pass > 3) break;// rp_recal_pass only valid between 1 and 3
 
-      //if ( ievt >= 100000 ) break; // just 100k events for testing, runs a little on the slow side...
+      //if ( ievt >= 10000 ) break; // just 100k events for testing, runs a little on the slow side...
       ++all_counter;
 
       bool say_event = ( ievt%1000==0 );
@@ -3666,6 +3676,38 @@ void flatten(int runNumber, int rp_recal_pass)
                   fvtxs3_v2_both_dcnw->Fill(pt_angle,cosfvtx_dphi2_dcnw);
                 } // check on psi
 
+
+	      for(int jtrk=0; jtrk< d_ntrk; jtrk++)
+		{
+		  //nfvtxt_CME_PosPos_fvtxsEP;
+		  float px2    = d_px[jtrk];
+		  float py2    = d_py[jtrk];
+		  float pz2    = d_pz[jtrk];
+
+		  // int dcarm=0;
+		  // if(px>0) dcarm=1;
+		  int arm1 = dcarm;
+		  int arm2 = 0;
+		  if ( px2 > 0 ) arm2 = 1;
+
+		  float phi2 = TMath::ATan2(py2,px2);
+		  // float pt = sqrt(px*px+py*py);
+		  float phi1 = phi0;
+
+		  // --- NEED TO ADD TRACK CHARGE TO TREES!!!
+		  int charge1 = 1;
+		  int charge2 = 1;
+		  float argument = cos(phi1+phi2-2*fvtx_south_psi2_docalib);
+		  if ( charge1 > 0 && charge2 > 0 ) nfvtxt_CME_PosPos_fvtxsEP->Fill(nfvtxt,argument);
+		  if ( charge1 < 0 && charge2 < 0 ) nfvtxt_CME_NegNeg_fvtxsEP->Fill(nfvtxt,argument);
+		  if ( charge1 > 0 && charge2 < 0 ) nfvtxt_CME_PosNeg_fvtxsEP->Fill(nfvtxt,argument);
+		  if ( charge1 < 0 && charge2 > 0 ) nfvtxt_CME_NegPos_fvtxsEP->Fill(nfvtxt,argument);
+		  if ( charge1 > 0 && charge2 > 0 && arm1 == 0 && arm2 == 1 ) nfvtxt_CME_EastPosWestPos_fvtxsEP->Fill(nfvtxt,argument);
+		  if ( charge1 < 0 && charge2 < 0 && arm1 == 0 && arm2 == 1 ) nfvtxt_CME_EastNegWestNeg_fvtxsEP->Fill(nfvtxt,argument);
+		  if ( charge1 > 0 && charge2 < 0 && arm1 == 0 && arm2 == 1 ) nfvtxt_CME_EastPosWestNeg_fvtxsEP->Fill(nfvtxt,argument);
+		  if ( charge1 < 0 && charge2 > 0 && arm1 == 0 && arm2 == 1 ) nfvtxt_CME_EastNegWestPos_fvtxsEP->Fill(nfvtxt,argument);
+		}
+
             } // loop over tracks
 
           for ( int i = 0; i < nfvtxt; ++i )
@@ -3757,7 +3799,7 @@ void flatten(int runNumber, int rp_recal_pass)
               os_fvtxn_tracks_d32eta_west->Fill(eta,os_fvtxn_tracks_uq3);
               os_fvtxn_tracks_d32eta_east->Fill(eta,os_fvtxn_tracks_uq3);
 
-            }
+            } // end of fvtx tracks
 
 
         } // check on tracks

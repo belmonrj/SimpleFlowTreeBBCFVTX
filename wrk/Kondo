@@ -1,14 +1,14 @@
 Universe        = vanilla
 Notification    = Complete
-Executable      = /phenix/plhf/belmonrj/offline/AnalysisTrain/SimpleFlowTreeBBCFVTX/wrk/flattening.exe
+Executable      = /phenix/plhf/belmonrj/offline/AnalysisTrain/SimpleFlowTreeBBCFVTX/wrk/cumulants.exe
 Requirements    = (CPU_Speed >= 1 && CPU_Experiment == "phenix")
 Rank            = CPU_Speed
 Priority        = +1
 GetEnv          = True
 Initialdir      = /phenix/plhf/belmonrj/offline/AnalysisTrain/SimpleFlowTreeBBCFVTX/wrk
-Error           = /phenix/plhf/belmonrj/offline/AnalysisTrain/SimpleFlowTreeBBCFVTX/wrk/log/job_$(Process).err
-Log             = /phenix/plhf/belmonrj/offline/AnalysisTrain/SimpleFlowTreeBBCFVTX/wrk/log/job_$(Process).log
-Output          = /phenix/plhf/belmonrj/offline/AnalysisTrain/SimpleFlowTreeBBCFVTX/wrk/log/job_$(Process).out
+Error           = /phenix/plhf/belmonrj/offline/AnalysisTrain/SimpleFlowTreeBBCFVTX/wrk/log/cjob_$(Process).err
+Log             = /phenix/plhf/belmonrj/offline/AnalysisTrain/SimpleFlowTreeBBCFVTX/wrk/log/cjob_$(Process).log
+Output          = /phenix/plhf/belmonrj/offline/AnalysisTrain/SimpleFlowTreeBBCFVTX/wrk/log/cjob_$(Process).out
 +Experiment     = "phenix"
 +Job_Type       = "cas"
 
