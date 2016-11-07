@@ -1393,7 +1393,7 @@ float calccos3_event(TComplex& Qn, TComplex& Q2n, float M)
 {
   if ( M < 3 ) return -9999;
   TComplex result = Qn*TComplex::Conjugate(Qn)*TComplex::Conjugate(Qn) - Qn*TComplex::Conjugate(Q2n);
-  float numerator = result.Re();
+  float numerator = result.Re() - 2*(M-1)*TComplex::Conjugate(Qn).Re();
   float denominator = M*(M-1)*(M-2);
   return numerator/denominator;
 }
@@ -1402,7 +1402,7 @@ float calcsin3_event(TComplex& Qn, TComplex& Q2n, float M)
 {
   if ( M < 3 ) return -9999;
   TComplex result = Qn*TComplex::Conjugate(Qn)*TComplex::Conjugate(Qn) - Qn*TComplex::Conjugate(Q2n);
-  float numerator = result.Im();
+  float numerator = result.Im() - 2*(M-1)*TComplex::Conjugate(Qn).Im();
   float denominator = M*(M-1)*(M-2);
   return numerator/denominator;
 }
