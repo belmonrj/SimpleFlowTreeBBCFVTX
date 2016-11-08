@@ -46,6 +46,7 @@ void takehistograms
   double sin3[nbins];
 
   double x[nbins]; // generic x-axis, multiplicity in our case for now
+  double ex[nbins];
 
   double corr_c2[nbins];
   double corr_c4[nbins];
@@ -55,6 +56,9 @@ void takehistograms
   double corr_222[nbins];
   double uncorr_four[nbins];
   double uncorr_222[nbins];
+
+  TH1D* th1d_222 = new TH1D("th1d_222","",80,0,80);
+  TH1D* th1d_four = new TH1D("th1d_four","",80,0,80);
 
   for ( int i = 0; i < nbins; ++i )
     {
@@ -77,6 +81,9 @@ void takehistograms
       corr_four[i] = corr_c4[i] + corr_222[i];
       uncorr_four[i] = four[i];
       uncorr_222[i] = 2*two[i]*two[i];
+      // --- make some histograms
+      th1d_222->SetBinContent(i+1,corr_222[i]);
+      th1d_four->SetBinContent(i+1,corr_four[i]);
     }
 
   TGraphErrors* tge_corr_c24 = new TGraphErrors(nbins,x,corr_c4,0,0);
@@ -112,7 +119,7 @@ void takehistograms
   tge_corr_four->SetMarkerColor(kRed);
   tge_corr_four->Draw("p");
   TLegend* leg = new TLegend(0.62,0.68,0.88,0.88);
-  leg->AddEntry(tge_corr_222,"2#LT#LT2#GT#GT^{2} - a.c","p");
+  leg->AddEntry(tge_corr_222,"2#LT#LT2#GT#GT^{2} - a.c.","p");
   leg->AddEntry(tge_corr_four,"#LT#LT4#GT#GT - a.c.","p");
   leg->SetTextSize(0.05);
   leg->Draw();
@@ -146,6 +153,100 @@ void takehistograms
   tge_uncorr_222->SetMaximum(2e-4);
   tge_uncorr_222->SetMinimum(-2e-5);
   c1->Print("testuncorrcomponentsfzz.png");
+
+  // ---
+
+  TH1D* th1d_222_clone = (TH1D*)th1d_222->Clone();
+  TH1D* th1d_four_clone = (TH1D*)th1d_four->Clone();
+
+  TFile* file = TFile::Open(Form("input/combined_200.root"));
+  TProfile* tp1f_c22 = (TProfile*)file->Get("nfvtxt_os_fvtxc_tracks_c22");
+  TProfile* tp1f_c24a = (TProfile*)file->Get("nfvtxt_os_fvtxc_tracks_c24");
+  TH1D* th1d_c24a = tp1f_c24a->ProjectionX(Form("th1d_c24a"));
+  TH1D* th1d_c22 = tp1f_c22->ProjectionX(Form("th1d_c22"));
+  TH1D* th1d_c22a = (TH1D*)th1d_c22->Clone(Form("th1d_c22a"));
+  th1d_c22a->Multiply(th1d_c22);
+  th1d_c22a->Scale(2.0);
+
+  // th1d_222_clone->Divide(th1d_c22a);
+  // th1d_222_clone->Draw();
+  // c1->Print("testratio222.png");
+  // th1d_four_clone->Divide(th1d_c24a);
+  // th1d_four_clone->Draw();
+  // c1->Print("testratiofour.png");
+  // th1d_222_clone->Draw("same");
+  // c1->Print("testratiocomponents.png");
+
+  float ratio_222[nbins];
+  float ratio_four[nbins];
+  float eratio_222[nbins];
+  float eratio_four[nbins];
+  float n[nbins];
+  float cumulant_ac[nbins];
+  float cumulant_os[nbins];
+  for ( int i = 0; i < nbins; ++i )
+    {
+      float value_222_a = corr_222[i];
+      float value_222_b = th1d_c22a->GetBinContent(i+1);
+      float value_four_a = corr_four[i];
+      float value_four_b = th1d_c24a->GetBinContent(i+1);
+      ratio_222[i] = -9;
+      ratio_four[i] = -9;
+      if ( value_222_b > 0 ) ratio_222[i] = value_222_a/value_222_b;
+      if ( value_four_b > 0 ) ratio_four[i] = value_four_a/value_four_b;
+      eratio_222[i] = 0;
+      eratio_four[i] = 0;
+      ex[i] = 0;
+      n[i] = th1d_c22a->GetBinCenter(i+1);
+      if ( i%5 == 0 ) cout << x[i] << " " << n[i] << " " << ratio_222[i] << endl;
+      cumulant_ac[i] = corr_c4[i];
+      cumulant_os[i] = value_four_b - value_222_b;
+    }
+
+  TGraphErrors* tge_cumulant_ac = new TGraphErrors(nbins,n,cumulant_ac,0,0);
+  TGraphErrors* tge_cumulant_os = new TGraphErrors(nbins,n,cumulant_os,0,0);
+  tge_cumulant_ac->SetMarkerStyle(kOpenCircle);
+  tge_cumulant_ac->SetMarkerColor(kBlack);
+  tge_cumulant_os->SetMarkerStyle(kOpenSquare);
+  tge_cumulant_os->SetMarkerColor(kBlue); // all the deepest blues are black
+  tge_cumulant_ac->Draw("ap");
+  tge_cumulant_os->Draw("p");
+  tge_cumulant_ac->SetMaximum(5e-5);
+  tge_cumulant_ac->SetMinimum(-5e-5);
+  tge_cumulant_ac->GetXaxis()->SetLimits(0,80);
+  tge_cumulant_ac->GetXaxis()->SetTitle("N^{FVTX}_{tracks}");
+  TLine line0(0,0,80,0);
+  line0.SetLineStyle(2);
+  line0.SetLineWidth(2);
+  line0.Draw();
+  c1->Print("testcomparecumulants.png");
+
+  TGraphErrors* tge_ratio_222 = new TGraphErrors(nbins,n,ratio_222,0,0);
+  tge_ratio_222->SetMarkerStyle(kOpenCircle);
+  tge_ratio_222->SetMarkerColor(kBlack);
+  tge_ratio_222->Draw("ap");
+  tge_ratio_222->SetMaximum(2.0);
+  tge_ratio_222->SetMinimum(0.0);
+  tge_ratio_222->GetXaxis()->SetLimits(0,80);
+  tge_ratio_222->GetXaxis()->SetTitle("N^{FVTX}_{tracks}");
+  TGraphErrors* tge_ratio_four = new TGraphErrors(nbins,n,ratio_four,0,0);
+  tge_ratio_four->SetMarkerStyle(kOpenSquare);
+  tge_ratio_four->SetMarkerColor(kRed);
+  tge_ratio_four->Draw("p");
+  TLegend* leg = new TLegend(0.62,0.68,0.88,0.88);
+  leg->AddEntry(tge_corr_222,"2#LT#LT2#GT#GT^{2} - a.c.","p");
+  leg->AddEntry(tge_corr_four,"#LT#LT4#GT#GT - a.c.","p");
+  leg->SetTextSize(0.05);
+  leg->Draw();
+  TLine line1(0,1,80,1);
+  line1.SetLineStyle(2);
+  line1.SetLineWidth(2);
+  line1.Draw();
+  TLine line2(0,1.1,80,1.1);
+  line2.SetLineStyle(2);
+  line2.SetLineWidth(2);
+  line2.Draw();
+  c1->Print("testcorrcomponentsratio.png");
 
 }
 
