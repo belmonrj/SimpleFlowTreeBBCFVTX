@@ -120,6 +120,9 @@ void takehistograms
   tge_corr_222->SetMaximum(1e-3);
   tge_corr_222->SetMinimum(-1e-4);
   c1->Print("testcorrcomponentsfz.png");
+  tge_corr_222->SetMaximum(2e-4);
+  tge_corr_222->SetMinimum(-2e-5);
+  c1->Print("testcorrcomponentsfzz.png");
 
   TGraphErrors* tge_uncorr_222 = new TGraphErrors(nbins,x,uncorr_222,0,0);
   tge_uncorr_222->SetMarkerStyle(kOpenCircle);
@@ -140,6 +143,9 @@ void takehistograms
   tge_uncorr_222->SetMaximum(1e-3);
   tge_uncorr_222->SetMinimum(-1e-4);
   c1->Print("testuncorrcomponentsfz.png");
+  tge_uncorr_222->SetMaximum(2e-4);
+  tge_uncorr_222->SetMinimum(-2e-5);
+  c1->Print("testuncorrcomponentsfzz.png");
 
 }
 
