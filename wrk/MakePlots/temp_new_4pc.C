@@ -49,7 +49,12 @@ void takehistograms
 
   double corr_c2[nbins];
   double corr_c4[nbins];
+  double uncorr_c2[nbins];
   double uncorr_c4[nbins];
+  double corr_four[nbins];
+  double corr_222[nbins];
+  double uncorr_four[nbins];
+  double uncorr_222[nbins];
 
   for ( int i = 0; i < nbins; ++i )
     {
@@ -68,19 +73,73 @@ void takehistograms
       uncorr_c4[i] = four[i] - 2*two[i]*two[i]; // not very useful but have for completeness
       corr_c2[i] = two[i] - cos1[i]*cos1[i] - sin1[i]*sin1[i]; // simple enough it doesn't need it's own function
       corr_c4[i] = calc_corr_four(four[i],two[i],cos1[i],sin1[i],cossum2[i],sinsum2[i],cos3[i],sin3[i]);
+      corr_222[i] = 2*corr_c2[i]*corr_c2[i];
+      corr_four[i] = corr_c4[i] + corr_222[i];
+      uncorr_four[i] = four[i];
+      uncorr_222[i] = 2*two[i]*two[i];
     }
 
   TGraphErrors* tge_corr_c24 = new TGraphErrors(nbins,x,corr_c4,0,0);
   tge_corr_c24->SetMarkerStyle(kOpenCircle);
   tge_corr_c24->SetMarkerColor(kBlack);
   tge_corr_c24->Draw("ap");
+  tge_corr_c24->GetXaxis()->SetLimits(0,80);
+  tge_corr_c24->GetXaxis()->SetTitle("N^{FVTX}_{tracks}");
   c1->Print("testcorr4pc.png");
+  tge_corr_c24->SetMaximum(1e-4);
+  tge_corr_c24->SetMinimum(-1e-4);
+  c1->Print("testcorr4pcfz.png");
 
   TGraphErrors* tge_corr_c22 = new TGraphErrors(nbins,x,corr_c2,0,0);
   tge_corr_c22->SetMarkerStyle(kOpenCircle);
   tge_corr_c22->SetMarkerColor(kBlack);
   tge_corr_c22->Draw("ap");
+  tge_corr_c22->GetXaxis()->SetLimits(0,80);
+  tge_corr_c22->GetXaxis()->SetTitle("N^{FVTX}_{tracks}");
   c1->Print("testcorr2pc.png");
+  tge_corr_c22->SetMaximum(2e-2);
+  tge_corr_c22->SetMinimum(0);
+  c1->Print("testcorr2pcfz.png");
+
+  TGraphErrors* tge_corr_222 = new TGraphErrors(nbins,x,corr_222,0,0);
+  tge_corr_222->SetMarkerStyle(kOpenCircle);
+  tge_corr_222->SetMarkerColor(kBlack);
+  tge_corr_222->Draw("ap");
+  tge_corr_222->GetXaxis()->SetLimits(0,80);
+  tge_corr_222->GetXaxis()->SetTitle("N^{FVTX}_{tracks}");
+  TGraphErrors* tge_corr_four = new TGraphErrors(nbins,x,corr_four,0,0);
+  tge_corr_four->SetMarkerStyle(kOpenSquare);
+  tge_corr_four->SetMarkerColor(kRed);
+  tge_corr_four->Draw("p");
+  TLegend* leg = new TLegend(0.62,0.68,0.88,0.88);
+  leg->AddEntry(tge_corr_222,"2#LT#LT2#GT#GT^{2} - a.c","p");
+  leg->AddEntry(tge_corr_four,"#LT#LT4#GT#GT - a.c.","p");
+  leg->SetTextSize(0.05);
+  leg->Draw();
+  c1->Print("testcorrcomponents.png");
+  tge_corr_222->SetMaximum(1e-3);
+  tge_corr_222->SetMinimum(-1e-4);
+  c1->Print("testcorrcomponentsfz.png");
+
+  TGraphErrors* tge_uncorr_222 = new TGraphErrors(nbins,x,uncorr_222,0,0);
+  tge_uncorr_222->SetMarkerStyle(kOpenCircle);
+  tge_uncorr_222->SetMarkerColor(kBlack);
+  tge_uncorr_222->Draw("ap");
+  tge_uncorr_222->GetXaxis()->SetLimits(0,80);
+  tge_uncorr_222->GetXaxis()->SetTitle("N^{FVTX}_{tracks}");
+  TGraphErrors* tge_uncorr_four = new TGraphErrors(nbins,x,uncorr_four,0,0);
+  tge_uncorr_four->SetMarkerStyle(kOpenSquare);
+  tge_uncorr_four->SetMarkerColor(kRed);
+  tge_uncorr_four->Draw("p");
+  TLegend* leg = new TLegend(0.62,0.68,0.88,0.88);
+  leg->AddEntry(tge_uncorr_222,"2#LT#LT2#GT#GT^{2}","p");
+  leg->AddEntry(tge_uncorr_four,"#LT#LT4#GT#GT","p");
+  leg->SetTextSize(0.05);
+  leg->Draw();
+  c1->Print("testuncorrcomponents.png");
+  tge_uncorr_222->SetMaximum(1e-3);
+  tge_uncorr_222->SetMinimum(-1e-4);
+  c1->Print("testuncorrcomponentsfz.png");
 
 }
 
