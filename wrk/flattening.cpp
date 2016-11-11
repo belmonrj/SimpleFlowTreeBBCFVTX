@@ -118,7 +118,7 @@ void flatten(int runNumber, int rp_recal_pass)
   // --- Run16dAu39
   if ( runNumber >= 457634 && runNumber <= 458167 ) energyflag = 39;
 
-  int verbosity = 0;
+  int verbosity = 2;
 
   char calibfile[500];
   sprintf(calibfile,"output/flattening_data/flattening_%d_%d.dat",runNumber,rp_recal_pass-1);
@@ -317,7 +317,8 @@ void flatten(int runNumber, int rp_recal_pass)
 
   TString tubegaincorrectionfile_name = Form("SpecialProjects/WeightFiles/bbctube_run%d.root", runNumber);
   TFile* tube_gaincorrection_file = TFile::Open(tubegaincorrectionfile_name);
-  float tube_gaincorrection[64] = {0};
+  float tube_gaincorrection[128];
+  for ( int i = 0; i < 128; ++i ) tube_gaincorrection[i] = 1.0;
   if ( tube_gaincorrection_file )
     {
       TH1D* th1d_tube_gaincorrection = (TH1D*)tube_gaincorrection_file->Get("th1d_tubegaincorrection");
@@ -423,6 +424,7 @@ void flatten(int runNumber, int rp_recal_pass)
   // ---
   TH1D* th1d_BBC_charge = new TH1D("th1d_BBC_charge","",200,-0.5,199.5);
   TH1D* th1d_FVTX_nclus = new TH1D("th1d_FVTX_nclus","",200,-0.5,1999.5);
+  TH1D* th1d_FVTX_ntrk = new TH1D("th1d_FVTX_ntrk","",100,-0.5,99.5);
   TH2D* th2d_qBBC_nFVTX = new TH2D("th2d_qBBC_nFVTX","",200,-0.5,199.5,200,-0.5,1999.5);
   TH1D* th1d_FVTXS_nclus = new TH1D("th1d_FVTXS_nclus","",200,-0.5,1999.5);
   TH1D* th1d_FVTXN_nclus = new TH1D("th1d_FVTXN_nclus","",200,-0.5,1999.5);
@@ -1421,7 +1423,7 @@ void flatten(int runNumber, int rp_recal_pass)
   float        d_Qx[9];
   float        d_Qy[9];
   float        d_Qw[9];
-  float        d_BBC_charge[64];
+  float        d_BBC_charge[128];
 
   int          npc1;
   int          d_nFVTX_clus;
@@ -1435,6 +1437,8 @@ void flatten(int runNumber, int rp_recal_pass)
   float        d_px[max_nh];
   float        d_py[max_nh];
   float        d_pz[max_nh];
+  float        d_pc3sdz[max_nh];
+  float        d_pc3sdphi[max_nh];
 
   int nfvtxt;
   float feta[75];
@@ -1472,6 +1476,8 @@ void flatten(int runNumber, int rp_recal_pass)
   TBranch* b_px;   //!
   TBranch* b_py;   //!
   TBranch* b_pz;   //!
+  TBranch* b_pc3sdz;   //!
+  TBranch* b_pc3sdphi;   //!
   TBranch* b_nfvtxt;   //!
   TBranch* b_fphi;   //!
   TBranch* b_feta;   //!
@@ -1515,6 +1521,8 @@ void flatten(int runNumber, int rp_recal_pass)
   ntp_event_chain->SetBranchAddress("d_cntpx",d_px,&b_px);
   ntp_event_chain->SetBranchAddress("d_cntpy",d_py,&b_py);
   ntp_event_chain->SetBranchAddress("d_cntpz",d_pz,&b_pz);
+  ntp_event_chain->SetBranchAddress("d_cntpc3sdz",d_pc3sdz,&b_pc3sdz);
+  ntp_event_chain->SetBranchAddress("d_cntpc3sdphi",d_pc3sdphi,&b_pc3sdphi);
 
   ntp_event_chain->SetBranchAddress("ntracklets",&nfvtxt,&b_nfvtxt);
   ntp_event_chain->SetBranchAddress("fphi",fphi,&b_fphi);
@@ -1559,9 +1567,9 @@ void flatten(int runNumber, int rp_recal_pass)
 
       if ( say_event ) cout << "event number = " << ievt << endl;
 
-      if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "getting event level variables" << endl;
+      //if ( ( say_event && verbosity > 0 ) || verbosity > 4 ) cout << "getting event level variables" << endl;
       ntp_event_chain->GetEntry(ievt);
-      if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Finished getting tree variables" << endl;
+      //if ( ( say_event && verbosity > 0 ) || verbosity > 4 ) cout << "Finished getting tree variables" << endl;
 
       // ---------------------
       // --- trigger selection
@@ -1579,6 +1587,13 @@ void flatten(int runNumber, int rp_recal_pass)
       if ( energyflag == 39  ) accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS;
 
       unsigned int passes_trigger = trigger_scaled & accepted_triggers;
+
+      // cout << "trigger_BBCLL1narrowcent  is " << trigger_BBCLL1narrowcent << endl;
+      // cout << "trigger_BBCLL1narrow  is " << trigger_BBCLL1narrow << endl;
+      // cout << "accepted_triggers is " << accepted_triggers << endl;
+      // cout << "trigger_scaled is " << trigger_scaled << endl;
+      // cout << "passes_trigger is " << passes_trigger << endl;
+
       if ( passes_trigger == 0 )
         {
           if ( verbosity > 1 ) cout << "trigger rejected" << endl;
@@ -1647,7 +1662,7 @@ void flatten(int runNumber, int rp_recal_pass)
       //                Calculating Event Planes                    //
       //------------------------------------------------------------//
 
-      if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Calculating event planes" << endl;
+      //if ( ( say_event && verbosity > 0 ) || verbosity > 4 ) cout << "Calculating event planes" << endl;
 
       // --- all numbers from Darren 2016-06-23
       const float x_off = 0.3;
@@ -1684,13 +1699,16 @@ void flatten(int runNumber, int rp_recal_pass)
       float bbc_nw_qy4 = 0;
       float bbc_nw_qw = 0;
 
-      if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Looping over BBC stuff now" << endl;
+      //if ( ( say_event && verbosity > 0 ) || verbosity > 4 ) cout << "Looping over BBC stuff now" << endl;
 
       if ( bbc_pmts )
         {
+	  //cout << "starting tubes loop" << endl;
+          //for(int ipmt = 64; ipmt < 128; ipmt++)
           for(int ipmt = 0; ipmt < 64; ipmt++)
             {
               float bbc_charge = d_BBC_charge[ipmt];
+	      //cout << ipmt << " " << bbc_charge << " " << bbc_nw_qw << endl;
               if ( bbc_charge <= 0 ) continue;
 
               float bbc_x      = d_pmt_x[ipmt] - vtx_x*10;//pmt location in mm
@@ -1750,6 +1768,8 @@ void flatten(int runNumber, int rp_recal_pass)
               bbc_nw_qx4 += bbc_charge*TMath::Cos(4*phi);
               bbc_nw_qy4 += bbc_charge*TMath::Sin(4*phi);
               bbc_nw_qw += bbc_charge;
+
+	      //cout << ipmt << " " << bbc_charge << " " << bbc_nw_qw << endl;
             } // loop over tubes
         } // check on tubes
 
@@ -1757,18 +1777,21 @@ void flatten(int runNumber, int rp_recal_pass)
 
       if ( centrality < 0 )
         {
-          //cout << "centrality undefined, cutting on bbc charge" << endl;
+          if ( verbosity > 1 ) cout << "centrality undefined, skipping event" << endl;
           // --- revise these numbers as needed
-          if ( energyflag == 200 && bbc_nw_qw < 60.0 ) continue;
-          if ( energyflag == 62  && bbc_nw_qw < 40.0 ) continue;
-          if ( energyflag == 20  && bbc_nw_qw < 25.0 ) continue;
-          if ( energyflag == 39  && bbc_nw_qw < 30.0 ) continue;
+          // if ( energyflag == 200 && bbc_nw_qw < 60.0 ) continue;
+          // if ( energyflag == 62  && bbc_nw_qw < 40.0 ) continue;
+          // if ( energyflag == 20  && bbc_nw_qw < 25.0 ) continue;
+          // if ( energyflag == 39  && bbc_nw_qw < 30.0 ) continue;
           ++bad_cent_counter;
+	  continue;
         }
 
       if ( say_event )
         {
-          cout << "bbc charge = " << bbc_qw << endl;
+          //cout << "bbc charge = " << bbc_qw << endl;
+          cout << "bbc charge = " << bbc_nw_qw << endl;
+	  //cout << "bbc charge direct sum = " << bbc_qs << "+" << bbc_qn << "=" << bbc_qs+bbc_qn << endl;
           cout << "centrality = " << centrality << endl;
         }
 
@@ -1787,6 +1810,7 @@ void flatten(int runNumber, int rp_recal_pass)
 
       th1d_BBC_charge->Fill(bbc_nw_qw);
       th1d_FVTX_nclus->Fill(d_nFVTX_clus);
+      th1d_FVTX_ntrk->Fill(nfvtxt);
       th2d_qBBC_nFVTX->Fill(bbc_nw_qw,d_nFVTX_clus);
 
       // --------------
@@ -1838,7 +1862,7 @@ void flatten(int runNumber, int rp_recal_pass)
       int nclus_south_outer = 0;
       int nclus_north_outer = 0;
 
-      if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Looping over FVTX cluster" << endl;
+      //if ( ( say_event && verbosity > 0 ) || verbosity > 4 ) cout << "Looping over FVTX cluster" << endl;
       if ( fvtx_clusters )
         {
           for(int iclus = 0; iclus < d_nFVTX_clus; iclus++)
@@ -1863,7 +1887,7 @@ void flatten(int runNumber, int rp_recal_pass)
               ++cluster_counter;
               if(!(id_fvtx>=0 && id_fvtx<40))
                 {
-                  if ( verbosity > 0 )
+                  if ( verbosity > 5 )
                     {
                       cout << "gap cut rejecting cluster??? cluster z = "
                            << d_FVTX_z[iclus] << " fvtx z = "
@@ -2997,9 +3021,10 @@ void flatten(int runNumber, int rp_recal_pass)
           cout << "FVTX south event plane " << fvtx_south_psi2_docalib << endl;
           cout << "FVTX north event plane " << fvtx_north_psi2_docalib << endl;
           cout << "BBC charge " << bbc_qw << endl;
-          cout << "Total number of clusters is " << d_nFVTX_clus << endl;
-          cout << "Number of FVTXS clusters " << fvtxs_qw[0] << endl;
-          cout << "Number of FVTXN clusters " << fvtxn_qw[0] << endl;
+	  cout << "centrality " << centrality << endl;
+          // cout << "Total number of clusters is " << d_nFVTX_clus << endl;
+          // cout << "Number of FVTXS clusters " << fvtxs_qw[0] << endl;
+          // cout << "Number of FVTXN clusters " << fvtxn_qw[0] << endl;
         }
 
 
@@ -3096,6 +3121,10 @@ void flatten(int runNumber, int rp_recal_pass)
               float px    = d_px[itrk];
               float py    = d_py[itrk];
               float pz    = d_pz[itrk];
+	      float pc3sdz    = d_pc3sdz[itrk];
+	      float pc3sdphi  = d_pc3sdphi[itrk];
+	      //cout << pc3sdphi << " " << pc3sdz << endl;
+	      //if ( fabs(pc3sdz) > 2.0 || fabs(pc3sdphi) > 2.0 ) continue;
 
               int dcarm=0;
               if(px>0) dcarm=1;
