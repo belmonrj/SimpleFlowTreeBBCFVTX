@@ -113,6 +113,7 @@ int SimpleFlowTreeBBCFVTX::Init(PHCompositeNode *topNode)
   {
     _ntp_event = new TTree("ntp_event", "event-wise ntuple");
     _ntp_event->SetAutoFlush(1000);
+    _ntp_event->SetMaxTreeSize(100000000000);
     _ntp_event -> Branch("event", &event, "event/F");
     _ntp_event -> Branch("bbc_z", &bbc_z, "bbc_z/F");
     _ntp_event -> Branch("centrality", &centrality, "centrality/F");
