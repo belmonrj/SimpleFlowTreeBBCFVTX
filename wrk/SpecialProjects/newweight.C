@@ -7,58 +7,66 @@ void fvtx_track_weight1d(int);
 void newweight()
 {
 
-  fvtx_track_weight1d(455355);
+  //fvtx_track_weight1d(455355);
 
   //return;
 
   //bbctube(456652);
 
-  // return;
+  //  return;
 
   //runweight2d(456652); // remember when this was needed?
   //newweight2d(455355); // now this is needed, and that could change again in a little while (must be some weird environment thing)
   //newweight2d(456652); // now this is needed, and that could change again in a little while (must be some weird environment thing)
   //runweight2d(455355);
 
-  //  return;
+  newweight2d(456652);
+  bbctube(456652);
+  fvtx_track_weight1d(456652);
+
+  //return;
 
   int run;
   ifstream fin;
 
-  fin.open("list_200.short");
+  // fin.open("list200.txt");
+  // while ( fin >> run )
+  //   {
+  //     newweight2d(run);
+  //     bbctube(run);
+  //     fvtx_track_weight1d(run);
+  //   }
+  // fin.close();
+
+  // return;
+
+  // fin.open("list62.txt");
+  // while ( fin >> run )
+  //   {
+  //     newweight2d(run);
+  //     bbctube(run);
+  //     fvtx_track_weight1d(run);
+  //   }
+  // fin.close();
+
+  // return;
+
+  // fin.open("list39.txt");
+  // while ( fin >> run )
+  //   {
+  //     newweight2d(run);
+  //     bbctube(run);
+  //     fvtx_track_weight1d(run);
+  //   }
+  // fin.close();
+
+  // return;
+
+  fin.open("list20.txt");
   while ( fin >> run )
     {
-      //newweight2d(run);
-      //bbctube(run);
-      fvtx_track_weight1d(run);
-    }
-  fin.close();
-
-  return;
-
-  fin.open("list_62.short");
-  while ( fin >> run )
-    {
-      // newweight2d(run);
-      // bbctube(run);
-      fvtx_track_weight1d(run);
-    }
-  fin.close();
-
-  fin.open("list_39.short");
-  while ( fin >> run )
-    {
-      // newweight2d(run);
-      // bbctube(run);
-      fvtx_track_weight1d(run);
-    }
-  fin.close();
-
-  fin.open("list_20.short");
-  while ( fin >> run )
-    {
-      // newweight2d(run);
-      // bbctube(run);
+      newweight2d(run);
+      bbctube(run);
       fvtx_track_weight1d(run);
     }
   fin.close();
@@ -552,7 +560,7 @@ void fvtx_track_weight1d(int run)
 
   TCanvas* c1 = new TCanvas("c1","");
 
-  TFile* file = TFile::Open(Form("RootFiles/ftweight_run%d_pass0.root",run));
+  TFile* file = TFile::Open(Form("RootFiles/weight_run%d_pass0.root",run));
   if ( !file )
     {
       cout << "WARNING: file does not exist for run " << run << endl;
@@ -570,7 +578,7 @@ void fvtx_track_weight1d(int run)
   // ---
   // ---
 
-  TFile* fout = TFile::Open(Form("WeightFiles/ftweight1d_run%d.root",run),"recreate");
+  TFile* fout = TFile::Open(Form("WeightFiles/weight1d_run%d.root",run),"recreate");
 
   TH1D* th1d_fvtxs_track_phi  = (TH1D*)((TH1D*)file->Get("th1d_fvtxs_track_phi" ))->Clone();
   TH1D* th1d_fvtxs0_track_phi = (TH1D*)((TH1D*)file->Get("th1d_fvtxs0_track_phi"))->Clone();
