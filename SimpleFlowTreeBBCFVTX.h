@@ -148,6 +148,7 @@ class SimpleFlowTreeBBCFVTX: public SubsysReco
   float d_cntpx[N_CTRK_MAX];
   float d_cntpy[N_CTRK_MAX];
   float d_cntpz[N_CTRK_MAX];
+  float d_cntcharge[N_CTRK_MAX];
   float d_cntpc3sdz[N_CTRK_MAX];
   float d_cntpc3sdphi[N_CTRK_MAX];
 

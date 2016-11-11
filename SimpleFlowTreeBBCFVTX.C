@@ -152,6 +152,7 @@ int SimpleFlowTreeBBCFVTX::Init(PHCompositeNode *topNode)
       _ntp_event -> Branch("d_cntpx", &d_cntpx, "d_cntpx[d_ntrk]/F");
       _ntp_event -> Branch("d_cntpy", &d_cntpy, "d_cntpy[d_ntrk]/F");
       _ntp_event -> Branch("d_cntpz", &d_cntpz, "d_cntpz[d_ntrk]/F");
+      _ntp_event -> Branch("d_cntcharge", &d_cntcharge, "d_cntcharge[d_ntrk]/F");
       _ntp_event -> Branch("d_cntpc3sdz", &d_cntpc3sdz, "d_cntpc3sdz[d_ntrk]/F");
       _ntp_event -> Branch("d_cntpc3sdphi", &d_cntpc3sdphi, "d_cntpc3sdphi[d_ntrk]/F");
     }
@@ -812,7 +813,7 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
       pz = _utils->rotate_z(px, pz);
 
 
-      // int charge = strk->get_charge();
+      int charge = strk->get_charge();
 
       float pc3dphi = strk->get_pc3dphi();
       float pc3dz = strk->get_pc3dz();
@@ -829,6 +830,7 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
       d_cntpx[counter] = px;
       d_cntpy[counter] = py;
       d_cntpz[counter] = pz;
+      d_cntcharge[counter] = charge;
       d_cntpc3sdz[counter] = pc3sdz;
       d_cntpc3sdphi[counter] = pc3sdphi;
 
