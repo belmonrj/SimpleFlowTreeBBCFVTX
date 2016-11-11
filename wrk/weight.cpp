@@ -111,8 +111,8 @@ void flatten(int runNumber, int passNumber)
   // char outFile1[300];
   // sprintf(outFile1,"%s%d%s","SpecialProjects/RootFiles/svrb_",runNumber,".root");
   TFile* tf_histo_inn = NULL;
-  if ( passNumber > 0 ) tf_histo_inn = TFile::Open(Form("SpecialProjects/RootFiles/ftweight_run%d_pass%d.root",runNumber,passNumber-1)); // need null for pass zero
-  TFile* tf_histo_out = new TFile(Form("SpecialProjects/RootFiles/ftweight_run%d_pass%d.root",runNumber,passNumber),"recreate");
+  if ( passNumber > 0 ) tf_histo_inn = TFile::Open(Form("SpecialProjects/RootFiles/weight_run%d_pass%d.root",runNumber,passNumber-1)); // need null for pass zero
+  TFile* tf_histo_out = new TFile(Form("SpecialProjects/RootFiles/weight_run%d_pass%d.root",runNumber,passNumber),"recreate");
   if ( !tf_histo_out )
     {
       cout << "FATAL ERROR: Unable to create output file!" << endl;
@@ -120,22 +120,30 @@ void flatten(int runNumber, int passNumber)
     }
 
 
-  // --- get the number of files for this run number
-  string pipe_out = (string) gSystem->GetFromPipe(Form("ls input/tree_%010d_*.root | grep -c r",runNumber));
-  int nfiles = 0;
-  nfiles = atoi(pipe_out.c_str());
-  cout<<"nfiles: "<<nfiles<<endl;
-  if(nfiles==0) return;
+  char filename[500];
 
-  // --- make a new TChain for the tree
+  // // --- get the number of files for this run number
+  // string pipe_out = (string) gSystem->GetFromPipe(Form("ls input/tree_%010d_*.root | grep -c r",runNumber));
+  // int nfiles = 0;
+  // nfiles = atoi(pipe_out.c_str());
+  // cout<<"nfiles: "<<nfiles<<endl;
+  // if(nfiles==0) return;
+
+  // // --- make a new TChain for the tree
+  // TChain *ntp_event_chain = new TChain("ntp_event");
+  // for ( int ifile = 0; ifile < nfiles; ++ifile )
+  //   {
+  //     char filename[500];
+  //     sprintf(filename,"input/tree_%010d_%04d.root",runNumber,ifile);
+  //     cout<<"adding to tchain: "<<filename<<endl;
+  //     ntp_event_chain->Add(filename);
+  //   }
+
   TChain *ntp_event_chain = new TChain("ntp_event");
-  for ( int ifile = 0; ifile < nfiles; ++ifile )
-    {
-      char filename[500];
-      sprintf(filename,"input/tree_%010d_%04d.root",runNumber,ifile);
-      cout<<"adding to tchain: "<<filename<<endl;
-      ntp_event_chain->Add(filename);
-    }
+  sprintf(filename,"input/tree_%d.root",runNumber);
+  cout << "adding to tchain: " << filename << endl;
+  ntp_event_chain->Add(filename);
+
 
 
   cout << "Initalizing PMT positions for the BBCS" << endl;
