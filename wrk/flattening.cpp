@@ -127,26 +127,26 @@ void flatten(int runNumber, int rp_recal_pass)
 
   char filename[500];
 
-  // // --- get the number of files for this run number
-  // string pipe_out = (string) gSystem->GetFromPipe(Form("ls input/tree_%010d_*.root | grep -c r",runNumber));
-  // int nfiles = 0;
-  // nfiles = atoi(pipe_out.c_str());
-  // cout<<"nfiles: "<<nfiles<<endl;
-  // if(nfiles==0) return;
+  // --- get the number of files for this run number
+  string pipe_out = (string) gSystem->GetFromPipe(Form("ls input/%d_*.root | grep -c r",runNumber));
+  int nfiles = 0;
+  nfiles = atoi(pipe_out.c_str());
+  cout<<"nfiles: "<<nfiles<<endl;
+  if(nfiles==0) return;
 
-  // // --- make a new TChain for the tree
-  // TChain *ntp_event_chain = new TChain("ntp_event");
-  // for ( int ifile = 0; ifile < nfiles; ++ifile )
-  //   {
-  //     sprintf(filename,"input/tree_%010d_%04d.root",runNumber,ifile);
-  //     cout<<"adding to tchain: "<<filename<<endl;
-  //     ntp_event_chain->Add(filename);
-  //   }
-
+  // --- make a new TChain for the tree
   TChain *ntp_event_chain = new TChain("ntp_event");
-  sprintf(filename,"input/tree_%d.root",runNumber);
-  cout << "adding to tchain: " << filename << endl;
-  ntp_event_chain->Add(filename);
+  for ( int ifile = 0; ifile < nfiles; ++ifile )
+    {
+      sprintf(filename,"input/%d_%d.root",runNumber,ifile);
+      cout<<"adding to tchain: "<<filename<<endl;
+      ntp_event_chain->Add(filename);
+    }
+
+  // TChain *ntp_event_chain = new TChain("ntp_event");
+  // sprintf(filename,"input/tree_%d.root",runNumber);
+  // cout << "adding to tchain: " << filename << endl;
+  // ntp_event_chain->Add(filename);
 
   // ---
 
