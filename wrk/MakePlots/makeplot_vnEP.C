@@ -15,10 +15,10 @@ void makeplot_vnEP()
       doenergy(39,i);
       doenergy(20,i);
       // ---
-      // diagnostic(200,i);
-      // diagnostic(62,i);
-      // diagnostic(39,i);
-      // diagnostic(20,i);
+      diagnostic(200,i);
+      diagnostic(62,i);
+      diagnostic(39,i);
+      diagnostic(20,i);
     }
 
   outfile->Write();
@@ -366,18 +366,18 @@ void doenergy(int energy, int harmonic)
   c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%deta_ratio_fvtxsbbcs.pdf",energy,harmonic));
   c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%deta_ratio_fvtxsbbcs.png",energy,harmonic));
 
-  TFile* fcorr = TFile::Open("ampt_vneta_correction.root");
-  //TProfile* tp1f_corr = (TProfile*)fcorr->Get("hv2eta_corr_sys");
-  TProfile* tp1f_corr = (TProfile*)fcorr->Get("v2eta_correction_dAu200");
-  TH1D* th1d_corr = tp1f_corr->ProjectionX();
-  hvneta_bbcs->Divide(th1d_corr);
-  hvneta_fvtxs->Divide(th1d_corr);
-  hvneta_bbcs->Draw();
-  hvneta_fvtxs->Draw("same");
-  leta->Draw();
+  // TFile* fcorr = TFile::Open("ampt_vneta_correction.root");
+  // //TProfile* tp1f_corr = (TProfile*)fcorr->Get("hv2eta_corr_sys");
+  // TProfile* tp1f_corr = (TProfile*)fcorr->Get("v2eta_correction_dAu200");
+  // TH1D* th1d_corr = tp1f_corr->ProjectionX();
+  // hvneta_bbcs->Divide(th1d_corr);
+  // hvneta_fvtxs->Divide(th1d_corr);
+  // hvneta_bbcs->Draw();
+  // hvneta_fvtxs->Draw("same");
+  // leta->Draw();
 
-  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%deta_corrected_fvtxsbbcs.pdf",energy,harmonic));
-  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%deta_corrected_fvtxsbbcs.png",energy,harmonic));
+  // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%deta_corrected_fvtxsbbcs.pdf",energy,harmonic));
+  // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%deta_corrected_fvtxsbbcs.png",energy,harmonic));
 
   delete c1;
 
