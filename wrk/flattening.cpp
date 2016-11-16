@@ -485,9 +485,26 @@ void flatten(int runNumber, int rp_recal_pass)
   TProfile* tp1f_reso2_BBC_CNT = new TProfile("tp1f_reso2_BBC_CNT","",1,-0.5,0.5,-1e6,1e6,"");
   TProfile* tp1f_reso2_BBC_FVTX = new TProfile("tp1f_reso2_BBC_FVTX","",1,-0.5,0.5,-1e6,1e6,"");
   TProfile* tp1f_reso2_CNT_FVTX = new TProfile("tp1f_reso2_CNT_FVTX","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_BBC_FVTX0 = new TProfile("tp1f_reso2_BBC_FVTX0","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_CNT_FVTX0 = new TProfile("tp1f_reso2_CNT_FVTX0","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_BBC_FVTX1 = new TProfile("tp1f_reso2_BBC_FVTX1","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_CNT_FVTX1 = new TProfile("tp1f_reso2_CNT_FVTX1","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_BBC_FVTX2 = new TProfile("tp1f_reso2_BBC_FVTX2","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_CNT_FVTX2 = new TProfile("tp1f_reso2_CNT_FVTX2","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_BBC_FVTX3 = new TProfile("tp1f_reso2_BBC_FVTX3","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_CNT_FVTX3 = new TProfile("tp1f_reso2_CNT_FVTX3","",1,-0.5,0.5,-1e6,1e6,"");
+
   TProfile* tp1f_reso3_BBC_CNT = new TProfile("tp1f_reso3_BBC_CNT","",1,-0.5,0.5,-1e6,1e6,"");
   TProfile* tp1f_reso3_BBC_FVTX = new TProfile("tp1f_reso3_BBC_FVTX","",1,-0.5,0.5,-1e6,1e6,"");
   TProfile* tp1f_reso3_CNT_FVTX = new TProfile("tp1f_reso3_CNT_FVTX","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_BBC_FVTX0 = new TProfile("tp1f_reso3_BBC_FVTX0","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_CNT_FVTX0 = new TProfile("tp1f_reso3_CNT_FVTX0","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_BBC_FVTX1 = new TProfile("tp1f_reso3_BBC_FVTX1","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_CNT_FVTX1 = new TProfile("tp1f_reso3_CNT_FVTX1","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_BBC_FVTX2 = new TProfile("tp1f_reso3_BBC_FVTX2","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_CNT_FVTX2 = new TProfile("tp1f_reso3_CNT_FVTX2","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_BBC_FVTX3 = new TProfile("tp1f_reso3_BBC_FVTX3","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_CNT_FVTX3 = new TProfile("tp1f_reso3_CNT_FVTX3","",1,-0.5,0.5,-1e6,1e6,"");
 
   TH1D* th1d_reso2_BBC_CNT = new TH1D("th1d_reso2_BBC_CNT","",220,-1.1,1.1);
   TH1D* th1d_reso2_BBC_FVTX = new TH1D("th1d_reso2_BBC_FVTX","",220,-1.1,1.1);
@@ -3056,6 +3073,14 @@ void flatten(int runNumber, int rp_recal_pass)
       // --- BBC and FVTX south
       tp1f_reso2_BBC_FVTX->Fill(0.0,cos(2*(bbc_south_psi2_docalib-fvtx_south_psi2_docalib)));
       tp1f_reso3_BBC_FVTX->Fill(0.0,cos(3*(bbc_south_psi3_docalib-fvtx_south_psi3_docalib)));
+      tp1f_reso2_BBC_FVTX0->Fill(0.0,cos(2*(bbc_south_psi2_docalib-fvtx0_south_psi2_docalib)));
+      tp1f_reso2_BBC_FVTX1->Fill(0.0,cos(2*(bbc_south_psi2_docalib-fvtx1_south_psi2_docalib)));
+      tp1f_reso2_BBC_FVTX2->Fill(0.0,cos(2*(bbc_south_psi2_docalib-fvtx2_south_psi2_docalib)));
+      tp1f_reso2_BBC_FVTX3->Fill(0.0,cos(2*(bbc_south_psi2_docalib-fvtx3_south_psi2_docalib)));
+      tp1f_reso3_BBC_FVTX0->Fill(0.0,cos(3*(bbc_south_psi3_docalib-fvtx0_south_psi3_docalib)));
+      tp1f_reso3_BBC_FVTX1->Fill(0.0,cos(3*(bbc_south_psi3_docalib-fvtx1_south_psi3_docalib)));
+      tp1f_reso3_BBC_FVTX2->Fill(0.0,cos(3*(bbc_south_psi3_docalib-fvtx2_south_psi3_docalib)));
+      tp1f_reso3_BBC_FVTX3->Fill(0.0,cos(3*(bbc_south_psi3_docalib-fvtx3_south_psi3_docalib)));
       th1d_reso2_BBC_FVTX->Fill(cos(2*(bbc_south_psi2_docalib-fvtx_south_psi2_docalib)));
       th1d_reso3_BBC_FVTX->Fill(cos(3*(bbc_south_psi3_docalib-fvtx_south_psi3_docalib)));
       th1d_dreso2_BBC_FVTX->Fill(bbc_south_psi2_docalib-fvtx_south_psi2_docalib);
@@ -3706,6 +3731,8 @@ void flatten(int runNumber, int rp_recal_pass)
                   if ( dcarm == 1 ) fvtxs0_v2_west_phipsi->Fill(fvtx_dphi2_docalib);
                   if ( dcarm == 0 ) fvtxs0_v2_east_phipsi->Fill(fvtx_dphi2_docalib);
                   fvtxs0_v2_both_phipsi->Fill(fvtx_dphi2_docalib);
+                  tp1f_reso2_CNT_FVTX0->Fill(0.0,cosfvtx_dphi2_docalib);
+                  tp1f_reso3_CNT_FVTX0->Fill(0.0,cosfvtx_dphi3_docalib);
                 }
 
               //fvtx layer 1
@@ -3728,6 +3755,8 @@ void flatten(int runNumber, int rp_recal_pass)
                   if ( dcarm == 1 ) fvtxs1_v2_west_phipsi->Fill(fvtx_dphi2_docalib);
                   if ( dcarm == 0 ) fvtxs1_v2_east_phipsi->Fill(fvtx_dphi2_docalib);
                   fvtxs1_v2_both_phipsi->Fill(fvtx_dphi2_docalib);
+                  tp1f_reso2_CNT_FVTX1->Fill(0.0,cosfvtx_dphi2_docalib);
+                  tp1f_reso3_CNT_FVTX1->Fill(0.0,cosfvtx_dphi3_docalib);
                 }
 
               //fvtx layer 2
@@ -3750,6 +3779,8 @@ void flatten(int runNumber, int rp_recal_pass)
                   if ( dcarm == 1 ) fvtxs2_v2_west_phipsi->Fill(fvtx_dphi2_docalib);
                   if ( dcarm == 0 ) fvtxs2_v2_east_phipsi->Fill(fvtx_dphi2_docalib);
                   fvtxs2_v2_both_phipsi->Fill(fvtx_dphi2_docalib);
+                  tp1f_reso2_CNT_FVTX2->Fill(0.0,cosfvtx_dphi2_docalib);
+                  tp1f_reso3_CNT_FVTX2->Fill(0.0,cosfvtx_dphi3_docalib);
                 }
 
               //fvtx layer 3
@@ -3772,6 +3803,8 @@ void flatten(int runNumber, int rp_recal_pass)
                   if ( dcarm == 1 ) fvtxs3_v2_west_phipsi->Fill(fvtx_dphi2_docalib);
                   if ( dcarm == 0 ) fvtxs3_v2_east_phipsi->Fill(fvtx_dphi2_docalib);
                   fvtxs3_v2_both_phipsi->Fill(fvtx_dphi2_docalib);
+                  tp1f_reso2_CNT_FVTX3->Fill(0.0,cosfvtx_dphi2_docalib);
+                  tp1f_reso3_CNT_FVTX3->Fill(0.0,cosfvtx_dphi3_docalib);
                 } // check on psi
 
               // --- now fvtx layers
