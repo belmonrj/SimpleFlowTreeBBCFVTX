@@ -459,8 +459,8 @@ void diagnostic(int energy, int harmonic)
   c1->Print(Form("FigsHarmonicCoefficient/diagnostic_fvtxs_EBW_energy%d_harm%d.pdf",energy,harmonic));
 
 
-  if ( harmonic == 2 )
-  {
+  //if ( harmonic == 2 )
+  //{
   TProfile* hvn_fvtxs0_B = (TProfile*)file->Get(Form("fvtxs0_v%d_both_docalib",harmonic));
   TProfile* hvn_fvtxs1_B = (TProfile*)file->Get(Form("fvtxs1_v%d_both_docalib",harmonic));
   TProfile* hvn_fvtxs2_B = (TProfile*)file->Get(Form("fvtxs2_v%d_both_docalib",harmonic));
@@ -503,7 +503,7 @@ void diagnostic(int energy, int harmonic)
 
   c1->Print(Form("FigsHarmonicCoefficient/diagnostic_fvtxsL_B_energy%d_harm%d.png",energy,harmonic));
   c1->Print(Form("FigsHarmonicCoefficient/diagnostic_fvtxsL_B_energy%d_harm%d.pdf",energy,harmonic));
-  }
+  //}
 
 
   // ---------
