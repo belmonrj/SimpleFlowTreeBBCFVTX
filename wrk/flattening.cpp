@@ -94,8 +94,8 @@ int main(int argc, char *argv[])
 
   cout << "Now processing with run number " << run << endl;
 
-  flatten(run,1);
-  flatten(run,2);
+  // flatten(run,1);
+  // flatten(run,2);
   flatten(run,3);
 
   return 0;
@@ -1483,6 +1483,7 @@ void flatten(int runNumber, int rp_recal_pass)
   float        d_px[max_nh];
   float        d_py[max_nh];
   float        d_pz[max_nh];
+  float        d_charge[max_nh];
   float        d_pc3sdz[max_nh];
   float        d_pc3sdphi[max_nh];
 
@@ -1522,6 +1523,7 @@ void flatten(int runNumber, int rp_recal_pass)
   TBranch* b_px;   //!
   TBranch* b_py;   //!
   TBranch* b_pz;   //!
+  TBranch* b_charge;   //!
   TBranch* b_pc3sdz;   //!
   TBranch* b_pc3sdphi;   //!
   TBranch* b_nfvtxt;   //!
@@ -1567,6 +1569,7 @@ void flatten(int runNumber, int rp_recal_pass)
   ntp_event_chain->SetBranchAddress("d_cntpx",d_px,&b_px);
   ntp_event_chain->SetBranchAddress("d_cntpy",d_py,&b_py);
   ntp_event_chain->SetBranchAddress("d_cntpz",d_pz,&b_pz);
+  ntp_event_chain->SetBranchAddress("d_cntcharge",d_charge,&b_charge);
   ntp_event_chain->SetBranchAddress("d_cntpc3sdz",d_pc3sdz,&b_pc3sdz);
   ntp_event_chain->SetBranchAddress("d_cntpc3sdphi",d_pc3sdphi,&b_pc3sdphi);
 
@@ -3177,6 +3180,7 @@ void flatten(int runNumber, int rp_recal_pass)
               float px    = d_px[itrk];
               float py    = d_py[itrk];
               float pz    = d_pz[itrk];
+	      float charge    = d_charge[itrk];
 	      float pc3sdz    = d_pc3sdz[itrk];
 	      float pc3sdphi  = d_pc3sdphi[itrk];
 	      //cout << pc3sdphi << " " << pc3sdz << endl;
@@ -3884,8 +3888,8 @@ void flatten(int runNumber, int rp_recal_pass)
 		  float phi1 = phi0;
 
 		  // --- NEED TO ADD TRACK CHARGE TO TREES!!!
-		  int charge1 = 1;
-		  int charge2 = 1;
+		  int charge1 = charge;
+		  int charge2 = d_charge[jtrk];
 		  float argument = cos(phi1+phi2-2*fvtx_south_psi2_docalib);
 		  if ( charge1 > 0 && charge2 > 0 ) nfvtxt_CME_PosPos_fvtxsEP->Fill(nfvtxt,argument);
 		  if ( charge1 < 0 && charge2 < 0 ) nfvtxt_CME_NegNeg_fvtxsEP->Fill(nfvtxt,argument);
