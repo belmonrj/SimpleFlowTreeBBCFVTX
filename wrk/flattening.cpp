@@ -3887,7 +3887,6 @@ void flatten(int runNumber, int rp_recal_pass)
 		  // float pt = sqrt(px*px+py*py);
 		  float phi1 = phi0;
 
-		  // --- NEED TO ADD TRACK CHARGE TO TREES!!!
 		  int charge1 = charge;
 		  int charge2 = d_charge[jtrk];
 		  float argument = cos(phi1+phi2-2*fvtx_south_psi2_docalib);
@@ -3907,6 +3906,9 @@ void flatten(int runNumber, int rp_recal_pass)
             {
               float phi = fphi[i];
               float eta = feta[i];
+	      float dcax = fdcax[i];
+	      float dcay = fdcay[i];
+	      //if ( fabs(dcax) > 0.5 || fabs(dcay) > 0.5 ) continue;
               int ns = 0;
               int nn = 0;
               if ( eta > 0 ) nn = 1;
