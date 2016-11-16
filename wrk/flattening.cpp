@@ -506,6 +506,15 @@ void flatten(int runNumber, int rp_recal_pass)
   TProfile* tp1f_reso3_BBC_FVTX3 = new TProfile("tp1f_reso3_BBC_FVTX3","",1,-0.5,0.5,-1e6,1e6,"");
   TProfile* tp1f_reso3_CNT_FVTX3 = new TProfile("tp1f_reso3_CNT_FVTX3","",1,-0.5,0.5,-1e6,1e6,"");
 
+  // ---
+  TProfile* tp1f_z_reso2_BBC_CNT = new TProfile("tp1f_z_reso2_BBC_CNT","",20,-10,10,-1e6,1e6,"");
+  TProfile* tp1f_z_reso2_BBC_FVTX = new TProfile("tp1f_z_reso2_BBC_FVTX","",20,-10,10,-1e6,1e6,"");
+  TProfile* tp1f_z_reso2_CNT_FVTX = new TProfile("tp1f_z_reso2_CNT_FVTX","",20,-10,10,-1e6,1e6,"");
+  TProfile* tp1f_z_reso3_BBC_CNT = new TProfile("tp1f_z_reso3_BBC_CNT","",20,-10,10,-1e6,1e6,"");
+  TProfile* tp1f_z_reso3_BBC_FVTX = new TProfile("tp1f_z_reso3_BBC_FVTX","",20,-10,10,-1e6,1e6,"");
+  TProfile* tp1f_z_reso3_CNT_FVTX = new TProfile("tp1f_z_reso3_CNT_FVTX","",20,-10,10,-1e6,1e6,"");
+  // ---
+
   TH1D* th1d_reso2_BBC_CNT = new TH1D("th1d_reso2_BBC_CNT","",220,-1.1,1.1);
   TH1D* th1d_reso2_BBC_FVTX = new TH1D("th1d_reso2_BBC_FVTX","",220,-1.1,1.1);
   TH1D* th1d_reso2_CNT_FVTX = new TH1D("th1d_reso2_CNT_FVTX","",220,-1.1,1.1);
@@ -3071,6 +3080,8 @@ void flatten(int runNumber, int rp_recal_pass)
       // ---
 
       // --- BBC and FVTX south
+      tp1f_z_reso2_BBC_FVTX->Fill(ZVTX,cos(2*(bbc_south_psi2_docalib-fvtx_south_psi2_docalib)));
+      tp1f_z_reso3_BBC_FVTX->Fill(ZVTX,cos(3*(bbc_south_psi3_docalib-fvtx_south_psi3_docalib)));
       tp1f_reso2_BBC_FVTX->Fill(0.0,cos(2*(bbc_south_psi2_docalib-fvtx_south_psi2_docalib)));
       tp1f_reso3_BBC_FVTX->Fill(0.0,cos(3*(bbc_south_psi3_docalib-fvtx_south_psi3_docalib)));
       tp1f_reso2_BBC_FVTX0->Fill(0.0,cos(2*(bbc_south_psi2_docalib-fvtx0_south_psi2_docalib)));
@@ -3504,6 +3515,8 @@ void flatten(int runNumber, int rp_recal_pass)
                       if ( dcarm == 1 ) bbcs_v4_4Psi2_west_docalib->Fill(pt_angle,cosfourfour);
                       if ( dcarm == 0 ) bbcs_v4_4Psi2_east_docalib->Fill(pt_angle,cosfourfour);
                       // --- ep reso
+                      tp1f_z_reso2_BBC_CNT->Fill(ZVTX,cosbbc_dphi2_docalib);
+                      tp1f_z_reso3_BBC_CNT->Fill(ZVTX,cosbbc_dphi3_docalib);
                       tp1f_reso2_BBC_CNT->Fill(0.0,cosbbc_dphi2_docalib);
                       tp1f_reso3_BBC_CNT->Fill(0.0,cosbbc_dphi3_docalib);
                       th1d_reso2_BBC_CNT->Fill(cosbbc_dphi2_docalib);
@@ -3585,6 +3598,8 @@ void flatten(int runNumber, int rp_recal_pass)
                   if ( dcarm == 1 ) fvtxs_v4_4Psi2_west_docalib->Fill(pt_angle,cosfourfour);
                   if ( dcarm == 0 ) fvtxs_v4_4Psi2_east_docalib->Fill(pt_angle,cosfourfour);
                   // --- ep reso
+                  tp1f_z_reso2_CNT_FVTX->Fill(ZVTX,cosfvtx_dphi2_docalib);
+                  tp1f_z_reso3_CNT_FVTX->Fill(ZVTX,cosfvtx_dphi3_docalib);
                   tp1f_reso2_CNT_FVTX->Fill(0.0,cosfvtx_dphi2_docalib);
                   tp1f_reso3_CNT_FVTX->Fill(0.0,cosfvtx_dphi3_docalib);
                   th1d_reso2_CNT_FVTX->Fill(cosfvtx_dphi2_docalib);
