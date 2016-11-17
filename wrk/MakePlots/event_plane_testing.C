@@ -10,6 +10,8 @@ void event_plane_testing()
   // psidiff_run(455050,2);
   // cospsidiff_run(455050,2);
 
+  beforeafterflat_run(454774,2); // 200
+  return;
   beforeafterflat_run(455050,2); // 200
   beforeafterflat_run(455355,2); // 200
   beforeafterflat_run(456015,2); // 62
@@ -38,7 +40,8 @@ void beforeafterflat_run(int run, int harmonic)
 
   TCanvas* c1 = new TCanvas("c1","");
 
-  TFile* file = TFile::Open(Form("input/hist_%d.root",run));
+  //TFile* file = TFile::Open(Form("input/hist_%d.root",run));
+  TFile* file = TFile::Open(Form("input/files_200/hist_%d.root",run)); // uh oh
   if ( !file ) { cout << "no file" << endl; return; }
   TList* list = file->GetListOfKeys();
   if ( list->GetSize() < 1 ) { cout << "no keys" << endl; return; }
@@ -92,6 +95,106 @@ void beforeafterflat_run(int run, int harmonic)
   c1->Print(Form("FigsEventPlane/after_psi%d_fvtxs_%d.png",harmonic,run));
   c1->Print(Form("FigsEventPlane/after_psi%d_fvtxs_%d.pdf",harmonic,run));
 
+  TH1D* hfvtxs0W = (TH1D*) ((TH2D*)file->Get(Form("psi_bf_0_%d_14",harmonic-1)))->ProjectionY();
+  hfvtxs0W->Draw();
+  hfvtxs0W->SetLineColor(kRed);
+  hfvtxs0W->GetXaxis()->SetTitle(Form("#Psi_{%d}, FVTXS0",harmonic));
+  TH1D* hfvtxs0 = (TH1D*) ((TH2D*)file->Get(Form("psi_bf_0_%d_4",harmonic-1)))->ProjectionY();
+  hfvtxs0->Draw("same");
+  hfvtxs0->SetLineColor(kGreen+2);
+  hfvtxs0->GetXaxis()->SetTitle(Form("#Psi_{%d}, FVTXS0",harmonic));
+  TH1D* hfvtxs0M = (TH1D*) ((TH2D*)file->Get(Form("psi_mf_0_%d_4",harmonic-1)))->ProjectionY();
+  hfvtxs0M->Draw("same");
+  hfvtxs0M->SetLineColor(kBlue);
+  TH1D* hfvtxs0A = (TH1D*) ((TH2D*)file->Get(Form("psi_af_0_%d_4",harmonic-1)))->ProjectionY();
+  hfvtxs0A->Draw("same");
+  hfvtxs0A->SetLineColor(kBlack);
+  leg = new TLegend(0.68,0.68,0.88,0.88);
+  leg->AddEntry(hfvtxs0W,"Raw","l");
+  leg->AddEntry(hfvtxs0,"Weighting","l");
+  leg->AddEntry(hfvtxs0M,"Recentering","l");
+  leg->AddEntry(hfvtxs0A,"Flattening","l");
+  leg->SetTextSize(0.045);
+  leg->Draw();
+  c1->Print(Form("FigsEventPlane/after_psi%d_fvtxs0_%d.png",harmonic,run));
+  c1->Print(Form("FigsEventPlane/after_psi%d_fvtxs0_%d.pdf",harmonic,run));
+
+  TH1D* hfvtxs1W = (TH1D*) ((TH2D*)file->Get(Form("psi_bf_0_%d_15",harmonic-1)))->ProjectionY();
+  hfvtxs1W->Draw();
+  hfvtxs1W->SetLineColor(kRed);
+  hfvtxs1W->GetXaxis()->SetTitle(Form("#Psi_{%d}, FVTXS1",harmonic));
+  TH1D* hfvtxs1 = (TH1D*) ((TH2D*)file->Get(Form("psi_bf_0_%d_5",harmonic-1)))->ProjectionY();
+  hfvtxs1->Draw("same");
+  hfvtxs1->SetLineColor(kGreen+2);
+  hfvtxs1->GetXaxis()->SetTitle(Form("#Psi_{%d}, FVTXS1",harmonic));
+  TH1D* hfvtxs1M = (TH1D*) ((TH2D*)file->Get(Form("psi_mf_0_%d_5",harmonic-1)))->ProjectionY();
+  hfvtxs1M->Draw("same");
+  hfvtxs1M->SetLineColor(kBlue);
+  TH1D* hfvtxs1A = (TH1D*) ((TH2D*)file->Get(Form("psi_af_0_%d_5",harmonic-1)))->ProjectionY();
+  hfvtxs1A->Draw("same");
+  hfvtxs1A->SetLineColor(kBlack);
+  leg = new TLegend(0.68,0.68,0.88,0.88);
+  leg->AddEntry(hfvtxs1W,"Raw","l");
+  leg->AddEntry(hfvtxs1,"Weighting","l");
+  leg->AddEntry(hfvtxs1M,"Recentering","l");
+  leg->AddEntry(hfvtxs1A,"Flattening","l");
+  leg->SetTextSize(0.045);
+  leg->Draw();
+  c1->Print(Form("FigsEventPlane/after_psi%d_fvtxs1_%d.png",harmonic,run));
+  c1->Print(Form("FigsEventPlane/after_psi%d_fvtxs1_%d.pdf",harmonic,run));
+
+  TH1D* hfvtxs2W = (TH1D*) ((TH2D*)file->Get(Form("psi_bf_0_%d_15",harmonic-1)))->ProjectionY();
+  hfvtxs2W->Draw();
+  hfvtxs2W->SetLineColor(kRed);
+  hfvtxs2W->GetXaxis()->SetTitle(Form("#Psi_{%d}, FVTXS2",harmonic));
+  TH1D* hfvtxs2 = (TH1D*) ((TH2D*)file->Get(Form("psi_bf_0_%d_5",harmonic-1)))->ProjectionY();
+  hfvtxs2->Draw("same");
+  hfvtxs2->SetLineColor(kGreen+2);
+  hfvtxs2->GetXaxis()->SetTitle(Form("#Psi_{%d}, FVTXS2",harmonic));
+  TH1D* hfvtxs2M = (TH1D*) ((TH2D*)file->Get(Form("psi_mf_0_%d_5",harmonic-1)))->ProjectionY();
+  hfvtxs2M->Draw("same");
+  hfvtxs2M->SetLineColor(kBlue);
+  TH1D* hfvtxs2A = (TH1D*) ((TH2D*)file->Get(Form("psi_af_0_%d_5",harmonic-1)))->ProjectionY();
+  hfvtxs2A->Draw("same");
+  hfvtxs2A->SetLineColor(kBlack);
+  leg = new TLegend(0.68,0.68,0.88,0.88);
+  leg->AddEntry(hfvtxs2W,"Raw","l");
+  leg->AddEntry(hfvtxs2,"Weighting","l");
+  leg->AddEntry(hfvtxs2M,"Recentering","l");
+  leg->AddEntry(hfvtxs2A,"Flattening","l");
+  leg->SetTextSize(0.045);
+  leg->Draw();
+  c1->Print(Form("FigsEventPlane/after_psi%d_fvtxs2_%d.png",harmonic,run));
+  c1->Print(Form("FigsEventPlane/after_psi%d_fvtxs2_%d.pdf",harmonic,run));
+
+  TH1D* hfvtxs3W = (TH1D*) ((TH2D*)file->Get(Form("psi_bf_0_%d_16",harmonic-1)))->ProjectionY();
+  hfvtxs3W->Draw();
+  hfvtxs3W->SetLineColor(kRed);
+  hfvtxs3W->GetXaxis()->SetTitle(Form("#Psi_{%d}, FVTXS3",harmonic));
+  TH1D* hfvtxs3 = (TH1D*) ((TH2D*)file->Get(Form("psi_bf_0_%d_6",harmonic-1)))->ProjectionY();
+  hfvtxs3->Draw("same");
+  hfvtxs3->SetLineColor(kGreen+2);
+  hfvtxs3->GetXaxis()->SetTitle(Form("#Psi_{%d}, FVTXS3",harmonic));
+  TH1D* hfvtxs3M = (TH1D*) ((TH2D*)file->Get(Form("psi_mf_0_%d_6",harmonic-1)))->ProjectionY();
+  hfvtxs3M->Draw("same");
+  hfvtxs3M->SetLineColor(kBlue);
+  TH1D* hfvtxs3A = (TH1D*) ((TH2D*)file->Get(Form("psi_af_0_%d_6",harmonic-1)))->ProjectionY();
+  hfvtxs3A->Draw("same");
+  hfvtxs3A->SetLineColor(kBlack);
+  leg = new TLegend(0.68,0.68,0.88,0.88);
+  leg->AddEntry(hfvtxs3W,"Raw","l");
+  leg->AddEntry(hfvtxs3,"Weighting","l");
+  leg->AddEntry(hfvtxs3M,"Recentering","l");
+  leg->AddEntry(hfvtxs3A,"Flattening","l");
+  leg->SetTextSize(0.045);
+  leg->Draw();
+  c1->Print(Form("FigsEventPlane/after_psi%d_fvtxs3_%d.png",harmonic,run));
+  c1->Print(Form("FigsEventPlane/after_psi%d_fvtxs3_%d.pdf",harmonic,run));
+
+
+
+  // ---
+
   TH1D* hfvtxnW = (TH1D*) ((TH2D*)file->Get(Form("psi_bf_0_%d_18",harmonic-1)))->ProjectionY();
   hfvtxnW->Draw();
   hfvtxnW->SetLineColor(kRed);
@@ -109,6 +212,7 @@ void beforeafterflat_run(int run, int harmonic)
   leg->Draw();
   c1->Print(Form("FigsEventPlane/after_psi%d_fvtxn_%d.png",harmonic,run));
   c1->Print(Form("FigsEventPlane/after_psi%d_fvtxn_%d.pdf",harmonic,run));
+
 
   // --- and now for something related but different
 
