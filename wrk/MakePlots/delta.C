@@ -7,10 +7,9 @@ void delta()
 {
 
   TFile* file = TFile::Open("input/combined_200.root");
-  cout << file << endl;
+
 
   TH1D* th1dA = (TH1D*)file->Get("fvtxs_v3_both_phipsi");
-  cout << th1dA << endl;
   TH1D* th1d0 = (TH1D*)file->Get("fvtxs0_v3_both_phipsi");
   TH1D* th1d1 = (TH1D*)file->Get("fvtxs1_v3_both_phipsi");
   TH1D* th1d2 = (TH1D*)file->Get("fvtxs2_v3_both_phipsi");
@@ -29,8 +28,8 @@ void delta()
   fun->SetParLimits(2,-0.9,0.9);
   th1dA_fixed->Fit(fun,"","",-1.1,1.1);
   tex.DrawLatex(0.65,0.82,Form("offset %.2e",fun->GetParameter(2)));
-  c1->Print("phipsi3_th1dA.png");
-  c1->Print("phipsi3_th1dA.pdf");
+  c1->Print("FigsEventPlane/phipsi3_th1dA.png");
+  c1->Print("FigsEventPlane/phipsi3_th1dA.pdf");
 
   TH1D* th1d0_fixed = pleasefixme3h(th1d0);
   th1d0_fixed->Draw();
@@ -41,8 +40,8 @@ void delta()
   th1d0_fixed->GetXaxis()->SetTitle("#phi-#Psi_{3}");
   th1d0_fixed->Fit(fun,"","",-1.1,1.1);
   tex.DrawLatex(0.65,0.82,Form("offset %.2e",fun->GetParameter(2)));
-  c1->Print("phipsi3_th1d0.png");
-  c1->Print("phipsi3_th1d0.pdf");
+  c1->Print("FigsEventPlane/phipsi3_th1d0.png");
+  c1->Print("FigsEventPlane/phipsi3_th1d0.pdf");
 
   TH1D* th1d1_fixed = pleasefixme3h(th1d1);
   th1d1_fixed->Draw();
@@ -53,8 +52,8 @@ void delta()
   th1d1_fixed->GetXaxis()->SetTitle("#phi-#Psi_{3}");
   th1d1_fixed->Fit(fun,"","",-1.1,1.1);
   tex.DrawLatex(0.65,0.82,Form("offset %.2e",fun->GetParameter(2)));
-  c1->Print("phipsi3_th1d1.png");
-  c1->Print("phipsi3_th1d1.pdf");
+  c1->Print("FigsEventPlane/phipsi3_th1d1.png");
+  c1->Print("FigsEventPlane/phipsi3_th1d1.pdf");
 
   TH1D* th1d2_fixed = pleasefixme3h(th1d2);
   th1d2_fixed->Draw();
@@ -65,8 +64,8 @@ void delta()
   th1d2_fixed->GetXaxis()->SetTitle("#phi-#Psi_{3}");
   th1d2_fixed->Fit(fun,"","",-1.1,1.1);
   tex.DrawLatex(0.65,0.82,Form("offset %.2e",fun->GetParameter(2)));
-  c1->Print("phipsi3_th1d2.png");
-  c1->Print("phipsi3_th1d2.pdf");
+  c1->Print("FigsEventPlane/phipsi3_th1d2.png");
+  c1->Print("FigsEventPlane/phipsi3_th1d2.pdf");
 
   TH1D* th1d3_fixed = pleasefixme3h(th1d3);
   th1d3_fixed->Draw();
@@ -77,8 +76,8 @@ void delta()
   th1d3_fixed->GetXaxis()->SetTitle("#phi-#Psi_{3}");
   th1d3_fixed->Fit(fun,"","",-1.1,1.1);
   tex.DrawLatex(0.65,0.82,Form("offset %.2e",fun->GetParameter(2)));
-  c1->Print("phipsi3_th1d3.png");
-  c1->Print("phipsi3_th1d3.pdf");
+  c1->Print("FigsEventPlane/phipsi3_th1d3.png");
+  c1->Print("FigsEventPlane/phipsi3_th1d3.pdf");
 
   // ---
 
@@ -98,8 +97,8 @@ void delta()
   th1d_B_fixed->GetXaxis()->SetTitle("#phi-#Psi_{2}");
   th1d_B_fixed->Fit(fun2,"","",-1.6,1.6);
   tex.DrawLatex(0.65,0.82,Form("offset %.2e",fun->GetParameter(2)));
-  c1->Print("phipsi2_th1d_B.png");
-  c1->Print("phipsi2_th1d_B.pdf");
+  c1->Print("FigsEventPlane/phipsi2_th1d_B.png");
+  c1->Print("FigsEventPlane/phipsi2_th1d_B.pdf");
 
   th1d_S_fixed->Draw();
   max = th1d_S_fixed->GetBinContent(th1d_S_fixed->GetMaximumBin());
@@ -109,8 +108,81 @@ void delta()
   th1d_S_fixed->GetXaxis()->SetTitle("#phi-#Psi_{2}");
   th1d_S_fixed->Fit(fun2,"","",-1.6,1.6);
   tex.DrawLatex(0.65,0.82,Form("offset %.2e",fun->GetParameter(2)));
-  c1->Print("phipsi2_th1d_S.png");
-  c1->Print("phipsi2_th1d_S.pdf");
+  c1->Print("FigsEventPlane/phipsi2_th1d_S.png");
+  c1->Print("FigsEventPlane/phipsi2_th1d_S.pdf");
+
+  // ----------------------------------
+
+  TH1D* th1d_2_A = (TH1D*)file->Get("fvtxs_v2_both_phipsi");
+  TH1D* th1d_2_0 = (TH1D*)file->Get("fvtxs0_v2_both_phipsi");
+  TH1D* th1d_2_1 = (TH1D*)file->Get("fvtxs1_v2_both_phipsi");
+  TH1D* th1d_2_2 = (TH1D*)file->Get("fvtxs2_v2_both_phipsi");
+  TH1D* th1d_2_3 = (TH1D*)file->Get("fvtxs3_v2_both_phipsi");
+
+  TH1D* th1d_2_A_fixed = pleasefixme2h(th1d_2_A);
+  th1d_2_A_fixed->Draw();
+  double max = th1d_2_A_fixed->GetBinContent(th1d_2_A_fixed->GetMaximumBin());
+  th1d_2_A_fixed->SetMaximum(max*1.002);
+  th1d_2_A_fixed->SetMinimum(max*0.92);
+  th1d_2_A_fixed->GetXaxis()->SetRangeUser(-1.7,1.7);
+  th1d_2_A_fixed->GetXaxis()->SetTitle("#phi-#Psi_{3}");
+  TF1* fun = new TF1("fun","[0]+[1]*TMath::Cos(2*x-[2])",-2,2);
+  TLatex tex(0.5,0.8,Form("offset %.2e",fun->GetParameter(2)));
+  tex.SetNDC();
+  fun->SetParLimits(2,-0.9,0.9);
+  th1d_2_A_fixed->Fit(fun,"","",-1.1,1.1);
+  tex.DrawLatex(0.65,0.82,Form("offset %.2e",fun->GetParameter(2)));
+  c1->Print("FigsEventPlane/phipsi2_th1dA.png");
+  c1->Print("FigsEventPlane/phipsi2_th1dA.pdf");
+
+  TH1D* th1d_2_0_fixed = pleasefixme2h(th1d_2_0);
+  th1d_2_0_fixed->Draw();
+  max = th1d_2_0_fixed->GetBinContent(th1d_2_0_fixed->GetMaximumBin());
+  th1d_2_0_fixed->SetMaximum(max*1.002);
+  th1d_2_0_fixed->SetMinimum(max*0.92);
+  th1d_2_0_fixed->GetXaxis()->SetRangeUser(-1.7,1.7);
+  th1d_2_0_fixed->GetXaxis()->SetTitle("#phi-#Psi_{3}");
+  th1d_2_0_fixed->Fit(fun,"","",-1.1,1.1);
+  tex.DrawLatex(0.65,0.82,Form("offset %.2e",fun->GetParameter(2)));
+  c1->Print("FigsEventPlane/phipsi2_th1d0.png");
+  c1->Print("FigsEventPlane/phipsi2_th1d0.pdf");
+
+  TH1D* th1d_2_1_fixed = pleasefixme2h(th1d_2_1);
+  th1d_2_1_fixed->Draw();
+  max = th1d_2_1_fixed->GetBinContent(th1d_2_1_fixed->GetMaximumBin());
+  th1d_2_1_fixed->SetMaximum(max*1.002);
+  th1d_2_1_fixed->SetMinimum(max*0.92);
+  th1d_2_1_fixed->GetXaxis()->SetRangeUser(-1.7,1.7);
+  th1d_2_1_fixed->GetXaxis()->SetTitle("#phi-#Psi_{3}");
+  th1d_2_1_fixed->Fit(fun,"","",-1.1,1.1);
+  tex.DrawLatex(0.65,0.82,Form("offset %.2e",fun->GetParameter(2)));
+  c1->Print("FigsEventPlane/phipsi2_th1d1.png");
+  c1->Print("FigsEventPlane/phipsi2_th1d1.pdf");
+
+  TH1D* th1d_2_2_fixed = pleasefixme2h(th1d_2_2);
+  th1d_2_2_fixed->Draw();
+  max = th1d_2_2_fixed->GetBinContent(th1d_2_2_fixed->GetMaximumBin());
+  th1d_2_2_fixed->SetMaximum(max*1.002);
+  th1d_2_2_fixed->SetMinimum(max*0.92);
+  th1d_2_2_fixed->GetXaxis()->SetRangeUser(-1.7,1.7);
+  th1d_2_2_fixed->GetXaxis()->SetTitle("#phi-#Psi_{3}");
+  th1d_2_2_fixed->Fit(fun,"","",-1.1,1.1);
+  tex.DrawLatex(0.65,0.82,Form("offset %.2e",fun->GetParameter(2)));
+  c1->Print("FigsEventPlane/phipsi2_th1d2.png");
+  c1->Print("FigsEventPlane/phipsi2_th1d2.pdf");
+
+  TH1D* th1d_2_3_fixed = pleasefixme2h(th1d_2_3);
+  th1d_2_3_fixed->Draw();
+  max = th1d_2_3_fixed->GetBinContent(th1d_2_3_fixed->GetMaximumBin());
+  th1d_2_3_fixed->SetMaximum(max*1.002);
+  th1d_2_3_fixed->SetMinimum(max*0.92);
+  th1d_2_3_fixed->GetXaxis()->SetRangeUser(-1.7,1.7);
+  th1d_2_3_fixed->GetXaxis()->SetTitle("#phi-#Psi_{3}");
+  th1d_2_3_fixed->Fit(fun,"","",-1.1,1.1);
+  tex.DrawLatex(0.65,0.82,Form("offset %.2e",fun->GetParameter(2)));
+  c1->Print("FigsEventPlane/phipsi2_th1d3.png");
+  c1->Print("FigsEventPlane/phipsi2_th1d3.pdf");
+
 
 
 }
