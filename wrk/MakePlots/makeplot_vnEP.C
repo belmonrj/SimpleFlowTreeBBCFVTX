@@ -101,6 +101,11 @@ void doenergy(int energy, int harmonic)
 
   // ---
 
+  TProfile* hvn_fvtxs_east = (TProfile*)file->Get(Form("fvtxs_v%d_east_docalib",harmonic));
+  hvn_fvtxs_east->Scale(1.0/reso_fvtx);
+  TProfile* hvn_fvtxs_west = (TProfile*)file->Get(Form("fvtxs_v%d_west_docalib",harmonic));
+  hvn_fvtxs_west->Scale(1.0/reso_fvtx);
+
   TProfile* hvn_fvtxs = (TProfile*)file->Get(Form("fvtxs_v%d_both_docalib",harmonic));
   hvn_fvtxs->Scale(1.0/reso_fvtx);
   ofstream fout((const char*)Form("DataTextFiles/run16dau%d_v%dfvtxs.dat",energy,harmonic));
@@ -146,6 +151,13 @@ void doenergy(int energy, int harmonic)
 
   c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxs.pdf",energy,harmonic));
   c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxs.png",energy,harmonic));
+
+  // ---
+  TProfile* hvn_bbcs_east = (TProfile*)file->Get(Form("bbcs_v%d_east_docalib",harmonic));
+  hvn_bbcs_east->Scale(1.0/reso_bbc);
+  TProfile* hvn_bbcs_west = (TProfile*)file->Get(Form("bbcs_v%d_west_docalib",harmonic));
+  hvn_bbcs_west->Scale(1.0/reso_bbc);
+  // ---
 
   TProfile* hvn_bbcs = (TProfile*)file->Get(Form("bbcs_v%d_both_docalib",harmonic));
   hvn_bbcs->SetLineColor(kRed);
@@ -389,10 +401,20 @@ void doenergy(int energy, int harmonic)
   if ( energy == 20 ) hvneta_fvtxs->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = 19.6 GeV"));
 
   outfile->cd();
+  hvn_bbcs->SetName(Form("tprofile_v%d_pT_eventplane_bbcs_%d",harmonic,energy));
+  hvn_bbcs_east->SetName(Form("tprofile_v%d_pT_east_eventplane_bbcs_%d",harmonic,energy));
+  hvn_bbcs_west->SetName(Form("tprofile_v%d_pT_west_eventplane_bbcs_%d",harmonic,energy));
   hvn_fvtxs->SetName(Form("tprofile_v%d_pT_eventplane_fvtxs_%d",harmonic,energy));
+  hvn_fvtxs_east->SetName(Form("tprofile_v%d_pT_east_eventplane_fvtxs_%d",harmonic,energy));
+  hvn_fvtxs_west->SetName(Form("tprofile_v%d_pT_west_eventplane_fvtxs_%d",harmonic,energy));
   hvneta_bbcs->SetName(Form("tprofile_v%d_eta_eventplane_bbcs_%d",harmonic,energy));
   hvneta_fvtxs->SetName(Form("tprofile_v%d_eta_eventplane_fvtxs_%d",harmonic,energy));
+  hvn_bbcs->Write();
+  hvn_bbcs_east->Write();
+  hvn_bbcs_west->Write();
   hvn_fvtxs->Write();
+  hvn_fvtxs_east->Write();
+  hvn_fvtxs_west->Write();
   hvneta_bbcs->Write();
   hvneta_fvtxs->Write();
 
