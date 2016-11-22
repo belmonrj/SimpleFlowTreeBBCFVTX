@@ -20,9 +20,13 @@ void newweight()
   //newweight2d(456652); // now this is needed, and that could change again in a little while (must be some weird environment thing)
   //runweight2d(455355);
 
-  newweight2d(454774);
-  bbctube(454774);
-  fvtx_track_weight1d(454774);
+  // newweight2d(454774);
+  // bbctube(454774);
+  // fvtx_track_weight1d(454774);
+
+  newweight2d(456652);
+  bbctube(456652);
+  fvtx_track_weight1d(456652);
 
   //return;
 
@@ -38,8 +42,6 @@ void newweight()
   //   }
   // fin.close();
 
-  // return;
-
   // fin.open("list62.txt");
   // while ( fin >> run )
   //   {
@@ -49,8 +51,6 @@ void newweight()
   //   }
   // fin.close();
 
-  // return;
-
   // fin.open("list39.txt");
   // while ( fin >> run )
   //   {
@@ -59,8 +59,6 @@ void newweight()
   //     fvtx_track_weight1d(run);
   //   }
   // fin.close();
-
-  // return;
 
   // fin.open("list20.txt");
   // while ( fin >> run )
@@ -77,11 +75,11 @@ void newweight()
 void newweight2d(int run)
 {
 
-  cout << "Now processing run " << run << endl;
+  cout << "Now processing run " << run << " to do cluster weights" << endl;
 
   TCanvas* c1 = new TCanvas("c1","");
 
-  TFile* file = TFile::Open(Form("RootFiles/weight_run%d_pass0.root",run));
+  TFile* file = TFile::Open(Form("RootFiles/hist_%d.root",run));
   if ( !file )
     {
       cout << "WARNING: file does not exist for run " << run << endl;
@@ -464,11 +462,11 @@ void newweight2d(int run)
 void bbctube(int run)
 {
 
-  cout << "Now processing run " << run << endl;
+  cout << "Now processing run " << run << " to do tube gain corrections " << endl;
 
   TCanvas* c1 = new TCanvas("c1","");
 
-  TFile* file = TFile::Open(Form("RootFiles/weight_run%d_pass0.root",run));
+  TFile* file = TFile::Open(Form("RootFiles/hist_%d.root",run));
   if ( !file )
     {
       cout << "WARNING: file does not exist for run " << run << endl;
@@ -556,11 +554,13 @@ void bbctube(int run)
 void fvtx_track_weight1d(int run)
 {
 
-  cout << "Now processing run " << run << endl;
+  cout << "Now processing run " << run << " to do track weights " << endl;
+  cout << "Haha no just kidding I'm not doing anything until we put those histograms into the flattening code" << endl;
+  return;
 
   TCanvas* c1 = new TCanvas("c1","");
 
-  TFile* file = TFile::Open(Form("RootFiles/weight_run%d_pass0.root",run));
+  TFile* file = TFile::Open(Form("RootFiles/hist_%d.root",run));
   if ( !file )
     {
       cout << "WARNING: file does not exist for run " << run << endl;
@@ -574,23 +574,30 @@ void fvtx_track_weight1d(int run)
       return;
     }
 
+  cout << "File name is " << file->GetName() << " and address is " << file << endl;
+
   // ---
   // ---
   // ---
 
   TFile* fout = TFile::Open(Form("WeightFiles/weight1d_run%d.root",run),"recreate");
 
-  TH1D* th1d_fvtxs_track_phi  = (TH1D*)((TH1D*)file->Get("th1d_fvtxs_track_phi" ))->Clone();
-  TH1D* th1d_fvtxs0_track_phi = (TH1D*)((TH1D*)file->Get("th1d_fvtxs0_track_phi"))->Clone();
-  TH1D* th1d_fvtxs1_track_phi = (TH1D*)((TH1D*)file->Get("th1d_fvtxs1_track_phi"))->Clone();
-  // TH1D* th1d_fvtxs2_track_phi = (TH1D*)((TH1D*)file->Get("th1d_fvtxs2_track_phi"))->Clone();
-  // TH1D* th1d_fvtxs3_track_phi = (TH1D*)((TH1D*)file->Get("th1d_fvtxs3_track_phi"))->Clone();
+  TH1D* th1d_fvtxs_track_phi  = ((TH1D*)file->Get("th1d_fvtxs_track_phi" ));
+  TH1D* th1d_fvtxs0_track_phi = ((TH1D*)file->Get("th1d_fvtxs0_track_phi"));
+  TH1D* th1d_fvtxs1_track_phi = ((TH1D*)file->Get("th1d_fvtxs1_track_phi"));
+
+  if ( !th1d_fvtxs_track_phi ||
+       !th1d_fvtxs0_track_phi ||
+       !th1d_fvtxs1_track_phi )
+    {
+      cout << "no track weight histograms " << endl;
+      return;
+    }
 
   TH1D* th1d_weight_fvtxs  = (TH1D*)th1d_fvtxs_track_phi ->Clone("th1d_fvtxs_track_phi_weight");
   TH1D* th1d_weight_fvtxs0 = (TH1D*)th1d_fvtxs0_track_phi->Clone("th1d_fvtxs0_track_phi_weight");
   TH1D* th1d_weight_fvtxs1 = (TH1D*)th1d_fvtxs1_track_phi->Clone("th1d_fvtxs1_track_phi_weight");
-  // TH1D* th1d_weight_fvtxs2 = (TH1D*)th1d_fvtxs2_track_phi->Clone("th1d_fvtxs2_track_phi_weight");
-  // TH1D* th1d_weight_fvtxs3 = (TH1D*)th1d_fvtxs3_track_phi->Clone("th1d_fvtxs3_track_phi_weight");
+
 
   const int nbins = 50;
   if ( th1d_fvtxs_track_phi->GetNbinsX() != nbins )
