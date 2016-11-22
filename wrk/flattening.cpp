@@ -488,6 +488,22 @@ void flatten(int runNumber, int rp_recal_pass)
   TH1D* th1d_fvtxn2_clus_wphi = new TH1D("th1d_fvtxn2_clus_wphi","",50,-pi,pi);
   TH1D* th1d_fvtxn3_clus_wphi = new TH1D("th1d_fvtxn3_clus_wphi","",50,-pi,pi);
 
+  TH1D* th1d_fvtxs_track_phi = new TH1D("th1d_fvtxs_track_phi","",50,-pi,pi);
+  TH1D* th1d_fvtxs0_track_phi = new TH1D("th1d_fvtxs0_track_phi","",50,-pi,pi);
+  TH1D* th1d_fvtxs1_track_phi = new TH1D("th1d_fvtxs1_track_phi","",50,-pi,pi);
+
+  TH1D* th1d_fvtxn_track_phi = new TH1D("th1d_fvtxn_track_phi","",50,-pi,pi);
+  TH1D* th1d_fvtxn0_track_phi = new TH1D("th1d_fvtxn0_track_phi","",50,-pi,pi);
+  TH1D* th1d_fvtxn1_track_phi = new TH1D("th1d_fvtxn1_track_phi","",50,-pi,pi);
+
+  TH2D* th2d_fvtxs_track_phi = new TH2D("th2d_fvtxs_track_phi","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxs0_track_phi = new TH2D("th2d_fvtxs0_track_phi","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxs1_track_phi = new TH2D("th2d_fvtxs1_track_phi","",20,-10.0,10.0,50,-pi,pi);
+
+  TH2D* th2d_fvtxn_track_phi = new TH2D("th2d_fvtxn_track_phi","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxn0_track_phi = new TH2D("th2d_fvtxn0_track_phi","",20,-10.0,10.0,50,-pi,pi);
+  TH2D* th2d_fvtxn1_track_phi = new TH2D("th2d_fvtxn1_track_phi","",20,-10.0,10.0,50,-pi,pi);
+
   // --- event plane resolution
   TProfile* tp1f_reso2_BBC_CNT = new TProfile("tp1f_reso2_BBC_CNT","",1,-0.5,0.5,-1e6,1e6,"");
   TProfile* tp1f_reso2_BBC_FVTX = new TProfile("tp1f_reso2_BBC_FVTX","",1,-0.5,0.5,-1e6,1e6,"");
@@ -2308,7 +2324,34 @@ void flatten(int runNumber, int rp_recal_pass)
 	      fvtxn_tracks_qw[2] += fvtx_weight;
 	      ++ntrack_north_outer; // good_4_event
 	    }
-	}
+
+	  int fvtx_layer = -1;
+	  if ( fabs(eta) < 2 ) fvtx_layer = 0;
+	  if ( fabs(eta) > 2 ) fvtx_layer = 1;
+
+	  // --- south side
+	  if ( eta < 0 )
+	    {
+	      th1d_fvtxs_track_phi->Fill(phi);
+	      if ( fvtx_layer == 0 ) th1d_fvtxs0_track_phi->Fill(phi);
+	      if ( fvtx_layer == 1 ) th1d_fvtxs1_track_phi->Fill(phi);
+	      th2d_fvtxs_track_phi->Fill(vtx_z,phi);
+	      if ( fvtx_layer == 0 ) th2d_fvtxs0_track_phi->Fill(vtx_z,phi);
+	      if ( fvtx_layer == 1 ) th2d_fvtxs1_track_phi->Fill(vtx_z,phi);
+	    } // check on south
+
+              // --- north side
+	  if ( eta > 0 )
+	    {
+	      th1d_fvtxn_track_phi->Fill(phi);
+	      if ( fvtx_layer == 0 ) th1d_fvtxn0_track_phi->Fill(phi);
+	      if ( fvtx_layer == 1 ) th1d_fvtxn1_track_phi->Fill(phi);
+	      th2d_fvtxn_track_phi->Fill(vtx_z,phi);
+	      if ( fvtx_layer == 0 ) th2d_fvtxn0_track_phi->Fill(vtx_z,phi);
+	      if ( fvtx_layer == 1 ) th2d_fvtxn1_track_phi->Fill(vtx_z,phi);
+	    } // check on north
+
+	} // end of loop of fvtx tracks
 
       good_4_event = good_4_event && ( ntrack_south_inner > 0 ) && ( ntrack_south_outer > 0 ) && ( ntrack_north_inner > 0 ) && ( ntrack_north_outer > 0 ) ;
       int nfvtxt_south = ntrack_south_inner + ntrack_south_outer;
