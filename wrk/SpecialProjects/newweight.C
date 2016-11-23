@@ -33,41 +33,41 @@ void newweight()
   int run;
   ifstream fin;
 
-  // fin.open("list200.txt");
-  // while ( fin >> run )
-  //   {
-  //     newweight2d(run);
-  //     bbctube(run);
-  //     fvtx_track_weight1d(run);
-  //   }
-  // fin.close();
+  fin.open("list200.txt");
+  while ( fin >> run )
+    {
+      newweight2d(run);
+      bbctube(run);
+      fvtx_track_weight1d(run);
+    }
+  fin.close();
 
-  // fin.open("list62.txt");
-  // while ( fin >> run )
-  //   {
-  //     newweight2d(run);
-  //     bbctube(run);
-  //     fvtx_track_weight1d(run);
-  //   }
-  // fin.close();
+  fin.open("list62.txt");
+  while ( fin >> run )
+    {
+      newweight2d(run);
+      bbctube(run);
+      fvtx_track_weight1d(run);
+    }
+  fin.close();
 
-  // fin.open("list39.txt");
-  // while ( fin >> run )
-  //   {
-  //     newweight2d(run);
-  //     bbctube(run);
-  //     fvtx_track_weight1d(run);
-  //   }
-  // fin.close();
+  fin.open("list39.txt");
+  while ( fin >> run )
+    {
+      newweight2d(run);
+      bbctube(run);
+      fvtx_track_weight1d(run);
+    }
+  fin.close();
 
-  // fin.open("list20.txt");
-  // while ( fin >> run )
-  //   {
-  //     newweight2d(run);
-  //     bbctube(run);
-  //     fvtx_track_weight1d(run);
-  //   }
-  // fin.close();
+  fin.open("list20.txt");
+  while ( fin >> run )
+    {
+      newweight2d(run);
+      bbctube(run);
+      fvtx_track_weight1d(run);
+    }
+  fin.close();
 
 }
 
@@ -480,7 +480,7 @@ void bbctube(int run)
       return;
     }
 
-  gROOT->ProcessLine(".L bbcrings.C");
+  gROOT->ProcessLine(".L StuffBBC/bbcrings.C");
 
   TProfile* tp1f_bbc_charge_tube = (TProfile*)file->Get("tp1f_bbc_charge_tube");
   TProfile* tp1f_bbc0_charge_tube = (TProfile*)file->Get("tp1f_bbc0_charge_tube");
@@ -501,26 +501,26 @@ void bbctube(int run)
   cout << mean3 << endl;
   cout << mean4 << endl;
 
-  tp1f_bbc0_charge_tube->Draw();
-  TLine line0(0,mean0,63,mean0);
-  line0.Draw();
-  c1->Print(Form("FigsWeight/bbctube0_charge_run%d.png",run));
-  tp1f_bbc1_charge_tube->Draw();
-  TLine line1(0,mean1,63,mean1);
-  line1.Draw();
-  c1->Print(Form("FigsWeight/bbctube1_charge_run%d.png",run));
-  tp1f_bbc2_charge_tube->Draw();
-  TLine line2(0,mean2,63,mean2);
-  line2.Draw();
-  c1->Print(Form("FigsWeight/bbctube2_charge_run%d.png",run));
-  tp1f_bbc3_charge_tube->Draw();
-  TLine line3(0,mean3,63,mean3);
-  line3.Draw();
-  c1->Print(Form("FigsWeight/bbctube3_charge_run%d.png",run));
-  tp1f_bbc4_charge_tube->Draw();
-  TLine line4(0,mean4,63,mean4);
-  line4.Draw();
-  c1->Print(Form("FigsWeight/bbctube4_charge_run%d.png",run));
+  // tp1f_bbc0_charge_tube->Draw();
+  // TLine line0(0,mean0,63,mean0);
+  // line0.Draw();
+  // c1->Print(Form("FigsWeight/bbctube0_charge_run%d.png",run));
+  // tp1f_bbc1_charge_tube->Draw();
+  // TLine line1(0,mean1,63,mean1);
+  // line1.Draw();
+  // c1->Print(Form("FigsWeight/bbctube1_charge_run%d.png",run));
+  // tp1f_bbc2_charge_tube->Draw();
+  // TLine line2(0,mean2,63,mean2);
+  // line2.Draw();
+  // c1->Print(Form("FigsWeight/bbctube2_charge_run%d.png",run));
+  // tp1f_bbc3_charge_tube->Draw();
+  // TLine line3(0,mean3,63,mean3);
+  // line3.Draw();
+  // c1->Print(Form("FigsWeight/bbctube3_charge_run%d.png",run));
+  // tp1f_bbc4_charge_tube->Draw();
+  // TLine line4(0,mean4,63,mean4);
+  // line4.Draw();
+  // c1->Print(Form("FigsWeight/bbctube4_charge_run%d.png",run));
 
   TFile* fout = TFile::Open(Form("WeightFiles/bbctube_run%d.root",run),"recreate");
   TH1D* th1d_tubegaincorrection = new TH1D("th1d_tubegaincorrection","",64,-0.5,63.5);
@@ -538,8 +538,8 @@ void bbctube(int run)
       th1d_tubegaincorrection->SetBinContent(i+1,gaincorrection);
     }
 
-  th1d_tubegaincorrection->Draw();
-  c1->Print(Form("FigsWeight/bbctube_gaincorrection_run%d.png",run));
+  // th1d_tubegaincorrection->Draw();
+  // c1->Print(Form("FigsWeight/bbctube_gaincorrection_run%d.png",run));
 
   fout->Write();
   fout->Close();
