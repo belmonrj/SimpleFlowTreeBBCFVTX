@@ -94,8 +94,8 @@ int main(int argc, char *argv[])
 
   cout << "Now processing with run number " << run << endl;
 
-  // flatten(run,1);
-  // flatten(run,2);
+  flatten(run,1);
+  flatten(run,2);
   flatten(run,3);
 
   return 0;
@@ -2001,8 +2001,8 @@ void flatten(int runNumber, int rp_recal_pass)
                   fvtx_weight = th1d_fvtxs_phi_weight[fvtx_layer+1]->GetBinContent(phi_bin);
                 }
               if ( fvtx_weight != fvtx_weight ) fvtx_weight = 0;
-              if ( fvtx_weight < 0 ) fvtx_weight = 0;
-              if ( fvtx_weight > 10 ) fvtx_weight = 0;
+              if ( fvtx_weight < 0.75 ) fvtx_weight = 0;
+              if ( fvtx_weight > 1.5 ) fvtx_weight = 0;
 
               // --- south side
               if ( d_FVTX_z[iclus] < 0 )
