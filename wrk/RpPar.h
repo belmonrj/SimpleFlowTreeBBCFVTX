@@ -1,6 +1,6 @@
 #ifndef RPPAR_H_
 #define RPPAR_H_
-static const int NDET = 30; // number of detectors (see below)
+static const int NDET = 34; // number of detectors (see below)
 //  0 -- BBCS  Psi2 from node tree
 //  1 -- FVTXS Psi2 from node tree
 //  2 -- BBCS Psi2 calculated
@@ -31,6 +31,10 @@ static const int NDET = 30; // number of detectors (see below)
 // 27 -- FVTXN tracks all
 // 28 -- FVTXN tracks inner
 // 29 -- FVTXN tracks outer
+// 30 -- FVTXS clusters 0 1 2
+// 31 -- FVTXS clusters 0 1 3
+// 32 -- FVTXS clusters 0 2 3
+// 33 -- FVTXS clusters 1 2 3
 static const int NHAR = 4; // number of harmonics (1, 2, 3)
 static const int NMUL = 1; // Multiplicity bins (centrality selections)
 static const int NZPS = 10; // number of z-vertex bins for flattening (very important for FVTX, maybe not so important for BBC)
