@@ -376,9 +376,9 @@ void flatten(int runNumber, int rp_recal_pass)
   int fvtxn0_tracks_index = 28;
   int fvtxn1_tracks_index = 29;
   int fvtxs012_index  = 30;
-  int fvtxs013_index  = 30;
-  int fvtxs023_index  = 30;
-  int fvtxs123_index  = 30;
+  int fvtxs013_index  = 31;
+  int fvtxs023_index  = 32;
+  int fvtxs123_index  = 33;
 
 
   float pi = acos(-1.0); // defined in RpPar.h, i wonder why no warning
