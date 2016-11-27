@@ -51,6 +51,7 @@ bool DIAG = false;
 
 
 int get_fvtx_layer(float);
+void dooffsets(int);
 void documulants(int);
 float calc2_event(float, float, float);
 float calc4_event(float, float, float, float, float);
@@ -76,6 +77,7 @@ int main(int argc, char *argv[])
 
   cout << "Now processing with run number " << run << endl;
 
+  dooffsets(run);
   documulants(run);
 
   return 0;
@@ -1320,5 +1322,516 @@ float calc4_event(float Xn, float Yn, float X2n, float Y2n, float M)
   return numerator/denominator;
 
 }
+
+
+
+// -----------------------------------------------------------------
+void dooffsets(int runNumber)
+{
+
+  cout << "runNumber = " << runNumber << endl;
+
+  int energyflag = 0;
+  // --- Run16dAu200
+  if ( runNumber >= 454774 && runNumber <= 455639 ) energyflag = 200;
+  // --- Run16dAu62
+  if ( runNumber >= 455792 && runNumber <= 456283 ) energyflag = 62;
+  // --- Run16dAu20
+  if ( runNumber >= 456652 && runNumber <= 457298 ) energyflag = 20;
+  // --- Run16dAu39
+  if ( runNumber >= 457634 && runNumber <= 458167 ) energyflag = 39;
+
+  int verbosity = 0;
+
+
+  char filename[500];
+
+  // --- get the number of files for this run number
+  string pipe_out = (string) gSystem->GetFromPipe(Form("ls input/%d_*.root | grep -c r",runNumber));
+  int nfiles = 0;
+  nfiles = atoi(pipe_out.c_str());
+  cout<<"nfiles: "<<nfiles<<endl;
+  if(nfiles==0) return;
+
+  // --- make a new TChain for the tree
+  TChain *ntp_event_chain = new TChain("ntp_event");
+  for ( int ifile = 0; ifile < nfiles; ++ifile )
+    {
+      sprintf(filename,"input/%d_%d.root",runNumber,ifile);
+      cout<<"adding to tchain: "<<filename<<endl;
+      ntp_event_chain->Add(filename);
+    }
+
+
+  char outFile1[300];
+  sprintf(outFile1,"%s%d%s%d%s","output/files_",energyflag,"/coffsets_",runNumber,".root");
+  cout << "histogram output file: " << outFile1 << endl;
+  TFile *mData1=TFile::Open(outFile1,"recreate");
+  mData1->cd();
+
+  // ---
+  // --- make histograms
+  // ---
+
+  TProfile* nfvtxt_tracks_south_qx2 = new TProfile("nfvtxt_tracks_south_qx2","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile* nfvtxt_tracks_south_qx3 = new TProfile("nfvtxt_tracks_south_qx3","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile* nfvtxt_tracks_south_qx4 = new TProfile("nfvtxt_tracks_south_qx4","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile* nfvtxt_tracks_south_qy2 = new TProfile("nfvtxt_tracks_south_qy2","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile* nfvtxt_tracks_south_qy3 = new TProfile("nfvtxt_tracks_south_qy3","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile* nfvtxt_tracks_south_qy4 = new TProfile("nfvtxt_tracks_south_qy4","",80,-0.5,79.5,-1.1,1.1,"");
+
+  TProfile* nfvtxt_tracks_south_inner_qx2 = new TProfile("nfvtxt_tracks_south_inner_qx2","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile* nfvtxt_tracks_south_inner_qx3 = new TProfile("nfvtxt_tracks_south_inner_qx3","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile* nfvtxt_tracks_south_inner_qx4 = new TProfile("nfvtxt_tracks_south_inner_qx4","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile* nfvtxt_tracks_south_inner_qy2 = new TProfile("nfvtxt_tracks_south_inner_qy2","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile* nfvtxt_tracks_south_inner_qy3 = new TProfile("nfvtxt_tracks_south_inner_qy3","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile* nfvtxt_tracks_south_inner_qy4 = new TProfile("nfvtxt_tracks_south_inner_qy4","",80,-0.5,79.5,-1.1,1.1,"");
+
+  TProfile* nfvtxt_tracks_south_outer_qx2 = new TProfile("nfvtxt_tracks_south_outer_qx2","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile* nfvtxt_tracks_south_outer_qx3 = new TProfile("nfvtxt_tracks_south_outer_qx3","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile* nfvtxt_tracks_south_outer_qx4 = new TProfile("nfvtxt_tracks_south_outer_qx4","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile* nfvtxt_tracks_south_outer_qy2 = new TProfile("nfvtxt_tracks_south_outer_qy2","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile* nfvtxt_tracks_south_outer_qy3 = new TProfile("nfvtxt_tracks_south_outer_qy3","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile* nfvtxt_tracks_south_outer_qy4 = new TProfile("nfvtxt_tracks_south_outer_qy4","",80,-0.5,79.5,-1.1,1.1,"");
+
+  TProfile* nfvtxt_tracks_north_qx2 = new TProfile("nfvtxt_tracks_north_qx2","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile* nfvtxt_tracks_north_qx3 = new TProfile("nfvtxt_tracks_north_qx3","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile* nfvtxt_tracks_north_qx4 = new TProfile("nfvtxt_tracks_north_qx4","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile* nfvtxt_tracks_north_qy2 = new TProfile("nfvtxt_tracks_north_qy2","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile* nfvtxt_tracks_north_qy3 = new TProfile("nfvtxt_tracks_north_qy3","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile* nfvtxt_tracks_north_qy4 = new TProfile("nfvtxt_tracks_north_qy4","",80,-0.5,79.5,-1.1,1.1,"");
+
+  TProfile* nfvtxt_tracks_north_inner_qx2 = new TProfile("nfvtxt_tracks_north_inner_qx2","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile* nfvtxt_tracks_north_inner_qx3 = new TProfile("nfvtxt_tracks_north_inner_qx3","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile* nfvtxt_tracks_north_inner_qx4 = new TProfile("nfvtxt_tracks_north_inner_qx4","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile* nfvtxt_tracks_north_inner_qy2 = new TProfile("nfvtxt_tracks_north_inner_qy2","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile* nfvtxt_tracks_north_inner_qy3 = new TProfile("nfvtxt_tracks_north_inner_qy3","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile* nfvtxt_tracks_north_inner_qy4 = new TProfile("nfvtxt_tracks_north_inner_qy4","",80,-0.5,79.5,-1.1,1.1,"");
+
+  TProfile* nfvtxt_tracks_north_outer_qx2 = new TProfile("nfvtxt_tracks_north_outer_qx2","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile* nfvtxt_tracks_north_outer_qx3 = new TProfile("nfvtxt_tracks_north_outer_qx3","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile* nfvtxt_tracks_north_outer_qx4 = new TProfile("nfvtxt_tracks_north_outer_qx4","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile* nfvtxt_tracks_north_outer_qy2 = new TProfile("nfvtxt_tracks_north_outer_qy2","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile* nfvtxt_tracks_north_outer_qy3 = new TProfile("nfvtxt_tracks_north_outer_qy3","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile* nfvtxt_tracks_north_outer_qy4 = new TProfile("nfvtxt_tracks_north_outer_qy4","",80,-0.5,79.5,-1.1,1.1,"");
+
+  // ---
+  // --- now get the tree ready
+  // ---
+
+  //tree variables
+  float        event;
+  float        d_bbcz;    // bbcz
+  float        centrality; // integer but stored as float in PHGlobal etc
+  float        bbc_qn;
+  float        bbc_qs;
+  unsigned int trigger_scaled;
+  unsigned int trigger_live;
+  float        bc_x;
+  float        bc_y;
+  float        vtx_z;
+  float        eventfvtx_x;
+  float        eventfvtx_y;
+  float        eventfvtx_z;
+  float        d_Qx[9];
+  float        d_Qy[9];
+  float        d_Qw[9];
+  float        d_BBC_charge[64];
+
+  int          npc1;
+  int          d_nFVTX_clus;
+  int          d_nFVTXN_clus;
+  int          d_nFVTXS_clus;
+  float        d_FVTX_x[max_nf];
+  float        d_FVTX_y[max_nf];
+  float        d_FVTX_z[max_nf];
+
+  int          d_ntrk;
+  float        d_px[max_nh];
+  float        d_py[max_nh];
+  float        d_pz[max_nh];
+
+  int nfvtxt;
+  float feta[75];
+  float fphi[75];
+  float fchisq[75];
+  float fdcax[75];
+  float fdcay[75];
+
+  // List of branches
+  TBranch* b_event;   //!
+  TBranch* b_bbc_z;   //!
+  TBranch* b_centrality;   //!
+  TBranch* b_bbc_qn;   //!
+  TBranch* b_bbc_qs;   //!
+  TBranch* b_npc1;   //!
+  TBranch* b_trigger_scaled;   //!
+  TBranch* b_trigger_live;   //!
+  TBranch* b_d_Qx;   //!
+  TBranch* b_d_Qy;   //!
+  TBranch* b_d_Qw;   //!
+  TBranch* b_bc_x;   //!
+  TBranch* b_bc_y;   //!
+  TBranch* b_vtx_z;   //!
+  TBranch* b_fvtx_x;   //!
+  TBranch* b_fvtx_y;   //!
+  TBranch* b_fvtx_z;   //!
+  TBranch* b_d_BBC_charge;   //!
+  TBranch* b_d_nFVTX_clus;   //!
+  TBranch* b_d_nFVTXN_clus;   //!
+  TBranch* b_d_nFVTXS_clus;   //!
+  TBranch* b_d_FVTX_x;   //!
+  TBranch* b_d_FVTX_y;   //!
+  TBranch* b_d_FVTX_z;   //!
+  TBranch* b_ntrk;   //!
+  TBranch* b_px;   //!
+  TBranch* b_py;   //!
+  TBranch* b_pz;   //!
+  TBranch* b_nfvtxt;   //!
+  TBranch* b_fphi;   //!
+  TBranch* b_feta;   //!
+  TBranch* b_fchisq;   //!
+  TBranch* b_fdcax;   //!
+  TBranch* b_fdcay;   //!
+  // TBranch* b_d_ntrk;   //!
+  // TBranch* b_d_cntpx;   //!
+  // TBranch* b_d_cntpy;   //!
+  // TBranch* b_d_cntpz;   //!
+
+  ntp_event_chain->SetBranchAddress("bbc_z",&d_bbcz,&b_bbc_z);
+  ntp_event_chain->SetBranchAddress("centrality",&centrality,&b_centrality);
+  ntp_event_chain->SetBranchAddress("bbc_qn",&bbc_qn,&b_bbc_qn);
+  ntp_event_chain->SetBranchAddress("bbc_qs",&bbc_qs,&b_bbc_qs);
+  ntp_event_chain->SetBranchAddress("npc1",&npc1,&b_npc1);
+  ntp_event_chain->SetBranchAddress("event",&event,&b_event);
+  ntp_event_chain->SetBranchAddress("trigger_scaled",&trigger_scaled,&b_trigger_scaled);
+  ntp_event_chain->SetBranchAddress("trigger_live",&trigger_live,&b_trigger_live);
+  ntp_event_chain->SetBranchAddress("bc_x",&bc_x,&b_bc_x);
+  ntp_event_chain->SetBranchAddress("bc_y",&bc_y,&b_bc_y);
+  ntp_event_chain->SetBranchAddress("vtx_z",&vtx_z,&b_vtx_z);
+
+  ntp_event_chain->SetBranchAddress("fvtx_x",&eventfvtx_x,&b_fvtx_x);
+  ntp_event_chain->SetBranchAddress("fvtx_y",&eventfvtx_y,&b_fvtx_y);
+  ntp_event_chain->SetBranchAddress("fvtx_z",&eventfvtx_z,&b_fvtx_z);
+
+  ntp_event_chain->SetBranchAddress("d_BBC_charge",d_BBC_charge,&b_d_BBC_charge);
+  ntp_event_chain->SetBranchAddress("d_Qx",d_Qx,&b_d_Qx);
+  ntp_event_chain->SetBranchAddress("d_Qy",d_Qy,&b_d_Qy);
+  ntp_event_chain->SetBranchAddress("d_Qw",d_Qw,&b_d_Qw);
+
+  ntp_event_chain->SetBranchAddress("d_nFVTX_clus",&d_nFVTX_clus,&b_d_nFVTX_clus);
+  ntp_event_chain->SetBranchAddress("d_nFVTXN_clus",&d_nFVTXN_clus,&b_d_nFVTXN_clus);
+  ntp_event_chain->SetBranchAddress("d_nFVTXS_clus",&d_nFVTXS_clus,&b_d_nFVTXS_clus);
+  ntp_event_chain->SetBranchAddress("d_FVTX_x",d_FVTX_x,&b_d_FVTX_x);
+  ntp_event_chain->SetBranchAddress("d_FVTX_y",d_FVTX_y,&b_d_FVTX_y);
+  ntp_event_chain->SetBranchAddress("d_FVTX_z",d_FVTX_z,&b_d_FVTX_z);
+
+  ntp_event_chain->SetBranchAddress("d_ntrk",&d_ntrk,&b_ntrk);
+  ntp_event_chain->SetBranchAddress("d_cntpx",d_px,&b_px);
+  ntp_event_chain->SetBranchAddress("d_cntpy",d_py,&b_py);
+  ntp_event_chain->SetBranchAddress("d_cntpz",d_pz,&b_pz);
+
+  ntp_event_chain->SetBranchAddress("ntracklets",&nfvtxt,&b_nfvtxt);
+  ntp_event_chain->SetBranchAddress("fphi",fphi,&b_fphi);
+  ntp_event_chain->SetBranchAddress("feta",feta,&b_feta);
+  ntp_event_chain->SetBranchAddress("fchisq",fchisq,&b_fchisq);
+  ntp_event_chain->SetBranchAddress("fDCA_X",fdcax,&b_fdcax);
+  ntp_event_chain->SetBranchAddress("fDCA_Y",fdcay,&b_fdcay);
+
+  // ---
+  // --- now do event loop
+  // ---
+
+  int all_counter = 0;
+
+  cout << "starting loop over events in the tree" << endl;
+  int nentries = ntp_event_chain->GetEntries();
+  cout << "total events = " << nentries << endl;
+  for ( int ievt = 0; ievt < nentries; ++ievt )
+    {
+
+      //if ( ievt >= 10000 ) break; // just 100k events for testing, runs a little on the slow side...
+      ++all_counter;
+
+      bool say_event = ( ievt%1000==0 );
+
+      if ( say_event ) cout << "event number = " << ievt << endl;
+
+      if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "getting event level variables" << endl;
+      ntp_event_chain->GetEntry(ievt);
+      if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Finished getting tree variables" << endl;
+
+      // ---------------------
+      // --- trigger selection
+      // ---------------------
+
+      unsigned int trigger_FVTXNSBBCScentral = 0x00100000;
+      unsigned int trigger_FVTXNSBBCS        = 0x00400000;
+      unsigned int trigger_BBCLL1narrowcent  = 0x00000008;
+      unsigned int trigger_BBCLL1narrow      = 0x00000010;
+
+      unsigned int accepted_triggers = 0;
+      if ( energyflag == 200 ) accepted_triggers = trigger_BBCLL1narrowcent  | trigger_BBCLL1narrow;
+      if ( energyflag == 62  ) accepted_triggers = trigger_BBCLL1narrowcent  | trigger_BBCLL1narrow;
+      if ( energyflag == 20  ) accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS;
+      if ( energyflag == 39  ) accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS;
+
+      unsigned int passes_trigger = trigger_scaled & accepted_triggers;
+      if ( passes_trigger == 0 )
+        {
+          if ( verbosity > 1 ) cout << "trigger rejected" << endl;
+          continue;
+        }
+
+      if ( centrality > -1 )
+        {
+          // if ( energyflag == 200 && centrality > 5  ) continue;
+          // if ( energyflag == 62  && centrality > 10 ) continue;
+          // if ( energyflag == 20  && centrality > 20 ) continue;
+          // if ( energyflag == 39  && centrality > 20 ) continue;
+          if ( energyflag == 200 && centrality > 5  ) continue;
+          if ( energyflag == 62  && centrality > 5  ) continue;
+          if ( energyflag == 20  && centrality > 20 ) continue;
+          if ( energyflag == 39  && centrality > 10 ) continue;
+        }
+
+      double ZVTX = -9999;
+      if ( runNumber >= 454774 && runNumber <= 456283 ) ZVTX = d_bbcz;
+      if ( runNumber >= 456652 && runNumber <= 458167 ) ZVTX = eventfvtx_z;
+      if ( fabs(ZVTX) > 10.0 )
+        {
+          if ( verbosity > 1 ) cout << "vertex rejected" << endl;
+          continue;
+        }
+      // --- this cut might be a good idea but it throws out too many events, further study needed
+      // if ( d_bbcz > -999 && eventfvtx_z > -999 && fabs(d_bbcz-eventfvtx_z) > 5 )
+      //   {
+      //     if ( verbosity > 0 ) cout << "bbc and fvtx vertex exist but out of range of each other " << d_bbcz << " " << eventfvtx_z << endl;
+      //     ++bad_vertex_counter;
+      //     continue;
+      //   }
+
+      // make sure bin number doesn't exceed number of bins
+      int izvtx = NZPS*(ZVTX+10)/20;
+      if ( izvtx < 0 || izvtx >= NZPS )
+        {
+          cout << "z vertex bin count problem!!!!" << endl;
+          cout << "bbcz = " << d_bbcz << endl;
+          cout << "fvtx_z = " << eventfvtx_z << endl;
+          cout << "bin number is " << izvtx << endl;
+          continue;
+        }
+
+      int toomanyclusters = 9999;
+      if ( energyflag == 200 ) toomanyclusters = 4000;
+      if ( energyflag == 62  ) toomanyclusters = 4000;
+      if ( energyflag == 20  ) toomanyclusters = 300;
+      if ( energyflag == 39  ) toomanyclusters = 500;
+
+      bool is_okaync = ( d_nFVTX_clus < toomanyclusters );
+      if ( !is_okaync )
+        {
+          if ( verbosity > 1 ) cout << "too many clusters" << endl;
+          continue;
+        }
+
+      // int nfvtxc = d_nFVTX_clus;
+      // int nfvtxc_south = d_nFVTXN_clus;
+      // int nfvtxc_north = d_nFVTXS_clus;
+
+      // ---------------------------------------------------------------------------------------
+
+
+      if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Calculating event planes" << endl;
+
+      // --- all numbers from Darren 2016-06-23
+      const float x_off = 0.3;
+      const float beam_angle = 0.001;
+      float vtx_z = d_bbcz;
+      if ( eventfvtx_z > -999 ) vtx_z = eventfvtx_z;
+      float vtx_x = x_off + atan(beam_angle)*vtx_z;
+      float vtx_y = 0.02;
+
+
+
+
+
+      // --- fvtx tracks
+      float fvtxs_tracks_qx2[3]; // both, inner, outer
+      float fvtxs_tracks_qy2[3];
+      float fvtxs_tracks_qx3[3];
+      float fvtxs_tracks_qy3[3];
+      float fvtxs_tracks_qx4[3];
+      float fvtxs_tracks_qy4[3];
+      float fvtxs_tracks_qw[3];
+      float fvtxn_tracks_qx2[3]; // both, inner, outer
+      float fvtxn_tracks_qy2[3];
+      float fvtxn_tracks_qx3[3];
+      float fvtxn_tracks_qy3[3];
+      float fvtxn_tracks_qx4[3];
+      float fvtxn_tracks_qy4[3];
+      float fvtxn_tracks_qw[3];
+
+      for ( int i = 0; i < 3; ++i )
+        {
+          fvtxs_tracks_qx2[i] = 0.0;
+          fvtxs_tracks_qy2[i] = 0.0;
+          fvtxs_tracks_qx3[i] = 0.0;
+          fvtxs_tracks_qy3[i] = 0.0;
+          fvtxs_tracks_qx4[i] = 0.0;
+          fvtxs_tracks_qy4[i] = 0.0;
+          fvtxs_tracks_qw[i] = 0.0;
+          fvtxn_tracks_qx2[i] = 0.0;
+          fvtxn_tracks_qy2[i] = 0.0;
+          fvtxn_tracks_qx3[i] = 0.0;
+          fvtxn_tracks_qy3[i] = 0.0;
+          fvtxn_tracks_qx4[i] = 0.0;
+          fvtxn_tracks_qy4[i] = 0.0;
+          fvtxn_tracks_qw[i] = 0.0;
+        } // loop over layers
+
+      int ntrack_south_inner = 0;
+      int ntrack_north_inner = 0;
+      int ntrack_south_outer = 0;
+      int ntrack_north_outer = 0;
+
+
+
+      // --- first fvtx track loop
+      for ( int i = 0; i < nfvtxt; ++i )
+	{
+	  // --- rotation now done in trees
+	  float phi = fphi[i];
+	  float eta = feta[i];
+
+	  bool is_south = ( eta < 0 );
+	  bool is_south_inner = ( eta > -2 && eta < 0 );
+	  bool is_south_outer = ( eta < -2 );
+	  bool is_north = ( eta > 0 );
+	  bool is_north_inner = ( eta < 2 && eta > 0 );
+	  bool is_north_outer = ( eta > 2 );
+
+	  float fvtx_weight = 1.0; // need to weight tracks at some point...
+
+	  if ( is_south )
+	    {
+	      fvtxs_tracks_qx2[0] += fvtx_weight * TMath::Cos(2*phi);
+	      fvtxs_tracks_qy2[0] += fvtx_weight * TMath::Sin(2*phi);
+	      fvtxs_tracks_qx3[0] += fvtx_weight * TMath::Cos(3*phi);
+	      fvtxs_tracks_qy3[0] += fvtx_weight * TMath::Sin(3*phi);
+	      fvtxs_tracks_qx4[0] += fvtx_weight * TMath::Cos(4*phi);
+	      fvtxs_tracks_qy4[0] += fvtx_weight * TMath::Sin(4*phi);
+	      fvtxs_tracks_qw[0] += fvtx_weight;
+	    }
+	  if ( is_south_inner )
+	    {
+	      fvtxs_tracks_qx2[1] += fvtx_weight * TMath::Cos(2*phi);
+	      fvtxs_tracks_qy2[1] += fvtx_weight * TMath::Sin(2*phi);
+	      fvtxs_tracks_qx3[1] += fvtx_weight * TMath::Cos(3*phi);
+	      fvtxs_tracks_qy3[1] += fvtx_weight * TMath::Sin(3*phi);
+	      fvtxs_tracks_qx4[1] += fvtx_weight * TMath::Cos(4*phi);
+	      fvtxs_tracks_qy4[1] += fvtx_weight * TMath::Sin(4*phi);
+	      fvtxs_tracks_qw[1] += fvtx_weight;
+	      ++ntrack_south_inner; // good_4_event
+	    }
+	  if ( is_south_outer )
+	    {
+	      fvtxs_tracks_qx2[2] += fvtx_weight * TMath::Cos(2*phi);
+	      fvtxs_tracks_qy2[2] += fvtx_weight * TMath::Sin(2*phi);
+	      fvtxs_tracks_qx3[2] += fvtx_weight * TMath::Cos(3*phi);
+	      fvtxs_tracks_qy3[2] += fvtx_weight * TMath::Sin(3*phi);
+	      fvtxs_tracks_qx4[2] += fvtx_weight * TMath::Cos(4*phi);
+	      fvtxs_tracks_qy4[2] += fvtx_weight * TMath::Sin(4*phi);
+	      fvtxs_tracks_qw[2] += fvtx_weight;
+	      ++ntrack_south_outer; // good_4_event
+	    }
+	  if ( is_north )
+	    {
+	      fvtxn_tracks_qx2[0] += fvtx_weight * TMath::Cos(2*phi);
+	      fvtxn_tracks_qy2[0] += fvtx_weight * TMath::Sin(2*phi);
+	      fvtxn_tracks_qx3[0] += fvtx_weight * TMath::Cos(3*phi);
+	      fvtxn_tracks_qy3[0] += fvtx_weight * TMath::Sin(3*phi);
+	      fvtxn_tracks_qx4[0] += fvtx_weight * TMath::Cos(4*phi);
+	      fvtxn_tracks_qy4[0] += fvtx_weight * TMath::Sin(4*phi);
+	      fvtxn_tracks_qw[0] += fvtx_weight;
+	    }
+	  if ( is_north_inner )
+	    {
+	      fvtxn_tracks_qx2[1] += fvtx_weight * TMath::Cos(2*phi);
+	      fvtxn_tracks_qy2[1] += fvtx_weight * TMath::Sin(2*phi);
+	      fvtxn_tracks_qx3[1] += fvtx_weight * TMath::Cos(3*phi);
+	      fvtxn_tracks_qy3[1] += fvtx_weight * TMath::Sin(3*phi);
+	      fvtxn_tracks_qx4[1] += fvtx_weight * TMath::Cos(4*phi);
+	      fvtxn_tracks_qy4[1] += fvtx_weight * TMath::Sin(4*phi);
+	      fvtxn_tracks_qw[1] += fvtx_weight;
+	      ++ntrack_north_inner; // good_4_event
+	    }
+	  if ( is_north_outer )
+	    {
+	      fvtxn_tracks_qx2[2] += fvtx_weight * TMath::Cos(2*phi);
+	      fvtxn_tracks_qy2[2] += fvtx_weight * TMath::Sin(2*phi);
+	      fvtxn_tracks_qx3[2] += fvtx_weight * TMath::Cos(3*phi);
+	      fvtxn_tracks_qy3[2] += fvtx_weight * TMath::Sin(3*phi);
+	      fvtxn_tracks_qx4[2] += fvtx_weight * TMath::Cos(4*phi);
+	      fvtxn_tracks_qy4[2] += fvtx_weight * TMath::Sin(4*phi);
+	      fvtxn_tracks_qw[2] += fvtx_weight;
+	      ++ntrack_north_outer; // good_4_event
+	    }
+	} // fvtx track loop
+
+      nfvtxt_tracks_south_qx2->Fill(nfvtxt,fvtxs_tracks_qx2[0]/fvtxs_tracks_qw[0]);
+      nfvtxt_tracks_south_qx3->Fill(nfvtxt,fvtxs_tracks_qx3[0]/fvtxs_tracks_qw[0]);
+      nfvtxt_tracks_south_qx4->Fill(nfvtxt,fvtxs_tracks_qx4[0]/fvtxs_tracks_qw[0]);
+      nfvtxt_tracks_south_qy2->Fill(nfvtxt,fvtxs_tracks_qy2[0]/fvtxs_tracks_qw[0]);
+      nfvtxt_tracks_south_qy3->Fill(nfvtxt,fvtxs_tracks_qy3[0]/fvtxs_tracks_qw[0]);
+      nfvtxt_tracks_south_qy4->Fill(nfvtxt,fvtxs_tracks_qy4[0]/fvtxs_tracks_qw[0]);
+
+      nfvtxt_tracks_south_inner_qx2->Fill(nfvtxt,fvtxs_tracks_qx2[1]/fvtxs_tracks_qw[1]);
+      nfvtxt_tracks_south_inner_qx3->Fill(nfvtxt,fvtxs_tracks_qx3[1]/fvtxs_tracks_qw[1]);
+      nfvtxt_tracks_south_inner_qx4->Fill(nfvtxt,fvtxs_tracks_qx4[1]/fvtxs_tracks_qw[1]);
+      nfvtxt_tracks_south_inner_qy2->Fill(nfvtxt,fvtxs_tracks_qy2[1]/fvtxs_tracks_qw[1]);
+      nfvtxt_tracks_south_inner_qy3->Fill(nfvtxt,fvtxs_tracks_qy3[1]/fvtxs_tracks_qw[1]);
+      nfvtxt_tracks_south_inner_qy4->Fill(nfvtxt,fvtxs_tracks_qy4[1]/fvtxs_tracks_qw[1]);
+
+      nfvtxt_tracks_south_outer_qx2->Fill(nfvtxt,fvtxs_tracks_qx2[2]/fvtxs_tracks_qw[2]);
+      nfvtxt_tracks_south_outer_qx3->Fill(nfvtxt,fvtxs_tracks_qx3[2]/fvtxs_tracks_qw[2]);
+      nfvtxt_tracks_south_outer_qx4->Fill(nfvtxt,fvtxs_tracks_qx4[2]/fvtxs_tracks_qw[2]);
+      nfvtxt_tracks_south_outer_qy2->Fill(nfvtxt,fvtxs_tracks_qy2[2]/fvtxs_tracks_qw[2]);
+      nfvtxt_tracks_south_outer_qy3->Fill(nfvtxt,fvtxs_tracks_qy3[2]/fvtxs_tracks_qw[2]);
+      nfvtxt_tracks_south_outer_qy4->Fill(nfvtxt,fvtxs_tracks_qy4[2]/fvtxs_tracks_qw[2]);
+
+      nfvtxt_tracks_north_qx2->Fill(nfvtxt,fvtxn_tracks_qx2[0]/fvtxn_tracks_qw[0]);
+      nfvtxt_tracks_north_qx3->Fill(nfvtxt,fvtxn_tracks_qx3[0]/fvtxn_tracks_qw[0]);
+      nfvtxt_tracks_north_qx4->Fill(nfvtxt,fvtxn_tracks_qx4[0]/fvtxn_tracks_qw[0]);
+      nfvtxt_tracks_north_qy2->Fill(nfvtxt,fvtxn_tracks_qy2[0]/fvtxn_tracks_qw[0]);
+      nfvtxt_tracks_north_qy3->Fill(nfvtxt,fvtxn_tracks_qy3[0]/fvtxn_tracks_qw[0]);
+      nfvtxt_tracks_north_qy4->Fill(nfvtxt,fvtxn_tracks_qy4[0]/fvtxn_tracks_qw[0]);
+
+      nfvtxt_tracks_north_inner_qx2->Fill(nfvtxt,fvtxn_tracks_qx2[1]/fvtxn_tracks_qw[1]);
+      nfvtxt_tracks_north_inner_qx3->Fill(nfvtxt,fvtxn_tracks_qx3[1]/fvtxn_tracks_qw[1]);
+      nfvtxt_tracks_north_inner_qx4->Fill(nfvtxt,fvtxn_tracks_qx4[1]/fvtxn_tracks_qw[1]);
+      nfvtxt_tracks_north_inner_qy2->Fill(nfvtxt,fvtxn_tracks_qy2[1]/fvtxn_tracks_qw[1]);
+      nfvtxt_tracks_north_inner_qy3->Fill(nfvtxt,fvtxn_tracks_qy3[1]/fvtxn_tracks_qw[1]);
+      nfvtxt_tracks_north_inner_qy4->Fill(nfvtxt,fvtxn_tracks_qy4[1]/fvtxn_tracks_qw[1]);
+
+      nfvtxt_tracks_north_outer_qx2->Fill(nfvtxt,fvtxn_tracks_qx2[2]/fvtxn_tracks_qw[2]);
+      nfvtxt_tracks_north_outer_qx3->Fill(nfvtxt,fvtxn_tracks_qx3[2]/fvtxn_tracks_qw[2]);
+      nfvtxt_tracks_north_outer_qx4->Fill(nfvtxt,fvtxn_tracks_qx4[2]/fvtxn_tracks_qw[2]);
+      nfvtxt_tracks_north_outer_qy2->Fill(nfvtxt,fvtxn_tracks_qy2[2]/fvtxn_tracks_qw[2]);
+      nfvtxt_tracks_north_outer_qy3->Fill(nfvtxt,fvtxn_tracks_qy3[2]/fvtxn_tracks_qw[2]);
+      nfvtxt_tracks_north_outer_qy4->Fill(nfvtxt,fvtxn_tracks_qy4[2]/fvtxn_tracks_qw[2]);
+
+    } // end of event loop
+
+  cout << "histogram output file: " << outFile1 << endl;
+  mData1->Write();
+  mData1->Close();
+  cout<<"cleaning up"<<endl;
+  ntp_event_chain->Delete();
+  cout<<"end of program ana"<<endl;
+  return;
+
+} // end of dooffsets
+
 
 
