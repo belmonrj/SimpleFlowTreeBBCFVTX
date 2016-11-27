@@ -11,7 +11,7 @@ void event_plane_testing()
   // cospsidiff_run(455050,2);
 
   beforeafterflat_run(455050,2); // 200
-  return;
+  //return;
   beforeafterflat_run(455355,2); // 200
   beforeafterflat_run(456015,2); // 62
   beforeafterflat_run(456201,2); // 62
@@ -101,6 +101,7 @@ void beforeafterflat_run(int run, int harmonic)
   TH1D* hfvtxs0 = (TH1D*) ((TH2D*)file->Get(Form("psi_bf_0_%d_4",harmonic-1)))->ProjectionY();
   //hfvtxs0->Draw("same");
   hfvtxs0->Draw();
+  hfvtxs0W->Draw("same");
   hfvtxs0->SetLineColor(kGreen+2);
   hfvtxs0->GetXaxis()->SetTitle(Form("#Psi_{%d}, FVTXS0",harmonic));
   TH1D* hfvtxs0M = (TH1D*) ((TH2D*)file->Get(Form("psi_mf_0_%d_4",harmonic-1)))->ProjectionY();
@@ -126,6 +127,7 @@ void beforeafterflat_run(int run, int harmonic)
   TH1D* hfvtxs1 = (TH1D*) ((TH2D*)file->Get(Form("psi_bf_0_%d_5",harmonic-1)))->ProjectionY();
   //hfvtxs1->Draw("same");
   hfvtxs1->Draw();
+  hfvtxs1W->Draw("same");
   hfvtxs1->SetLineColor(kGreen+2);
   hfvtxs1->GetXaxis()->SetTitle(Form("#Psi_{%d}, FVTXS1",harmonic));
   TH1D* hfvtxs1M = (TH1D*) ((TH2D*)file->Get(Form("psi_mf_0_%d_5",harmonic-1)))->ProjectionY();
@@ -151,6 +153,7 @@ void beforeafterflat_run(int run, int harmonic)
   TH1D* hfvtxs2 = (TH1D*) ((TH2D*)file->Get(Form("psi_bf_0_%d_6",harmonic-1)))->ProjectionY();
   //hfvtxs2->Draw("same");
   hfvtxs2->Draw();
+  hfvtxs2W->Draw("same");
   hfvtxs2->SetLineColor(kGreen+2);
   hfvtxs2->GetXaxis()->SetTitle(Form("#Psi_{%d}, FVTXS2",harmonic));
   TH1D* hfvtxs2M = (TH1D*) ((TH2D*)file->Get(Form("psi_mf_0_%d_6",harmonic-1)))->ProjectionY();
@@ -176,6 +179,7 @@ void beforeafterflat_run(int run, int harmonic)
   TH1D* hfvtxs3 = (TH1D*) ((TH2D*)file->Get(Form("psi_bf_0_%d_7",harmonic-1)))->ProjectionY();
   //hfvtxs3->Draw("same");
   hfvtxs3->Draw();
+  hfvtxs3W->Draw("same");
   hfvtxs3->SetLineColor(kGreen+2);
   hfvtxs3->GetXaxis()->SetTitle(Form("#Psi_{%d}, FVTXS3",harmonic));
   TH1D* hfvtxs3M = (TH1D*) ((TH2D*)file->Get(Form("psi_mf_0_%d_7",harmonic-1)))->ProjectionY();
