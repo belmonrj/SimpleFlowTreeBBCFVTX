@@ -120,10 +120,10 @@ void takehistograms
   tge_corr_c24->Draw("ap");
   tge_corr_c24->GetXaxis()->SetLimits(0,80);
   tge_corr_c24->GetXaxis()->SetTitle("N^{FVTX}_{tracks}");
-  c1->Print("testcorr4pc.png");
+  c1->Print("FigsFour/testcorr4pc.png");
   tge_corr_c24->SetMaximum(1e-4);
   tge_corr_c24->SetMinimum(-1e-4);
-  c1->Print("testcorr4pcfz.png");
+  c1->Print("FigsFour/testcorr4pcfz.png");
 
   TGraphErrors* tge_corr_c22 = new TGraphErrors(nbins,x,corr_c2,0,0);
   tge_corr_c22->SetMarkerStyle(kOpenCircle);
@@ -131,10 +131,10 @@ void takehistograms
   tge_corr_c22->Draw("ap");
   tge_corr_c22->GetXaxis()->SetLimits(0,80);
   tge_corr_c22->GetXaxis()->SetTitle("N^{FVTX}_{tracks}");
-  c1->Print("testcorr2pc.png");
+  c1->Print("FigsFour/testcorr2pc.png");
   tge_corr_c22->SetMaximum(2e-2);
   tge_corr_c22->SetMinimum(0);
-  c1->Print("testcorr2pcfz.png");
+  c1->Print("FigsFour/testcorr2pcfz.png");
 
   TGraphErrors* tge_corr_222 = new TGraphErrors(nbins,x,corr_222,0,0);
   tge_corr_222->SetMarkerStyle(kOpenCircle);
@@ -151,13 +151,13 @@ void takehistograms
   leg->AddEntry(tge_corr_four,"#LT#LT4#GT#GT - a.c.","p");
   leg->SetTextSize(0.05);
   leg->Draw();
-  c1->Print("testcorrcomponents.png");
+  c1->Print("FigsFour/testcorrcomponents.png");
   tge_corr_222->SetMaximum(1e-3);
   tge_corr_222->SetMinimum(-1e-4);
-  c1->Print("testcorrcomponentsfz.png");
+  c1->Print("FigsFour/testcorrcomponentsfz.png");
   tge_corr_222->SetMaximum(2e-4);
   tge_corr_222->SetMinimum(-2e-5);
-  c1->Print("testcorrcomponentsfzz.png");
+  c1->Print("FigsFour/testcorrcomponentsfzz.png");
 
   TGraphErrors* tge_uncorr_222 = new TGraphErrors(nbins,x,uncorr_222,0,0);
   tge_uncorr_222->SetMarkerStyle(kOpenCircle);
@@ -174,13 +174,13 @@ void takehistograms
   leg->AddEntry(tge_uncorr_four,"#LT#LT4#GT#GT","p");
   leg->SetTextSize(0.05);
   leg->Draw();
-  c1->Print("testuncorrcomponents.png");
+  c1->Print("FigsFour/testuncorrcomponents.png");
   tge_uncorr_222->SetMaximum(1e-3);
   tge_uncorr_222->SetMinimum(-1e-4);
-  c1->Print("testuncorrcomponentsfz.png");
+  c1->Print("FigsFour/testuncorrcomponentsfz.png");
   tge_uncorr_222->SetMaximum(2e-4);
   tge_uncorr_222->SetMinimum(-2e-5);
-  c1->Print("testuncorrcomponentsfzz.png");
+  c1->Print("FigsFour/testuncorrcomponentsfzz.png");
 
   // ---
 
@@ -198,12 +198,12 @@ void takehistograms
 
   // th1d_222_clone->Divide(th1d_c22a);
   // th1d_222_clone->Draw();
-  // c1->Print("testratio222.png");
+  // c1->Print("FigsFour/testratio222.png");
   // th1d_four_clone->Divide(th1d_c24a);
   // th1d_four_clone->Draw();
-  // c1->Print("testratiofour.png");
+  // c1->Print("FigsFour/testratiofour.png");
   // th1d_222_clone->Draw("same");
-  // c1->Print("testratiocomponents.png");
+  // c1->Print("FigsFour/testratiocomponents.png");
 
   float ratio_222[nbins];
   float ratio_four[nbins];
@@ -247,7 +247,7 @@ void takehistograms
   line0.SetLineStyle(2);
   line0.SetLineWidth(2);
   line0.Draw();
-  c1->Print("testcomparecumulants.png");
+  c1->Print("FigsFour/testcomparecumulants.png");
 
   TGraphErrors* tge_ratio_222 = new TGraphErrors(nbins,n,ratio_222,0,0);
   tge_ratio_222->SetMarkerStyle(kOpenCircle);
@@ -274,7 +274,7 @@ void takehistograms
   line2.SetLineStyle(2);
   line2.SetLineWidth(2);
   line2.Draw();
-  c1->Print("testcorrcomponentsratio.png");
+  c1->Print("FigsFour/testcorrcomponentsratio.png");
 
   // --- now go back to california
 
@@ -284,10 +284,10 @@ void takehistograms
   tge_corr_sc24->Draw("ap");
   tge_corr_sc24->GetXaxis()->SetLimits(0,80);
   tge_corr_sc24->GetXaxis()->SetTitle("N^{FVTX}_{tracks}");
-  c1->Print("stestcorr4pc.png");
+  c1->Print("FigsFour/stestcorr4pc.png");
   tge_corr_sc24->SetMaximum(1e-4);
   tge_corr_sc24->SetMinimum(-1e-4);
-  c1->Print("stestcorr4pcfz.png");
+  c1->Print("FigsFour/stestcorr4pcfz.png");
 
   TGraphErrors* tge_corr_sc22 = new TGraphErrors(nbins,x,corr_sc2,0,0);
   tge_corr_sc22->SetMarkerStyle(kOpenCircle);
@@ -295,10 +295,10 @@ void takehistograms
   tge_corr_sc22->Draw("ap");
   tge_corr_sc22->GetXaxis()->SetLimits(0,80);
   tge_corr_sc22->GetXaxis()->SetTitle("N^{FVTX}_{tracks}");
-  c1->Print("stestcorr2pc.png");
+  c1->Print("FigsFour/stestcorr2pc.png");
   tge_corr_sc22->SetMaximum(2e-2);
   tge_corr_sc22->SetMinimum(0);
-  c1->Print("stestcorr2pcfz.png");
+  c1->Print("FigsFour/stestcorr2pcfz.png");
 
   TGraphErrors* tge_corr_s222 = new TGraphErrors(nbins,x,corr_s222,0,0);
   tge_corr_s222->SetMarkerStyle(kOpenCircle);
@@ -311,17 +311,17 @@ void takehistograms
   tge_corr_sfour->SetMarkerColor(kRed);
   tge_corr_sfour->Draw("p");
   TLegend* leg = new TLegend(0.62,0.68,0.88,0.88);
-  leg->AddEntry(tge_corr_s222,"2#LT#LT2#GT#GT^{2} (qvc).","p");
-  leg->AddEntry(tge_corr_sfour,"#LT#LT4#GT#GT - (qvc)","p");
+  leg->AddEntry(tge_corr_s222,"2#LT#LT2#GT#GT^{2} (qvc)","p");
+  leg->AddEntry(tge_corr_sfour,"#LT#LT4#GT#GT (qvc)","p");
   leg->SetTextSize(0.05);
   leg->Draw();
-  c1->Print("stestcorrcomponents.png");
+  c1->Print("FigsFour/stestcorrcomponents.png");
   tge_corr_s222->SetMaximum(1e-3);
   tge_corr_s222->SetMinimum(-1e-4);
-  c1->Print("stestcorrcomponentsfz.png");
+  c1->Print("FigsFour/stestcorrcomponentsfz.png");
   tge_corr_s222->SetMaximum(2e-4);
   tge_corr_s222->SetMinimum(-2e-5);
-  c1->Print("stestcorrcomponentsfzz.png");
+  c1->Print("FigsFour/stestcorrcomponentsfzz.png");
 
   TGraphErrors* tge_cumulant_zy = new TGraphErrors(nbins,x,corr_sc4,0,0);
   tge_cumulant_ac->SetMarkerStyle(kOpenCircle);
@@ -338,7 +338,7 @@ void takehistograms
   line0.SetLineStyle(2);
   line0.SetLineWidth(2);
   line0.Draw();
-  c1->Print("stestcomparecumulants.png");
+  c1->Print("FigsFour/stestcomparecumulants.png");
 
   TGraphErrors* tge_v24 = new TGraphErrors(nbins,x,corr_v24,0,0);
   TGraphErrors* tge_sv24 = new TGraphErrors(nbins,x,corr_sv24,0,0);
@@ -353,8 +353,7 @@ void takehistograms
   tge_v24->GetXaxis()->SetLimits(0,80);
   tge_v24->GetXaxis()->SetTitle("N^{FVTX}_{tracks}");
   line0.Draw();
-  c1->Print("stestcomparev24.png");
-
+  c1->Print("FigsFour/stestcomparev24.png");
 
 }
 
