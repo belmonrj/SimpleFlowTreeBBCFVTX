@@ -1,4 +1,4 @@
-void takehistograms(TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*);
+void takehistograms(TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*);
 
 double calc_corr_four(double,double,double,double,double,double,double,double);
 
@@ -17,8 +17,9 @@ void temp_new_4pc()
   TProfile* tp1f_sinsum2 = (TProfile*)fin->Get("nfvtxt_os_fvtxc_tracks_sinsum22");
   TProfile* tp1f_cos3 = (TProfile*)fin->Get("nfvtxt_os_fvtxc_tracks_cos23");
   TProfile* tp1f_sin3 = (TProfile*)fin->Get("nfvtxt_os_fvtxc_tracks_sin23");
+  TProfile* tp1f_SS_two = (TProfile*)fin->Get("nfvtxt_zzyzx_fvtxsfvtxn_tracks_c22");
 
-  takehistograms(tp1f_four,tp1f_two,tp1f_cos1,tp1f_sin1,tp1f_cossum2,tp1f_sinsum2,tp1f_cos3,tp1f_sin3,tp1f_S_four,tp1f_S_two);
+  takehistograms(tp1f_four,tp1f_two,tp1f_cos1,tp1f_sin1,tp1f_cossum2,tp1f_sinsum2,tp1f_cos3,tp1f_sin3,tp1f_S_four,tp1f_S_two,tp1f_SS_two);
 
 }
 
@@ -33,7 +34,8 @@ void takehistograms
  TProfile* tp1f_cos3,
  TProfile* tp1f_sin3,
  TProfile* tp1f_S_four,
- TProfile* tp1f_S_two
+ TProfile* tp1f_S_two,
+ TProfile* tp1f_SS_two
 )
 {
 
@@ -63,6 +65,7 @@ void takehistograms
   double uncorr_four[nbins];
   double uncorr_222[nbins];
 
+  double corr_ssc2[nbins];
   double corr_sc2[nbins];
   double corr_sc4[nbins];
   double corr_sfour[nbins];
@@ -70,6 +73,8 @@ void takehistograms
 
   double corr_v24[nbins];
   double corr_sv24[nbins];
+  double corr_sv22[nbins];
+  double corr_ssv22[nbins];
 
   TH1D* th1d_222 = new TH1D("th1d_222","",80,0,80);
   TH1D* th1d_four = new TH1D("th1d_four","",80,0,80);
@@ -107,11 +112,16 @@ void takehistograms
       corr_s222[i] = 2*stwo[i]*stwo[i];
       corr_sc4[i] = sfour[i] - 2*stwo[i]*stwo[i];
       corr_sc2[i] = stwo[i];
+      corr_ssc2[i] = tp1f_SS_two->GetBinContent(i+1);
       // ---
       corr_v24[i] = -9;
       if ( corr_c4[i] < 0 && x[i] > 19 && x[i] < 60 ) corr_v24[i] = sqrt(sqrt(-corr_c4[i]));
       corr_sv24[i] = -9;
       if ( corr_sc4[i] < 0 && x[i] > 19 && x[i] < 60 ) corr_sv24[i] = sqrt(sqrt(-corr_sc4[i]));
+      corr_sv22[i] = -9;
+      if ( corr_sc2[i] > 0 && x[i] > 10 && x[i] < 70 ) corr_sv22[i] = sqrt(corr_sc2[i]);
+      corr_ssv22[i] = -9;
+      if ( corr_ssc2[i] > 0 && x[i] > 10 && x[i] < 70 ) corr_ssv22[i] = sqrt(corr_ssc2[i]);
     }
 
   TGraphErrors* tge_corr_c24 = new TGraphErrors(nbins,x,corr_c4,0,0);
@@ -348,12 +358,31 @@ void takehistograms
   tge_sv24->SetMarkerColor(kBlue);
   tge_v24->Draw("ap");
   tge_sv24->Draw("p");
-  tge_v24->SetMaximum(0.2);
-  tge_v24->SetMinimum(-0.1);
+  tge_v24->SetMaximum(0.12);
+  tge_v24->SetMinimum(-0.02);
   tge_v24->GetXaxis()->SetLimits(0,80);
   tge_v24->GetXaxis()->SetTitle("N^{FVTX}_{tracks}");
   line0.Draw();
   c1->Print("FigsFour/stestcomparev24.png");
+  TGraphErrors* tge_sv22 = new TGraphErrors(nbins,x,corr_sv22,0,0);
+  tge_sv22->SetMarkerStyle(kOpenDiamond);
+  tge_sv22->SetMarkerColor(kMagenta+2);
+  tge_sv22->Draw("p");
+  TLegend* legss = new TLegend(0.68,0.68,0.88,0.88);
+  legss->AddEntry(tge_v24,"v_{2}{4} AC","p");
+  legss->AddEntry(tge_sv24,"v_{2}{4} QVC","p");
+  legss->AddEntry(tge_sv22,"v_{2}{2}","p");
+  legss->SetTextSize(0.045);
+  legss->SetFillStyle(0);
+  legss->Draw();
+  c1->Print("FigsFour/stestcomparev24andv22.png");
+  TGraphErrors* tge_ssv22 = new TGraphErrors(nbins,x,corr_ssv22,0,0);
+  tge_ssv22->SetMarkerStyle(kOpenCross);
+  tge_ssv22->SetMarkerColor(kRed);
+  tge_ssv22->Draw("p");
+  legss->AddEntry(tge_ssv22,"v_{2}{SP}","p");
+  legss->Draw();
+  c1->Print("FigsFour/stestcomparev24andv22andSP.png");
 
 }
 
