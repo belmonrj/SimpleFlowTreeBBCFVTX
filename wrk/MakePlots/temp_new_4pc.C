@@ -1,4 +1,4 @@
-void takehistograms(TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*);
+void takehistograms(TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*);
 
 double calc_corr_four(double,double,double,double,double,double,double,double);
 
@@ -9,6 +9,8 @@ void temp_new_4pc()
 
   TProfile* tp1f_four = (TProfile*)fin->Get("nfvtxt_os_fvtxc_tracks_c24");
   TProfile* tp1f_two = (TProfile*)fin->Get("nfvtxt_os_fvtxc_tracks_c22");
+  TProfile* tp1f_S_four = (TProfile*)fin->Get("nfvtxt_zzyzx_fvtxc_tracks_c24");
+  TProfile* tp1f_S_two = (TProfile*)fin->Get("nfvtxt_zzyzx_fvtxc_tracks_c22");
   TProfile* tp1f_cos1 = (TProfile*)fin->Get("nfvtxt_os_fvtxc_tracks_cos21");
   TProfile* tp1f_sin1 = (TProfile*)fin->Get("nfvtxt_os_fvtxc_tracks_sin21");
   TProfile* tp1f_cossum2 = (TProfile*)fin->Get("nfvtxt_os_fvtxc_tracks_cossum22");
@@ -16,7 +18,7 @@ void temp_new_4pc()
   TProfile* tp1f_cos3 = (TProfile*)fin->Get("nfvtxt_os_fvtxc_tracks_cos23");
   TProfile* tp1f_sin3 = (TProfile*)fin->Get("nfvtxt_os_fvtxc_tracks_sin23");
 
-  takehistograms(tp1f_four,tp1f_two,tp1f_cos1,tp1f_sin1,tp1f_cossum2,tp1f_sinsum2,tp1f_cos3,tp1f_sin3);
+  takehistograms(tp1f_four,tp1f_two,tp1f_cos1,tp1f_sin1,tp1f_cossum2,tp1f_sinsum2,tp1f_cos3,tp1f_sin3,tp1f_S_four,tp1f_S_two);
 
 }
 
@@ -29,7 +31,9 @@ void takehistograms
  TProfile* tp1f_cossum2,
  TProfile* tp1f_sinsum2,
  TProfile* tp1f_cos3,
- TProfile* tp1f_sin3
+ TProfile* tp1f_sin3,
+ TProfile* tp1f_S_four,
+ TProfile* tp1f_S_two
 )
 {
 
@@ -38,6 +42,8 @@ void takehistograms
 
   double four[nbins];
   double two[nbins];
+  double sfour[nbins];
+  double stwo[nbins];
   double cos1[nbins];
   double sin1[nbins];
   double cossum2[nbins];
@@ -57,8 +63,18 @@ void takehistograms
   double uncorr_four[nbins];
   double uncorr_222[nbins];
 
+  double corr_sc2[nbins];
+  double corr_sc4[nbins];
+  double corr_sfour[nbins];
+  double corr_s222[nbins];
+
+  double corr_v24[nbins];
+  double corr_sv24[nbins];
+
   TH1D* th1d_222 = new TH1D("th1d_222","",80,0,80);
   TH1D* th1d_four = new TH1D("th1d_four","",80,0,80);
+  TH1D* th1d_s222 = new TH1D("th1d_s222","",80,0,80);
+  TH1D* th1d_sfour = new TH1D("th1d_sfour","",80,0,80);
 
   for ( int i = 0; i < nbins; ++i )
     {
@@ -84,6 +100,18 @@ void takehistograms
       // --- make some histograms
       th1d_222->SetBinContent(i+1,corr_222[i]);
       th1d_four->SetBinContent(i+1,corr_four[i]);
+      // --- california
+      sfour[i]    = tp1f_S_four->GetBinContent(i+1);
+      stwo[i]     = tp1f_S_two->GetBinContent(i+1);
+      corr_sfour[i] = sfour[i];
+      corr_s222[i] = 2*stwo[i]*stwo[i];
+      corr_sc4[i] = sfour[i] - 2*stwo[i]*stwo[i];
+      corr_sc2[i] = stwo[i];
+      // ---
+      corr_v24[i] = -9;
+      if ( corr_c4[i] < 0 && x[i] > 19 && x[i] < 60 ) corr_v24[i] = sqrt(sqrt(-corr_c4[i]));
+      corr_sv24[i] = -9;
+      if ( corr_sc4[i] < 0 && x[i] > 19 && x[i] < 60 ) corr_sv24[i] = sqrt(sqrt(-corr_sc4[i]));
     }
 
   TGraphErrors* tge_corr_c24 = new TGraphErrors(nbins,x,corr_c4,0,0);
@@ -247,6 +275,86 @@ void takehistograms
   line2.SetLineWidth(2);
   line2.Draw();
   c1->Print("testcorrcomponentsratio.png");
+
+  // --- now go back to california
+
+  TGraphErrors* tge_corr_sc24 = new TGraphErrors(nbins,x,corr_sc4,0,0);
+  tge_corr_sc24->SetMarkerStyle(kOpenCircle);
+  tge_corr_sc24->SetMarkerColor(kBlack);
+  tge_corr_sc24->Draw("ap");
+  tge_corr_sc24->GetXaxis()->SetLimits(0,80);
+  tge_corr_sc24->GetXaxis()->SetTitle("N^{FVTX}_{tracks}");
+  c1->Print("stestcorr4pc.png");
+  tge_corr_sc24->SetMaximum(1e-4);
+  tge_corr_sc24->SetMinimum(-1e-4);
+  c1->Print("stestcorr4pcfz.png");
+
+  TGraphErrors* tge_corr_sc22 = new TGraphErrors(nbins,x,corr_sc2,0,0);
+  tge_corr_sc22->SetMarkerStyle(kOpenCircle);
+  tge_corr_sc22->SetMarkerColor(kBlack);
+  tge_corr_sc22->Draw("ap");
+  tge_corr_sc22->GetXaxis()->SetLimits(0,80);
+  tge_corr_sc22->GetXaxis()->SetTitle("N^{FVTX}_{tracks}");
+  c1->Print("stestcorr2pc.png");
+  tge_corr_sc22->SetMaximum(2e-2);
+  tge_corr_sc22->SetMinimum(0);
+  c1->Print("stestcorr2pcfz.png");
+
+  TGraphErrors* tge_corr_s222 = new TGraphErrors(nbins,x,corr_s222,0,0);
+  tge_corr_s222->SetMarkerStyle(kOpenCircle);
+  tge_corr_s222->SetMarkerColor(kBlack);
+  tge_corr_s222->Draw("ap");
+  tge_corr_s222->GetXaxis()->SetLimits(0,80);
+  tge_corr_s222->GetXaxis()->SetTitle("N^{FVTX}_{tracks}");
+  TGraphErrors* tge_corr_sfour = new TGraphErrors(nbins,x,corr_sfour,0,0);
+  tge_corr_sfour->SetMarkerStyle(kOpenSquare);
+  tge_corr_sfour->SetMarkerColor(kRed);
+  tge_corr_sfour->Draw("p");
+  TLegend* leg = new TLegend(0.62,0.68,0.88,0.88);
+  leg->AddEntry(tge_corr_s222,"2#LT#LT2#GT#GT^{2} (qvc).","p");
+  leg->AddEntry(tge_corr_sfour,"#LT#LT4#GT#GT - (qvc)","p");
+  leg->SetTextSize(0.05);
+  leg->Draw();
+  c1->Print("stestcorrcomponents.png");
+  tge_corr_s222->SetMaximum(1e-3);
+  tge_corr_s222->SetMinimum(-1e-4);
+  c1->Print("stestcorrcomponentsfz.png");
+  tge_corr_s222->SetMaximum(2e-4);
+  tge_corr_s222->SetMinimum(-2e-5);
+  c1->Print("stestcorrcomponentsfzz.png");
+
+  TGraphErrors* tge_cumulant_zy = new TGraphErrors(nbins,x,corr_sc4,0,0);
+  tge_cumulant_ac->SetMarkerStyle(kOpenCircle);
+  tge_cumulant_ac->SetMarkerColor(kBlack);
+  tge_cumulant_zy->SetMarkerStyle(kOpenSquare);
+  tge_cumulant_zy->SetMarkerColor(kBlue); // all the deepest blues are black
+  tge_cumulant_ac->Draw("ap");
+  tge_cumulant_zy->Draw("p");
+  tge_cumulant_ac->SetMaximum(5e-5);
+  tge_cumulant_ac->SetMinimum(-5e-5);
+  tge_cumulant_ac->GetXaxis()->SetLimits(0,80);
+  tge_cumulant_ac->GetXaxis()->SetTitle("N^{FVTX}_{tracks}");
+  TLine line0(0,0,80,0);
+  line0.SetLineStyle(2);
+  line0.SetLineWidth(2);
+  line0.Draw();
+  c1->Print("stestcomparecumulants.png");
+
+  TGraphErrors* tge_v24 = new TGraphErrors(nbins,x,corr_v24,0,0);
+  TGraphErrors* tge_sv24 = new TGraphErrors(nbins,x,corr_sv24,0,0);
+  tge_v24->SetMarkerStyle(kOpenCircle);
+  tge_v24->SetMarkerColor(kBlack);
+  tge_sv24->SetMarkerStyle(kOpenSquare);
+  tge_sv24->SetMarkerColor(kBlue);
+  tge_v24->Draw("ap");
+  tge_sv24->Draw("p");
+  tge_v24->SetMaximum(0.2);
+  tge_v24->SetMinimum(-0.1);
+  tge_v24->GetXaxis()->SetLimits(0,80);
+  tge_v24->GetXaxis()->SetTitle("N^{FVTX}_{tracks}");
+  line0.Draw();
+  c1->Print("stestcomparev24.png");
+
 
 }
 
