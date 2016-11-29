@@ -424,9 +424,9 @@ void flatten(int runNumber, int rp_recal_pass)
   TH2D     *psi_af[NMUL][NHAR][NDET];
 
   // flattening parameters read in from file
-  float    mean[NMUL][NZPS][NHAR][NDET][2]; // mean of Psi distribution (???)
-  float    widt[NMUL][NZPS][NHAR][NDET][2]; // width of Psi distribution (???)
-  float    four[NMUL][NZPS][NHAR][NDET][2][NORD]; // ?
+  float    mean[NMUL][NZPS][NHAR][NDET][2]; // mean of qx, qy (? double check)
+  float    widt[NMUL][NZPS][NHAR][NDET][2]; // width of qx, qy (?? double check)
+  float    four[NMUL][NZPS][NHAR][NDET][2][NORD]; // fourier components for flattening
 
   // TFile *mData1=TFile::Open(outFile1,"recreate");
   // mData1->cd();
