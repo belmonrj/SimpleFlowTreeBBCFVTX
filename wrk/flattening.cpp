@@ -897,6 +897,30 @@ void flatten(int runNumber, int rp_recal_pass)
   TH1D* fvtxs3_v2_east_phipsi2 = new TH1D(Form("fvtxs3_v2_east_phipsi2"),"",126,-6.3,6.3);
   TH1D* fvtxs3_v2_both_phipsi2 = new TH1D(Form("fvtxs3_v2_both_phipsi2"),"",126,-6.3,6.3);
 
+  TH1D* bbcs_v2_west_phipsi2_pT13 = new TH1D(Form("bbcs_v2_west_phipsi2_pT13"),"",126,-6.3,6.3);
+  TH1D* bbcs_v2_east_phipsi2_pT13 = new TH1D(Form("bbcs_v2_east_phipsi2_pT13"),"",126,-6.3,6.3);
+  TH1D* bbcs_v2_both_phipsi2_pT13 = new TH1D(Form("bbcs_v2_both_phipsi2_pT13"),"",126,-6.3,6.3);
+
+  TH1D* fvtxs_v2_west_phipsi2_pT13 = new TH1D(Form("fvtxs_v2_west_phipsi2_pT13"),"",126,-6.3,6.3);
+  TH1D* fvtxs_v2_east_phipsi2_pT13 = new TH1D(Form("fvtxs_v2_east_phipsi2_pT13"),"",126,-6.3,6.3);
+  TH1D* fvtxs_v2_both_phipsi2_pT13 = new TH1D(Form("fvtxs_v2_both_phipsi2_pT13"),"",126,-6.3,6.3);
+
+  TH1D* fvtxs0_v2_west_phipsi2_pT13 = new TH1D(Form("fvtxs0_v2_west_phipsi2_pT13"),"",126,-6.3,6.3);
+  TH1D* fvtxs0_v2_east_phipsi2_pT13 = new TH1D(Form("fvtxs0_v2_east_phipsi2_pT13"),"",126,-6.3,6.3);
+  TH1D* fvtxs0_v2_both_phipsi2_pT13 = new TH1D(Form("fvtxs0_v2_both_phipsi2_pT13"),"",126,-6.3,6.3);
+
+  TH1D* fvtxs1_v2_west_phipsi2_pT13 = new TH1D(Form("fvtxs1_v2_west_phipsi2_pT13"),"",126,-6.3,6.3);
+  TH1D* fvtxs1_v2_east_phipsi2_pT13 = new TH1D(Form("fvtxs1_v2_east_phipsi2_pT13"),"",126,-6.3,6.3);
+  TH1D* fvtxs1_v2_both_phipsi2_pT13 = new TH1D(Form("fvtxs1_v2_both_phipsi2_pT13"),"",126,-6.3,6.3);
+
+  TH1D* fvtxs2_v2_west_phipsi2_pT13 = new TH1D(Form("fvtxs2_v2_west_phipsi2_pT13"),"",126,-6.3,6.3);
+  TH1D* fvtxs2_v2_east_phipsi2_pT13 = new TH1D(Form("fvtxs2_v2_east_phipsi2_pT13"),"",126,-6.3,6.3);
+  TH1D* fvtxs2_v2_both_phipsi2_pT13 = new TH1D(Form("fvtxs2_v2_both_phipsi2_pT13"),"",126,-6.3,6.3);
+
+  TH1D* fvtxs3_v2_west_phipsi2_pT13 = new TH1D(Form("fvtxs3_v2_west_phipsi2_pT13"),"",126,-6.3,6.3);
+  TH1D* fvtxs3_v2_east_phipsi2_pT13 = new TH1D(Form("fvtxs3_v2_east_phipsi2_pT13"),"",126,-6.3,6.3);
+  TH1D* fvtxs3_v2_both_phipsi2_pT13 = new TH1D(Form("fvtxs3_v2_both_phipsi2_pT13"),"",126,-6.3,6.3);
+
   TProfile* fvtxs012_v2_west_docalib = new TProfile(Form("fvtxs012_v2_west_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
   TProfile* fvtxs012_v2_east_docalib = new TProfile(Form("fvtxs012_v2_east_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
   TProfile* fvtxs012_v2_both_docalib = new TProfile(Form("fvtxs012_v2_both_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
@@ -1016,6 +1040,30 @@ void flatten(int runNumber, int rp_recal_pass)
   TH1D* fvtxs3_v3_west_phipsi3 = new TH1D(Form("fvtxs3_v3_west_phipsi3"),"",126,-6.3,6.3);
   TH1D* fvtxs3_v3_east_phipsi3 = new TH1D(Form("fvtxs3_v3_east_phipsi3"),"",126,-6.3,6.3);
   TH1D* fvtxs3_v3_both_phipsi3 = new TH1D(Form("fvtxs3_v3_both_phipsi3"),"",126,-6.3,6.3);
+
+  TH1D* bbcs_v3_west_phipsi3_pT13 = new TH1D(Form("bbcs_v3_west_phipsi3_pT13"),"",126,-6.3,6.3);
+  TH1D* bbcs_v3_east_phipsi3_pT13 = new TH1D(Form("bbcs_v3_east_phipsi3_pT13"),"",126,-6.3,6.3);
+  TH1D* bbcs_v3_both_phipsi3_pT13 = new TH1D(Form("bbcs_v3_both_phipsi3_pT13"),"",126,-6.3,6.3);
+
+  TH1D* fvtxs_v3_west_phipsi3_pT13 = new TH1D(Form("fvtxs_v3_west_phipsi3_pT13"),"",126,-6.3,6.3);
+  TH1D* fvtxs_v3_east_phipsi3_pT13 = new TH1D(Form("fvtxs_v3_east_phipsi3_pT13"),"",126,-6.3,6.3);
+  TH1D* fvtxs_v3_both_phipsi3_pT13 = new TH1D(Form("fvtxs_v3_both_phipsi3_pT13"),"",126,-6.3,6.3);
+
+  TH1D* fvtxs0_v3_west_phipsi3_pT13 = new TH1D(Form("fvtxs0_v3_west_phipsi3_pT13"),"",126,-6.3,6.3);
+  TH1D* fvtxs0_v3_east_phipsi3_pT13 = new TH1D(Form("fvtxs0_v3_east_phipsi3_pT13"),"",126,-6.3,6.3);
+  TH1D* fvtxs0_v3_both_phipsi3_pT13 = new TH1D(Form("fvtxs0_v3_both_phipsi3_pT13"),"",126,-6.3,6.3);
+
+  TH1D* fvtxs1_v3_west_phipsi3_pT13 = new TH1D(Form("fvtxs1_v3_west_phipsi3_pT13"),"",126,-6.3,6.3);
+  TH1D* fvtxs1_v3_east_phipsi3_pT13 = new TH1D(Form("fvtxs1_v3_east_phipsi3_pT13"),"",126,-6.3,6.3);
+  TH1D* fvtxs1_v3_both_phipsi3_pT13 = new TH1D(Form("fvtxs1_v3_both_phipsi3_pT13"),"",126,-6.3,6.3);
+
+  TH1D* fvtxs2_v3_west_phipsi3_pT13 = new TH1D(Form("fvtxs2_v3_west_phipsi3_pT13"),"",126,-6.3,6.3);
+  TH1D* fvtxs2_v3_east_phipsi3_pT13 = new TH1D(Form("fvtxs2_v3_east_phipsi3_pT13"),"",126,-6.3,6.3);
+  TH1D* fvtxs2_v3_both_phipsi3_pT13 = new TH1D(Form("fvtxs2_v3_both_phipsi3_pT13"),"",126,-6.3,6.3);
+
+  TH1D* fvtxs3_v3_west_phipsi3_pT13 = new TH1D(Form("fvtxs3_v3_west_phipsi3_pT13"),"",126,-6.3,6.3);
+  TH1D* fvtxs3_v3_east_phipsi3_pT13 = new TH1D(Form("fvtxs3_v3_east_phipsi3_pT13"),"",126,-6.3,6.3);
+  TH1D* fvtxs3_v3_both_phipsi3_pT13 = new TH1D(Form("fvtxs3_v3_both_phipsi3_pT13"),"",126,-6.3,6.3);
 
   TH1D* fvtxs012_v3_west_phipsi = new TH1D(Form("fvtxs012_v3_west_phipsi"),"",126,-6.3,6.3);
   TH1D* fvtxs012_v3_east_phipsi = new TH1D(Form("fvtxs012_v3_east_phipsi"),"",126,-6.3,6.3);
@@ -3679,6 +3727,12 @@ void flatten(int runNumber, int rp_recal_pass)
 		      if ( dcarm == 1 ) bbcs_v3_west_phipsi3->Fill(helper);
 		      if ( dcarm == 0 ) bbcs_v3_east_phipsi3->Fill(helper);
 		      bbcs_v3_both_phipsi3->Fill(helper);
+		      if ( pt_angle > 1.0 && pt_angle < 3.0 )
+			{
+			  if ( dcarm == 1 ) bbcs_v3_west_phipsi3_pT13->Fill(helper);
+			  if ( dcarm == 0 ) bbcs_v3_east_phipsi3_pT13->Fill(helper);
+			  bbcs_v3_both_phipsi3_pT13->Fill(helper);
+			}
 		      // -------------------------------------------------------------------------
 		      // -------------------------------------------------------------------------
 		      if ( dcarm == 1 ) bbcs_v2_west_phipsi->Fill(bbc_dphi2_docalib);
@@ -3689,6 +3743,12 @@ void flatten(int runNumber, int rp_recal_pass)
 		      if ( dcarm == 1 ) bbcs_v2_west_phipsi2->Fill(helper);
 		      if ( dcarm == 0 ) bbcs_v2_east_phipsi2->Fill(helper);
 		      bbcs_v2_both_phipsi2->Fill(helper);
+		      if ( pt_angle > 1.0 && pt_angle < 3.0 )
+			{
+			  if ( dcarm == 1 ) bbcs_v2_west_phipsi2_pT13->Fill(helper);
+			  if ( dcarm == 0 ) bbcs_v2_east_phipsi2_pT13->Fill(helper);
+			  bbcs_v2_both_phipsi2_pT13->Fill(helper);
+			}
 		      // -------------------------------------------------------------------------
                       // --- 4th harmonic
                       double fourfour = 4*phi_angle - 4*bbc_south_psi2_docalib;
@@ -3775,11 +3835,23 @@ void flatten(int runNumber, int rp_recal_pass)
                   if ( dcarm == 1 ) fvtxs_v3_west_phipsi3->Fill(helper);
                   if ( dcarm == 0 ) fvtxs_v3_east_phipsi3->Fill(helper);
                   fvtxs_v3_both_phipsi3->Fill(helper);
+		  if ( pt_angle > 1.0 && pt_angle < 3.0 )
+		    {
+		      if ( dcarm == 1 ) fvtxs_v3_west_phipsi3_pT13->Fill(helper);
+		      if ( dcarm == 0 ) fvtxs_v3_east_phipsi3_pT13->Fill(helper);
+		      fvtxs_v3_both_phipsi3_pT13->Fill(helper);
+		    }
 		  // ---
 		  helper = atan2(sin(2*fvtx_dphi2_docalib),cos(2*fvtx_dphi2_docalib));
                   if ( dcarm == 1 ) fvtxs_v2_west_phipsi2->Fill(helper);
                   if ( dcarm == 0 ) fvtxs_v2_east_phipsi2->Fill(helper);
                   fvtxs_v2_both_phipsi2->Fill(helper);
+		  if ( pt_angle > 1.0 && pt_angle < 3.0 )
+		    {
+		      if ( dcarm == 1 ) fvtxs_v2_west_phipsi2_pT13->Fill(helper);
+		      if ( dcarm == 0 ) fvtxs_v2_east_phipsi2_pT13->Fill(helper);
+		      fvtxs_v2_both_phipsi2_pT13->Fill(helper);
+		    }
 		  // ---
                   if ( dcarm == 1 ) fvtxs_v2_west_phipsi->Fill(fvtx_dphi2_docalib);
                   if ( dcarm == 0 ) fvtxs_v2_east_phipsi->Fill(fvtx_dphi2_docalib);
@@ -3940,6 +4012,12 @@ void flatten(int runNumber, int rp_recal_pass)
                   if ( dcarm == 1 ) fvtxs0_v3_west_phipsi3->Fill(helper);
                   if ( dcarm == 0 ) fvtxs0_v3_east_phipsi3->Fill(helper);
                   fvtxs0_v3_both_phipsi3->Fill(helper);
+		  if ( pt_angle > 1.0 && pt_angle < 3.0 )
+		    {
+		      if ( dcarm == 1 ) fvtxs0_v3_west_phipsi3_pT13->Fill(helper);
+		      if ( dcarm == 0 ) fvtxs0_v3_east_phipsi3_pT13->Fill(helper);
+		      fvtxs0_v3_both_phipsi3_pT13->Fill(helper);
+		    }
 		  // ---
                   fvtxs0_v3_both_phipsi->Fill(fvtx_dphi3_docalib);
                   if ( dcarm == 1 ) fvtxs0_v2_west_phipsi->Fill(fvtx_dphi2_docalib);
@@ -3947,6 +4025,18 @@ void flatten(int runNumber, int rp_recal_pass)
                   fvtxs0_v2_both_phipsi->Fill(fvtx_dphi2_docalib);
                   tp1f_reso2_CNT_FVTX0->Fill(0.0,cosfvtx_dphi2_docalib);
                   tp1f_reso3_CNT_FVTX0->Fill(0.0,cosfvtx_dphi3_docalib);
+		  // ---
+		  helper = atan2(sin(2*fvtx_dphi2_docalib),cos(2*fvtx_dphi2_docalib));
+                  if ( dcarm == 1 ) fvtxs0_v2_west_phipsi2->Fill(helper);
+                  if ( dcarm == 0 ) fvtxs0_v2_east_phipsi2->Fill(helper);
+                  fvtxs0_v2_both_phipsi2->Fill(helper);
+		  if ( pt_angle > 1.0 && pt_angle < 3.0 )
+		    {
+		      if ( dcarm == 1 ) fvtxs0_v2_west_phipsi2_pT13->Fill(helper);
+		      if ( dcarm == 0 ) fvtxs0_v2_east_phipsi2_pT13->Fill(helper);
+		      fvtxs0_v2_both_phipsi2_pT13->Fill(helper);
+		    }
+		  // ---
                 }
 
               //fvtx layer 1
@@ -3973,10 +4063,28 @@ void flatten(int runNumber, int rp_recal_pass)
                   if ( dcarm == 1 ) fvtxs1_v3_west_phipsi3->Fill(helper);
                   if ( dcarm == 0 ) fvtxs1_v3_east_phipsi3->Fill(helper);
                   fvtxs1_v3_both_phipsi3->Fill(helper);
+		  if ( pt_angle > 1.0 && pt_angle < 3.0 )
+		    {
+		      if ( dcarm == 1 ) fvtxs1_v3_west_phipsi3_pT13->Fill(helper);
+		      if ( dcarm == 0 ) fvtxs1_v3_east_phipsi3_pT13->Fill(helper);
+		      fvtxs1_v3_both_phipsi3_pT13->Fill(helper);
+		    }
 		  // ---
                   fvtxs1_v2_both_phipsi->Fill(fvtx_dphi2_docalib);
                   tp1f_reso2_CNT_FVTX1->Fill(0.0,cosfvtx_dphi2_docalib);
                   tp1f_reso3_CNT_FVTX1->Fill(0.0,cosfvtx_dphi3_docalib);
+		  // ---
+		  helper = atan2(sin(2*fvtx_dphi2_docalib),cos(2*fvtx_dphi2_docalib));
+                  if ( dcarm == 1 ) fvtxs1_v2_west_phipsi2->Fill(helper);
+                  if ( dcarm == 0 ) fvtxs1_v2_east_phipsi2->Fill(helper);
+                  fvtxs1_v2_both_phipsi2->Fill(helper);
+		  if ( pt_angle > 1.0 && pt_angle < 3.0 )
+		    {
+		      if ( dcarm == 1 ) fvtxs1_v2_west_phipsi2_pT13->Fill(helper);
+		      if ( dcarm == 0 ) fvtxs1_v2_east_phipsi2_pT13->Fill(helper);
+		      fvtxs1_v2_both_phipsi2_pT13->Fill(helper);
+		    }
+		  // ---
                 }
 
               //fvtx layer 2
@@ -4003,10 +4111,28 @@ void flatten(int runNumber, int rp_recal_pass)
                   if ( dcarm == 1 ) fvtxs2_v3_west_phipsi3->Fill(helper);
                   if ( dcarm == 0 ) fvtxs2_v3_east_phipsi3->Fill(helper);
                   fvtxs2_v3_both_phipsi3->Fill(helper);
+		  if ( pt_angle > 1.0 && pt_angle < 3.0 )
+		    {
+		      if ( dcarm == 1 ) fvtxs2_v3_west_phipsi3_pT13->Fill(helper);
+		      if ( dcarm == 0 ) fvtxs2_v3_east_phipsi3_pT13->Fill(helper);
+		      fvtxs2_v3_both_phipsi3_pT13->Fill(helper);
+		    }
 		  // ---
                   fvtxs2_v2_both_phipsi->Fill(fvtx_dphi2_docalib);
                   tp1f_reso2_CNT_FVTX2->Fill(0.0,cosfvtx_dphi2_docalib);
                   tp1f_reso3_CNT_FVTX2->Fill(0.0,cosfvtx_dphi3_docalib);
+		  // ---
+		  helper = atan2(sin(2*fvtx_dphi2_docalib),cos(2*fvtx_dphi2_docalib));
+                  if ( dcarm == 1 ) fvtxs2_v2_west_phipsi2->Fill(helper);
+                  if ( dcarm == 0 ) fvtxs2_v2_east_phipsi2->Fill(helper);
+                  fvtxs2_v2_both_phipsi2->Fill(helper);
+		  if ( pt_angle > 1.0 && pt_angle < 3.0 )
+		    {
+		      if ( dcarm == 1 ) fvtxs2_v2_west_phipsi2_pT13->Fill(helper);
+		      if ( dcarm == 0 ) fvtxs2_v2_east_phipsi2_pT13->Fill(helper);
+		      fvtxs2_v2_both_phipsi2_pT13->Fill(helper);
+		    }
+		  // ---
                 }
 
               //fvtx layer 3
@@ -4033,10 +4159,28 @@ void flatten(int runNumber, int rp_recal_pass)
                   if ( dcarm == 1 ) fvtxs3_v3_west_phipsi3->Fill(helper);
                   if ( dcarm == 0 ) fvtxs3_v3_east_phipsi3->Fill(helper);
                   fvtxs3_v3_both_phipsi3->Fill(helper);
+		  if ( pt_angle > 1.0 && pt_angle < 3.0 )
+		    {
+		      if ( dcarm == 1 ) fvtxs3_v3_west_phipsi3_pT13->Fill(helper);
+		      if ( dcarm == 0 ) fvtxs3_v3_east_phipsi3_pT13->Fill(helper);
+		      fvtxs3_v3_both_phipsi3_pT13->Fill(helper);
+		    }
 		  // ---
                   fvtxs3_v2_both_phipsi->Fill(fvtx_dphi2_docalib);
                   tp1f_reso2_CNT_FVTX3->Fill(0.0,cosfvtx_dphi2_docalib);
                   tp1f_reso3_CNT_FVTX3->Fill(0.0,cosfvtx_dphi3_docalib);
+		  // ---
+		  helper = atan2(sin(2*fvtx_dphi2_docalib),cos(2*fvtx_dphi2_docalib));
+                  if ( dcarm == 1 ) fvtxs3_v2_west_phipsi2->Fill(helper);
+                  if ( dcarm == 0 ) fvtxs3_v2_east_phipsi2->Fill(helper);
+                  fvtxs3_v2_both_phipsi2->Fill(helper);
+		  if ( pt_angle > 1.0 && pt_angle < 3.0 )
+		    {
+		      if ( dcarm == 1 ) fvtxs3_v2_west_phipsi2_pT13->Fill(helper);
+		      if ( dcarm == 0 ) fvtxs3_v2_east_phipsi2_pT13->Fill(helper);
+		      fvtxs3_v2_both_phipsi2_pT13->Fill(helper);
+		    }
+		  // ---
                 } // check on psi
 
               //fvtx layer 012
