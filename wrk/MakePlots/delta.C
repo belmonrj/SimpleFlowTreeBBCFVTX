@@ -1,6 +1,17 @@
+#include <iostream>
+#include "TROOT.h"
+#include "TFile.h"
+#include "TF1.h"
+#include "TH1.h"
+#include "TLegend.h"
+#include "TCanvas.h"
+#include "TLatex.h"
+#include "TStyle.h"
+
 const float pi = 3.1415926535;
 
 TH1D* pleasefixme3h(TH1D*);
+TH1D* pleasefixme2h(TH1D*);
 
 void domain();
 void dosomethingelse();
@@ -9,7 +20,7 @@ void dosomethingelse();
 void delta()
 {
 
-  domain();
+  //domain();
   dosomethingelse();
 
 }
@@ -17,6 +28,8 @@ void delta()
 
 void dosomethingelse()
 {
+
+  TCanvas* c1 = new TCanvas("c1","");
 
   gStyle->SetOptTitle(1);
 
@@ -65,12 +78,12 @@ void dosomethingelse()
   th1d0->GetXaxis()->SetTitle("#phi-#psi_{3}");
   th1d0E->Draw("same");
   th1d0W->Draw("same");
-  TLegend legA(0.18,0.68,0.38,0.88);
-  legA.AddEntry(th1d0,"both arms","el");
-  legA.AddEntry(th1d0E,"east arm","el");
-  legA.AddEntry(th1d0W,"west arm","el");
-  legA.SetTextSize(0.045);
-  legA.Draw();
+  TLegend leg1(0.18,0.68,0.38,0.88);
+  leg1.AddEntry(th1d0,"both arms","el");
+  leg1.AddEntry(th1d0E,"east arm","el");
+  leg1.AddEntry(th1d0W,"west arm","el");
+  leg1.SetTextSize(0.045);
+  leg1.Draw();
   c1->Print("FigsEventPlane/superduper_fvtxs0EW.png");
   c1->Print("FigsEventPlane/superduper_fvtxs0EW.pdf");
 
@@ -82,12 +95,12 @@ void dosomethingelse()
   th1d1->GetXaxis()->SetTitle("#phi-#psi_{3}");
   th1d1E->Draw("same");
   th1d1W->Draw("same");
-  TLegend legA(0.18,0.68,0.38,0.88);
-  legA.AddEntry(th1d1,"both arms","el");
-  legA.AddEntry(th1d1E,"east arm","el");
-  legA.AddEntry(th1d1W,"west arm","el");
-  legA.SetTextSize(0.045);
-  legA.Draw();
+  TLegend leg2(0.18,0.68,0.38,0.88);
+  leg2.AddEntry(th1d1,"both arms","el");
+  leg2.AddEntry(th1d1E,"east arm","el");
+  leg2.AddEntry(th1d1W,"west arm","el");
+  leg2.SetTextSize(0.045);
+  leg2.Draw();
   c1->Print("FigsEventPlane/superduper_fvtxs1EW.png");
   c1->Print("FigsEventPlane/superduper_fvtxs1EW.pdf");
 
@@ -99,12 +112,12 @@ void dosomethingelse()
   th1d2->GetXaxis()->SetTitle("#phi-#psi_{3}");
   th1d2E->Draw("same");
   th1d2W->Draw("same");
-  TLegend legA(0.18,0.68,0.38,0.88);
-  legA.AddEntry(th1d2,"both arms","el");
-  legA.AddEntry(th1d2E,"east arm","el");
-  legA.AddEntry(th1d2W,"west arm","el");
-  legA.SetTextSize(0.045);
-  legA.Draw();
+  TLegend leg3(0.18,0.68,0.38,0.88);
+  leg3.AddEntry(th1d2,"both arms","el");
+  leg3.AddEntry(th1d2E,"east arm","el");
+  leg3.AddEntry(th1d2W,"west arm","el");
+  leg3.SetTextSize(0.045);
+  leg3.Draw();
   c1->Print("FigsEventPlane/superduper_fvtxs2EW.png");
   c1->Print("FigsEventPlane/superduper_fvtxs2EW.pdf");
 
@@ -116,19 +129,77 @@ void dosomethingelse()
   th1d3->GetXaxis()->SetTitle("#phi-#psi_{3}");
   th1d3E->Draw("same");
   th1d3W->Draw("same");
-  TLegend legA(0.18,0.68,0.38,0.88);
-  legA.AddEntry(th1d3,"both arms","el");
-  legA.AddEntry(th1d3E,"east arm","el");
-  legA.AddEntry(th1d3W,"west arm","el");
-  legA.SetTextSize(0.045);
-  legA.Draw();
+  TLegend leg4(0.18,0.68,0.38,0.88);
+  leg4.AddEntry(th1d3,"both arms","el");
+  leg4.AddEntry(th1d3E,"east arm","el");
+  leg4.AddEntry(th1d3W,"west arm","el");
+  leg4.SetTextSize(0.045);
+  leg4.Draw();
   c1->Print("FigsEventPlane/superduper_fvtxs3EW.png");
   c1->Print("FigsEventPlane/superduper_fvtxs3EW.pdf");
+
+  cout << "triple checking here " << endl;
+  TH1D* th1d_B = (TH1D*)file->Get("th1d_os_dreso3_BBC_CNT");
+  TH1D* th1d_S = (TH1D*)file->Get("th1d_os_dreso3_CNT_FVTX");
+  th1d_B->Rebin(2);
+  cout << "integral for bbc is " << th1d_B->Integral() << endl;
+  cout << "integral before is " << th1d_S->Integral() << endl;
+  th1d_S->Rebin(2);
+  cout << "integral after is " << th1d_S->Integral() << endl;
+
+  th1d_S->Draw();
+  th1dA->SetLineColor(kRed);
+  th1dA->Draw("same");
+  cout << "integral is " << th1dA->Integral() << endl;
+  c1->Print("triple_check_binning.png");
+
+  th1d_S->Divide(th1d3);
+  th1d_S->Draw();
+  c1->Print("triple_check_binning_ratio.png");
+
+  cout << "check binning here " << endl;
+  TH1D* th1d_B_fixed = pleasefixme3h(th1d_B);
+  TH1D* th1d_S_fixed = pleasefixme3h(th1d_S);
+  // th1d_B_fixed->Rebin(2);
+  // th1d_S_fixed->Rebin(2);
+
+  th1d_B->Draw();
+  th1d_B->SetTitle("BBCS");
+  th1d_B->GetXaxis()->SetTitle("#phi-#Psi_{3}");
+  c1->Print("FigsEventPlane/superduper_bbcs.png");
+  c1->Print("FigsEventPlane/superduper_bbcs.pdf");
+
+  th1d_S->SetLineColor(kGreen+2);
+  th1d_S->Draw("same");
+  th1d_B->SetTitle("BBCS and FVTXS");
+  c1->Print("FigsEventPlane/superduper_bbcsfvtxs.png");
+  c1->Print("FigsEventPlane/superduper_bbcsfvtxs.pdf");
+
+  th1d_B_fixed->Draw();
+  double max = th1d_B_fixed->GetBinContent(th1d_B_fixed->GetMaximumBin());
+  th1d_B_fixed->SetMaximum(max*1.002);
+  th1d_B_fixed->SetMinimum(max*0.990);
+  th1d_B_fixed->GetXaxis()->SetRangeUser(-1.2,1.2);
+  th1d_B_fixed->GetXaxis()->SetTitle("#phi-#Psi_{3}");
+  TF1* fun = new TF1("fun","[0]+[1]*TMath::Cos(3*x-[2])",-2,2);
+  th1d_B_fixed->Fit(fun,"","",-1.1,1.1);
+  TLatex tex(0.5,0.8,Form("offset %.2e #pm %.2e",fun->GetParameter(2),fun->GetParError(2)));
+  tex.SetNDC();
+  tex.DrawLatex(0.45,0.82,Form("offset %.2e #pm %.2e",fun->GetParameter(2),fun->GetParError(2)));
+  c1->Print("FigsEventPlane/superduper_bbcs_fixed.png");
+  c1->Print("FigsEventPlane/superduper_bbcs_fixed.pdf");
+
+  th1d_S_fixed->SetLineColor(kGreen+2);
+  th1d_S_fixed->Draw("same");
+  c1->Print("FigsEventPlane/superduper_bbcsfvtxs_fixed.png");
+  c1->Print("FigsEventPlane/superduper_bbcsfvtxs_fixed.pdf");
 
 }
 
 void domain()
 {
+
+  TCanvas* c1 = new TCanvas("c1","");
 
   TFile* file = TFile::Open("input/combined_200.root");
 
@@ -151,6 +222,7 @@ void domain()
   TH1D* th1d2W = (TH1D*)file->Get("fvtxs2_v3_west_phipsi");
   TH1D* th1d3W = (TH1D*)file->Get("fvtxs3_v3_west_phipsi");
 
+  cout << "check binning here " << endl;
   TH1D* th1dA_fixed = pleasefixme3h(th1dA);
   th1dA_fixed->Draw();
   double max = th1dA_fixed->GetBinContent(th1dA_fixed->GetMaximumBin());
@@ -531,6 +603,7 @@ void domain()
   c1->Print("FigsEventPlane/phipsi3_th1d_B.png");
   c1->Print("FigsEventPlane/phipsi3_th1d_B.pdf");
 
+  //  th1d_S_fixed->Rebin(2);
   th1d_S_fixed->Draw();
   max = th1d_S_fixed->GetBinContent(th1d_S_fixed->GetMaximumBin());
   th1d_S_fixed->SetMaximum(max*1.002);
@@ -556,6 +629,10 @@ TH1D* pleasefixme3h(TH1D* in)
       float amount = clone->GetBinContent(i+1);
       if ( phi < -pi )
 	{
+	  if ( i < 5 )
+	    {
+	      cout << "phi is " << phi << " " << clone->GetBinLowEdge(i+1) << " " << clone->GetBinLowEdge(i+2) << endl;
+	    }
 	  clone->SetBinContent(i+1,0);
 	  clone->Fill(phi+2*pi,amount);
 	}
@@ -587,7 +664,7 @@ TH1D* pleasefixme3h(TH1D* in)
 
 TH1D* pleasefixme2h(TH1D* in)
 {
-  TH1D* clone = (TH1D*)in->Clone();
+  TH1D* clone = (TH1D*)in->Clone(Form("%s_clone",in->GetName()));
   int nbins = clone->GetNbinsX();
   for ( int i = 0; i < nbins; ++i )
     {
@@ -604,7 +681,7 @@ TH1D* pleasefixme2h(TH1D* in)
 	  clone->Fill(phi-2*pi,amount);
 	}
     }
-  TH1D* clone2 = (TH1D*)clone->Clone();
+  TH1D* clone2 = (TH1D*)clone->Clone(Form("%s_clone2",in->GetName()));
   for ( int i = 0; i < nbins; ++i )
     {
       float phi = clone2->GetBinCenter(i+1);
