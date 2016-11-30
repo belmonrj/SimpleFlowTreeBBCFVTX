@@ -148,6 +148,24 @@ void doenergy(int energy, int harmonic)
   c1->Print(Form("FigsHarmonicCoefficient/special_eprc_fvtxsL_B_energy%d_harm%d.png",energy,harmonic));
   c1->Print(Form("FigsHarmonicCoefficient/special_eprc_fvtxsL_B_energy%d_harm%d.pdf",energy,harmonic));
 
+  hvn_fvtxs_B->Rebin(5);
+  hvn_fvtxs0_B->Rebin(5);
+  hvn_fvtxs1_B->Rebin(5);
+  hvn_fvtxs2_B->Rebin(5);
+  hvn_fvtxs3_B->Rebin(5);
+
+  h2dummy->Draw();
+  hvn_fvtxs_B->Draw("same");
+  hvn_fvtxs0_B->Draw("same");
+  hvn_fvtxs1_B->Draw("same");
+  hvn_fvtxs2_B->Draw("same");
+  hvn_fvtxs3_B->Draw("same");
+  line.Draw();
+  leg->Draw();
+
+  c1->Print(Form("FigsHarmonicCoefficient/special_eprc_fvtxsL_B_energy%d_harm%d_REBIN.png",energy,harmonic));
+  c1->Print(Form("FigsHarmonicCoefficient/special_eprc_fvtxsL_B_energy%d_harm%d_REBIN.pdf",energy,harmonic));
+
   hvn_bbcs_B->Scale(1.0/reso_bbc);
   hvn_bbcs_B->Draw("same");
   leg->AddEntry(hvn_bbcs_B,"BBCS","elp");
@@ -158,60 +176,60 @@ void doenergy(int energy, int harmonic)
 
 
 
-  TH1D* th1d_hvn_fvtxs_B = hvn_fvtxs_B->ProjectionX();
-  for ( int i = 0; i < 15; ++i )
-    {
-      double value0 = hvn_fvtxs0_B->GetBinContent(i+1);
-      double error0 = hvn_fvtxs0_B->GetBinError(i+1);
-      double sigma0 = error0*error0;
-      double value1 = hvn_fvtxs1_B->GetBinContent(i+1);
-      double error1 = hvn_fvtxs1_B->GetBinError(i+1);
-      double sigma1 = error1*error1;
-      double value2 = hvn_fvtxs2_B->GetBinContent(i+1);
-      double error2 = hvn_fvtxs2_B->GetBinError(i+1);
-      double sigma2 = error2*error2;
-      double value3 = hvn_fvtxs3_B->GetBinContent(i+1);
-      double error3 = hvn_fvtxs3_B->GetBinError(i+1);
-      double sigma3 = error3*error3;
-      // ---
-      sigma0 = hvn_fvtxs0_B->GetBinEntries(i+1);
-      sigma1 = hvn_fvtxs1_B->GetBinEntries(i+1);
-      sigma2 = hvn_fvtxs2_B->GetBinEntries(i+1);
-      sigma3 = hvn_fvtxs3_B->GetBinEntries(i+1);
-      // ---
-      double numer0 = value0*sigma0;
-      double numer1 = value1*sigma0;
-      double numer2 = value2*sigma0;
-      double numer3 = value3*sigma0;
-      // ---
-      double numerator = numer0 + numer1 + numer2 + numer3;
-      double denominator = sigma0 + sigma1+ sigma2 + sigma3;
-      numerator = numer0 + numer1 + numer2;
-      denominator = sigma0 + sigma1+ sigma2;
-      double finalvalue = -9; if ( denominator > 0 ) finalvalue = numerator/denominator;
-      cout << "final value is " << finalvalue << endl;
-      // ---
-      th1d_hvn_fvtxs_B->SetBinContent(i+1,finalvalue);
-    }
+  // TH1D* th1d_hvn_fvtxs_B = hvn_fvtxs_B->ProjectionX();
+  // for ( int i = 0; i < 15; ++i )
+  //   {
+  //     double value0 = hvn_fvtxs0_B->GetBinContent(i+1);
+  //     double error0 = hvn_fvtxs0_B->GetBinError(i+1);
+  //     double sigma0 = error0*error0;
+  //     double value1 = hvn_fvtxs1_B->GetBinContent(i+1);
+  //     double error1 = hvn_fvtxs1_B->GetBinError(i+1);
+  //     double sigma1 = error1*error1;
+  //     double value2 = hvn_fvtxs2_B->GetBinContent(i+1);
+  //     double error2 = hvn_fvtxs2_B->GetBinError(i+1);
+  //     double sigma2 = error2*error2;
+  //     double value3 = hvn_fvtxs3_B->GetBinContent(i+1);
+  //     double error3 = hvn_fvtxs3_B->GetBinError(i+1);
+  //     double sigma3 = error3*error3;
+  //     // ---
+  //     sigma0 = hvn_fvtxs0_B->GetBinEntries(i+1);
+  //     sigma1 = hvn_fvtxs1_B->GetBinEntries(i+1);
+  //     sigma2 = hvn_fvtxs2_B->GetBinEntries(i+1);
+  //     sigma3 = hvn_fvtxs3_B->GetBinEntries(i+1);
+  //     // ---
+  //     double numer0 = value0*sigma0;
+  //     double numer1 = value1*sigma0;
+  //     double numer2 = value2*sigma0;
+  //     double numer3 = value3*sigma0;
+  //     // ---
+  //     double numerator = numer0 + numer1 + numer2 + numer3;
+  //     double denominator = sigma0 + sigma1+ sigma2 + sigma3;
+  //     numerator = numer0 + numer1 + numer2;
+  //     denominator = sigma0 + sigma1+ sigma2;
+  //     double finalvalue = -9; if ( denominator > 0 ) finalvalue = numerator/denominator;
+  //     cout << "final value is " << finalvalue << endl;
+  //     // ---
+  //     th1d_hvn_fvtxs_B->SetBinContent(i+1,finalvalue);
+  //   }
 
-  h2dummy->Draw();
-  hvn_bbcs_B->Draw("same ex0p");
-  hvn_fvtxs_B->Draw("same ex0p");
-  th1d_hvn_fvtxs_B->SetMarkerStyle(kOpenCross);
-  th1d_hvn_fvtxs_B->SetMarkerColor(kBlack);
-  th1d_hvn_fvtxs_B->SetLineColor(kBlack);
-  th1d_hvn_fvtxs_B->Draw("same ex0p");
-  line.Draw();
+  // h2dummy->Draw();
+  // hvn_bbcs_B->Draw("same ex0p");
+  // hvn_fvtxs_B->Draw("same ex0p");
+  // th1d_hvn_fvtxs_B->SetMarkerStyle(kOpenCross);
+  // th1d_hvn_fvtxs_B->SetMarkerColor(kBlack);
+  // th1d_hvn_fvtxs_B->SetLineColor(kBlack);
+  // th1d_hvn_fvtxs_B->Draw("same ex0p");
+  // line.Draw();
 
-  TLegend* leg2 = new TLegend(0.18,0.68,0.38,0.88);
-  leg2->AddEntry(hvn_bbcs_B,"BBCS","ep");
-  leg2->AddEntry(hvn_fvtxs_B,"FVTXS all layers","ep");
-  leg2->AddEntry(th1d_hvn_fvtxs_B,"FVTXS layers 0 1 2 ESTIMATE ONLY","ep");
-  leg2->SetTextSize(0.05);
-  leg2->Draw();
+  // TLegend* leg2 = new TLegend(0.18,0.68,0.38,0.88);
+  // leg2->AddEntry(hvn_bbcs_B,"BBCS","ep");
+  // leg2->AddEntry(hvn_fvtxs_B,"FVTXS all layers","ep");
+  // leg2->AddEntry(th1d_hvn_fvtxs_B,"FVTXS layers 0 1 2 ESTIMATE ONLY","ep");
+  // leg2->SetTextSize(0.05);
+  // leg2->Draw();
 
-  c1->Print(Form("FigsHarmonicCoefficient/special_calcave_fvtxsL_B_energy%d_harm%d.png",energy,harmonic));
-  c1->Print(Form("FigsHarmonicCoefficient/special_calcave_fvtxsL_B_energy%d_harm%d.pdf",energy,harmonic));
+  // c1->Print(Form("FigsHarmonicCoefficient/special_calcave_fvtxsL_B_energy%d_harm%d.png",energy,harmonic));
+  // c1->Print(Form("FigsHarmonicCoefficient/special_calcave_fvtxsL_B_energy%d_harm%d.pdf",energy,harmonic));
 
   delete c1;
 
