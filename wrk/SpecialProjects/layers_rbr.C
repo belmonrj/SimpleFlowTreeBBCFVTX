@@ -70,8 +70,95 @@ void layers_rbr()
   tg_index_difference_fvtxs0->GetXaxis()->SetLimits(-1,counter+1);
   tg_index_difference_fvtxs0->GetXaxis()->SetTitle("run index");
   tg_index_difference_fvtxs0->GetYaxis()->SetTitle("relative difference");
-  c1->Print("Jamie/Figs/final_psi3_difference.png");
-  c1->Print("Jamie/Figs/final_psi3_difference.pdf");
+  c1->Print("Jamie/Figs/final_psi3_difference_fvtxs0.png");
+  c1->Print("Jamie/Figs/final_psi3_difference_fvtxs0.pdf");
+
+  TGraph* tg_index_center_fvtxs0 = new TGraph(counter,runindex,psi3_center_fvtxs0);
+  tg_index_center_fvtxs0->SetMarkerStyle(kFullCircle);
+  tg_index_center_fvtxs0->SetMarkerColor(kBlack);
+  tg_index_center_fvtxs0->Draw("ap");
+  tg_index_center_fvtxs0->SetMaximum(1.0);
+  tg_index_center_fvtxs0->SetMinimum(0.0);
+  tg_index_center_fvtxs0->GetXaxis()->SetLimits(-1,counter+1);
+  tg_index_center_fvtxs0->GetXaxis()->SetTitle("run index");
+  tg_index_center_fvtxs0->GetYaxis()->SetTitle("relative center");
+  c1->Print("Jamie/Figs/final_psi3_center_fvtxs0.png");
+  c1->Print("Jamie/Figs/final_psi3_center_fvtxs0.pdf");
+
+  TGraph* tg_index_difference_fvtxs1 = new TGraph(counter,runindex,psi3_difference_fvtxs1);
+  tg_index_difference_fvtxs1->SetMarkerStyle(kFullCircle);
+  tg_index_difference_fvtxs1->SetMarkerColor(kBlack);
+  tg_index_difference_fvtxs1->Draw("ap");
+  tg_index_difference_fvtxs1->SetMaximum(1.0);
+  tg_index_difference_fvtxs1->SetMinimum(0.0);
+  tg_index_difference_fvtxs1->GetXaxis()->SetLimits(-1,counter+1);
+  tg_index_difference_fvtxs1->GetXaxis()->SetTitle("run index");
+  tg_index_difference_fvtxs1->GetYaxis()->SetTitle("relative difference");
+  c1->Print("Jamie/Figs/final_psi3_difference_fvtxs1.png");
+  c1->Print("Jamie/Figs/final_psi3_difference_fvtxs1.pdf");
+
+  TGraph* tg_index_center_fvtxs1 = new TGraph(counter,runindex,psi3_center_fvtxs1);
+  tg_index_center_fvtxs1->SetMarkerStyle(kFullCircle);
+  tg_index_center_fvtxs1->SetMarkerColor(kBlack);
+  tg_index_center_fvtxs1->Draw("ap");
+  tg_index_center_fvtxs1->SetMaximum(1.0);
+  tg_index_center_fvtxs1->SetMinimum(0.0);
+  tg_index_center_fvtxs1->GetXaxis()->SetLimits(-1,counter+1);
+  tg_index_center_fvtxs1->GetXaxis()->SetTitle("run index");
+  tg_index_center_fvtxs1->GetYaxis()->SetTitle("relative center");
+  c1->Print("Jamie/Figs/final_psi3_center_fvtxs1.png");
+  c1->Print("Jamie/Figs/final_psi3_center_fvtxs1.pdf");
+
+
+  TGraph* tg_index_difference_fvtxs2 = new TGraph(counter,runindex,psi3_difference_fvtxs2);
+  tg_index_difference_fvtxs2->SetMarkerStyle(kFullCircle);
+  tg_index_difference_fvtxs2->SetMarkerColor(kBlack);
+  tg_index_difference_fvtxs2->Draw("ap");
+  tg_index_difference_fvtxs2->SetMaximum(1.0);
+  tg_index_difference_fvtxs2->SetMinimum(0.0);
+  tg_index_difference_fvtxs2->GetXaxis()->SetLimits(-1,counter+1);
+  tg_index_difference_fvtxs2->GetXaxis()->SetTitle("run index");
+  tg_index_difference_fvtxs2->GetYaxis()->SetTitle("relative difference");
+  c1->Print("Jamie/Figs/final_psi3_difference_fvtxs2.png");
+  c1->Print("Jamie/Figs/final_psi3_difference_fvtxs2.pdf");
+
+  TGraph* tg_index_center_fvtxs2 = new TGraph(counter,runindex,psi3_center_fvtxs2);
+  tg_index_center_fvtxs2->SetMarkerStyle(kFullCircle);
+  tg_index_center_fvtxs2->SetMarkerColor(kBlack);
+  tg_index_center_fvtxs2->Draw("ap");
+  tg_index_center_fvtxs2->SetMaximum(1.0);
+  tg_index_center_fvtxs2->SetMinimum(0.0);
+  tg_index_center_fvtxs2->GetXaxis()->SetLimits(-1,counter+1);
+  tg_index_center_fvtxs2->GetXaxis()->SetTitle("run index");
+  tg_index_center_fvtxs2->GetYaxis()->SetTitle("relative center");
+  c1->Print("Jamie/Figs/final_psi3_center_fvtxs2.png");
+  c1->Print("Jamie/Figs/final_psi3_center_fvtxs2.pdf");
+
+
+  TGraph* tg_index_difference_fvtxs3 = new TGraph(counter,runindex,psi3_difference_fvtxs3);
+  tg_index_difference_fvtxs3->SetMarkerStyle(kFullCircle);
+  tg_index_difference_fvtxs3->SetMarkerColor(kBlack);
+  tg_index_difference_fvtxs3->Draw("ap");
+  tg_index_difference_fvtxs3->SetMaximum(1.0);
+  tg_index_difference_fvtxs3->SetMinimum(0.0);
+  tg_index_difference_fvtxs3->GetXaxis()->SetLimits(-1,counter+1);
+  tg_index_difference_fvtxs3->GetXaxis()->SetTitle("run index");
+  tg_index_difference_fvtxs3->GetYaxis()->SetTitle("relative difference");
+  c1->Print("Jamie/Figs/final_psi3_difference_fvtxs3.png");
+  c1->Print("Jamie/Figs/final_psi3_difference_fvtxs3.pdf");
+
+  TGraph* tg_index_center_fvtxs3 = new TGraph(counter,runindex,psi3_center_fvtxs3);
+  tg_index_center_fvtxs3->SetMarkerStyle(kFullCircle);
+  tg_index_center_fvtxs3->SetMarkerColor(kBlack);
+  tg_index_center_fvtxs3->Draw("ap");
+  tg_index_center_fvtxs3->SetMaximum(1.0);
+  tg_index_center_fvtxs3->SetMinimum(0.0);
+  tg_index_center_fvtxs3->GetXaxis()->SetLimits(-1,counter+1);
+  tg_index_center_fvtxs3->GetXaxis()->SetTitle("run index");
+  tg_index_center_fvtxs3->GetYaxis()->SetTitle("relative center");
+  c1->Print("Jamie/Figs/final_psi3_center_fvtxs3.png");
+  c1->Print("Jamie/Figs/final_psi3_center_fvtxs3.pdf");
+
 
 }
 
@@ -79,7 +166,8 @@ void layers_rbr()
 void doit(int run)
 {
 
-  TFile* file = TFile::Open(Form("RootFiles/hist_%d.root",run));
+  //TFile* file = TFile::Open(Form("RootFiles/hist_%d.root",run));
+  TFile* file = TFile::Open(Form("../output/files_200_mostlyprevious/hist_%d.root",run));
   if ( !file )
     {
       cout << "WARNING: file does not exist for run " << run << endl;
@@ -104,8 +192,8 @@ void doit(int run)
   TH1D* th1d_psi3_fvtxs2 = (TH1D*)th2d_psi3_fvtxs2->ProjectionY("th1d_psi3_fvtxs2");
   TH1D* th1d_psi3_fvtxs3 = (TH1D*)th2d_psi3_fvtxs3->ProjectionY("th1d_psi3_fvtxs3");
 
-  TF1* fun = new TF1("fun","[0]+[1]*cos(3*(x-[2]))",-1.1,1.1);
-  fun->SetParLimits(2,-1.1,1.1);
+  TF1* fun = new TF1("fun","[0]+[1]*cos(3*(x-[2]))",-1.0,1.0);
+  fun->SetParLimits(2,-1.0,1.0);
   float par0, par1, par2;
   float epar0, epar1, epar2;
   float max;
@@ -124,7 +212,7 @@ void doit(int run)
   fun->SetParameter(1,max);
   fun->SetParameter(2,0.0);
   th1d_psi3_fvtxs0->Draw();
-  th1d_psi3_fvtxs0->Fit(fun,"","",-1.1,1.1);
+  th1d_psi3_fvtxs0->Fit(fun,"","",-1.0,1.0);
   if ( line_max ) delete line_max;
   line_max = new TLine(-4,max,4,max);
   line_max->SetLineStyle(2);
@@ -164,7 +252,7 @@ void doit(int run)
   fun->SetParameter(1,max);
   fun->SetParameter(2,0.0);
   th1d_psi3_fvtxs1->Draw();
-  th1d_psi3_fvtxs1->Fit(fun,"","",-1.1,1.1);
+  th1d_psi3_fvtxs1->Fit(fun,"","",-1.0,1.0);
   c1->Print(Form("Jamie/Figs/psi3fit_fvtxs1_run%d.png",run));
   c1->Print(Form("Jamie/Figs/psi3fit_fvtxs1_run%d.pdf",run));
   par0 = fun->GetParameter(0);
@@ -189,7 +277,7 @@ void doit(int run)
   fun->SetParameter(1,max);
   fun->SetParameter(2,0.0);
   th1d_psi3_fvtxs2->Draw();
-  th1d_psi3_fvtxs2->Fit(fun,"","",-1.1,1.1);
+  th1d_psi3_fvtxs2->Fit(fun,"","",-1.0,1.0);
   c1->Print(Form("Jamie/Figs/psi3fit_fvtxs2_run%d.png",run));
   c1->Print(Form("Jamie/Figs/psi3fit_fvtxs2_run%d.pdf",run));
   par0 = fun->GetParameter(0);
@@ -214,7 +302,7 @@ void doit(int run)
   fun->SetParameter(1,max);
   fun->SetParameter(2,0.0);
   th1d_psi3_fvtxs3->Draw();
-  th1d_psi3_fvtxs3->Fit(fun,"","",-1.1,1.1);
+  th1d_psi3_fvtxs3->Fit(fun,"","",-1.0,1.0);
   c1->Print(Form("Jamie/Figs/psi3fit_fvtxs3_run%d.png",run));
   c1->Print(Form("Jamie/Figs/psi3fit_fvtxs3_run%d.pdf",run));
   par0 = fun->GetParameter(0);
