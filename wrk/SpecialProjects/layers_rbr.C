@@ -31,13 +31,14 @@ float e_psi3_magnitude_fvtxs2[111];
 float e_psi3_magnitude_fvtxs3[111];
 
 float runnumber[111]; // actually an int but convenient to have a float
+float runindex[111];
 
 void doit(int);
 
 void layers_rbr()
 {
 
-  gStyle->SetOptFit(1);
+  gStyle->SetOptFit(0);
 
   int run;
   ifstream fin;
@@ -47,14 +48,30 @@ void layers_rbr()
   while ( fin >> run )
     {
       doit(run);
-      ++counter;
       runnumber[counter] = run;
-      if ( counter > 2 ) break;
+      runindex[counter] = counter;
+      ++counter;
     }
   fin.close();
 
+  TCanvas* c1 = new TCanvas();
 
+  for ( int i = 0; i < counter; ++i )
+    {
+      cout << "LOOK HERE!!! " << i << " " << runindex[i] << " " << psi3_difference_fvtxs0[i] << endl;
+    }
 
+  TGraph* tg_index_difference_fvtxs0 = new TGraph(counter,runindex,psi3_difference_fvtxs0);
+  tg_index_difference_fvtxs0->SetMarkerStyle(kFullCircle);
+  tg_index_difference_fvtxs0->SetMarkerColor(kBlack);
+  tg_index_difference_fvtxs0->Draw("ap");
+  tg_index_difference_fvtxs0->SetMaximum(1.0);
+  tg_index_difference_fvtxs0->SetMinimum(0.0);
+  tg_index_difference_fvtxs0->GetXaxis()->SetLimits(-1,counter+1);
+  tg_index_difference_fvtxs0->GetXaxis()->SetTitle("run index");
+  tg_index_difference_fvtxs0->GetYaxis()->SetTitle("relative difference");
+  c1->Print("Jamie/Figs/final_psi3_difference.png");
+  c1->Print("Jamie/Figs/final_psi3_difference.pdf");
 
 }
 
@@ -92,15 +109,37 @@ void doit(int run)
   float par0, par1, par2;
   float epar0, epar1, epar2;
   float max;
+  float min;
+  float cen;
   float off;
   float mag;
+  TLine* line_min = NULL;
+  TLine* line_max = NULL;
+  TLine* line_cen = NULL;
 
   max = th1d_psi3_fvtxs0->GetMaximum();
+  cen = th1d_psi3_fvtxs0->GetBinCenter(th1d_psi3_fvtxs0->GetMaximumBin());
+  min = th1d_psi3_fvtxs0->GetMinimum(max*0.1); // minimum bin with at least 1 entry
   fun->SetParameter(0,max);
   fun->SetParameter(1,max);
   fun->SetParameter(2,0.0);
   th1d_psi3_fvtxs0->Draw();
   th1d_psi3_fvtxs0->Fit(fun,"","",-1.1,1.1);
+  if ( line_max ) delete line_max;
+  line_max = new TLine(-4,max,4,max);
+  line_max->SetLineStyle(2);
+  line_max->SetLineWidth(2);
+  line_max->Draw();
+  if ( line_min ) delete line_min;
+  line_min = new TLine(-4,min,4,min);
+  line_min->SetLineStyle(2);
+  line_min->SetLineWidth(2);
+  line_min->Draw();
+  if ( line_cen ) delete line_cen;
+  line_cen = new TLine(cen,0,cen,max);
+  line_cen->SetLineStyle(2);
+  line_cen->SetLineWidth(2);
+  line_cen->Draw();
   c1->Print(Form("Jamie/Figs/psi3fit_fvtxs0_run%d.png",run));
   c1->Print(Form("Jamie/Figs/psi3fit_fvtxs0_run%d.pdf",run));
   par0 = fun->GetParameter(0);
@@ -115,8 +154,12 @@ void doit(int run)
   psi3_magnitude_fvtxs0[counter] = mag;
   e_psi3_offset_fvtxs0[counter] = epar2;
   e_psi3_magnitude_fvtxs0[counter] = (epar1/par1)*mag;
+  psi3_difference_fvtxs0[counter] = (max-min)/(max);
+  psi3_center_fvtxs0[counter] = cen;
 
   max = th1d_psi3_fvtxs1->GetMaximum();
+  cen = th1d_psi3_fvtxs1->GetBinCenter(th1d_psi3_fvtxs1->GetMaximumBin());
+  min = th1d_psi3_fvtxs1->GetMinimum(max*0.1); // minimum bin with at least 1 entry
   fun->SetParameter(0,max);
   fun->SetParameter(1,max);
   fun->SetParameter(2,0.0);
@@ -136,8 +179,12 @@ void doit(int run)
   psi3_magnitude_fvtxs1[counter] = mag;
   e_psi3_offset_fvtxs1[counter] = epar2;
   e_psi3_magnitude_fvtxs1[counter] = (epar1/par1)*mag;
+  psi3_difference_fvtxs1[counter] = (max-min)/(max);
+  psi3_center_fvtxs1[counter] = cen;
 
   max = th1d_psi3_fvtxs2->GetMaximum();
+  cen = th1d_psi3_fvtxs2->GetBinCenter(th1d_psi3_fvtxs2->GetMaximumBin());
+  min = th1d_psi3_fvtxs2->GetMinimum(max*0.1); // minimum bin with at least 1 entry
   fun->SetParameter(0,max);
   fun->SetParameter(1,max);
   fun->SetParameter(2,0.0);
@@ -157,8 +204,12 @@ void doit(int run)
   psi3_magnitude_fvtxs2[counter] = mag;
   e_psi3_offset_fvtxs2[counter] = epar2;
   e_psi3_magnitude_fvtxs2[counter] = (epar1/par1)*mag;
+  psi3_difference_fvtxs2[counter] = (max-min)/(max);
+  psi3_center_fvtxs2[counter] = cen;
 
   max = th1d_psi3_fvtxs3->GetMaximum();
+  cen = th1d_psi3_fvtxs3->GetBinCenter(th1d_psi3_fvtxs3->GetMaximumBin());
+  min = th1d_psi3_fvtxs3->GetMinimum(max*0.1); // minimum bin with at least 1 entry
   fun->SetParameter(0,max);
   fun->SetParameter(1,max);
   fun->SetParameter(2,0.0);
@@ -178,6 +229,9 @@ void doit(int run)
   psi3_magnitude_fvtxs3[counter] = mag;
   e_psi3_offset_fvtxs3[counter] = epar2;
   e_psi3_magnitude_fvtxs3[counter] = (epar1/par1)*mag;
+  psi3_difference_fvtxs3[counter] = (max-min)/(max);
+  psi3_center_fvtxs3[counter] = cen;
+
 
 
   delete fun;
