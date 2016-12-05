@@ -112,8 +112,8 @@ void layers_rbr()
   tg_psi3_index_center_fvtxs0->SetMarkerColor(kBlack);
   tg_psi3_index_center_fvtxs0->SetTitle("FVTXS layer 0");
   tg_psi3_index_center_fvtxs0->Draw("ap");
-  tg_psi3_index_center_fvtxs0->SetMaximum(1.0);
-  tg_psi3_index_center_fvtxs0->SetMinimum(-1.0);
+  tg_psi3_index_center_fvtxs0->SetMaximum(1.1);
+  tg_psi3_index_center_fvtxs0->SetMinimum(-1.1);
   tg_psi3_index_center_fvtxs0->GetXaxis()->SetLimits(-1,counter+1);
   tg_psi3_index_center_fvtxs0->GetXaxis()->SetTitle("run index");
   tg_psi3_index_center_fvtxs0->GetYaxis()->SetTitle("center");
@@ -139,8 +139,8 @@ void layers_rbr()
   tg_psi3_index_center_fvtxs1->SetMarkerColor(kBlack);
   tg_psi3_index_center_fvtxs1->SetTitle("FVTXS layer 1");
   tg_psi3_index_center_fvtxs1->Draw("ap");
-  tg_psi3_index_center_fvtxs1->SetMaximum(1.0);
-  tg_psi3_index_center_fvtxs1->SetMinimum(-1.0);
+  tg_psi3_index_center_fvtxs1->SetMaximum(1.1);
+  tg_psi3_index_center_fvtxs1->SetMinimum(-1.1);
   tg_psi3_index_center_fvtxs1->GetXaxis()->SetLimits(-1,counter+1);
   tg_psi3_index_center_fvtxs1->GetXaxis()->SetTitle("run index");
   tg_psi3_index_center_fvtxs1->GetYaxis()->SetTitle("center");
@@ -166,8 +166,8 @@ void layers_rbr()
   tg_psi3_index_center_fvtxs2->SetMarkerColor(kBlack);
   tg_psi3_index_center_fvtxs2->SetTitle("FVTXS layer 2");
   tg_psi3_index_center_fvtxs2->Draw("ap");
-  tg_psi3_index_center_fvtxs2->SetMaximum(1.0);
-  tg_psi3_index_center_fvtxs2->SetMinimum(-1.0);
+  tg_psi3_index_center_fvtxs2->SetMaximum(1.1);
+  tg_psi3_index_center_fvtxs2->SetMinimum(-1.1);
   tg_psi3_index_center_fvtxs2->GetXaxis()->SetLimits(-1,counter+1);
   tg_psi3_index_center_fvtxs2->GetXaxis()->SetTitle("run index");
   tg_psi3_index_center_fvtxs2->GetYaxis()->SetTitle("center");
@@ -193,8 +193,8 @@ void layers_rbr()
   tg_psi3_index_center_fvtxs3->SetMarkerColor(kBlack);
   tg_psi3_index_center_fvtxs3->SetTitle("FVTXS layer 3");
   tg_psi3_index_center_fvtxs3->Draw("ap");
-  tg_psi3_index_center_fvtxs3->SetMaximum(1.0);
-  tg_psi3_index_center_fvtxs3->SetMinimum(-1.0);
+  tg_psi3_index_center_fvtxs3->SetMaximum(1.1);
+  tg_psi3_index_center_fvtxs3->SetMinimum(-1.1);
   tg_psi3_index_center_fvtxs3->GetXaxis()->SetLimits(-1,counter+1);
   tg_psi3_index_center_fvtxs3->GetXaxis()->SetTitle("run index");
   tg_psi3_index_center_fvtxs3->GetYaxis()->SetTitle("center");
@@ -225,8 +225,8 @@ void layers_rbr()
   tg_psi2_index_center_fvtxs0->SetMarkerColor(kBlack);
   tg_psi2_index_center_fvtxs0->SetTitle("FVTXS layer 0");
   tg_psi2_index_center_fvtxs0->Draw("ap");
-  tg_psi2_index_center_fvtxs0->SetMaximum(1.0);
-  tg_psi2_index_center_fvtxs0->SetMinimum(-1.0);
+  tg_psi2_index_center_fvtxs0->SetMaximum(1.6);
+  tg_psi2_index_center_fvtxs0->SetMinimum(-1.6);
   tg_psi2_index_center_fvtxs0->GetXaxis()->SetLimits(-1,counter+1);
   tg_psi2_index_center_fvtxs0->GetXaxis()->SetTitle("run index");
   tg_psi2_index_center_fvtxs0->GetYaxis()->SetTitle("center");
@@ -252,8 +252,8 @@ void layers_rbr()
   tg_psi2_index_center_fvtxs1->SetMarkerColor(kBlack);
   tg_psi2_index_center_fvtxs1->SetTitle("FVTXS layer 1");
   tg_psi2_index_center_fvtxs1->Draw("ap");
-  tg_psi2_index_center_fvtxs1->SetMaximum(1.0);
-  tg_psi2_index_center_fvtxs1->SetMinimum(-1.0);
+  tg_psi2_index_center_fvtxs1->SetMaximum(1.6);
+  tg_psi2_index_center_fvtxs1->SetMinimum(-1.6);
   tg_psi2_index_center_fvtxs1->GetXaxis()->SetLimits(-1,counter+1);
   tg_psi2_index_center_fvtxs1->GetXaxis()->SetTitle("run index");
   tg_psi2_index_center_fvtxs1->GetYaxis()->SetTitle("center");
@@ -279,8 +279,8 @@ void layers_rbr()
   tg_psi2_index_center_fvtxs2->SetMarkerColor(kBlack);
   tg_psi2_index_center_fvtxs2->SetTitle("FVTXS layer 2");
   tg_psi2_index_center_fvtxs2->Draw("ap");
-  tg_psi2_index_center_fvtxs2->SetMaximum(1.0);
-  tg_psi2_index_center_fvtxs2->SetMinimum(-1.0);
+  tg_psi2_index_center_fvtxs2->SetMaximum(1.6);
+  tg_psi2_index_center_fvtxs2->SetMinimum(-1.6);
   tg_psi2_index_center_fvtxs2->GetXaxis()->SetLimits(-1,counter+1);
   tg_psi2_index_center_fvtxs2->GetXaxis()->SetTitle("run index");
   tg_psi2_index_center_fvtxs2->GetYaxis()->SetTitle("center");
@@ -306,8 +306,8 @@ void layers_rbr()
   tg_psi2_index_center_fvtxs3->SetMarkerColor(kBlack);
   tg_psi2_index_center_fvtxs3->SetTitle("FVTXS layer 3");
   tg_psi2_index_center_fvtxs3->Draw("ap");
-  tg_psi2_index_center_fvtxs3->SetMaximum(1.0);
-  tg_psi2_index_center_fvtxs3->SetMinimum(-1.0);
+  tg_psi2_index_center_fvtxs3->SetMaximum(1.6);
+  tg_psi2_index_center_fvtxs3->SetMinimum(-1.6);
   tg_psi2_index_center_fvtxs3->GetXaxis()->SetLimits(-1,counter+1);
   tg_psi2_index_center_fvtxs3->GetXaxis()->SetTitle("run index");
   tg_psi2_index_center_fvtxs3->GetYaxis()->SetTitle("center");
