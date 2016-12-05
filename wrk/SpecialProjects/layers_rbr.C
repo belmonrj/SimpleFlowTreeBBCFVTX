@@ -69,6 +69,7 @@ void layers_rbr()
 {
 
   gStyle->SetOptFit(0);
+  gStyle->SetOptTitle(1);
 
   int run;
   ifstream fin;
@@ -96,6 +97,7 @@ void layers_rbr()
   TGraph* tg_psi3_index_difference_fvtxs0 = new TGraph(counter,runindex,psi3_difference_fvtxs0);
   tg_psi3_index_difference_fvtxs0->SetMarkerStyle(kFullCircle);
   tg_psi3_index_difference_fvtxs0->SetMarkerColor(kBlack);
+  tg_psi3_index_difference_fvtxs0->SetTitle("FVTXS layer 0");
   tg_psi3_index_difference_fvtxs0->Draw("ap");
   tg_psi3_index_difference_fvtxs0->SetMaximum(1.0);
   tg_psi3_index_difference_fvtxs0->SetMinimum(0.0);
@@ -108,12 +110,13 @@ void layers_rbr()
   TGraph* tg_psi3_index_center_fvtxs0 = new TGraph(counter,runindex,psi3_center_fvtxs0);
   tg_psi3_index_center_fvtxs0->SetMarkerStyle(kFullCircle);
   tg_psi3_index_center_fvtxs0->SetMarkerColor(kBlack);
+  tg_psi3_index_center_fvtxs0->SetTitle("FVTXS layer 0");
   tg_psi3_index_center_fvtxs0->Draw("ap");
   tg_psi3_index_center_fvtxs0->SetMaximum(1.0);
-  tg_psi3_index_center_fvtxs0->SetMinimum(0.0);
+  tg_psi3_index_center_fvtxs0->SetMinimum(-1.0);
   tg_psi3_index_center_fvtxs0->GetXaxis()->SetLimits(-1,counter+1);
   tg_psi3_index_center_fvtxs0->GetXaxis()->SetTitle("run index");
-  tg_psi3_index_center_fvtxs0->GetYaxis()->SetTitle("relative center");
+  tg_psi3_index_center_fvtxs0->GetYaxis()->SetTitle("center");
   c1->Print("Jamie/Figs/final_psi3_center_fvtxs0.png");
   c1->Print("Jamie/Figs/final_psi3_center_fvtxs0.pdf");
 
@@ -121,6 +124,7 @@ void layers_rbr()
   TGraph* tg_psi3_index_difference_fvtxs1 = new TGraph(counter,runindex,psi3_difference_fvtxs1);
   tg_psi3_index_difference_fvtxs1->SetMarkerStyle(kFullCircle);
   tg_psi3_index_difference_fvtxs1->SetMarkerColor(kBlack);
+  tg_psi3_index_difference_fvtxs1->SetTitle("FVTXS layer 1");
   tg_psi3_index_difference_fvtxs1->Draw("ap");
   tg_psi3_index_difference_fvtxs1->SetMaximum(1.0);
   tg_psi3_index_difference_fvtxs1->SetMinimum(0.0);
@@ -133,12 +137,13 @@ void layers_rbr()
   TGraph* tg_psi3_index_center_fvtxs1 = new TGraph(counter,runindex,psi3_center_fvtxs1);
   tg_psi3_index_center_fvtxs1->SetMarkerStyle(kFullCircle);
   tg_psi3_index_center_fvtxs1->SetMarkerColor(kBlack);
+  tg_psi3_index_center_fvtxs1->SetTitle("FVTXS layer 1");
   tg_psi3_index_center_fvtxs1->Draw("ap");
   tg_psi3_index_center_fvtxs1->SetMaximum(1.0);
-  tg_psi3_index_center_fvtxs1->SetMinimum(0.0);
+  tg_psi3_index_center_fvtxs1->SetMinimum(-1.0);
   tg_psi3_index_center_fvtxs1->GetXaxis()->SetLimits(-1,counter+1);
   tg_psi3_index_center_fvtxs1->GetXaxis()->SetTitle("run index");
-  tg_psi3_index_center_fvtxs1->GetYaxis()->SetTitle("relative center");
+  tg_psi3_index_center_fvtxs1->GetYaxis()->SetTitle("center");
   c1->Print("Jamie/Figs/final_psi3_center_fvtxs1.png");
   c1->Print("Jamie/Figs/final_psi3_center_fvtxs1.pdf");
 
@@ -146,6 +151,7 @@ void layers_rbr()
   TGraph* tg_psi3_index_difference_fvtxs2 = new TGraph(counter,runindex,psi3_difference_fvtxs2);
   tg_psi3_index_difference_fvtxs2->SetMarkerStyle(kFullCircle);
   tg_psi3_index_difference_fvtxs2->SetMarkerColor(kBlack);
+  tg_psi3_index_difference_fvtxs2->SetTitle("FVTXS layer 2");
   tg_psi3_index_difference_fvtxs2->Draw("ap");
   tg_psi3_index_difference_fvtxs2->SetMaximum(1.0);
   tg_psi3_index_difference_fvtxs2->SetMinimum(0.0);
@@ -158,12 +164,13 @@ void layers_rbr()
   TGraph* tg_psi3_index_center_fvtxs2 = new TGraph(counter,runindex,psi3_center_fvtxs2);
   tg_psi3_index_center_fvtxs2->SetMarkerStyle(kFullCircle);
   tg_psi3_index_center_fvtxs2->SetMarkerColor(kBlack);
+  tg_psi3_index_center_fvtxs2->SetTitle("FVTXS layer 2");
   tg_psi3_index_center_fvtxs2->Draw("ap");
   tg_psi3_index_center_fvtxs2->SetMaximum(1.0);
-  tg_psi3_index_center_fvtxs2->SetMinimum(0.0);
+  tg_psi3_index_center_fvtxs2->SetMinimum(-1.0);
   tg_psi3_index_center_fvtxs2->GetXaxis()->SetLimits(-1,counter+1);
   tg_psi3_index_center_fvtxs2->GetXaxis()->SetTitle("run index");
-  tg_psi3_index_center_fvtxs2->GetYaxis()->SetTitle("relative center");
+  tg_psi3_index_center_fvtxs2->GetYaxis()->SetTitle("center");
   c1->Print("Jamie/Figs/final_psi3_center_fvtxs2.png");
   c1->Print("Jamie/Figs/final_psi3_center_fvtxs2.pdf");
 
@@ -171,6 +178,7 @@ void layers_rbr()
   TGraph* tg_psi3_index_difference_fvtxs3 = new TGraph(counter,runindex,psi3_difference_fvtxs3);
   tg_psi3_index_difference_fvtxs3->SetMarkerStyle(kFullCircle);
   tg_psi3_index_difference_fvtxs3->SetMarkerColor(kBlack);
+  tg_psi3_index_difference_fvtxs3->SetTitle("FVTXS layer 3");
   tg_psi3_index_difference_fvtxs3->Draw("ap");
   tg_psi3_index_difference_fvtxs3->SetMaximum(1.0);
   tg_psi3_index_difference_fvtxs3->SetMinimum(0.0);
@@ -183,12 +191,13 @@ void layers_rbr()
   TGraph* tg_psi3_index_center_fvtxs3 = new TGraph(counter,runindex,psi3_center_fvtxs3);
   tg_psi3_index_center_fvtxs3->SetMarkerStyle(kFullCircle);
   tg_psi3_index_center_fvtxs3->SetMarkerColor(kBlack);
+  tg_psi3_index_center_fvtxs3->SetTitle("FVTXS layer 3");
   tg_psi3_index_center_fvtxs3->Draw("ap");
   tg_psi3_index_center_fvtxs3->SetMaximum(1.0);
-  tg_psi3_index_center_fvtxs3->SetMinimum(0.0);
+  tg_psi3_index_center_fvtxs3->SetMinimum(-1.0);
   tg_psi3_index_center_fvtxs3->GetXaxis()->SetLimits(-1,counter+1);
   tg_psi3_index_center_fvtxs3->GetXaxis()->SetTitle("run index");
-  tg_psi3_index_center_fvtxs3->GetYaxis()->SetTitle("relative center");
+  tg_psi3_index_center_fvtxs3->GetYaxis()->SetTitle("center");
   c1->Print("Jamie/Figs/final_psi3_center_fvtxs3.png");
   c1->Print("Jamie/Figs/final_psi3_center_fvtxs3.pdf");
 
@@ -201,6 +210,7 @@ void layers_rbr()
   TGraph* tg_psi2_index_difference_fvtxs0 = new TGraph(counter,runindex,psi2_difference_fvtxs0);
   tg_psi2_index_difference_fvtxs0->SetMarkerStyle(kFullCircle);
   tg_psi2_index_difference_fvtxs0->SetMarkerColor(kBlack);
+  tg_psi2_index_difference_fvtxs0->SetTitle("FVTXS layer 0");
   tg_psi2_index_difference_fvtxs0->Draw("ap");
   tg_psi2_index_difference_fvtxs0->SetMaximum(1.0);
   tg_psi2_index_difference_fvtxs0->SetMinimum(0.0);
@@ -213,12 +223,13 @@ void layers_rbr()
   TGraph* tg_psi2_index_center_fvtxs0 = new TGraph(counter,runindex,psi2_center_fvtxs0);
   tg_psi2_index_center_fvtxs0->SetMarkerStyle(kFullCircle);
   tg_psi2_index_center_fvtxs0->SetMarkerColor(kBlack);
+  tg_psi2_index_center_fvtxs0->SetTitle("FVTXS layer 0");
   tg_psi2_index_center_fvtxs0->Draw("ap");
   tg_psi2_index_center_fvtxs0->SetMaximum(1.0);
-  tg_psi2_index_center_fvtxs0->SetMinimum(0.0);
+  tg_psi2_index_center_fvtxs0->SetMinimum(-1.0);
   tg_psi2_index_center_fvtxs0->GetXaxis()->SetLimits(-1,counter+1);
   tg_psi2_index_center_fvtxs0->GetXaxis()->SetTitle("run index");
-  tg_psi2_index_center_fvtxs0->GetYaxis()->SetTitle("relative center");
+  tg_psi2_index_center_fvtxs0->GetYaxis()->SetTitle("center");
   c1->Print("Jamie/Figs/final_psi2_center_fvtxs0.png");
   c1->Print("Jamie/Figs/final_psi2_center_fvtxs0.pdf");
 
@@ -226,6 +237,7 @@ void layers_rbr()
   TGraph* tg_psi2_index_difference_fvtxs1 = new TGraph(counter,runindex,psi2_difference_fvtxs1);
   tg_psi2_index_difference_fvtxs1->SetMarkerStyle(kFullCircle);
   tg_psi2_index_difference_fvtxs1->SetMarkerColor(kBlack);
+  tg_psi2_index_difference_fvtxs1->SetTitle("FVTXS layer 1");
   tg_psi2_index_difference_fvtxs1->Draw("ap");
   tg_psi2_index_difference_fvtxs1->SetMaximum(1.0);
   tg_psi2_index_difference_fvtxs1->SetMinimum(0.0);
@@ -238,12 +250,13 @@ void layers_rbr()
   TGraph* tg_psi2_index_center_fvtxs1 = new TGraph(counter,runindex,psi2_center_fvtxs1);
   tg_psi2_index_center_fvtxs1->SetMarkerStyle(kFullCircle);
   tg_psi2_index_center_fvtxs1->SetMarkerColor(kBlack);
+  tg_psi2_index_center_fvtxs1->SetTitle("FVTXS layer 1");
   tg_psi2_index_center_fvtxs1->Draw("ap");
   tg_psi2_index_center_fvtxs1->SetMaximum(1.0);
-  tg_psi2_index_center_fvtxs1->SetMinimum(0.0);
+  tg_psi2_index_center_fvtxs1->SetMinimum(-1.0);
   tg_psi2_index_center_fvtxs1->GetXaxis()->SetLimits(-1,counter+1);
   tg_psi2_index_center_fvtxs1->GetXaxis()->SetTitle("run index");
-  tg_psi2_index_center_fvtxs1->GetYaxis()->SetTitle("relative center");
+  tg_psi2_index_center_fvtxs1->GetYaxis()->SetTitle("center");
   c1->Print("Jamie/Figs/final_psi2_center_fvtxs1.png");
   c1->Print("Jamie/Figs/final_psi2_center_fvtxs1.pdf");
 
@@ -251,6 +264,7 @@ void layers_rbr()
   TGraph* tg_psi2_index_difference_fvtxs2 = new TGraph(counter,runindex,psi2_difference_fvtxs2);
   tg_psi2_index_difference_fvtxs2->SetMarkerStyle(kFullCircle);
   tg_psi2_index_difference_fvtxs2->SetMarkerColor(kBlack);
+  tg_psi2_index_difference_fvtxs2->SetTitle("FVTXS layer 2");
   tg_psi2_index_difference_fvtxs2->Draw("ap");
   tg_psi2_index_difference_fvtxs2->SetMaximum(1.0);
   tg_psi2_index_difference_fvtxs2->SetMinimum(0.0);
@@ -263,12 +277,13 @@ void layers_rbr()
   TGraph* tg_psi2_index_center_fvtxs2 = new TGraph(counter,runindex,psi2_center_fvtxs2);
   tg_psi2_index_center_fvtxs2->SetMarkerStyle(kFullCircle);
   tg_psi2_index_center_fvtxs2->SetMarkerColor(kBlack);
+  tg_psi2_index_center_fvtxs2->SetTitle("FVTXS layer 2");
   tg_psi2_index_center_fvtxs2->Draw("ap");
   tg_psi2_index_center_fvtxs2->SetMaximum(1.0);
-  tg_psi2_index_center_fvtxs2->SetMinimum(0.0);
+  tg_psi2_index_center_fvtxs2->SetMinimum(-1.0);
   tg_psi2_index_center_fvtxs2->GetXaxis()->SetLimits(-1,counter+1);
   tg_psi2_index_center_fvtxs2->GetXaxis()->SetTitle("run index");
-  tg_psi2_index_center_fvtxs2->GetYaxis()->SetTitle("relative center");
+  tg_psi2_index_center_fvtxs2->GetYaxis()->SetTitle("center");
   c1->Print("Jamie/Figs/final_psi2_center_fvtxs2.png");
   c1->Print("Jamie/Figs/final_psi2_center_fvtxs2.pdf");
 
@@ -276,6 +291,7 @@ void layers_rbr()
   TGraph* tg_psi2_index_difference_fvtxs3 = new TGraph(counter,runindex,psi2_difference_fvtxs3);
   tg_psi2_index_difference_fvtxs3->SetMarkerStyle(kFullCircle);
   tg_psi2_index_difference_fvtxs3->SetMarkerColor(kBlack);
+  tg_psi2_index_difference_fvtxs3->SetTitle("FVTXS layer 3");
   tg_psi2_index_difference_fvtxs3->Draw("ap");
   tg_psi2_index_difference_fvtxs3->SetMaximum(1.0);
   tg_psi2_index_difference_fvtxs3->SetMinimum(0.0);
@@ -288,12 +304,13 @@ void layers_rbr()
   TGraph* tg_psi2_index_center_fvtxs3 = new TGraph(counter,runindex,psi2_center_fvtxs3);
   tg_psi2_index_center_fvtxs3->SetMarkerStyle(kFullCircle);
   tg_psi2_index_center_fvtxs3->SetMarkerColor(kBlack);
+  tg_psi2_index_center_fvtxs3->SetTitle("FVTXS layer 3");
   tg_psi2_index_center_fvtxs3->Draw("ap");
   tg_psi2_index_center_fvtxs3->SetMaximum(1.0);
-  tg_psi2_index_center_fvtxs3->SetMinimum(0.0);
+  tg_psi2_index_center_fvtxs3->SetMinimum(-1.0);
   tg_psi2_index_center_fvtxs3->GetXaxis()->SetLimits(-1,counter+1);
   tg_psi2_index_center_fvtxs3->GetXaxis()->SetTitle("run index");
-  tg_psi2_index_center_fvtxs3->GetYaxis()->SetTitle("relative center");
+  tg_psi2_index_center_fvtxs3->GetYaxis()->SetTitle("center");
   c1->Print("Jamie/Figs/final_psi2_center_fvtxs3.png");
   c1->Print("Jamie/Figs/final_psi2_center_fvtxs3.pdf");
 
@@ -351,6 +368,7 @@ void doit(int run)
   fun->SetParameter(0,max);
   fun->SetParameter(1,max);
   fun->SetParameter(2,0.0);
+  th1d_psi3_fvtxs0->SetTitle("FVTXS layer 0");
   th1d_psi3_fvtxs0->Draw();
   th1d_psi3_fvtxs0->Fit(fun,"","",-1.0,1.0);
   if ( line_max ) delete line_max;
@@ -391,6 +409,7 @@ void doit(int run)
   fun->SetParameter(0,max);
   fun->SetParameter(1,max);
   fun->SetParameter(2,0.0);
+  th1d_psi3_fvtxs1->SetTitle("FVTXS layer 1");
   th1d_psi3_fvtxs1->Draw();
   th1d_psi3_fvtxs1->Fit(fun,"","",-1.0,1.0);
   if ( line_max ) delete line_max;
@@ -431,6 +450,7 @@ void doit(int run)
   fun->SetParameter(0,max);
   fun->SetParameter(1,max);
   fun->SetParameter(2,0.0);
+  th1d_psi3_fvtxs2->SetTitle("FVTXS layer 2");
   th1d_psi3_fvtxs2->Draw();
   th1d_psi3_fvtxs2->Fit(fun,"","",-1.0,1.0);
   if ( line_max ) delete line_max;
@@ -471,6 +491,7 @@ void doit(int run)
   fun->SetParameter(0,max);
   fun->SetParameter(1,max);
   fun->SetParameter(2,0.0);
+  th1d_psi3_fvtxs3->SetTitle("FVTXS layer 3");
   th1d_psi3_fvtxs3->Draw();
   th1d_psi3_fvtxs3->Fit(fun,"","",-1.0,1.0);
   if ( line_max ) delete line_max;
@@ -508,7 +529,7 @@ void doit(int run)
 
 
   // ---
-  // --- now psi2
+  // --- come back here for psi2
   // ---
 
   TH2D* th2d_psi2_fvtxs0 = (TH2D*)file->Get("psi_bf_0_1_4");
@@ -521,17 +542,18 @@ void doit(int run)
   TH1D* th1d_psi2_fvtxs3 = (TH1D*)th2d_psi2_fvtxs3->ProjectionY("th1d_psi2_fvtxs3");
 
   if ( fun ) delete fun;
-  fun = new TF1("fun","[0]+[1]*cos(3*(2-[2]))",-1.6,1.6);
+  fun = new TF1("fun","[0]+[1]*cos(2*(x-[2]))",-1.6,1.6);
   fun->SetParLimits(2,-1.57,1.57);
 
   max = th1d_psi2_fvtxs0->GetMaximum();
   cen = th1d_psi2_fvtxs0->GetBinCenter(th1d_psi2_fvtxs0->GetMaximumBin());
-  min = th1d_psi2_fvtxs0->GetMinimum(max*0.1); // minimum bin with at least 1 entry
+  min = th1d_psi2_fvtxs0->GetMinimum(max*0.15); // minimum bin with at least 1 entry
   fun->SetParameter(0,max);
   fun->SetParameter(1,max);
   fun->SetParameter(2,0.0);
+  th1d_psi2_fvtxs0->SetTitle("FVTXS layer 0");
   th1d_psi2_fvtxs0->Draw();
-  th1d_psi2_fvtxs0->Fit(fun,"","",-1.0,1.0);
+  th1d_psi2_fvtxs0->Fit(fun,"","",-1.55,1.55);
   if ( line_max ) delete line_max;
   line_max = new TLine(-4,max,4,max);
   line_max->SetLineStyle(2);
@@ -566,12 +588,13 @@ void doit(int run)
 
   max = th1d_psi2_fvtxs1->GetMaximum();
   cen = th1d_psi2_fvtxs1->GetBinCenter(th1d_psi2_fvtxs1->GetMaximumBin());
-  min = th1d_psi2_fvtxs1->GetMinimum(max*0.1); // minimum bin with at least 1 entry
+  min = th1d_psi2_fvtxs1->GetMinimum(max*0.15); // minimum bin with at least 1 entry
   fun->SetParameter(0,max);
   fun->SetParameter(1,max);
   fun->SetParameter(2,0.0);
+  th1d_psi2_fvtxs1->SetTitle("FVTXS layer 1");
   th1d_psi2_fvtxs1->Draw();
-  th1d_psi2_fvtxs1->Fit(fun,"","",-1.0,1.0);
+  th1d_psi2_fvtxs1->Fit(fun,"","",-1.55,1.55);
   if ( line_max ) delete line_max;
   line_max = new TLine(-4,max,4,max);
   line_max->SetLineStyle(2);
@@ -606,12 +629,13 @@ void doit(int run)
 
   max = th1d_psi2_fvtxs2->GetMaximum();
   cen = th1d_psi2_fvtxs2->GetBinCenter(th1d_psi2_fvtxs2->GetMaximumBin());
-  min = th1d_psi2_fvtxs2->GetMinimum(max*0.1); // minimum bin with at least 1 entry
+  min = th1d_psi2_fvtxs2->GetMinimum(max*0.15); // minimum bin with at least 1 entry
   fun->SetParameter(0,max);
   fun->SetParameter(1,max);
   fun->SetParameter(2,0.0);
+  th1d_psi2_fvtxs2->SetTitle("FVTXS layer 2");
   th1d_psi2_fvtxs2->Draw();
-  th1d_psi2_fvtxs2->Fit(fun,"","",-1.0,1.0);
+  th1d_psi2_fvtxs2->Fit(fun,"","",-1.55,1.55);
   if ( line_max ) delete line_max;
   line_max = new TLine(-4,max,4,max);
   line_max->SetLineStyle(2);
@@ -646,12 +670,13 @@ void doit(int run)
 
   max = th1d_psi2_fvtxs3->GetMaximum();
   cen = th1d_psi2_fvtxs3->GetBinCenter(th1d_psi2_fvtxs3->GetMaximumBin());
-  min = th1d_psi2_fvtxs3->GetMinimum(max*0.1); // minimum bin with at least 1 entry
+  min = th1d_psi2_fvtxs3->GetMinimum(max*0.15); // minimum bin with at least 1 entry
   fun->SetParameter(0,max);
   fun->SetParameter(1,max);
   fun->SetParameter(2,0.0);
+  th1d_psi2_fvtxs3->SetTitle("FVTXS layer 3");
   th1d_psi2_fvtxs3->Draw();
-  th1d_psi2_fvtxs3->Fit(fun,"","",-1.0,1.0);
+  th1d_psi2_fvtxs3->Fit(fun,"","",-1.55,1.55);
   if ( line_max ) delete line_max;
   line_max = new TLine(-4,max,4,max);
   line_max->SetLineStyle(2);
