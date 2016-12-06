@@ -482,6 +482,45 @@ void takehistograms
   c1->Print("FigsFour/cbr_v24andv22andSP.png");
   c1->Print("FigsFour/cbr_v24andv22andSP.pdf");
 
+  // ---
+  // --- it never stops
+  // ---
+
+  // ------------------------------------------------------------------------------
+  TH1D* th1d_v2_mid = (TH1D*)th1d_c24->Clone("th1d_v2_mid");
+  TH1D* th1d_v2_sigma = (TH1D*)th1d_c24->Clone("th1d_v2_sigma");
+  for (int i = 1; i < bin_size+1; i++)
+    {
+      double temp_1 = th1d_cv24->GetBinContent(i);
+      double temp_2 = th1d_cv22->GetBinContent(i);
+      if (temp_1 <= 0)
+	{
+	  th1d_v2_mid->SetBinContent(i, temp_1);
+	  th1d_v2_sigma->SetBinContent(i, temp_1);
+	}
+      else
+	{
+	  double v2_mid = (temp_1 * temp_1 + temp_2 * temp_2) / 2;
+	  double v2_sigma = (temp_2 * temp_2 - temp_1 * temp_1) / 2;
+	  v2_mid = TMath::Sqrt(v2_mid);
+	  if (v2_sigma > 0) v2_sigma = TMath::Sqrt(v2_sigma)/v2_mid;
+	  else v2_sigma = -9999;
+	  th1d_v2_mid->SetBinContent(i, v2_mid);
+	  th1d_v2_sigma->SetBinContent(i, v2_sigma);
+	}
+    }
+
+
+  tge_v24->Draw("ap");
+  th1d_cv24->Draw("p,same");
+  tge_sv22->Draw("p");
+  th1d_cv22->Draw("p,same");
+  th1d_v2_mid->SetMarkerStyle(kFullCross);
+  th1d_v2_mid->SetMarkerColor(kBlue);
+  th1d_v2_mid->Draw("p,same");
+  c1->Print("FigsFour/cbr_v24andv22_and_mid.png");
+  c1->Print("FigsFour/cbr_v24andv22_and_mid.pdf");
+
 }
 
 double calc_corr_four(double four, double two, double cos1, double sin1, double cossum2, double sinsum2, double cos3, double sin3)
