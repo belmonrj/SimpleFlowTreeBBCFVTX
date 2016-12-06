@@ -584,6 +584,16 @@ void takehistograms
   c1->Print("FigsFour/cbr_v2sigma.png");
   c1->Print("FigsFour/cbr_v2sigma.pdf");
 
+  TFile* fout = TFile::Open("cumulants.root","recreate");
+  tge_v2_sigma->SetName("tge_v2sigma_200");
+  tge_v2_sigma->Write();
+  tge_sv22->SetName("tge_v22_200");
+  tge_sv22->Write();
+  tge_sv24->SetName("tge_v24_200");
+  tge_sv24->Write();
+  fout->Write();
+  fout->Close();
+
 }
 
 
