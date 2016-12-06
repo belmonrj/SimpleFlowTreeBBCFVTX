@@ -384,6 +384,104 @@ void takehistograms
   legss->Draw();
   c1->Print("FigsFour/stestcomparev24andv22andSP.png");
 
+  // --- now bill stuff
+  //TFile *bill = TFile::Open("dAu_cumulant200.root");
+  TFile *bill = TFile::Open("dAu_D_cumulant.root");
+  int bin_size = 50; // PbPb: maximum 100      pPb: 50
+
+  TProfile* tp1f_raa4 = (TProfile*)bill->Get("raa4_Ncharge");
+  TProfile* tp1f_raa2 = (TProfile*)bill->Get("raa2_Ncharge");
+  TProfile* tp1f_gapp = (TProfile*)bill->Get("comp_Ncharge");
+  TH1D* th1d_raa4 = tp1f_raa4->ProjectionX("th1d_raa4");
+  TH1D* th1d_raa2 = tp1f_raa2->ProjectionX("th1d_raa2");
+  TH1D* th1d_gapp = tp1f_gapp->ProjectionX("th1d_gapp");
+
+  TH1D* th1d_c2 = (TH1D*)th1d_raa2->Clone("th1d_c2");
+  th1d_c2->Multiply(th1d_raa2);
+  th1d_c2->Scale(2.0);
+  TH1D* th1d_c24 = (TH1D*)th1d_raa4->Clone("th1d_c24");
+  th1d_c24->Add(th1d_c2, -1.0);
+  TH1D* th1d_cv24 = (TH1D*)th1d_c24->Clone("th1d_cv24");
+  for (int i = 1; i < bin_size+1; i++)
+    {
+      double temp_1 = th1d_cv24->GetBinContent(i);
+      double erro_1 = th1d_cv24->GetBinError(i);
+      if (temp_1 >= 0) th1d_cv24->SetBinContent(i, -9999);
+      else
+	{
+	  double temp_2 = pow(-temp_1, 0.25);
+	  cout << temp_1 << " " << fabs(temp_1) << endl;
+	  double erro_2 = 0.25 * erro_1 * fabs(temp_2) / fabs(temp_1);
+	  th1d_cv24->SetBinContent(i, temp_2);
+	  th1d_cv24->SetBinError(i, erro_2);
+	}
+    }
+  TH1D* th1d_cv22 = (TH1D*)th1d_raa2->Clone("th1d_cv22");
+  for (int i = 1; i < bin_size+1; i++)
+    {
+      double temp_1 = th1d_cv22->GetBinContent(i);
+      double erro_1 = th1d_cv22->GetBinError(i);
+      if (temp_1 <= 0) th1d_cv22->SetBinContent(i, -9999);
+      else
+	{
+	  double temp_2 = pow(temp_1, 0.5);
+	  double erro_2 = 0.5 * erro_1 * fabs(temp_2) / fabs(temp_1);
+	  th1d_cv22->SetBinContent(i, temp_2);
+	  th1d_cv22->SetBinError(i, erro_2);
+	}
+    }
+  TH1D* th1d_cv22gap = (TH1D*)th1d_gapp->Clone("th1d_cv22gap");
+  for (int i = 1; i < bin_size+1; i++)
+    {
+      double temp_1 = th1d_cv22gap->GetBinContent(i);
+      double erro_1 = th1d_cv22gap->GetBinError(i);
+      if (temp_1 <= 0) th1d_cv22gap->SetBinContent(i, -9999);
+      else
+	{
+	  double temp_2 = pow(temp_1, 0.5);
+	  double erro_2 = 0.5 * erro_1 * fabs(temp_2) / fabs(temp_1);
+	  th1d_cv22gap->SetBinContent(i, temp_2);
+	  th1d_cv22gap->SetBinError(i, erro_2);
+	}
+    }
+  th1d_cv22->SetMarkerStyle(kFullDiamond);
+  th1d_cv22->SetMarkerColor(kMagenta+2);
+  th1d_cv24->SetMarkerStyle(kFullCircle);
+  th1d_cv24->SetMarkerColor(kBlack);
+
+  tge_v24->Draw("ap");
+  th1d_cv24->Draw("p,same");
+  TLegend* blegh1 = new TLegend(0.60,0.18,0.70,0.38);
+  blegh1->SetHeader("Run16");
+  blegh1->AddEntry(tge_v24,"v_{2}{4}","elp");
+  blegh1->SetTextSize(0.045);
+  blegh1->Draw();
+  TLegend* blegh2 = new TLegend(0.75,0.18,0.85,0.38);
+  blegh2->SetHeader("AMPT");
+  blegh2->AddEntry(th1d_cv24,"v_{2}{4}","elp");
+  blegh2->SetTextSize(0.045);
+  blegh2->Draw();
+  c1->Print("FigsFour/cbr_v24.png");
+  c1->Print("FigsFour/cbr_v24.pdf");
+  tge_sv22->Draw("p");
+  th1d_cv22->Draw("p,same");
+  blegh1->AddEntry(tge_sv22,"v_{2}{2}","elp");
+  blegh1->Draw();
+  blegh2->AddEntry(th1d_cv22,"v_{2}{2}","elp");
+  blegh2->Draw();
+  c1->Print("FigsFour/cbr_v24andv22.png");
+  c1->Print("FigsFour/cbr_v24andv22.pdf");
+  th1d_cv22gap->SetMarkerStyle(kFullCross);
+  th1d_cv22gap->SetMarkerColor(kRed);
+  tge_ssv22->Draw("p");
+  th1d_cv22gap->Draw("p,same");
+  blegh1->AddEntry(tge_ssv22,"v_{2}{SP}","elp");
+  blegh1->Draw();
+  blegh2->AddEntry(th1d_cv22gap,"v_{2}{SP}","elp");
+  blegh2->Draw();
+  c1->Print("FigsFour/cbr_v24andv22andSP.png");
+  c1->Print("FigsFour/cbr_v24andv22andSP.pdf");
+
 }
 
 double calc_corr_four(double four, double two, double cos1, double sin1, double cossum2, double sinsum2, double cos3, double sin3)
