@@ -373,4 +373,10 @@ void plot_ppb_pbpb()
 
   c2->Print("ampt_sigma_epsilon_v.png");
   c2->Print("ampt_sigma_epsilon_v.pdf");
+
+  TFile* fout = TFile::Open("epsilon_for_cumulants.root","recreate");
+  th1d_epsilon2->SetName("th1d_epsilon2_200");
+  th1d_epsilon2->Write();
+  fout->Write();
+  fout->Close();
 }
