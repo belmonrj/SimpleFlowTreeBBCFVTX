@@ -76,6 +76,9 @@ void takehistograms
   double corr_sv22[nbins];
   double corr_ssv22[nbins];
 
+  double d_v2_mid[nbins];
+  double d_v2_sigma[nbins];
+
   TH1D* th1d_222 = new TH1D("th1d_222","",80,0,80);
   TH1D* th1d_four = new TH1D("th1d_four","",80,0,80);
   TH1D* th1d_s222 = new TH1D("th1d_s222","",80,0,80);
@@ -122,6 +125,20 @@ void takehistograms
       if ( corr_sc2[i] > 0 && x[i] > 10 && x[i] < 70 ) corr_sv22[i] = sqrt(corr_sc2[i]);
       corr_ssv22[i] = -9;
       if ( corr_ssc2[i] > 0 && x[i] > 10 && x[i] < 70 ) corr_ssv22[i] = sqrt(corr_ssc2[i]);
+      // ---
+      d_v2_mid[i] = (corr_sv22[i]*corr_sv22[i] + corr_sv24[i]*corr_sv24[i])/2.0;
+      d_v2_sigma[i] = (corr_sv22[i]*corr_sv22[i] - corr_sv24[i]*corr_sv24[i])/2.0;
+      if ( d_v2_mid[i] > 0 )
+	{
+	  d_v2_mid[i] = sqrt(d_v2_mid[i]);
+	  d_v2_sigma[i] = sqrt(d_v2_sigma[i])/d_v2_mid[i];
+	}
+      else
+	{
+	  d_v2_mid[i] = -9;
+	  d_v2_sigma[i] = -9;
+	}
+      if ( d_v2_sigma[i] <= 0 ) d_v2_sigma[i] = -9;
     }
 
   TGraphErrors* tge_corr_c24 = new TGraphErrors(nbins,x,corr_c4,0,0);
@@ -486,6 +503,13 @@ void takehistograms
   // --- it never stops
   // ---
 
+  TGraphErrors* tge_v2_mid = new TGraphErrors(nbins,x,d_v2_mid,0,0);
+  tge_v2_mid->SetMarkerStyle(kOpenCross);
+  tge_v2_mid->SetMarkerColor(kBlue);
+  TGraphErrors* tge_v2_sigma = new TGraphErrors(nbins,x,d_v2_sigma,0,0);
+  tge_v2_sigma->SetMarkerStyle(kOpenCircle);
+  tge_v2_sigma->SetMarkerColor(kBlack);
+
   // ------------------------------------------------------------------------------
   TH1D* th1d_v2_mid = (TH1D*)th1d_c24->Clone("th1d_v2_mid");
   TH1D* th1d_v2_sigma = (TH1D*)th1d_c24->Clone("th1d_v2_sigma");
@@ -510,18 +534,59 @@ void takehistograms
 	}
     }
 
-
   tge_v24->Draw("ap");
   th1d_cv24->Draw("p,same");
   tge_sv22->Draw("p");
   th1d_cv22->Draw("p,same");
   th1d_v2_mid->SetMarkerStyle(kFullCross);
   th1d_v2_mid->SetMarkerColor(kBlue);
+  tge_v2_mid->Draw("p");
   th1d_v2_mid->Draw("p,same");
+  blegh1->Clear();
+  blegh2->Clear();
+  blegh1->SetHeader("Run16");
+  blegh1->AddEntry(tge_v24,"v_{2}{4}","elp");
+  blegh1->SetTextSize(0.045);
+  blegh1->Draw();
+  blegh2->SetHeader("AMPT");
+  blegh2->AddEntry(th1d_cv24,"v_{2}{4}","elp");
+  blegh2->SetTextSize(0.045);
+  blegh2->Draw();
+  blegh1->AddEntry(tge_sv22,"v_{2}{2}","elp");
+  blegh1->Draw();
+  blegh2->AddEntry(th1d_cv22,"v_{2}{2}","elp");
+  blegh2->Draw();
+  blegh1->AddEntry(tge_v2_mid,"v_{2}{mid}","elp");
+  blegh1->Draw();
+  blegh2->AddEntry(th1d_v2_mid,"v_{2}{mid}","elp");
+  blegh2->Draw();
   c1->Print("FigsFour/cbr_v24andv22_and_mid.png");
   c1->Print("FigsFour/cbr_v24andv22_and_mid.pdf");
 
+  tge_v2_sigma->Draw("ap");
+  tge_v2_sigma->SetMaximum(1.0);
+  tge_v2_sigma->SetMinimum(0.0);
+  tge_v2_sigma->GetXaxis()->SetLimits(0,80);
+  tge_v2_sigma->GetXaxis()->SetTitle("N^{FVTX}_{tracks}");
+  th1d_v2_sigma->SetMarkerStyle(kFullCircle);
+  th1d_v2_sigma->SetMarkerColor(kBlack);
+  th1d_v2_sigma->Draw("p,same");
+  blegh1->Clear();
+  blegh2->Clear();
+  blegh1->SetHeader("Run16");
+  blegh1->AddEntry(tge_v2_sigma,"#sigma_{v}/v","elp");
+  blegh1->SetTextSize(0.045);
+  blegh1->Draw();
+  blegh2->SetHeader("AMPT");
+  blegh2->AddEntry(th1d_v2_sigma,"#sigma_{v}/v","elp");
+  blegh2->SetTextSize(0.045);
+  blegh2->Draw();
+  c1->Print("FigsFour/cbr_v2sigma.png");
+  c1->Print("FigsFour/cbr_v2sigma.pdf");
+
 }
+
+
 
 double calc_corr_four(double four, double two, double cos1, double sin1, double cossum2, double sinsum2, double cos3, double sin3)
 {
@@ -537,3 +602,4 @@ double calc_corr_four(double four, double two, double cos1, double sin1, double 
   double result = uncorr - corr_term1 + corr_term2 - corr_term3 - corr_term4 + corr_term5 + corr_term6 + corr_term7 - corr_term8;
   return result;
 }
+
