@@ -83,6 +83,12 @@ void doenergy(int energy)
 							);
 	  cout << content_final0[i] << " " << econtent_final0[i] << endl;
 	}
+      else
+	{
+	  content_ab0[i] -= 99;
+	  content_bb0[i] -= 99;
+	  content_aa0[i] -= 99;
+	}
     }
   // -------------------------------------------------------------------------------------------
   TGraphErrors* tge_ab0 = new TGraphErrors(12,x,content_ab0,0,econtent_ab0);
@@ -95,7 +101,7 @@ void doenergy(int energy)
   tge_ab0->GetXaxis()->SetLimits(-3,3);
   tge_ab0->GetXaxis()->SetTitle("#eta_{b}");
   tge_ab0->GetYaxis()->SetTitle("V_{2}^{a,b}(#eta_{a} = -2.75)");
-  tge_ab0->GetYaxis()->SetTitleOffset(1.25);
+  tge_ab0->GetYaxis()->SetTitleOffset(1.3);
   line->Draw();
   c1->Print("FigsDecorrelation/early_ab0.png");
   c1->Print("FigsDecorrelation/early_ab0.pdf");
@@ -109,7 +115,7 @@ void doenergy(int energy)
   tge_aa0->GetXaxis()->SetLimits(-3,3);
   tge_aa0->GetXaxis()->SetTitle("#eta_{b}");
   tge_aa0->GetYaxis()->SetTitle("V_{2}^{a,a}(#eta_{a} = -2.75)");
-  tge_aa0->GetYaxis()->SetTitleOffset(1.25);
+  tge_aa0->GetYaxis()->SetTitleOffset(1.3);
   line->Draw();
   c1->Print("FigsDecorrelation/early_aa0.png");
   c1->Print("FigsDecorrelation/early_aa0.pdf");
@@ -123,7 +129,7 @@ void doenergy(int energy)
   tge_bb0->GetXaxis()->SetLimits(-3,3);
   tge_bb0->GetXaxis()->SetTitle("#eta_{b}");
   tge_bb0->GetYaxis()->SetTitle("V_{2}^{b,b}(#eta_{a} = -2.75)");
-  tge_bb0->GetYaxis()->SetTitleOffset(1.25);
+  tge_bb0->GetYaxis()->SetTitleOffset(1.3);
   line->Draw();
   c1->Print("FigsDecorrelation/early_bb0.png");
   c1->Print("FigsDecorrelation/early_bb0.pdf");
@@ -192,6 +198,12 @@ void doenergy(int energy)
 							);
 	  cout << content_final1[i] << " " << econtent_final1[i] << endl;
 	}
+      else
+	{
+	  content_ab1[i] -= 99;
+	  content_bb1[i] -= 99;
+	  content_aa1[i] -= 99;
+	}
     }
   // -------------------------------------------------------------------------------------------
   TGraphErrors* tge_ab1 = new TGraphErrors(12,x,content_ab1,0,econtent_ab1);
@@ -204,7 +216,7 @@ void doenergy(int energy)
   tge_ab1->GetXaxis()->SetLimits(-3,3);
   tge_ab1->GetXaxis()->SetTitle("#eta_{b}");
   tge_ab1->GetYaxis()->SetTitle("V_{2}^{a,b}(#eta_{a} = -2.25)");
-  tge_ab1->GetYaxis()->SetTitleOffset(1.25);
+  tge_ab1->GetYaxis()->SetTitleOffset(1.3);
   line->Draw();
   c1->Print("FigsDecorrelation/early_ab1.png");
   c1->Print("FigsDecorrelation/early_ab1.pdf");
@@ -218,7 +230,7 @@ void doenergy(int energy)
   tge_aa1->GetXaxis()->SetLimits(-3,3);
   tge_aa1->GetXaxis()->SetTitle("#eta_{b}");
   tge_aa1->GetYaxis()->SetTitle("V_{2}^{a,a}(#eta_{a} = -2.25)");
-  tge_aa1->GetYaxis()->SetTitleOffset(1.25);
+  tge_aa1->GetYaxis()->SetTitleOffset(1.3);
   line->Draw();
   c1->Print("FigsDecorrelation/early_aa1.png");
   c1->Print("FigsDecorrelation/early_aa1.pdf");
@@ -232,7 +244,7 @@ void doenergy(int energy)
   tge_bb1->GetXaxis()->SetLimits(-3,3);
   tge_bb1->GetXaxis()->SetTitle("#eta_{b}");
   tge_bb1->GetYaxis()->SetTitle("V_{2}^{b,b}(#eta_{a} = -2.25)");
-  tge_bb1->GetYaxis()->SetTitleOffset(1.25);
+  tge_bb1->GetYaxis()->SetTitleOffset(1.3);
   line->Draw();
   c1->Print("FigsDecorrelation/early_bb1.png");
   c1->Print("FigsDecorrelation/early_bb1.pdf");
@@ -301,6 +313,12 @@ void doenergy(int energy)
 							);
 	  cout << content_final2[i] << " " << econtent_final2[i] << endl;
 	}
+      else
+	{
+	  content_ab2[i] -= 99;
+	  content_bb2[i] -= 99;
+	  content_aa2[i] -= 99;
+	}
     }
   // -------------------------------------------------------------------------------------------
   TGraphErrors* tge_ab2 = new TGraphErrors(12,x,content_ab2,0,econtent_ab2);
@@ -313,7 +331,7 @@ void doenergy(int energy)
   tge_ab2->GetXaxis()->SetLimits(-3,3);
   tge_ab2->GetXaxis()->SetTitle("#eta_{b}");
   tge_ab2->GetYaxis()->SetTitle("V_{2}^{a,b}(#eta_{a} = -1.75)");
-  tge_ab2->GetYaxis()->SetTitleOffset(1.25);
+  tge_ab2->GetYaxis()->SetTitleOffset(1.3);
   line->Draw();
   c1->Print("FigsDecorrelation/early_ab2.png");
   c1->Print("FigsDecorrelation/early_ab2.pdf");
@@ -327,7 +345,7 @@ void doenergy(int energy)
   tge_aa2->GetXaxis()->SetLimits(-3,3);
   tge_aa2->GetXaxis()->SetTitle("#eta_{b}");
   tge_aa2->GetYaxis()->SetTitle("V_{2}^{a,a}(#eta_{a} = -1.75)");
-  tge_aa2->GetYaxis()->SetTitleOffset(1.25);
+  tge_aa2->GetYaxis()->SetTitleOffset(1.3);
   line->Draw();
   c1->Print("FigsDecorrelation/early_aa2.png");
   c1->Print("FigsDecorrelation/early_aa2.pdf");
@@ -341,7 +359,7 @@ void doenergy(int energy)
   tge_bb2->GetXaxis()->SetLimits(-3,3);
   tge_bb2->GetXaxis()->SetTitle("#eta_{b}");
   tge_bb2->GetYaxis()->SetTitle("V_{2}^{b,b}(#eta_{a} = -1.75)");
-  tge_bb2->GetYaxis()->SetTitleOffset(1.25);
+  tge_bb2->GetYaxis()->SetTitleOffset(1.3);
   line->Draw();
   c1->Print("FigsDecorrelation/early_bb2.png");
   c1->Print("FigsDecorrelation/early_bb2.pdf");
@@ -410,6 +428,12 @@ void doenergy(int energy)
 							);
 	  cout << content_final3[i] << " " << econtent_final3[i] << endl;
 	}
+      else
+	{
+	  content_ab3[i] -= 99;
+	  content_bb3[i] -= 99;
+	  content_aa3[i] -= 99;
+	}
     }
   // -------------------------------------------------------------------------------------------
   TGraphErrors* tge_ab3 = new TGraphErrors(12,x,content_ab3,0,econtent_ab3);
@@ -422,7 +446,7 @@ void doenergy(int energy)
   tge_ab3->GetXaxis()->SetLimits(-3,3);
   tge_ab3->GetXaxis()->SetTitle("#eta_{b}");
   tge_ab3->GetYaxis()->SetTitle("V_{2}^{a,b}(#eta_{a} = -1.25)");
-  tge_ab3->GetYaxis()->SetTitleOffset(1.25);
+  tge_ab3->GetYaxis()->SetTitleOffset(1.3);
   line->Draw();
   c1->Print("FigsDecorrelation/early_ab3.png");
   c1->Print("FigsDecorrelation/early_ab3.pdf");
@@ -436,7 +460,7 @@ void doenergy(int energy)
   tge_aa3->GetXaxis()->SetLimits(-3,3);
   tge_aa3->GetXaxis()->SetTitle("#eta_{b}");
   tge_aa3->GetYaxis()->SetTitle("V_{2}^{a,a}(#eta_{a} = -1.25)");
-  tge_aa3->GetYaxis()->SetTitleOffset(1.25);
+  tge_aa3->GetYaxis()->SetTitleOffset(1.3);
   line->Draw();
   c1->Print("FigsDecorrelation/early_aa3.png");
   c1->Print("FigsDecorrelation/early_aa3.pdf");
@@ -450,7 +474,7 @@ void doenergy(int energy)
   tge_bb3->GetXaxis()->SetLimits(-3,3);
   tge_bb3->GetXaxis()->SetTitle("#eta_{b}");
   tge_bb3->GetYaxis()->SetTitle("V_{2}^{b,b}(#eta_{a} = -1.25)");
-  tge_bb3->GetYaxis()->SetTitleOffset(1.25);
+  tge_bb3->GetYaxis()->SetTitleOffset(1.3);
   line->Draw();
   c1->Print("FigsDecorrelation/early_bb3.png");
   c1->Print("FigsDecorrelation/early_bb3.pdf");
@@ -518,6 +542,12 @@ void doenergy(int energy)
 							(econtent_bb4[i]/content_bb4[i])*(econtent_bb4[i]/content_bb4[i])
 							);
 	}
+      else
+	{
+	  content_ab4[i] -= 99;
+	  content_bb4[i] -= 99;
+	  content_aa4[i] -= 99;
+	}
       cout << content_final4[i] << " " << econtent_final4[i] << endl;
       // cout << content_ab4[i] << " " << econtent_ab4[i] << endl;
       // cout << content_aa4[i] << " " << econtent_aa4[i] << endl;
@@ -534,7 +564,7 @@ void doenergy(int energy)
   tge_ab4->GetXaxis()->SetLimits(-3,3);
   tge_ab4->GetXaxis()->SetTitle("#eta_{b}");
   tge_ab4->GetYaxis()->SetTitle("V_{2}^{a,b}(#eta_{a} = 1.25)");
-  tge_ab4->GetYaxis()->SetTitleOffset(1.25);
+  tge_ab4->GetYaxis()->SetTitleOffset(1.3);
   line->Draw();
   c1->Print("FigsDecorrelation/early_ab4.png");
   c1->Print("FigsDecorrelation/early_ab4.pdf");
@@ -548,7 +578,7 @@ void doenergy(int energy)
   tge_aa4->GetXaxis()->SetLimits(-3,3);
   tge_aa4->GetXaxis()->SetTitle("#eta_{b}");
   tge_aa4->GetYaxis()->SetTitle("V_{2}^{a,a}(#eta_{a} = 1.25)");
-  tge_aa4->GetYaxis()->SetTitleOffset(1.25);
+  tge_aa4->GetYaxis()->SetTitleOffset(1.3);
   line->Draw();
   c1->Print("FigsDecorrelation/early_aa4.png");
   c1->Print("FigsDecorrelation/early_aa4.pdf");
@@ -562,7 +592,7 @@ void doenergy(int energy)
   tge_bb4->GetXaxis()->SetLimits(-3,3);
   tge_bb4->GetXaxis()->SetTitle("#eta_{b}");
   tge_bb4->GetYaxis()->SetTitle("V_{2}^{b,b}(#eta_{a} = 1.25)");
-  tge_bb4->GetYaxis()->SetTitleOffset(1.25);
+  tge_bb4->GetYaxis()->SetTitleOffset(1.3);
   line->Draw();
   c1->Print("FigsDecorrelation/early_bb4.png");
   c1->Print("FigsDecorrelation/early_bb4.pdf");
@@ -630,6 +660,12 @@ void doenergy(int energy)
 							(econtent_bb5[i]/content_bb5[i])*(econtent_bb5[i]/content_bb5[i])
 							);
 	}
+      else
+	{
+	  content_ab5[i] -= 99;
+	  content_bb5[i] -= 99;
+	  content_aa5[i] -= 99;
+	}
       cout << content_final5[i] << " " << econtent_final5[i] << endl;
       // cout << content_ab5[i] << " " << econtent_ab5[i] << endl;
       // cout << content_aa5[i] << " " << econtent_aa5[i] << endl;
@@ -646,7 +682,7 @@ void doenergy(int energy)
   tge_ab5->GetXaxis()->SetLimits(-3,3);
   tge_ab5->GetXaxis()->SetTitle("#eta_{b}");
   tge_ab5->GetYaxis()->SetTitle("V_{2}^{a,b}(#eta_{a} = 1.75)");
-  tge_ab5->GetYaxis()->SetTitleOffset(1.25);
+  tge_ab5->GetYaxis()->SetTitleOffset(1.3);
   line->Draw();
   c1->Print("FigsDecorrelation/early_ab5.png");
   c1->Print("FigsDecorrelation/early_ab5.pdf");
@@ -660,7 +696,7 @@ void doenergy(int energy)
   tge_aa5->GetXaxis()->SetLimits(-3,3);
   tge_aa5->GetXaxis()->SetTitle("#eta_{b}");
   tge_aa5->GetYaxis()->SetTitle("V_{2}^{a,a}(#eta_{a} = 1.75)");
-  tge_aa5->GetYaxis()->SetTitleOffset(1.25);
+  tge_aa5->GetYaxis()->SetTitleOffset(1.3);
   line->Draw();
   c1->Print("FigsDecorrelation/early_aa5.png");
   c1->Print("FigsDecorrelation/early_aa5.pdf");
@@ -674,7 +710,7 @@ void doenergy(int energy)
   tge_bb5->GetXaxis()->SetLimits(-3,3);
   tge_bb5->GetXaxis()->SetTitle("#eta_{b}");
   tge_bb5->GetYaxis()->SetTitle("V_{2}^{b,b}(#eta_{a} = 1.75)");
-  tge_bb5->GetYaxis()->SetTitleOffset(1.25);
+  tge_bb5->GetYaxis()->SetTitleOffset(1.3);
   line->Draw();
   c1->Print("FigsDecorrelation/early_bb5.png");
   c1->Print("FigsDecorrelation/early_bb5.pdf");
@@ -742,6 +778,12 @@ void doenergy(int energy)
 							(econtent_bb6[i]/content_bb6[i])*(econtent_bb6[i]/content_bb6[i])
 							);
 	}
+      else
+	{
+	  content_ab6[i] -= 99;
+	  content_bb6[i] -= 99;
+	  content_aa6[i] -= 99;
+	}
       cout << content_final6[i] << " " << econtent_final6[i] << endl;
       // cout << content_ab6[i] << " " << econtent_ab6[i] << endl;
       // cout << content_aa6[i] << " " << econtent_aa6[i] << endl;
@@ -758,7 +800,7 @@ void doenergy(int energy)
   tge_ab6->GetXaxis()->SetLimits(-3,3);
   tge_ab6->GetXaxis()->SetTitle("#eta_{b}");
   tge_ab6->GetYaxis()->SetTitle("V_{2}^{a,b}(#eta_{a} = 2.25)");
-  tge_ab6->GetYaxis()->SetTitleOffset(1.25);
+  tge_ab6->GetYaxis()->SetTitleOffset(1.3);
   line->Draw();
   c1->Print("FigsDecorrelation/early_ab6.png");
   c1->Print("FigsDecorrelation/early_ab6.pdf");
@@ -772,7 +814,7 @@ void doenergy(int energy)
   tge_aa6->GetXaxis()->SetLimits(-3,3);
   tge_aa6->GetXaxis()->SetTitle("#eta_{b}");
   tge_aa6->GetYaxis()->SetTitle("V_{2}^{a,a}(#eta_{a} = 2.25)");
-  tge_aa6->GetYaxis()->SetTitleOffset(1.25);
+  tge_aa6->GetYaxis()->SetTitleOffset(1.3);
   line->Draw();
   c1->Print("FigsDecorrelation/early_aa6.png");
   c1->Print("FigsDecorrelation/early_aa6.pdf");
@@ -786,7 +828,7 @@ void doenergy(int energy)
   tge_bb6->GetXaxis()->SetLimits(-3,3);
   tge_bb6->GetXaxis()->SetTitle("#eta_{b}");
   tge_bb6->GetYaxis()->SetTitle("V_{2}^{b,b}(#eta_{a} = 2.25)");
-  tge_bb6->GetYaxis()->SetTitleOffset(1.25);
+  tge_bb6->GetYaxis()->SetTitleOffset(1.3);
   line->Draw();
   c1->Print("FigsDecorrelation/early_bb6.png");
   c1->Print("FigsDecorrelation/early_bb6.pdf");
@@ -854,6 +896,12 @@ void doenergy(int energy)
 							(econtent_bb7[i]/content_bb7[i])*(econtent_bb7[i]/content_bb7[i])
 							);
 	}
+      else
+	{
+	  content_ab7[i] -= 99;
+	  content_bb7[i] -= 99;
+	  content_aa7[i] -= 99;
+	}
       cout << content_final7[i] << " " << econtent_final7[i] << endl;
       // cout << content_ab7[i] << " " << econtent_ab7[i] << endl;
       // cout << content_aa7[i] << " " << econtent_aa7[i] << endl;
@@ -870,7 +918,7 @@ void doenergy(int energy)
   tge_ab7->GetXaxis()->SetLimits(-3,3);
   tge_ab7->GetXaxis()->SetTitle("#eta_{b}");
   tge_ab7->GetYaxis()->SetTitle("V_{2}^{a,b}(#eta_{a} = 2.75)");
-  tge_ab7->GetYaxis()->SetTitleOffset(1.25);
+  tge_ab7->GetYaxis()->SetTitleOffset(1.3);
   line->Draw();
   c1->Print("FigsDecorrelation/early_ab7.png");
   c1->Print("FigsDecorrelation/early_ab7.pdf");
@@ -884,7 +932,7 @@ void doenergy(int energy)
   tge_aa7->GetXaxis()->SetLimits(-3,3);
   tge_aa7->GetXaxis()->SetTitle("#eta_{b}");
   tge_aa7->GetYaxis()->SetTitle("V_{2}^{a,a}(#eta_{a} = 2.75)");
-  tge_aa7->GetYaxis()->SetTitleOffset(1.25);
+  tge_aa7->GetYaxis()->SetTitleOffset(1.3);
   line->Draw();
   c1->Print("FigsDecorrelation/early_aa7.png");
   c1->Print("FigsDecorrelation/early_aa7.pdf");
@@ -898,7 +946,7 @@ void doenergy(int energy)
   tge_bb7->GetXaxis()->SetLimits(-3,3);
   tge_bb7->GetXaxis()->SetTitle("#eta_{b}");
   tge_bb7->GetYaxis()->SetTitle("V_{2}^{b,b}(#eta_{a} = 2.75)");
-  tge_bb7->GetYaxis()->SetTitleOffset(1.25);
+  tge_bb7->GetYaxis()->SetTitleOffset(1.3);
   line->Draw();
   c1->Print("FigsDecorrelation/early_bb7.png");
   c1->Print("FigsDecorrelation/early_bb7.pdf");
