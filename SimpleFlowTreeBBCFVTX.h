@@ -26,7 +26,7 @@
 //static const int N_FVTX_CLUSTER_MAX = 750; // maximum number of fvtx clusters, may need to be changed for larger systems
 static const int N_FVTX_CLUSTER_MAX = 4000; // what's the largest possible number?
 static const int N_CTRK_MAX = 75; // max number of PHCentralTracks
-static const int N_FTRK_MAX = 75; // max number of FVTX tracks
+static const int N_FTRK_MAX = 200; // max number of FVTX tracks
 
 class Fun4AllHistoManager;
 class BbcCalib;
