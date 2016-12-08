@@ -215,6 +215,12 @@ int SimpleFlowTreeBBCFVTX::InitRun(PHCompositeNode *topNode)
   // This is done in init run so that the collision system can be
   // determined from the run number
   TString _collsys = "Run16dAu200"; // default to 200 GeV
+  // --- Run15pAu200
+  if ( runnumber >= 432637 && runnumber <= 436647 )
+    _collsys = "Run15pAu200";
+  // --- Run15pAl200
+  if ( runnumber >= 436759 && runnumber <= 438422 )
+    _collsys = "Run15pAl200";
   // --- Run16dAu200
   if ( runnumber >= 454774 && runnumber <= 455639 )
     _collsys = "Run16dAu200";
