@@ -34,6 +34,7 @@ class BbcGeo;
 class TVector3;
 class TLorentzVector;
 class dAuBES_utils;
+class DoubleInteractionUtil;
 
 
 class SimpleFlowTreeBBCFVTX: public SubsysReco
@@ -105,6 +106,7 @@ class SimpleFlowTreeBBCFVTX: public SubsysReco
   BbcGeo   *m_bbcgeo;
 
   dAuBES_utils* _utils;            ///< Utilities class
+  DoubleInteractionUtil *d_diutil; ///< double interaction utility class;
 
 
   int tmp_evt;
@@ -126,6 +128,7 @@ class SimpleFlowTreeBBCFVTX: public SubsysReco
   float FVTX_X;
   float FVTX_Y;
   float FVTX_Z;
+  float frac;
 
   //float d_BBCs_Qy[221];
   //float d_BBCs_Qw[221];

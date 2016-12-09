@@ -53,6 +53,7 @@
 #include <PreviousEvent.h>
 
 #include "dAuBES_utils.h"
+#include "DoubleInteractionUtil.h"
 
 
 // ------------------------
@@ -86,6 +87,8 @@ SimpleFlowTreeBBCFVTX::SimpleFlowTreeBBCFVTX():
 
   m_bbccalib = new BbcCalib();
   m_bbcgeo   = new BbcGeo();
+  d_diutil   = new DoubleInteractionUtil();
+
   return;
 }
 
@@ -95,6 +98,7 @@ SimpleFlowTreeBBCFVTX::~SimpleFlowTreeBBCFVTX()
 {
   delete m_bbccalib;
   delete m_bbcgeo;
+  delete d_diutil;
   if ( _utils ) delete _utils;
 }
 
@@ -129,6 +133,7 @@ int SimpleFlowTreeBBCFVTX::Init(PHCompositeNode *topNode)
     _ntp_event -> Branch("fvtx_x", &FVTX_X, "fvtx_x/F");
     _ntp_event -> Branch("fvtx_y", &FVTX_Y, "fvtx_y/F");
     _ntp_event -> Branch("fvtx_z", &FVTX_Z, "fvtx_z/F");
+    _ntp_event -> Branch("frac", &frac, "frac/F");
     if (_write_bbc)
     {
       _ntp_event -> Branch("bbc_qn", &bbc_qn, "bbc_qn/F");
@@ -238,6 +243,8 @@ int SimpleFlowTreeBBCFVTX::InitRun(PHCompositeNode *topNode)
   _utils = new dAuBES_utils(_collsys, true);
   // _utils->is_sim(_is_sim);
 
+  d_diutil->setBbcCalib(topNode);
+
 
   return EVENT_OK;
 }
@@ -293,6 +300,8 @@ int SimpleFlowTreeBBCFVTX::ResetEvent(PHCompositeNode *topNode)
       fDCA_X[i]    = -9999;
       fDCA_Y[i]    = -9999;
     }
+
+  frac = -9999;
 
   return EVENT_OK;
 
@@ -477,7 +486,8 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
   if ( _verbosity > 1 ) cout << "FVTX vertex points: " << FVTX_X << " " << FVTX_Y << " " << FVTX_Z << endl;
 
 
-
+  // double interaction variable
+  frac = d_diutil->calcFrac(topNode);
 
   //int ibbcz_bin = (bbc_z+30.0)/10;//for fvtx eta cuts
 
