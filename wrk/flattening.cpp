@@ -1067,6 +1067,54 @@ void flatten(int runNumber, int rp_recal_pass)
   TProfile* fvtxs3_v3_east_cospsi3 = new TProfile(Form("fvtxs3_v3_east_cospsi3"),"",15, 0.0, 3.0, -1.1, 1.1);
   TProfile* fvtxs3_v3_both_cospsi3 = new TProfile(Form("fvtxs3_v3_both_cospsi3"),"",15, 0.0, 3.0, -1.1, 1.1);
 
+  TProfile* bbcs_v3_west_sinphi = new TProfile(Form("bbcs_v3_west_sinphi"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_v3_east_sinphi = new TProfile(Form("bbcs_v3_east_sinphi"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_v3_both_sinphi = new TProfile(Form("bbcs_v3_both_sinphi"),"",15, 0.0, 3.0, -1.1, 1.1);
+
+  TProfile* fvtxs_v3_west_sinphi = new TProfile(Form("fvtxs_v3_west_sinphi"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_v3_east_sinphi = new TProfile(Form("fvtxs_v3_east_sinphi"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_v3_both_sinphi = new TProfile(Form("fvtxs_v3_both_sinphi"),"",15, 0.0, 3.0, -1.1, 1.1);
+
+  TProfile* fvtxs0_v3_west_sinphi = new TProfile(Form("fvtxs0_v3_west_sinphi"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs0_v3_east_sinphi = new TProfile(Form("fvtxs0_v3_east_sinphi"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs0_v3_both_sinphi = new TProfile(Form("fvtxs0_v3_both_sinphi"),"",15, 0.0, 3.0, -1.1, 1.1);
+
+  TProfile* fvtxs1_v3_west_sinphi = new TProfile(Form("fvtxs1_v3_west_sinphi"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs1_v3_east_sinphi = new TProfile(Form("fvtxs1_v3_east_sinphi"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs1_v3_both_sinphi = new TProfile(Form("fvtxs1_v3_both_sinphi"),"",15, 0.0, 3.0, -1.1, 1.1);
+
+  TProfile* fvtxs2_v3_west_sinphi = new TProfile(Form("fvtxs2_v3_west_sinphi"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs2_v3_east_sinphi = new TProfile(Form("fvtxs2_v3_east_sinphi"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs2_v3_both_sinphi = new TProfile(Form("fvtxs2_v3_both_sinphi"),"",15, 0.0, 3.0, -1.1, 1.1);
+
+  TProfile* fvtxs3_v3_west_sinphi = new TProfile(Form("fvtxs3_v3_west_sinphi"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs3_v3_east_sinphi = new TProfile(Form("fvtxs3_v3_east_sinphi"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs3_v3_both_sinphi = new TProfile(Form("fvtxs3_v3_both_sinphi"),"",15, 0.0, 3.0, -1.1, 1.1);
+
+  TProfile* bbcs_v3_west_sinpsi3 = new TProfile(Form("bbcs_v3_west_sinpsi3"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_v3_east_sinpsi3 = new TProfile(Form("bbcs_v3_east_sinpsi3"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_v3_both_sinpsi3 = new TProfile(Form("bbcs_v3_both_sinpsi3"),"",15, 0.0, 3.0, -1.1, 1.1);
+
+  TProfile* fvtxs_v3_west_sinpsi3 = new TProfile(Form("fvtxs_v3_west_sinpsi3"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_v3_east_sinpsi3 = new TProfile(Form("fvtxs_v3_east_sinpsi3"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_v3_both_sinpsi3 = new TProfile(Form("fvtxs_v3_both_sinpsi3"),"",15, 0.0, 3.0, -1.1, 1.1);
+
+  TProfile* fvtxs0_v3_west_sinpsi3 = new TProfile(Form("fvtxs0_v3_west_sinpsi3"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs0_v3_east_sinpsi3 = new TProfile(Form("fvtxs0_v3_east_sinpsi3"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs0_v3_both_sinpsi3 = new TProfile(Form("fvtxs0_v3_both_sinpsi3"),"",15, 0.0, 3.0, -1.1, 1.1);
+
+  TProfile* fvtxs1_v3_west_sinpsi3 = new TProfile(Form("fvtxs1_v3_west_sinpsi3"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs1_v3_east_sinpsi3 = new TProfile(Form("fvtxs1_v3_east_sinpsi3"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs1_v3_both_sinpsi3 = new TProfile(Form("fvtxs1_v3_both_sinpsi3"),"",15, 0.0, 3.0, -1.1, 1.1);
+
+  TProfile* fvtxs2_v3_west_sinpsi3 = new TProfile(Form("fvtxs2_v3_west_sinpsi3"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs2_v3_east_sinpsi3 = new TProfile(Form("fvtxs2_v3_east_sinpsi3"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs2_v3_both_sinpsi3 = new TProfile(Form("fvtxs2_v3_both_sinpsi3"),"",15, 0.0, 3.0, -1.1, 1.1);
+
+  TProfile* fvtxs3_v3_west_sinpsi3 = new TProfile(Form("fvtxs3_v3_west_sinpsi3"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs3_v3_east_sinpsi3 = new TProfile(Form("fvtxs3_v3_east_sinpsi3"),"",15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs3_v3_both_sinpsi3 = new TProfile(Form("fvtxs3_v3_both_sinpsi3"),"",15, 0.0, 3.0, -1.1, 1.1);
+
   TProfile* fvtxs012_v3_west_docalib = new TProfile(Form("fvtxs012_v3_west_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
   TProfile* fvtxs012_v3_east_docalib = new TProfile(Form("fvtxs012_v3_east_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
   TProfile* fvtxs012_v3_both_docalib = new TProfile(Form("fvtxs012_v3_both_docalib"),"",15, 0.0, 3.0, -1.1, 1.1);
@@ -3859,6 +3907,13 @@ void flatten(int runNumber, int rp_recal_pass)
                       if ( dcarm == 1 ) bbcs_v3_west_cospsi3->Fill(pt_angle,cos(3*bbc_south_psi3_docalib));
                       if ( dcarm == 0 ) bbcs_v3_east_cospsi3->Fill(pt_angle,cos(3*bbc_south_psi3_docalib));
 		      // -------------------------------------------------------------------------
+                      bbcs_v3_both_sinphi->Fill(pt_angle,sin(3*phi_angle));
+                      if ( dcarm == 1 ) bbcs_v3_west_sinphi->Fill(pt_angle,sin(3*phi_angle));
+                      if ( dcarm == 0 ) bbcs_v3_east_sinphi->Fill(pt_angle,sin(3*phi_angle));
+                      bbcs_v3_both_sinpsi3->Fill(pt_angle,sin(3*bbc_south_psi3_docalib));
+                      if ( dcarm == 1 ) bbcs_v3_west_sinpsi3->Fill(pt_angle,sin(3*bbc_south_psi3_docalib));
+                      if ( dcarm == 0 ) bbcs_v3_east_sinpsi3->Fill(pt_angle,sin(3*bbc_south_psi3_docalib));
+		      // -------------------------------------------------------------------------
 		      if ( dcarm == 1 ) bbcs_v3_west_phipsi->Fill(bbc_dphi3_docalib);
 		      if ( dcarm == 0 ) bbcs_v3_east_phipsi->Fill(bbc_dphi3_docalib);
 		      bbcs_v3_both_phipsi->Fill(bbc_dphi3_docalib);
@@ -3973,7 +4028,14 @@ void flatten(int runNumber, int rp_recal_pass)
 		  fvtxs_v3_both_cospsi3->Fill(pt_angle,cos(3*fvtx_south_psi3_docalib));
 		  if ( dcarm == 1 ) fvtxs_v3_west_cospsi3->Fill(pt_angle,cos(3*fvtx_south_psi3_docalib));
 		  if ( dcarm == 0 ) fvtxs_v3_east_cospsi3->Fill(pt_angle,cos(3*fvtx_south_psi3_docalib));
-		  // ---
+		  // -------------------------------------------------------------------------
+		  fvtxs_v3_both_sinphi->Fill(pt_angle,sin(3*phi_angle));
+		  if ( dcarm == 1 ) fvtxs_v3_west_sinphi->Fill(pt_angle,sin(3*phi_angle));
+		  if ( dcarm == 0 ) fvtxs_v3_east_sinphi->Fill(pt_angle,sin(3*phi_angle));
+		  fvtxs_v3_both_sinpsi3->Fill(pt_angle,sin(3*fvtx_south_psi3_docalib));
+		  if ( dcarm == 1 ) fvtxs_v3_west_sinpsi3->Fill(pt_angle,sin(3*fvtx_south_psi3_docalib));
+		  if ( dcarm == 0 ) fvtxs_v3_east_sinpsi3->Fill(pt_angle,sin(3*fvtx_south_psi3_docalib));
+		  // -------------------------------------------------------------------------
                   if ( dcarm == 1 ) fvtxs_v3_west_phipsi->Fill(fvtx_dphi3_docalib);
                   if ( dcarm == 0 ) fvtxs_v3_east_phipsi->Fill(fvtx_dphi3_docalib);
                   fvtxs_v3_both_phipsi->Fill(fvtx_dphi3_docalib);
@@ -4159,6 +4221,13 @@ void flatten(int runNumber, int rp_recal_pass)
 		  if ( dcarm == 1 ) fvtxs0_v3_west_cospsi3->Fill(pt_angle,cos(3*fvtx0_south_psi3_docalib));
 		  if ( dcarm == 0 ) fvtxs0_v3_east_cospsi3->Fill(pt_angle,cos(3*fvtx0_south_psi3_docalib));
 		  // ------------------------------------------------------------------------------------
+		  fvtxs0_v3_both_sinphi->Fill(pt_angle,sin(3*phi_angle));
+		  if ( dcarm == 1 ) fvtxs0_v3_west_sinphi->Fill(pt_angle,sin(3*phi_angle));
+		  if ( dcarm == 0 ) fvtxs0_v3_east_sinphi->Fill(pt_angle,sin(3*phi_angle));
+		  fvtxs0_v3_both_sinpsi3->Fill(pt_angle,sin(3*fvtx0_south_psi3_docalib));
+		  if ( dcarm == 1 ) fvtxs0_v3_west_sinpsi3->Fill(pt_angle,sin(3*fvtx0_south_psi3_docalib));
+		  if ( dcarm == 0 ) fvtxs0_v3_east_sinpsi3->Fill(pt_angle,sin(3*fvtx0_south_psi3_docalib));
+		  // ------------------------------------------------------------------------------------
                   fvtxs0_v3_both_docalib->Fill(pt_angle,cosfvtx_dphi3_docalib);
                   if ( dcarm == 1 ) fvtxs0_v3_west_phipsi->Fill(fvtx_dphi3_docalib);
                   if ( dcarm == 0 ) fvtxs0_v3_east_phipsi->Fill(fvtx_dphi3_docalib);
@@ -4218,6 +4287,13 @@ void flatten(int runNumber, int rp_recal_pass)
 		  if ( dcarm == 1 ) fvtxs1_v3_west_cospsi3->Fill(pt_angle,cos(3*fvtx1_south_psi3_docalib));
 		  if ( dcarm == 0 ) fvtxs1_v3_east_cospsi3->Fill(pt_angle,cos(3*fvtx1_south_psi3_docalib));
 		  // ------------------------------------------------------------------------------------
+		  fvtxs1_v3_both_sinphi->Fill(pt_angle,sin(3*phi_angle));
+		  if ( dcarm == 1 ) fvtxs1_v3_west_sinphi->Fill(pt_angle,sin(3*phi_angle));
+		  if ( dcarm == 0 ) fvtxs1_v3_east_sinphi->Fill(pt_angle,sin(3*phi_angle));
+		  fvtxs1_v3_both_sinpsi3->Fill(pt_angle,sin(3*fvtx1_south_psi3_docalib));
+		  if ( dcarm == 1 ) fvtxs1_v3_west_sinpsi3->Fill(pt_angle,sin(3*fvtx1_south_psi3_docalib));
+		  if ( dcarm == 0 ) fvtxs1_v3_east_sinpsi3->Fill(pt_angle,sin(3*fvtx1_south_psi3_docalib));
+		  // ------------------------------------------------------------------------------------
                   fvtxs1_v3_both_phipsi->Fill(fvtx_dphi3_docalib);
                   if ( dcarm == 1 ) fvtxs1_v2_west_phipsi->Fill(fvtx_dphi2_docalib);
                   if ( dcarm == 0 ) fvtxs1_v2_east_phipsi->Fill(fvtx_dphi2_docalib);
@@ -4271,6 +4347,13 @@ void flatten(int runNumber, int rp_recal_pass)
 		  fvtxs2_v3_both_cospsi3->Fill(pt_angle,cos(3*fvtx2_south_psi3_docalib));
 		  if ( dcarm == 1 ) fvtxs2_v3_west_cospsi3->Fill(pt_angle,cos(3*fvtx2_south_psi3_docalib));
 		  if ( dcarm == 0 ) fvtxs2_v3_east_cospsi3->Fill(pt_angle,cos(3*fvtx2_south_psi3_docalib));
+		  // ------------------------------------------------------------------------------------
+		  fvtxs2_v3_both_sinphi->Fill(pt_angle,sin(3*phi_angle));
+		  if ( dcarm == 1 ) fvtxs2_v3_west_sinphi->Fill(pt_angle,sin(3*phi_angle));
+		  if ( dcarm == 0 ) fvtxs2_v3_east_sinphi->Fill(pt_angle,sin(3*phi_angle));
+		  fvtxs2_v3_both_sinpsi3->Fill(pt_angle,sin(3*fvtx2_south_psi3_docalib));
+		  if ( dcarm == 1 ) fvtxs2_v3_west_sinpsi3->Fill(pt_angle,sin(3*fvtx2_south_psi3_docalib));
+		  if ( dcarm == 0 ) fvtxs2_v3_east_sinpsi3->Fill(pt_angle,sin(3*fvtx2_south_psi3_docalib));
 		  // ------------------------------------------------------------------------------------
                   if ( dcarm == 1 ) fvtxs2_v3_west_phipsi->Fill(fvtx_dphi3_docalib);
                   if ( dcarm == 0 ) fvtxs2_v3_east_phipsi->Fill(fvtx_dphi3_docalib);
@@ -4327,6 +4410,13 @@ void flatten(int runNumber, int rp_recal_pass)
 		  fvtxs3_v3_both_cospsi3->Fill(pt_angle,cos(3*fvtx3_south_psi3_docalib));
 		  if ( dcarm == 1 ) fvtxs3_v3_west_cospsi3->Fill(pt_angle,cos(3*fvtx3_south_psi3_docalib));
 		  if ( dcarm == 0 ) fvtxs3_v3_east_cospsi3->Fill(pt_angle,cos(3*fvtx3_south_psi3_docalib));
+		  // ------------------------------------------------------------------------------------
+		  fvtxs3_v3_both_sinphi->Fill(pt_angle,sin(3*phi_angle));
+		  if ( dcarm == 1 ) fvtxs3_v3_west_sinphi->Fill(pt_angle,sin(3*phi_angle));
+		  if ( dcarm == 0 ) fvtxs3_v3_east_sinphi->Fill(pt_angle,sin(3*phi_angle));
+		  fvtxs3_v3_both_sinpsi3->Fill(pt_angle,sin(3*fvtx3_south_psi3_docalib));
+		  if ( dcarm == 1 ) fvtxs3_v3_west_sinpsi3->Fill(pt_angle,sin(3*fvtx3_south_psi3_docalib));
+		  if ( dcarm == 0 ) fvtxs3_v3_east_sinpsi3->Fill(pt_angle,sin(3*fvtx3_south_psi3_docalib));
 		  // ------------------------------------------------------------------------------------
                   if ( dcarm == 1 ) fvtxs3_v3_west_phipsi->Fill(fvtx_dphi3_docalib);
                   if ( dcarm == 0 ) fvtxs3_v3_east_phipsi->Fill(fvtx_dphi3_docalib);
