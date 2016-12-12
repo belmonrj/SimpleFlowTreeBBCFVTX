@@ -120,8 +120,8 @@ void doenergy(int energy, int harmonic)
   leg->SetTextSize(0.05);
   leg->Draw();
 
-  c1->Print(Form("FigsHarmonicCoefficient/special_fvtxsL_B_energy%d_harm%d.png",energy,harmonic));
-  c1->Print(Form("FigsHarmonicCoefficient/special_fvtxsL_B_energy%d_harm%d.pdf",energy,harmonic));
+  c1->Print(Form("FigsCheckThree/special_fvtxsL_B_energy%d_harm%d.png",energy,harmonic));
+  c1->Print(Form("FigsCheckThree/special_fvtxsL_B_energy%d_harm%d.pdf",energy,harmonic));
 
   hvn_fvtxs_B->Scale(1.0/reso_fvtx);
   hvn_fvtxs0_B->Scale(1.0/reso_fvtx0);
@@ -145,8 +145,8 @@ void doenergy(int energy, int harmonic)
   line.Draw();
   leg->Draw();
 
-  c1->Print(Form("FigsHarmonicCoefficient/special_eprc_fvtxsL_B_energy%d_harm%d.png",energy,harmonic));
-  c1->Print(Form("FigsHarmonicCoefficient/special_eprc_fvtxsL_B_energy%d_harm%d.pdf",energy,harmonic));
+  c1->Print(Form("FigsCheckThree/special_eprc_fvtxsL_B_energy%d_harm%d.png",energy,harmonic));
+  c1->Print(Form("FigsCheckThree/special_eprc_fvtxsL_B_energy%d_harm%d.pdf",energy,harmonic));
 
   hvn_fvtxs_B->Rebin(5);
   hvn_fvtxs0_B->Rebin(5);
@@ -163,16 +163,16 @@ void doenergy(int energy, int harmonic)
   line.Draw();
   leg->Draw();
 
-  c1->Print(Form("FigsHarmonicCoefficient/special_eprc_fvtxsL_B_energy%d_harm%d_REBIN.png",energy,harmonic));
-  c1->Print(Form("FigsHarmonicCoefficient/special_eprc_fvtxsL_B_energy%d_harm%d_REBIN.pdf",energy,harmonic));
+  c1->Print(Form("FigsCheckThree/special_eprc_fvtxsL_B_energy%d_harm%d_REBIN.png",energy,harmonic));
+  c1->Print(Form("FigsCheckThree/special_eprc_fvtxsL_B_energy%d_harm%d_REBIN.pdf",energy,harmonic));
 
   hvn_bbcs_B->Scale(1.0/reso_bbc);
   hvn_bbcs_B->Draw("same");
   leg->AddEntry(hvn_bbcs_B,"BBCS","elp");
   leg->Draw();
 
-  c1->Print(Form("FigsHarmonicCoefficient/special_eprcab_fvtxsL_B_energy%d_harm%d.png",energy,harmonic));
-  c1->Print(Form("FigsHarmonicCoefficient/special_eprcab_fvtxsL_B_energy%d_harm%d.pdf",energy,harmonic));
+  c1->Print(Form("FigsCheckThree/special_eprcab_fvtxsL_B_energy%d_harm%d.png",energy,harmonic));
+  c1->Print(Form("FigsCheckThree/special_eprcab_fvtxsL_B_energy%d_harm%d.pdf",energy,harmonic));
 
 
 
@@ -228,8 +228,8 @@ void doenergy(int energy, int harmonic)
   // leg2->SetTextSize(0.05);
   // leg2->Draw();
 
-  // c1->Print(Form("FigsHarmonicCoefficient/special_calcave_fvtxsL_B_energy%d_harm%d.png",energy,harmonic));
-  // c1->Print(Form("FigsHarmonicCoefficient/special_calcave_fvtxsL_B_energy%d_harm%d.pdf",energy,harmonic));
+  // c1->Print(Form("FigsCheckThree/special_calcave_fvtxsL_B_energy%d_harm%d.png",energy,harmonic));
+  // c1->Print(Form("FigsCheckThree/special_calcave_fvtxsL_B_energy%d_harm%d.pdf",energy,harmonic));
 
   delete c1;
 
@@ -344,8 +344,8 @@ void doenergy3(int energy, int harmonic)
   leg->SetTextSize(0.05);
   leg->Draw();
 
-  c1->Print(Form("FigsHarmonicCoefficient/superspecial_fvtxsL_B_energy%d_harm%d.png",energy,harmonic));
-  c1->Print(Form("FigsHarmonicCoefficient/superspecial_fvtxsL_B_energy%d_harm%d.pdf",energy,harmonic));
+  c1->Print(Form("FigsCheckThree/superspecial_fvtxsL_B_energy%d_harm%d.png",energy,harmonic));
+  c1->Print(Form("FigsCheckThree/superspecial_fvtxsL_B_energy%d_harm%d.pdf",energy,harmonic));
 
   hvn_fvtxs_B->Scale(1.0/reso_fvtx);
   hvn_fvtxs012_B->Scale(1.0/reso_fvtx012);
@@ -369,16 +369,16 @@ void doenergy3(int energy, int harmonic)
   line.Draw();
   leg->Draw();
 
-  c1->Print(Form("FigsHarmonicCoefficient/superspecial_eprc_fvtxsL_B_energy%d_harm%d.png",energy,harmonic));
-  c1->Print(Form("FigsHarmonicCoefficient/superspecial_eprc_fvtxsL_B_energy%d_harm%d.pdf",energy,harmonic));
+  c1->Print(Form("FigsCheckThree/superspecial_eprc_fvtxsL_B_energy%d_harm%d.png",energy,harmonic));
+  c1->Print(Form("FigsCheckThree/superspecial_eprc_fvtxsL_B_energy%d_harm%d.pdf",energy,harmonic));
 
   hvn_bbcs_B->Scale(1.0/reso_bbc);
   hvn_bbcs_B->Draw("same");
   leg->AddEntry(hvn_bbcs_B,"BBCS","elp");
   leg->Draw();
 
-  c1->Print(Form("FigsHarmonicCoefficient/superspecial_eprcab_fvtxsL_B_energy%d_harm%d.png",energy,harmonic));
-  c1->Print(Form("FigsHarmonicCoefficient/superspecial_eprcab_fvtxsL_B_energy%d_harm%d.pdf",energy,harmonic));
+  c1->Print(Form("FigsCheckThree/superspecial_eprcab_fvtxsL_B_energy%d_harm%d.png",energy,harmonic));
+  c1->Print(Form("FigsCheckThree/superspecial_eprcab_fvtxsL_B_energy%d_harm%d.pdf",energy,harmonic));
 
 
 
