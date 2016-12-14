@@ -1815,6 +1815,7 @@ void flatten(int runNumber, int rp_recal_pass)
   float        d_pc3sdphi[max_nh];
 
   int nfvtxt;
+  int fnhits[75];
   float feta[75];
   float fphi[75];
   float fchisq[75];
@@ -1854,6 +1855,7 @@ void flatten(int runNumber, int rp_recal_pass)
   TBranch* b_pc3sdz;   //!
   TBranch* b_pc3sdphi;   //!
   TBranch* b_nfvtxt;   //!
+  TBranch* b_fnhits;   //!
   TBranch* b_fphi;   //!
   TBranch* b_feta;   //!
   TBranch* b_fchisq;   //!
@@ -1901,6 +1903,7 @@ void flatten(int runNumber, int rp_recal_pass)
   ntp_event_chain->SetBranchAddress("d_cntpc3sdphi",d_pc3sdphi,&b_pc3sdphi);
 
   ntp_event_chain->SetBranchAddress("ntracklets",&nfvtxt,&b_nfvtxt);
+  ntp_event_chain->SetBranchAddress("fnhits",fnhits,&b_fnhits);
   ntp_event_chain->SetBranchAddress("fphi",fphi,&b_fphi);
   ntp_event_chain->SetBranchAddress("feta",feta,&b_feta);
   ntp_event_chain->SetBranchAddress("fchisq",fchisq,&b_fchisq);
@@ -2612,8 +2615,11 @@ void flatten(int runNumber, int rp_recal_pass)
       for ( int i = 0; i < nfvtxt; ++i )
 	{
 	  // --- rotation now done in trees
+	  int nhits = fnhits[i];
 	  float phi = fphi[i];
 	  float eta = feta[i];
+	  float dcax = fdcax[i];
+	  float dcay = fdcay[i];
 
 	  bool is_south = ( eta < 0 );
 	  bool is_south_inner = ( eta > -2 && eta < 0 );
