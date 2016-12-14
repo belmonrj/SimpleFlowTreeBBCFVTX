@@ -6,10 +6,10 @@ TFile* outfile;
 void show_layers_vn()
 {
 
-  doenergy(200,2);
+  //doenergy(200,2);
   doenergy(200,3);
-  doenergy3(200,2);
-  doenergy3(200,3);
+  //doenergy3(200,2);
+  //doenergy3(200,3);
 
 }
 
@@ -148,23 +148,23 @@ void doenergy(int energy, int harmonic)
   c1->Print(Form("FigsCheckThree/special_eprc_fvtxsL_B_energy%d_harm%d.png",energy,harmonic));
   c1->Print(Form("FigsCheckThree/special_eprc_fvtxsL_B_energy%d_harm%d.pdf",energy,harmonic));
 
-  hvn_fvtxs_B->Rebin(5);
-  hvn_fvtxs0_B->Rebin(5);
-  hvn_fvtxs1_B->Rebin(5);
-  hvn_fvtxs2_B->Rebin(5);
-  hvn_fvtxs3_B->Rebin(5);
+  // hvn_fvtxs_B->Rebin(5);
+  // hvn_fvtxs0_B->Rebin(5);
+  // hvn_fvtxs1_B->Rebin(5);
+  // hvn_fvtxs2_B->Rebin(5);
+  // hvn_fvtxs3_B->Rebin(5);
 
-  h2dummy->Draw();
-  hvn_fvtxs_B->Draw("same");
-  hvn_fvtxs0_B->Draw("same");
-  hvn_fvtxs1_B->Draw("same");
-  hvn_fvtxs2_B->Draw("same");
-  hvn_fvtxs3_B->Draw("same");
-  line.Draw();
-  leg->Draw();
+  // h2dummy->Draw();
+  // hvn_fvtxs_B->Draw("same");
+  // hvn_fvtxs0_B->Draw("same");
+  // hvn_fvtxs1_B->Draw("same");
+  // hvn_fvtxs2_B->Draw("same");
+  // hvn_fvtxs3_B->Draw("same");
+  // line.Draw();
+  // leg->Draw();
 
-  c1->Print(Form("FigsCheckThree/special_eprc_fvtxsL_B_energy%d_harm%d_REBIN.png",energy,harmonic));
-  c1->Print(Form("FigsCheckThree/special_eprc_fvtxsL_B_energy%d_harm%d_REBIN.pdf",energy,harmonic));
+  // c1->Print(Form("FigsCheckThree/special_eprc_fvtxsL_B_energy%d_harm%d_REBIN.png",energy,harmonic));
+  // c1->Print(Form("FigsCheckThree/special_eprc_fvtxsL_B_energy%d_harm%d_REBIN.pdf",energy,harmonic));
 
   hvn_bbcs_B->Scale(1.0/reso_bbc);
   hvn_bbcs_B->Draw("same");
@@ -230,6 +230,23 @@ void doenergy(int energy, int harmonic)
 
   // c1->Print(Form("FigsCheckThree/special_calcave_fvtxsL_B_energy%d_harm%d.png",energy,harmonic));
   // c1->Print(Form("FigsCheckThree/special_calcave_fvtxsL_B_energy%d_harm%d.pdf",energy,harmonic));
+
+  TFile* fout = TFile::Open(Form("special_v%d_layers_%d.root",harmonic,energy),"recreate");
+  fout->cd();
+  hvn_bbcs_B->SetName("hvn_bbcs_B");
+  hvn_fvtxs_B->SetName("hvn_fvtxs_B");
+  hvn_fvtxs0_B->SetName("hvn_fvtxs0_B");
+  hvn_fvtxs1_B->SetName("hvn_fvtxs1_B");
+  hvn_fvtxs2_B->SetName("hvn_fvtxs2_B");
+  hvn_fvtxs3_B->SetName("hvn_fvtxs3_B");
+  hvn_bbcs_B->Write();
+  hvn_fvtxs_B->Write();
+  hvn_fvtxs0_B->Write();
+  hvn_fvtxs1_B->Write();
+  hvn_fvtxs2_B->Write();
+  hvn_fvtxs3_B->Write();
+  fout->Write();
+  fout->Close();
 
   delete c1;
 
