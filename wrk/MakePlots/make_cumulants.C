@@ -1,16 +1,14 @@
-void takehistograms(TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*);
+void takehistograms(TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*);
 
 double calc_corr_four(double,double,double,double,double,double,double,double);
 
-void temp_new_4pc()
+void make_cumulants()
 {
 
   TFile* fin = TFile::Open("input/cumulants_200.root");
 
   TProfile* tp1f_four = (TProfile*)fin->Get("nfvtxt_os_fvtxc_tracks_c24");
   TProfile* tp1f_two = (TProfile*)fin->Get("nfvtxt_os_fvtxc_tracks_c22");
-  TProfile* tp1f_S_four = (TProfile*)fin->Get("nfvtxt_zzyzx_fvtxc_tracks_c24");
-  TProfile* tp1f_S_two = (TProfile*)fin->Get("nfvtxt_zzyzx_fvtxc_tracks_c22");
   TProfile* tp1f_cos1 = (TProfile*)fin->Get("nfvtxt_os_fvtxc_tracks_cos21");
   TProfile* tp1f_sin1 = (TProfile*)fin->Get("nfvtxt_os_fvtxc_tracks_sin21");
   TProfile* tp1f_cossum2 = (TProfile*)fin->Get("nfvtxt_os_fvtxc_tracks_cossum22");
@@ -19,7 +17,7 @@ void temp_new_4pc()
   TProfile* tp1f_sin3 = (TProfile*)fin->Get("nfvtxt_os_fvtxc_tracks_sin23");
   TProfile* tp1f_SS_two = (TProfile*)fin->Get("nfvtxt_zzyzx_fvtxsfvtxn_tracks_c22");
 
-  takehistograms(tp1f_four,tp1f_two,tp1f_cos1,tp1f_sin1,tp1f_cossum2,tp1f_sinsum2,tp1f_cos3,tp1f_sin3,tp1f_S_four,tp1f_S_two,tp1f_SS_two);
+  takehistograms(tp1f_four,tp1f_two,tp1f_cos1,tp1f_sin1,tp1f_cossum2,tp1f_sinsum2,tp1f_cos3,tp1f_sin3,tp1f_SS_two);
 
 }
 
@@ -33,8 +31,6 @@ void takehistograms
  TProfile* tp1f_sinsum2,
  TProfile* tp1f_cos3,
  TProfile* tp1f_sin3,
- TProfile* tp1f_S_four,
- TProfile* tp1f_S_two,
  TProfile* tp1f_SS_two
 )
 {
@@ -137,16 +133,16 @@ void takehistograms
       th1d_222->SetBinContent(i+1,corr_222[i]);
       th1d_four->SetBinContent(i+1,corr_four[i]);
       // --- california
-      sfour[i]    = tp1f_S_four->GetBinContent(i+1);
-      stwo[i]     = tp1f_S_two->GetBinContent(i+1);
+      // sfour[i]    = tp1f_S_four->GetBinContent(i+1);
+      // stwo[i]     = tp1f_S_two->GetBinContent(i+1);
       corr_sfour[i] = sfour[i];
       corr_s222[i] = 2*stwo[i]*stwo[i];
       corr_sc4[i] = sfour[i] - 2*stwo[i]*stwo[i];
       corr_sc2[i] = stwo[i];
       corr_ssc2[i] = tp1f_SS_two->GetBinContent(i+1);
       // -- get stat uncert
-      esfour[i]    = tp1f_S_four->GetBinError(i+1);
-      estwo[i]     = tp1f_S_two->GetBinError(i+1);
+      // esfour[i]    = tp1f_S_four->GetBinError(i+1);
+      // estwo[i]     = tp1f_S_two->GetBinError(i+1);
       ecorr_sfour[i] = esfour[i];
       ecorr_s222[i] = 2*estwo[i]*estwo[i];
       ecorr_sc4[i] = esfour[i] - 2*estwo[i]*estwo[i];
@@ -310,7 +306,7 @@ void takehistograms
       eratio_four[i] = 0;
       ex[i] = 0;
       n[i] = th1d_c22a->GetBinCenter(i+1);
-      if ( i%5 == 0 ) cout << x[i] << " " << n[i] << " " << ratio_222[i] << endl;
+      //if ( i%5 == 0 ) cout << x[i] << " " << n[i] << " " << ratio_222[i] << endl;
       cumulant_ac[i] = corr_c4[i];
       cumulant_os[i] = value_four_b - value_222_b;
     }
@@ -360,102 +356,17 @@ void takehistograms
   line2.Draw();
   c1->Print("FigsFour/testcorrcomponentsratio.png");
 
-  // --- now go back to california
-
-  TGraphErrors* tge_corr_sc24 = new TGraphErrors(nbins,x,corr_sc4,0,0);
-  tge_corr_sc24->SetMarkerStyle(kOpenCircle);
-  tge_corr_sc24->SetMarkerColor(kBlack);
-  tge_corr_sc24->Draw("ap");
-  tge_corr_sc24->GetXaxis()->SetLimits(0,80);
-  tge_corr_sc24->GetXaxis()->SetTitle("N^{FVTX}_{tracks}");
-  c1->Print("FigsFour/stestcorr4pc.png");
-  tge_corr_sc24->SetMaximum(1e-4);
-  tge_corr_sc24->SetMinimum(-1e-4);
-  c1->Print("FigsFour/stestcorr4pcfz.png");
-
-  TGraphErrors* tge_corr_sc22 = new TGraphErrors(nbins,x,corr_sc2,0,0);
-  tge_corr_sc22->SetMarkerStyle(kOpenCircle);
-  tge_corr_sc22->SetMarkerColor(kBlack);
-  tge_corr_sc22->Draw("ap");
-  tge_corr_sc22->GetXaxis()->SetLimits(0,80);
-  tge_corr_sc22->GetXaxis()->SetTitle("N^{FVTX}_{tracks}");
-  c1->Print("FigsFour/stestcorr2pc.png");
-  tge_corr_sc22->SetMaximum(2e-2);
-  tge_corr_sc22->SetMinimum(0);
-  c1->Print("FigsFour/stestcorr2pcfz.png");
-
-  TGraphErrors* tge_corr_s222 = new TGraphErrors(nbins,x,corr_s222,0,0);
-  tge_corr_s222->SetMarkerStyle(kOpenCircle);
-  tge_corr_s222->SetMarkerColor(kBlack);
-  tge_corr_s222->Draw("ap");
-  tge_corr_s222->GetXaxis()->SetLimits(0,80);
-  tge_corr_s222->GetXaxis()->SetTitle("N^{FVTX}_{tracks}");
-  TGraphErrors* tge_corr_sfour = new TGraphErrors(nbins,x,corr_sfour,0,0);
-  tge_corr_sfour->SetMarkerStyle(kOpenSquare);
-  tge_corr_sfour->SetMarkerColor(kRed);
-  tge_corr_sfour->Draw("p");
-  TLegend* leg = new TLegend(0.62,0.68,0.88,0.88);
-  leg->AddEntry(tge_corr_s222,"2#LT#LT2#GT#GT^{2} (qvc)","p");
-  leg->AddEntry(tge_corr_sfour,"#LT#LT4#GT#GT (qvc)","p");
-  leg->SetTextSize(0.05);
-  leg->Draw();
-  c1->Print("FigsFour/stestcorrcomponents.png");
-  tge_corr_s222->SetMaximum(1e-3);
-  tge_corr_s222->SetMinimum(-1e-4);
-  c1->Print("FigsFour/stestcorrcomponentsfz.png");
-  tge_corr_s222->SetMaximum(2e-4);
-  tge_corr_s222->SetMinimum(-2e-5);
-  c1->Print("FigsFour/stestcorrcomponentsfzz.png");
-
-  TGraphErrors* tge_cumulant_zy = new TGraphErrors(nbins,x,corr_sc4,0,0);
-  tge_cumulant_ac->SetMarkerStyle(kOpenCircle);
-  tge_cumulant_ac->SetMarkerColor(kBlack);
-  tge_cumulant_zy->SetMarkerStyle(kOpenSquare);
-  tge_cumulant_zy->SetMarkerColor(kBlue); // all the deepest blues are black
-  tge_cumulant_ac->Draw("ap");
-  tge_cumulant_zy->Draw("p");
-  tge_cumulant_ac->SetMaximum(5e-5);
-  tge_cumulant_ac->SetMinimum(-5e-5);
-  tge_cumulant_ac->GetXaxis()->SetLimits(0,80);
-  tge_cumulant_ac->GetXaxis()->SetTitle("N^{FVTX}_{tracks}");
-  TLine line0(0,0,80,0);
-  line0.SetLineStyle(2);
-  line0.SetLineWidth(2);
-  line0.Draw();
-  c1->Print("FigsFour/stestcomparecumulants.png");
-
   TGraphErrors* tge_v24 = new TGraphErrors(nbins,x,corr_v24,0,ecorr_v24);
-  TGraphErrors* tge_sv24 = new TGraphErrors(nbins,x,corr_sv24,0,ecorr_sv24);
   tge_v24->SetMarkerStyle(kOpenCircle);
   tge_v24->SetMarkerColor(kBlack);
-  tge_sv24->SetMarkerStyle(kOpenSquare);
-  tge_sv24->SetMarkerColor(kBlue);
-  tge_v24->Draw("ap");
-  tge_sv24->Draw("p");
-  tge_v24->SetMaximum(0.12);
-  tge_v24->SetMinimum(-0.02);
-  tge_v24->GetXaxis()->SetLimits(0,80);
-  tge_v24->GetXaxis()->SetTitle("N^{FVTX}_{tracks}");
-  line0.Draw();
-  c1->Print("FigsFour/stestcomparev24.png");
-  TGraphErrors* tge_sv22 = new TGraphErrors(nbins,x,corr_sv22,0,ecorr_sv22);
-  tge_sv22->SetMarkerStyle(kOpenDiamond);
-  tge_sv22->SetMarkerColor(kMagenta+2);
-  tge_sv22->Draw("p");
-  TLegend* legss = new TLegend(0.68,0.68,0.88,0.88);
-  legss->AddEntry(tge_v24,"v_{2}{4} AC","p");
-  legss->AddEntry(tge_sv24,"v_{2}{4} QVC","p");
-  legss->AddEntry(tge_sv22,"v_{2}{2}","p");
-  legss->SetTextSize(0.045);
-  legss->SetFillStyle(0);
-  legss->Draw();
-  c1->Print("FigsFour/stestcomparev24andv22.png");
+
+
   TGraphErrors* tge_ssv22 = new TGraphErrors(nbins,x,corr_ssv22,0,ecorr_ssv22);
   tge_ssv22->SetMarkerStyle(kOpenCross);
   tge_ssv22->SetMarkerColor(kRed);
   tge_ssv22->Draw("p");
-  legss->AddEntry(tge_ssv22,"v_{2}{SP}","p");
-  legss->Draw();
+  // legss->AddEntry(tge_ssv22,"v_{2}{SP}","p");
+  // legss->Draw();
   c1->Print("FigsFour/stestcomparev24andv22andSP.png");
 
   TGraphErrors* tge_v22 = new TGraphErrors(nbins,x,corr_v22,0,ecorr_v22);
@@ -465,8 +376,8 @@ void takehistograms
 
 
   // --- now bill stuff
-  //TFile *bill = TFile::Open("dAu_cumulant200.root");
-  TFile *bill = TFile::Open("dAu_D_cumulant.root");
+  //TFile *bill = TFile::Open("StuffForAMPT/dAu_cumulant200.root");
+  TFile *bill = TFile::Open("StuffForAMPT/dAu_D_cumulant.root");
   int bin_size = 50; // PbPb: maximum 100      pPb: 50
 
   TProfile* tp1f_raa4 = (TProfile*)bill->Get("raa4_Ncharge");
@@ -490,7 +401,7 @@ void takehistograms
       else
 	{
 	  double temp_2 = pow(-temp_1, 0.25);
-	  cout << temp_1 << " " << fabs(temp_1) << endl;
+	  //cout << temp_1 << " " << fabs(temp_1) << endl;
 	  double erro_2 = 0.25 * erro_1 * fabs(temp_2) / fabs(temp_1);
 	  th1d_cv24->SetBinContent(i, temp_2);
 	  th1d_cv24->SetBinError(i, erro_2);
@@ -543,9 +454,9 @@ void takehistograms
   blegh2->Draw();
   c1->Print("FigsFour/cbr_v24.png");
   c1->Print("FigsFour/cbr_v24.pdf");
-  tge_sv22->Draw("p");
+  //tge_sv22->Draw("p");
   th1d_cv22->Draw("p,same");
-  blegh1->AddEntry(tge_sv22,"v_{2}{2}","elp");
+  //blegh1->AddEntry(tge_sv22,"v_{2}{2}","elp");
   blegh1->Draw();
   blegh2->AddEntry(th1d_cv22,"v_{2}{2}","elp");
   blegh2->Draw();
@@ -605,7 +516,7 @@ void takehistograms
 
   tge_v24->Draw("ap");
   th1d_cv24->Draw("p,same");
-  tge_sv22->Draw("p");
+  //tge_sv22->Draw("p");
   th1d_cv22->Draw("p,same");
   th1d_v2_mid->SetMarkerStyle(kFullCross);
   th1d_v2_mid->SetMarkerColor(kBlue);
@@ -621,7 +532,7 @@ void takehistograms
   blegh2->AddEntry(th1d_cv24,"v_{2}{4}","elp");
   blegh2->SetTextSize(0.045);
   blegh2->Draw();
-  blegh1->AddEntry(tge_sv22,"v_{2}{2}","elp");
+  //blegh1->AddEntry(tge_sv22,"v_{2}{2}","elp");
   blegh1->Draw();
   blegh2->AddEntry(th1d_cv22,"v_{2}{2}","elp");
   blegh2->Draw();
