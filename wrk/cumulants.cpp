@@ -544,6 +544,7 @@ void documulants(int runNumber)
   float        d_pz[max_nh];
 
   int nfvtxt;
+  int fnhits[75];
   float feta[75];
   float fphi[75];
   float fchisq[75];
@@ -580,6 +581,7 @@ void documulants(int runNumber)
   TBranch* b_py;   //!
   TBranch* b_pz;   //!
   TBranch* b_nfvtxt;   //!
+  TBranch* b_fnhits;   //!
   TBranch* b_fphi;   //!
   TBranch* b_feta;   //!
   TBranch* b_fchisq;   //!
@@ -624,6 +626,7 @@ void documulants(int runNumber)
   ntp_event_chain->SetBranchAddress("d_cntpz",d_pz,&b_pz);
 
   ntp_event_chain->SetBranchAddress("ntracklets",&nfvtxt,&b_nfvtxt);
+  ntp_event_chain->SetBranchAddress("fnhits",fnhits,&b_fnhits);
   ntp_event_chain->SetBranchAddress("fphi",fphi,&b_fphi);
   ntp_event_chain->SetBranchAddress("feta",feta,&b_feta);
   ntp_event_chain->SetBranchAddress("fchisq",fchisq,&b_fchisq);
@@ -1064,8 +1067,16 @@ void documulants(int runNumber)
       for ( int i = 0; i < nfvtxt; ++i )
 	{
 	  // --- rotation now done in trees
+	  int nhits = fnhits[i];
 	  float phi = fphi[i];
 	  float eta = feta[i];
+	  float dcax = fdcax[i];
+	  float dcay = fdcay[i];
+
+	  if ( nhits < 4 ) continue;
+	  if ( fabs(dcax) >  1.5 || fabs(dcay) > 1.5 ) continue;
+
+	  //cout << dcax << " " << dcay << " " << nhits << endl;
 
 	  int special_index = -1;
 	  if ( eta > -3.0 && eta < -2.5 ) special_index = 0;
