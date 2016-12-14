@@ -1,5 +1,3 @@
-void takehistograms(TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*,TProfile*);
-
 double calc_corr_four(double,double,double,double,double,double,double,double);
 
 void make_cumulants()
@@ -17,23 +15,6 @@ void make_cumulants()
   TProfile* tp1f_sin3 = (TProfile*)fin->Get("nfvtxt_os_fvtxc_tracks_sin23");
   TProfile* tp1f_SS_two = (TProfile*)fin->Get("nfvtxt_zzyzx_fvtxsfvtxn_tracks_c22");
 
-  takehistograms(tp1f_four,tp1f_two,tp1f_cos1,tp1f_sin1,tp1f_cossum2,tp1f_sinsum2,tp1f_cos3,tp1f_sin3,tp1f_SS_two);
-
-}
-
-void takehistograms
-(
- TProfile* tp1f_four,
- TProfile* tp1f_two,
- TProfile* tp1f_cos1,
- TProfile* tp1f_sin1,
- TProfile* tp1f_cossum2,
- TProfile* tp1f_sinsum2,
- TProfile* tp1f_cos3,
- TProfile* tp1f_sin3,
- TProfile* tp1f_SS_two
-)
-{
 
   int nbinsx = tp1f_four->GetNbinsX();
   const int nbins = nbinsx;
