@@ -1,19 +1,47 @@
 double calc_corr_four(double,double,double,double,double,double,double,double);
 
+void domake(int,int);
+
 void make_cumulants()
+{
+  domake(200,1); // energy, rebin factor
+}
+
+void domake(int energy, int rebin)
 {
 
   TFile* fin = TFile::Open("input/cumulants_200.root");
 
-  TProfile* tp1f_four = (TProfile*)fin->Get("nfvtxt_os_fvtxc_tracks_c24");
-  TProfile* tp1f_two = (TProfile*)fin->Get("nfvtxt_os_fvtxc_tracks_c22");
-  TProfile* tp1f_cos1 = (TProfile*)fin->Get("nfvtxt_os_fvtxc_tracks_cos21");
-  TProfile* tp1f_sin1 = (TProfile*)fin->Get("nfvtxt_os_fvtxc_tracks_sin21");
+  TProfile* tp1f_four    = (TProfile*)fin->Get("nfvtxt_os_fvtxc_tracks_c24");
+  TProfile* tp1f_two     = (TProfile*)fin->Get("nfvtxt_os_fvtxc_tracks_c22");
+  TProfile* tp1f_cos1    = (TProfile*)fin->Get("nfvtxt_os_fvtxc_tracks_cos21");
+  TProfile* tp1f_sin1    = (TProfile*)fin->Get("nfvtxt_os_fvtxc_tracks_sin21");
   TProfile* tp1f_cossum2 = (TProfile*)fin->Get("nfvtxt_os_fvtxc_tracks_cossum22");
   TProfile* tp1f_sinsum2 = (TProfile*)fin->Get("nfvtxt_os_fvtxc_tracks_sinsum22");
-  TProfile* tp1f_cos3 = (TProfile*)fin->Get("nfvtxt_os_fvtxc_tracks_cos23");
-  TProfile* tp1f_sin3 = (TProfile*)fin->Get("nfvtxt_os_fvtxc_tracks_sin23");
-  TProfile* tp1f_SS_two = (TProfile*)fin->Get("nfvtxt_zzyzx_fvtxsfvtxn_tracks_c22");
+  TProfile* tp1f_cos3    = (TProfile*)fin->Get("nfvtxt_os_fvtxc_tracks_cos23");
+  TProfile* tp1f_sin3    = (TProfile*)fin->Get("nfvtxt_os_fvtxc_tracks_sin23");
+  TProfile* tp1f_SS_two  = (TProfile*)fin->Get("nfvtxt_zzyzx_fvtxsfvtxn_tracks_c22");
+
+  tp1f_four   ->Rebin(rebin);
+  tp1f_two    ->Rebin(rebin);
+  tp1f_cos1   ->Rebin(rebin);
+  tp1f_sin1   ->Rebin(rebin);
+  tp1f_cossum2->Rebin(rebin);
+  tp1f_sinsum2->Rebin(rebin);
+  tp1f_cos3   ->Rebin(rebin);
+  tp1f_sin3   ->Rebin(rebin);
+  tp1f_SS_two ->Rebin(rebin);
+
+  TH1D* th1d_four    = tp1f_four   ->ProjectionX("th1d_four  ");
+  TH1D* th1d_two     = tp1f_two    ->ProjectionX("th1d_two   ");
+  TH1D* th1d_cos1    = tp1f_cos1   ->ProjectionX("th1d_cos1  ");
+  TH1D* th1d_sin1    = tp1f_sin1   ->ProjectionX("th1d_sin1  ");
+  TH1D* th1d_cossum2 = tp1f_cossum2->ProjectionX("th1d_cossum2");
+  TH1D* th1d_sinsum2 = tp1f_sinsum2->ProjectionX("th1d_sinsum2");
+  TH1D* th1d_cos3    = tp1f_cos3   ->ProjectionX("th1d_cos3  ");
+  TH1D* th1d_sin3    = tp1f_sin3   ->ProjectionX("th1d_sin3  ");
+  TH1D* th1d_SS_two  = tp1f_SS_two ->ProjectionX("th1d_SS_two");
+
 
 
   int nbinsx = tp1f_four->GetNbinsX();
