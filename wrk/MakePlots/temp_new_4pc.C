@@ -431,7 +431,7 @@ void takehistograms
   tge_sv24->SetMarkerStyle(kOpenSquare);
   tge_sv24->SetMarkerColor(kBlue);
   tge_v24->Draw("ap");
-  tge_sv24->Draw("p");
+  //tge_sv24->Draw("p");
   tge_v24->SetMaximum(0.12);
   tge_v24->SetMinimum(-0.02);
   tge_v24->GetXaxis()->SetLimits(0,80);
@@ -441,7 +441,11 @@ void takehistograms
   TGraphErrors* tge_sv22 = new TGraphErrors(nbins,x,corr_sv22,0,ecorr_sv22);
   tge_sv22->SetMarkerStyle(kOpenDiamond);
   tge_sv22->SetMarkerColor(kMagenta+2);
-  tge_sv22->Draw("p");
+  //tge_sv22->Draw("p");
+  TGraphErrors* tge_v22 = new TGraphErrors(nbins,x,corr_v22,0,ecorr_v22);
+  tge_v22->SetMarkerStyle(kOpenDiamond);
+  tge_v22->SetMarkerColor(kMagenta+2);
+  tge_v22->Draw("p");
   TLegend* legss = new TLegend(0.68,0.68,0.88,0.88);
   legss->AddEntry(tge_v24,"v_{2}{4} AC","p");
   legss->AddEntry(tge_sv24,"v_{2}{4} QVC","p");
