@@ -5,6 +5,9 @@ TH1D* dueprocess(TH1D*,TH1D*,TH1D*,TH1D*,TH1D*);
 void diehanddieverletzt()
 {
 
+  TCanvas* c1 = new TCanvas();
+  c1->SetGrid();
+
   TFile* file = TFile::Open("input/combined_200.root");
 
   TProfile* tp1f_base;
@@ -433,6 +436,104 @@ void diehanddieverletzt()
   c1->Print("FigsCheckThree/reso_corrected_compterms_botharms_bbcsfvtxs.png");
   c1->Print("FigsCheckThree/reso_corrected_compterms_botharms_bbcsfvtxs.pdf");
 
+  th1d_sB_east->SetLineColor(kBlue+2);
+  th1d_sA_east->SetLineColor(kRed+2);
+  th1d_nc_sB_east->SetLineColor(kBlue);
+  th1d_nc_sA_east->SetLineColor(kRed);
+  th1d_sB_east->Draw();
+  th1d_sA_east->Draw("same");
+  th1d_nc_sB_east->Draw("same");
+  th1d_nc_sA_east->Draw("same");
+  c1->Print("FigsCheckThree/reso_corrected_compterms_eastarm_bbcsfvtxs.png");
+  c1->Print("FigsCheckThree/reso_corrected_compterms_eastarm_bbcsfvtxs.pdf");
+
+  th1d_sB_west->SetLineColor(kBlue+2);
+  th1d_sA_west->SetLineColor(kRed+2);
+  th1d_nc_sB_west->SetLineColor(kBlue);
+  th1d_nc_sA_west->SetLineColor(kRed);
+  th1d_sB_west->Draw();
+  th1d_sA_west->Draw("same");
+  th1d_nc_sB_west->Draw("same");
+  th1d_nc_sA_west->Draw("same");
+  c1->Print("FigsCheckThree/reso_corrected_compterms_westarm_bbcsfvtxs.png");
+  c1->Print("FigsCheckThree/reso_corrected_compterms_westarm_bbcsfvtxs.pdf");
+
+  TFile* fout = TFile::Open("shengli_stuff.root","recreate");
+  fout->cd();
+  th1d_sB_both->SetName("hvn_withcorrterms_bbcs_B");
+  th1d_sB_east->SetName("hvn_withcorrterms_bbcs_E");
+  th1d_sB_west->SetName("hvn_withcorrterms_bbcs_W");
+  th1d_sA_both->SetName("hvn_withcorrterms_fvtxs_B");
+  th1d_sA_east->SetName("hvn_withcorrterms_fvtxs_E");
+  th1d_sA_west->SetName("hvn_withcorrterms_fvtxs_W");
+  th1d_s0_both->SetName("hvn_withcorrterms_fvtxs0_B");
+  th1d_s0_east->SetName("hvn_withcorrterms_fvtxs0_E");
+  th1d_s0_west->SetName("hvn_withcorrterms_fvtxs0_W");
+  th1d_s1_both->SetName("hvn_withcorrterms_fvtxs1_B");
+  th1d_s1_east->SetName("hvn_withcorrterms_fvtxs1_E");
+  th1d_s1_west->SetName("hvn_withcorrterms_fvtxs1_W");
+  th1d_s2_both->SetName("hvn_withcorrterms_fvtxs2_B");
+  th1d_s2_east->SetName("hvn_withcorrterms_fvtxs2_E");
+  th1d_s2_west->SetName("hvn_withcorrterms_fvtxs2_W");
+  th1d_s3_both->SetName("hvn_withcorrterms_fvtxs3_B");
+  th1d_s3_east->SetName("hvn_withcorrterms_fvtxs3_E");
+  th1d_s3_west->SetName("hvn_withcorrterms_fvtxs3_W");
+  th1d_sB_both->Write();
+  th1d_sB_east->Write();
+  th1d_sB_west->Write();
+  th1d_sA_both->Write();
+  th1d_sA_east->Write();
+  th1d_sA_west->Write();
+  th1d_s0_both->Write();
+  th1d_s0_east->Write();
+  th1d_s0_west->Write();
+  th1d_s1_both->Write();
+  th1d_s1_east->Write();
+  th1d_s1_west->Write();
+  th1d_s2_both->Write();
+  th1d_s2_east->Write();
+  th1d_s2_west->Write();
+  th1d_s3_both->Write();
+  th1d_s3_east->Write();
+  th1d_s3_west->Write();
+  th1d_nc_sB_both->SetName("hvn_nocorrterms_bbcs_B");
+  th1d_nc_sB_east->SetName("hvn_nocorrterms_bbcs_E");
+  th1d_nc_sB_west->SetName("hvn_nocorrterms_bbcs_W");
+  th1d_nc_sA_both->SetName("hvn_nocorrterms_fvtxs_B");
+  th1d_nc_sA_east->SetName("hvn_nocorrterms_fvtxs_E");
+  th1d_nc_sA_west->SetName("hvn_nocorrterms_fvtxs_W");
+  th1d_nc_s0_both->SetName("hvn_nocorrterms_fvtxs0_B");
+  th1d_nc_s0_east->SetName("hvn_nocorrterms_fvtxs0_E");
+  th1d_nc_s0_west->SetName("hvn_nocorrterms_fvtxs0_W");
+  th1d_nc_s1_both->SetName("hvn_nocorrterms_fvtxs1_B");
+  th1d_nc_s1_east->SetName("hvn_nocorrterms_fvtxs1_E");
+  th1d_nc_s1_west->SetName("hvn_nocorrterms_fvtxs1_W");
+  th1d_nc_s2_both->SetName("hvn_nocorrterms_fvtxs2_B");
+  th1d_nc_s2_east->SetName("hvn_nocorrterms_fvtxs2_E");
+  th1d_nc_s2_west->SetName("hvn_nocorrterms_fvtxs2_W");
+  th1d_nc_s3_both->SetName("hvn_nocorrterms_fvtxs3_B");
+  th1d_nc_s3_east->SetName("hvn_nocorrterms_fvtxs3_E");
+  th1d_nc_s3_west->SetName("hvn_nocorrterms_fvtxs3_W");
+  th1d_nc_sB_both->Write();
+  th1d_nc_sB_east->Write();
+  th1d_nc_sB_west->Write();
+  th1d_nc_sA_both->Write();
+  th1d_nc_sA_east->Write();
+  th1d_nc_sA_west->Write();
+  th1d_nc_s0_both->Write();
+  th1d_nc_s0_east->Write();
+  th1d_nc_s0_west->Write();
+  th1d_nc_s1_both->Write();
+  th1d_nc_s1_east->Write();
+  th1d_nc_s1_west->Write();
+  th1d_nc_s2_both->Write();
+  th1d_nc_s2_east->Write();
+  th1d_nc_s2_west->Write();
+  th1d_nc_s3_both->Write();
+  th1d_nc_s3_east->Write();
+  th1d_nc_s3_west->Write();
+  fout->Write();
+  fout->Close();
 
 }
 
