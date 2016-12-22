@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
 
   cout << "Now processing with run number " << run << endl;
 
-  dooffsets(run);
+  //dooffsets(run);
   documulants(run);
 
   return 0;
@@ -1073,8 +1073,8 @@ void documulants(int runNumber)
 	  float dcax = fdcax[i];
 	  float dcay = fdcay[i];
 
-	  if ( nhits < 4 ) continue;
-	  if ( fabs(dcax) >  1.5 || fabs(dcay) > 1.5 ) continue;
+	  //if ( nhits < 4 ) continue;
+	  //if ( fabs(dcax) >  1.5 || fabs(dcay) > 1.5 ) continue;
 
 	  //cout << dcax << " " << dcay << " " << nhits << endl;
 
@@ -1214,9 +1214,9 @@ void documulants(int runNumber)
       float os_fvtxs_qy4 = fvtxs_qy4[0];
       float os_fvtxs_qq2 = calc2_event(os_fvtxs_qx2,os_fvtxs_qy2,os_fvtxs_qw);
       //float os_fvtxs_qq3 = calc2_event(os_fvtxs_qx3,os_fvtxs_qy3,os_fvtxs_qw);
-      nfvtxt_os_fvtxs_c22->Fill(nfvtxt_south,os_fvtxs_qq2);
-      nfvtxt_os_fvtxs_cos21->Fill(nfvtxt_south,os_fvtxs_qx2/os_fvtxs_qw);
-      nfvtxt_os_fvtxs_sin21->Fill(nfvtxt_south,os_fvtxs_qy2/os_fvtxs_qw);
+      nfvtxt_os_fvtxs_c22->Fill(nfvtxt,os_fvtxs_qq2);
+      nfvtxt_os_fvtxs_cos21->Fill(nfvtxt,os_fvtxs_qx2/os_fvtxs_qw);
+      nfvtxt_os_fvtxs_sin21->Fill(nfvtxt,os_fvtxs_qy2/os_fvtxs_qw);
       TComplex tc_os_fvtxs_Q2(os_fvtxs_qx2,os_fvtxs_qy2);
       TComplex tc_os_fvtxs_Q4(os_fvtxs_qx4,os_fvtxs_qy4);
       float os_fvtxs_cossum2 = calccossum2_event(tc_os_fvtxs_Q2,tc_os_fvtxs_Q4,os_fvtxs_qw);
@@ -1237,9 +1237,9 @@ void documulants(int runNumber)
       float os_fvtxn_qy4 = fvtxn_qy4[0];
       float os_fvtxn_qq2 = calc2_event(os_fvtxn_qx2,os_fvtxn_qy2,os_fvtxn_qw);
       //float os_fvtxn_qq3 = calc2_event(os_fvtxn_qx3,os_fvtxn_qy3,os_fvtxn_qw);
-      nfvtxt_os_fvtxn_c22->Fill(nfvtxt_north,os_fvtxn_qq2);
-      nfvtxt_os_fvtxn_cos21->Fill(nfvtxt_north,os_fvtxn_qx2/os_fvtxn_qw);
-      nfvtxt_os_fvtxn_sin21->Fill(nfvtxt_north,os_fvtxn_qy2/os_fvtxn_qw);
+      nfvtxt_os_fvtxn_c22->Fill(nfvtxt,os_fvtxn_qq2);
+      nfvtxt_os_fvtxn_cos21->Fill(nfvtxt,os_fvtxn_qx2/os_fvtxn_qw);
+      nfvtxt_os_fvtxn_sin21->Fill(nfvtxt,os_fvtxn_qy2/os_fvtxn_qw);
       TComplex tc_os_fvtxn_Q2(os_fvtxn_qx2,os_fvtxn_qy2);
       TComplex tc_os_fvtxn_Q4(os_fvtxn_qx4,os_fvtxn_qy4);
       float os_fvtxn_cossum2 = calccossum2_event(tc_os_fvtxn_Q2,tc_os_fvtxn_Q4,os_fvtxn_qw);
@@ -1279,8 +1279,8 @@ void documulants(int runNumber)
       float os_fvtxn_ce01_qq2 = ( os_fvtxn_ce0_qx2*os_fvtxn_ce1_qx2 + os_fvtxn_ce0_qy2*os_fvtxn_ce1_qy2 ) / ( os_fvtxn_ce0_qw*os_fvtxn_ce1_qw );
       //float os_fvtxn_ce01_qq3 = ( os_fvtxn_ce0_qx3*os_fvtxn_ce1_qx3 + os_fvtxn_ce0_qy3*os_fvtxn_ce1_qy3 ) / ( os_fvtxn_ce0_qw*os_fvtxn_ce1_qw );
       // --- come back here to add some histograms and do some 4 particle stuff
-      nfvtxt_os_fvtxs_ce01_c22->Fill(nfvtxt_south,os_fvtxs_ce01_qq2);
-      nfvtxt_os_fvtxn_ce01_c22->Fill(nfvtxt_north,os_fvtxn_ce01_qq2);
+      nfvtxt_os_fvtxs_ce01_c22->Fill(nfvtxt,os_fvtxs_ce01_qq2);
+      nfvtxt_os_fvtxn_ce01_c22->Fill(nfvtxt,os_fvtxn_ce01_qq2);
 
       // --- now fvtx tracks
 
@@ -1293,9 +1293,9 @@ void documulants(int runNumber)
       float os_fvtxs_tracks_qy4 = fvtxs_tracks_qy4[0];
       float os_fvtxs_tracks_qq2 = calc2_event(os_fvtxs_tracks_qx2,os_fvtxs_tracks_qy2,os_fvtxs_tracks_qw);
       //float os_fvtxs_tracks_qq3 = calc2_event(os_fvtxs_tracks_qx3,os_fvtxs_tracks_qy3,os_fvtxs_tracks_qw);
-      nfvtxt_os_fvtxs_tracks_c22->Fill(nfvtxt_south,os_fvtxs_tracks_qq2);
-      nfvtxt_os_fvtxs_tracks_cos21->Fill(nfvtxt_south,os_fvtxs_tracks_qx2/os_fvtxs_tracks_qw);
-      nfvtxt_os_fvtxs_tracks_sin21->Fill(nfvtxt_south,os_fvtxs_tracks_qy2/os_fvtxs_tracks_qw);
+      nfvtxt_os_fvtxs_tracks_c22->Fill(nfvtxt,os_fvtxs_tracks_qq2);
+      nfvtxt_os_fvtxs_tracks_cos21->Fill(nfvtxt,os_fvtxs_tracks_qx2/os_fvtxs_tracks_qw);
+      nfvtxt_os_fvtxs_tracks_sin21->Fill(nfvtxt,os_fvtxs_tracks_qy2/os_fvtxs_tracks_qw);
       TComplex tc_os_fvtxs_tracks_Q2(os_fvtxs_tracks_qx2,os_fvtxs_tracks_qy2);
       TComplex tc_os_fvtxs_tracks_Q4(os_fvtxs_tracks_qx4,os_fvtxs_tracks_qy4);
       float os_fvtxs_tracks_cossum2 = calccossum2_event(tc_os_fvtxs_tracks_Q2,tc_os_fvtxs_tracks_Q4,os_fvtxs_tracks_qw);
@@ -1316,9 +1316,9 @@ void documulants(int runNumber)
       float os_fvtxn_tracks_qy4 = fvtxn_tracks_qy4[0];
       float os_fvtxn_tracks_qq2 = calc2_event(os_fvtxn_tracks_qx2,os_fvtxn_tracks_qy2,os_fvtxn_tracks_qw);
       //float os_fvtxn_tracks_qq3 = calc2_event(os_fvtxn_tracks_qx3,os_fvtxn_tracks_qy3,os_fvtxn_tracks_qw);
-      nfvtxt_os_fvtxn_tracks_c22->Fill(nfvtxt_north,os_fvtxn_tracks_qq2);
-      nfvtxt_os_fvtxn_tracks_cos21->Fill(nfvtxt_north,os_fvtxn_tracks_qx2/os_fvtxn_tracks_qw);
-      nfvtxt_os_fvtxn_tracks_sin21->Fill(nfvtxt_north,os_fvtxn_tracks_qy2/os_fvtxn_tracks_qw);
+      nfvtxt_os_fvtxn_tracks_c22->Fill(nfvtxt,os_fvtxn_tracks_qq2);
+      nfvtxt_os_fvtxn_tracks_cos21->Fill(nfvtxt,os_fvtxn_tracks_qx2/os_fvtxn_tracks_qw);
+      nfvtxt_os_fvtxn_tracks_sin21->Fill(nfvtxt,os_fvtxn_tracks_qy2/os_fvtxn_tracks_qw);
       TComplex tc_os_fvtxn_tracks_Q2(os_fvtxn_tracks_qx2,os_fvtxn_tracks_qy2);
       TComplex tc_os_fvtxn_tracks_Q4(os_fvtxn_tracks_qx4,os_fvtxn_tracks_qy4);
       float os_fvtxn_tracks_cossum2 = calccossum2_event(tc_os_fvtxn_tracks_Q2,tc_os_fvtxn_tracks_Q4,os_fvtxn_tracks_qw);
@@ -1425,9 +1425,9 @@ void documulants(int runNumber)
       float zzyzx_fvtxs_tracks_qy4 = fvtxs_tracks_qy4[0] - offset_tracks_south_qy4;
       float zzyzx_fvtxs_tracks_qq2 = calc2_event(zzyzx_fvtxs_tracks_qx2,zzyzx_fvtxs_tracks_qy2,zzyzx_fvtxs_tracks_qw);
       //float zzyzx_fvtxs_tracks_qq3 = calc2_event(zzyzx_fvtxs_tracks_qx3,zzyzx_fvtxs_tracks_qy3,zzyzx_fvtxs_tracks_qw);
-      nfvtxt_zzyzx_fvtxs_tracks_c22->Fill(nfvtxt_south,zzyzx_fvtxs_tracks_qq2);
-      nfvtxt_zzyzx_fvtxs_tracks_cos21->Fill(nfvtxt_south,zzyzx_fvtxs_tracks_qx2/zzyzx_fvtxs_tracks_qw);
-      nfvtxt_zzyzx_fvtxs_tracks_sin21->Fill(nfvtxt_south,zzyzx_fvtxs_tracks_qy2/zzyzx_fvtxs_tracks_qw);
+      nfvtxt_zzyzx_fvtxs_tracks_c22->Fill(nfvtxt,zzyzx_fvtxs_tracks_qq2);
+      nfvtxt_zzyzx_fvtxs_tracks_cos21->Fill(nfvtxt,zzyzx_fvtxs_tracks_qx2/zzyzx_fvtxs_tracks_qw);
+      nfvtxt_zzyzx_fvtxs_tracks_sin21->Fill(nfvtxt,zzyzx_fvtxs_tracks_qy2/zzyzx_fvtxs_tracks_qw);
       TComplex tc_zzyzx_fvtxs_tracks_Q2(zzyzx_fvtxs_tracks_qx2,zzyzx_fvtxs_tracks_qy2);
       TComplex tc_zzyzx_fvtxs_tracks_Q4(zzyzx_fvtxs_tracks_qx4,zzyzx_fvtxs_tracks_qy4);
       float zzyzx_fvtxs_tracks_cossum2 = calccossum2_event(tc_zzyzx_fvtxs_tracks_Q2,tc_zzyzx_fvtxs_tracks_Q4,zzyzx_fvtxs_tracks_qw);
@@ -1448,9 +1448,9 @@ void documulants(int runNumber)
       float zzyzx_fvtxn_tracks_qy4 = fvtxn_tracks_qy4[0] - offset_tracks_north_qy4;
       float zzyzx_fvtxn_tracks_qq2 = calc2_event(zzyzx_fvtxn_tracks_qx2,zzyzx_fvtxn_tracks_qy2,zzyzx_fvtxn_tracks_qw);
       //float zzyzx_fvtxn_tracks_qq3 = calc2_event(zzyzx_fvtxn_tracks_qx3,zzyzx_fvtxn_tracks_qy3,zzyzx_fvtxn_tracks_qw);
-      nfvtxt_zzyzx_fvtxn_tracks_c22->Fill(nfvtxt_north,zzyzx_fvtxn_tracks_qq2);
-      nfvtxt_zzyzx_fvtxn_tracks_cos21->Fill(nfvtxt_north,zzyzx_fvtxn_tracks_qx2/zzyzx_fvtxn_tracks_qw);
-      nfvtxt_zzyzx_fvtxn_tracks_sin21->Fill(nfvtxt_north,zzyzx_fvtxn_tracks_qy2/zzyzx_fvtxn_tracks_qw);
+      nfvtxt_zzyzx_fvtxn_tracks_c22->Fill(nfvtxt,zzyzx_fvtxn_tracks_qq2);
+      nfvtxt_zzyzx_fvtxn_tracks_cos21->Fill(nfvtxt,zzyzx_fvtxn_tracks_qx2/zzyzx_fvtxn_tracks_qw);
+      nfvtxt_zzyzx_fvtxn_tracks_sin21->Fill(nfvtxt,zzyzx_fvtxn_tracks_qy2/zzyzx_fvtxn_tracks_qw);
       TComplex tc_zzyzx_fvtxn_tracks_Q2(zzyzx_fvtxn_tracks_qx2,zzyzx_fvtxn_tracks_qy2);
       TComplex tc_zzyzx_fvtxn_tracks_Q4(zzyzx_fvtxn_tracks_qx4,zzyzx_fvtxn_tracks_qy4);
       float zzyzx_fvtxn_tracks_cossum2 = calccossum2_event(tc_zzyzx_fvtxn_tracks_Q2,tc_zzyzx_fvtxn_tracks_Q4,zzyzx_fvtxn_tracks_qw);
@@ -1509,8 +1509,8 @@ void documulants(int runNumber)
 	  float os_fvtxs_tracks_qqqq4 = calc4_event(os_fvtxs_tracks_qx2,os_fvtxs_tracks_qy2,os_fvtxs_tracks_qx4,os_fvtxs_tracks_qy4,os_fvtxs_tracks_qw);
 	  float os_fvtxn_tracks_qqqq4 = calc4_event(os_fvtxn_tracks_qx2,os_fvtxn_tracks_qy2,os_fvtxn_tracks_qx4,os_fvtxn_tracks_qy4,os_fvtxn_tracks_qw);
 	  float os_fvtxc_tracks_qqqq4 = calc4_event(os_fvtxc_tracks_qx2,os_fvtxc_tracks_qy2,os_fvtxc_tracks_qx4,os_fvtxc_tracks_qy4,os_fvtxc_tracks_qw);
-	  nfvtxt_os_fvtxs_tracks_c24->Fill(nfvtxt_south,os_fvtxs_tracks_qqqq4);
-	  nfvtxt_os_fvtxn_tracks_c24->Fill(nfvtxt_north,os_fvtxn_tracks_qqqq4);
+	  nfvtxt_os_fvtxs_tracks_c24->Fill(nfvtxt,os_fvtxs_tracks_qqqq4);
+	  nfvtxt_os_fvtxn_tracks_c24->Fill(nfvtxt,os_fvtxn_tracks_qqqq4);
 	  nfvtxt_os_fvtxc_tracks_c24->Fill(nfvtxt,os_fvtxc_tracks_qqqq4);
 
 	  nfvtxt_os_fvtxsfvtxn_tracks_c24a->Fill(nfvtxt,os_fvtxsfvtxn_tracks_qq2*os_fvtxsfvtxn_tracks_qq2); // doesn't account for cross terms
@@ -1553,8 +1553,8 @@ void documulants(int runNumber)
 	  float zzyzx_fvtxs_tracks_qqqq4 = calc4_event(zzyzx_fvtxs_tracks_qx2,zzyzx_fvtxs_tracks_qy2,zzyzx_fvtxs_tracks_qx4,zzyzx_fvtxs_tracks_qy4,zzyzx_fvtxs_tracks_qw);
 	  float zzyzx_fvtxn_tracks_qqqq4 = calc4_event(zzyzx_fvtxn_tracks_qx2,zzyzx_fvtxn_tracks_qy2,zzyzx_fvtxn_tracks_qx4,zzyzx_fvtxn_tracks_qy4,zzyzx_fvtxn_tracks_qw);
 	  float zzyzx_fvtxc_tracks_qqqq4 = calc4_event(zzyzx_fvtxc_tracks_qx2,zzyzx_fvtxc_tracks_qy2,zzyzx_fvtxc_tracks_qx4,zzyzx_fvtxc_tracks_qy4,zzyzx_fvtxc_tracks_qw);
-	  nfvtxt_zzyzx_fvtxs_tracks_c24->Fill(nfvtxt_south,zzyzx_fvtxs_tracks_qqqq4);
-	  nfvtxt_zzyzx_fvtxn_tracks_c24->Fill(nfvtxt_north,zzyzx_fvtxn_tracks_qqqq4);
+	  nfvtxt_zzyzx_fvtxs_tracks_c24->Fill(nfvtxt,zzyzx_fvtxs_tracks_qqqq4);
+	  nfvtxt_zzyzx_fvtxn_tracks_c24->Fill(nfvtxt,zzyzx_fvtxn_tracks_qqqq4);
 	  nfvtxt_zzyzx_fvtxc_tracks_c24->Fill(nfvtxt,zzyzx_fvtxc_tracks_qqqq4);
 
 	}
