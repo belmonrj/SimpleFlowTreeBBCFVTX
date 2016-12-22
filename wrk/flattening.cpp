@@ -151,7 +151,8 @@ void flatten(int runNumber, int rp_recal_pass)
 
   // ---
 
-  bool doweights = true; // change to false if you don't want to bother
+  //bool doweights = true; // change to false if you don't want to bother
+  bool doweights = false; // change to false if you don't want to bother
   TString phiweightfile_name = Form("SpecialProjects/WeightFiles/newweight2d_run%d.root", runNumber);
   //TString phiweightfile_name = Form("SpecialProjects/Jamie/fout_grid_dau200central.root");
   TFile* phi_weight_file = TFile::Open(phiweightfile_name); // COME BACK HERE AND HAVE A LOOK
@@ -2351,12 +2352,12 @@ void flatten(int runNumber, int rp_recal_pass)
 		  // if ( fvtx_layer == 3 ) fvtx_weight = tg_jamie_fvtxs3_zvtx[izvtx_jamie]->Eval(phi);
 		  //cout << "info from Jamie histogram is " << fvtx_weight << " (and by the way the jamie vertex bin is " << izvtx_jamie << ")" << endl;
                 }
-              // if ( fvtx_weight != fvtx_weight ) fvtx_weight = 0;
-              // if ( fvtx_weight < 0.75 ) fvtx_weight = 0;
-              // if ( fvtx_weight > 1.5 ) fvtx_weight = 0;
-              if ( fvtx_weight != fvtx_weight ) fvtx_weight = 1;
-              if ( fvtx_weight < 0 ) fvtx_weight = 1;
-              if ( fvtx_weight > 10 ) fvtx_weight = 1;
+              if ( fvtx_weight != fvtx_weight ) fvtx_weight = 0;
+              if ( fvtx_weight < 0.75 ) fvtx_weight = 0;
+              if ( fvtx_weight > 1.5 ) fvtx_weight = 0;
+              // if ( fvtx_weight != fvtx_weight ) fvtx_weight = 1;
+              // if ( fvtx_weight < 0 ) fvtx_weight = 1;
+              // if ( fvtx_weight > 10 ) fvtx_weight = 1;
 
               // --- south side
               if ( d_FVTX_z[iclus] < 0 )
