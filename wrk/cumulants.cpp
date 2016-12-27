@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
 
   cout << "Now processing with run number " << run << endl;
 
-  //dooffsets(run);
+  dooffsets(run);
   documulants(run);
 
   return 0;
@@ -1853,10 +1853,14 @@ float calc6_event(TComplex& qn, TComplex& q2n, TComplex& q3n, float M)
   double term3 = 2.0 * (term3a + term3b) / (M*(M-1)*(M-2)*(M-3)*(M-4)*(M-5));
 
   // fourth term
-  double term4 = -9.0 * (TMath::Power(qn*TComplex::Conjugate(qn),2)+q2n*TComplex::Conjugate(q2n)) / (M*(M-1)*(M-2)*(M-3)*(M-5));
+  //double term4 = -9.0 * (TMath::Power(qn*TComplex::Conjugate(qn),2)+q2n*TComplex::Conjugate(q2n)) / (M*(M-1)*(M-2)*(M-3)*(M-5));
+  double term4 = -9.0 * (TMath::Power(qn*TComplex::Conjugate(qn),2)+q2n*TComplex::Conjugate(q2n)) ;
+  term4 /= (M*(M-1)*(M-2)*(M-3)*(M-5));
 
   // fifth term
-  double term5 = 18.0 * qn*TComplex::Conjugate(qn) / (M*(M-1)*(M-3)*(M-4));
+  //double term5 = 18.0 * qn*TComplex::Conjugate(qn) / (M*(M-1)*(M-3)*(M-4));
+  double term5 = 18.0 * qn*TComplex::Conjugate(qn) ;
+  term5 /=  (M*(M-1)*(M-3)*(M-4));
 
   // sixth term
   double term6 = -6.0/((M-1)*(M-2)*(M-3));
