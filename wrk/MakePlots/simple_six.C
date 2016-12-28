@@ -42,6 +42,7 @@ void simple_six()
       double esix = th1d_six->GetBinError(i+1);
       double ev26 = v26*(esix/six); // relative error for now, will get proper formula later...
       th1d_v26->SetBinError(i+1,ev26);
+      cout << six << " " << c26 << " " << v26 << endl;
     }
 
   double xmin = 0.0;
@@ -111,9 +112,9 @@ void simple_six()
   empty->Draw();
   empty->GetXaxis()->SetTitle("N^{1<|#eta|<3}_{trk}");
   empty->GetYaxis()->SetTitle("v_{2}");
-  th1d_c26->SetMarkerStyle(kOpenCircle);
-  th1d_c26->SetLineColor(kBlack);
-  th1d_c26->Draw("same ex0p");
+  th1d_v26->SetMarkerStyle(kOpenCircle);
+  th1d_v26->SetLineColor(kBlack);
+  th1d_v26->Draw("same ex0p");
   if ( leg ) delete leg;
   leg = new TLegend(0.62,0.68,0.88,0.88);
   //leg->SetHeader(type);
