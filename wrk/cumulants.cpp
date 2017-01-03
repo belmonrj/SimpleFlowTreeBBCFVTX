@@ -1135,10 +1135,39 @@ void documulants(int runNumber)
 	  special_fvtx_tracks_qw[i] = 0;
 	}
 
+      bool fvtx_track_passes[nfvtxt];
+      int number_of_tracks_that_fail = 0;
+      int number_of_tracks_that_pass = 0;
+      for ( int i = 0; i < nfvtxt; ++i )
+	{
+	  fvtx_track_passes[i] = true;
+	}
+      for ( int i = 0; i < nfvtxt; ++i )
+	{
+	  for ( int j = i+1; j < nfvtxt; ++j )
+	    {
+	      double phi1 = fphi[i];
+	      double eta1 = feta[i];
+	      double phi2 = fphi[j];
+	      double eta2 = feta[j];
+	      if ( fabs(eta1-eta2) < 0.01 )
+		{
+		  //++number_of_tracks_that_fail; // trying to figure this out
+		  fvtx_track_passes[i] = false;
+		  fvtx_track_passes[j] = false;
+		}
+	    }
+	  if ( fvtx_track_passes[i] == true ) ++number_of_tracks_that_pass;
+	}
+      cout << "total tracks " << nfvtxt << endl;
+      cout << "tracks that pass " << number_of_tracks_that_pass << endl;
+      cout << "tracks that fail " << number_of_tracks_that_fail << endl;
+
       // --- first fvtx track loop
       for ( int i = 0; i < nfvtxt; ++i )
 	{
 	  // --- rotation now done in trees
+	  if ( !fvtx_track_passes[i] ) continue;
 	  //int nhits = fnhits[i];
 	  float phi = fphi[i];
 	  float eta = feta[i];
