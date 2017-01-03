@@ -719,7 +719,7 @@ void documulants(int runNumber)
   for ( int ievt = 0; ievt < nentries; ++ievt )
     {
 
-      //if ( ievt >= 10000 ) break; // just 100k events for testing, runs a little on the slow side...
+      //if ( ievt >= 100000 ) break; // just 100k events for testing, runs a little on the slow side...
       ++all_counter;
 
       bool say_event = ( ievt%1000==0 );
@@ -1159,9 +1159,9 @@ void documulants(int runNumber)
 	    }
 	  if ( fvtx_track_passes[i] == true ) ++number_of_tracks_that_pass;
 	}
-      cout << "total tracks " << nfvtxt << endl;
-      cout << "tracks that pass " << number_of_tracks_that_pass << endl;
-      cout << "tracks that fail " << number_of_tracks_that_fail << endl;
+      //cout << "total tracks " << nfvtxt << endl;
+      //cout << "tracks that pass " << number_of_tracks_that_pass << endl;
+      //cout << "tracks that fail " << number_of_tracks_that_fail << endl;
 
       // --- first fvtx track loop
       for ( int i = 0; i < nfvtxt; ++i )
@@ -2138,7 +2138,7 @@ void dooffsets(int runNumber)
   for ( int ievt = 0; ievt < nentries; ++ievt )
     {
 
-      //if ( ievt >= 10000 ) break; // just 100k events for testing, runs a little on the slow side...
+      //if ( ievt >= 100000 ) break; // just 100k events for testing, runs a little on the slow side...
       ++all_counter;
 
       bool say_event = ( ievt%1000==0 );
