@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
 
   cout << "Now processing with run number " << run << endl;
 
-  dooffsets(run);
+  //dooffsets(run);
   documulants(run);
 
   return 0;
@@ -767,7 +767,8 @@ void documulants(int runNumber)
       double ZVTX = -9999;
       if ( runNumber >= 454774 && runNumber <= 456283 ) ZVTX = d_bbcz;
       if ( runNumber >= 456652 && runNumber <= 458167 ) ZVTX = eventfvtx_z;
-      if ( fabs(ZVTX) > 10.0 )
+      //if ( fabs(ZVTX) > 10.0 )
+      if ( fabs(ZVTX) > 5.0 )
         {
           if ( verbosity > 1 ) cout << "vertex rejected" << endl;
           continue;
@@ -1167,7 +1168,7 @@ void documulants(int runNumber)
       for ( int i = 0; i < nfvtxt; ++i )
 	{
 	  // --- rotation now done in trees
-	  if ( !fvtx_track_passes[i] ) continue;
+	  //if ( !fvtx_track_passes[i] ) continue;
 	  //int nhits = fnhits[i];
 	  float phi = fphi[i];
 	  float eta = feta[i];
