@@ -85,7 +85,7 @@ void simple_six()
   TH2D* empty = new TH2D("empty","",1,xmin,xmax,1,ymin,ymax);
   empty->Draw();
   empty->GetXaxis()->SetTitle("N^{1<|#eta|<3}_{trk}");
-  empty->GetYaxis()->SetTitle("compontents");
+  empty->GetYaxis()->SetTitle("components");
   th1d_six->SetMarkerStyle(kOpenCircle);
   th1d_942->SetMarkerStyle(kOpenSquare);
   th1d_123->SetMarkerStyle(kOpenCross);
@@ -103,9 +103,9 @@ void simple_six()
   leg->SetHeader("Run16dAu200");
   leg->SetTextSize(0.045);
   leg->SetFillStyle(0);
-  leg->AddEntry(th1d_six,"#LT6#GT","p");
-  leg->AddEntry(th1d_942,"9#LT4#GT#LT2#GT","p");
-  leg->AddEntry(th1d_123,"12#LT2#GT^{3}","p");
+  leg->AddEntry(th1d_six,"#LT#LT6#GT#GT","p");
+  leg->AddEntry(th1d_942,"9#LT#LT4#GT#GT#LT#LT2#GT#GT","p");
+  leg->AddEntry(th1d_123,"12#LT#LT2#GT#GT^{3}","p");
   leg->Draw();
   c1->Print(Form("FigsSix/sixparticle_components_blah.png"));
   c1->Print(Form("FigsSix/sixparticle_components_blah.pdf"));
@@ -118,7 +118,7 @@ void simple_six()
   empty = new TH2D("empty","",1,xmin,xmax,1,ymin,ymax);
   empty->Draw();
   empty->GetXaxis()->SetTitle("N^{1<|#eta|<3}_{trk}");
-  empty->GetYaxis()->SetTitle("compontents");
+  empty->GetYaxis()->SetTitle("components");
   th1d_six->Draw("same ex0p");
   th1d_942->Draw("same ex0p");
   th1d_123->Draw("same ex0p");
