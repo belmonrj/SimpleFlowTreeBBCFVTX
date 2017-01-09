@@ -5,6 +5,7 @@ void plotv3new2(){
 
   float fvtx4_cnt=0; float con_fvtx4=0;//for FVTX resolution
   float fvtx5_cnt=0; float con_fvtx5=0;//for BBC resolution
+  //for(int i=0; i<15; i++){//pt>0.0 and pt<3 GeV/c
   for(int i=2; i<15; i++){//pt>0.4 and pt<3 GeV/c
     fvtx4_cnt+=fvtxs_v3_both_docalib->GetBinContent(i+1)*fvtxs_v3_both_docalib->GetBinEntries(i+1);
     con_fvtx4+=fvtxs_v3_both_docalib->GetBinEntries(i+1);
@@ -65,6 +66,10 @@ void plotv3new2(){
 
   leg1->AddEntry(v3fvtx4,"FVTX","P");
   leg1->AddEntry(v3fvtx5,"BBC","P");
+  
+  leg1->Draw();
 
-leg1->Draw();
+  c1->Print("v3dAu200_shengli.png");
+  c1->Print("v3dAu200_shengli.pdf");
+
 }
