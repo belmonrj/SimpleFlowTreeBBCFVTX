@@ -5,15 +5,15 @@ void plotv3new2(){
 
   float fvtx4_cnt=0; float con_fvtx4=0;//for FVTX resolution
   float fvtx5_cnt=0; float con_fvtx5=0;//for BBC resolution
-  //for(int i=0; i<15; i++){//pt>0.0 and pt<3 GeV/c
-  for(int i=2; i<15; i++){//pt>0.4 and pt<3 GeV/c
+  for(int i=0; i<15; i++){//pt>0.0 and pt<3 GeV/c
+  //for(int i=2; i<15; i++){//pt>0.4 and pt<3 GeV/c
     fvtx4_cnt+=fvtxs_v3_both_docalib->GetBinContent(i+1)*fvtxs_v3_both_docalib->GetBinEntries(i+1);
     con_fvtx4+=fvtxs_v3_both_docalib->GetBinEntries(i+1);
 
     fvtx5_cnt+=bbcs_v3_both_docalib->GetBinContent(i+1)*bbcs_v3_both_docalib->GetBinEntries(i+1);
     con_fvtx5+=bbcs_v3_both_docalib->GetBinEntries(i+1);
   }
-  
+
   fvtx4_cnt/=con_fvtx4;
   fvtx5_cnt/=con_fvtx5;
 
@@ -27,7 +27,7 @@ void plotv3new2(){
   TProfile *v3fvtx4 = fvtxs_v3_both_docalib->Clone();//fvtx v3
   TProfile *v3fvtx5 = bbcs_v3_both_docalib->Clone();//bbc v3
 
-  
+
   v3fvtx4->Scale(1.0/reso4);
   v3fvtx5->Scale(1.0/reso5);
 
@@ -38,8 +38,8 @@ void plotv3new2(){
 
 
   TH1F *h0=new TH1F("h0","Layer0", 30, 0, 3.0);
-  h0->SetMaximum(0.1);
-  h0->SetMinimum(0.0);
+  h0->SetMaximum(0.05);
+  h0->SetMinimum(-0.01);
   h0->GetXaxis()->SetTitle("pt");
   h0->GetYaxis()->SetTitle("v3");
   h0->GetYaxis()->CenterTitle(kTRUE);
@@ -66,10 +66,10 @@ void plotv3new2(){
 
   leg1->AddEntry(v3fvtx4,"FVTX","P");
   leg1->AddEntry(v3fvtx5,"BBC","P");
-  
+
   leg1->Draw();
 
-  c1->Print("v3dAu200_shengli.png");
-  c1->Print("v3dAu200_shengli.pdf");
+  cc->Print("v3dAu200_shengli_ronres.png");
+  cc->Print("v3dAu200_shengli_ronres.pdf");
 
 }
