@@ -95,8 +95,8 @@ int main(int argc, char *argv[])
 
   cout << "Now processing with run number " << run << endl;
 
-  flatten(run,1);
-  flatten(run,2);
+  //flatten(run,1);
+  //flatten(run,2);
   flatten(run,3);
 
   return 0;
@@ -3958,6 +3958,8 @@ void flatten(int runNumber, int rp_recal_pass)
                       if ( dcarm == 1 ) bbcs_v4_4Psi2_west_docalib->Fill(pt_angle,cosfourfour);
                       if ( dcarm == 0 ) bbcs_v4_4Psi2_east_docalib->Fill(pt_angle,cosfourfour);
                       // --- ep reso
+		      if ( pt_angle > 0.4 && pt_angle < 3.0 )
+		      {
                       tp1f_z_reso2_BBC_CNT->Fill(ZVTX,cosbbc_dphi2_docalib);
                       tp1f_z_reso3_BBC_CNT->Fill(ZVTX,cosbbc_dphi3_docalib);
                       tp1f_reso2_BBC_CNT->Fill(0.0,cosbbc_dphi2_docalib);
@@ -3975,6 +3977,7 @@ void flatten(int runNumber, int rp_recal_pass)
                       th1d_os_reso3_BBC_CNT->Fill( cos(3.0*(phi_angle-os_bbc_psi3)) );
                       th1d_os_dreso2_BBC_CNT->Fill( phi_angle-os_bbc_psi2 );
                       th1d_os_dreso3_BBC_CNT->Fill( phi_angle-os_bbc_psi3 );
+		      }
                       // ---
                       bbcs_v2eta_both_docalib->Fill(eta,cosbbc_dphi2_docalib);
                       if ( dcarm == 1 ) bbcs_v2eta_west_docalib->Fill(eta,cosbbc_dphi2_docalib);
@@ -4077,6 +4080,8 @@ void flatten(int runNumber, int rp_recal_pass)
                   fvtxs_v4_4Psi2_both_docalib->Fill(pt_angle,cosfourfour);
                   if ( dcarm == 1 ) fvtxs_v4_4Psi2_west_docalib->Fill(pt_angle,cosfourfour);
                   if ( dcarm == 0 ) fvtxs_v4_4Psi2_east_docalib->Fill(pt_angle,cosfourfour);
+		  if ( pt_angle > 0.4 && pt_angle < 3.0 )
+		  {
                   // --- ep reso
                   tp1f_z_reso2_CNT_FVTX->Fill(ZVTX,cosfvtx_dphi2_docalib);
                   tp1f_z_reso3_CNT_FVTX->Fill(ZVTX,cosfvtx_dphi3_docalib);
@@ -4095,6 +4100,7 @@ void flatten(int runNumber, int rp_recal_pass)
                   th1d_os_reso3_CNT_FVTX->Fill( cos(3.0*(phi_angle-os_fvtxs_psi3)) );
                   th1d_os_dreso2_CNT_FVTX->Fill( phi_angle-os_fvtxs_psi2 );
                   th1d_os_dreso3_CNT_FVTX->Fill( phi_angle-os_fvtxs_psi3 );
+		  }
                   // ---
                   fvtxs_v2eta_both_docalib->Fill(eta,cosfvtx_dphi2_docalib);
                   if ( dcarm == 1 ) fvtxs_v2eta_west_docalib->Fill(eta,cosfvtx_dphi2_docalib);
@@ -4153,6 +4159,8 @@ void flatten(int runNumber, int rp_recal_pass)
                   fvtxn_v4_4Psi2_both_docalib->Fill(pt_angle,cosfourfour);
                   if ( dcarm == 1 ) fvtxn_v4_4Psi2_west_docalib->Fill(pt_angle,cosfourfour);
                   if ( dcarm == 0 ) fvtxn_v4_4Psi2_east_docalib->Fill(pt_angle,cosfourfour);
+		  if ( pt_angle > 0.4 && pt_angle < 3.0 )
+		  {
                   // --- ep reso
                   tp1f_reso2_CNT_FVTXN->Fill(0.0,cosfvtx_dphi2_docalib);
                   tp1f_reso3_CNT_FVTXN->Fill(0.0,cosfvtx_dphi3_docalib);
@@ -4169,6 +4177,7 @@ void flatten(int runNumber, int rp_recal_pass)
                   th1d_os_reso3_CNT_FVTXN->Fill( cos(3.0*(phi_angle-os_fvtxn_psi3)) );
                   th1d_os_dreso2_CNT_FVTXN->Fill( phi_angle-os_fvtxn_psi2 );
                   th1d_os_dreso3_CNT_FVTXN->Fill( phi_angle-os_fvtxn_psi3 );
+		  }
                   // ---
                   fvtxn_v2eta_both_docalib->Fill(eta,cosfvtx_dphi2_docalib);
                   if ( dcarm == 1 ) fvtxn_v2eta_west_docalib->Fill(eta,cosfvtx_dphi2_docalib);
@@ -4253,8 +4262,11 @@ void flatten(int runNumber, int rp_recal_pass)
                   if ( dcarm == 1 ) fvtxs0_v2_west_phipsi->Fill(fvtx_dphi2_docalib);
                   if ( dcarm == 0 ) fvtxs0_v2_east_phipsi->Fill(fvtx_dphi2_docalib);
                   fvtxs0_v2_both_phipsi->Fill(fvtx_dphi2_docalib);
+		  if ( pt_angle > 0.4 && pt_angle < 3.0 )
+		  {
                   tp1f_reso2_CNT_FVTX0->Fill(0.0,cosfvtx_dphi2_docalib);
                   tp1f_reso3_CNT_FVTX0->Fill(0.0,cosfvtx_dphi3_docalib);
+		  }
 		  // ---
 		  helper = atan2(sin(2*fvtx_dphi2_docalib),cos(2*fvtx_dphi2_docalib));
                   if ( dcarm == 1 ) fvtxs0_v2_west_phipsi2->Fill(helper);
@@ -4316,8 +4328,11 @@ void flatten(int runNumber, int rp_recal_pass)
 		    }
 		  // ---
                   fvtxs1_v2_both_phipsi->Fill(fvtx_dphi2_docalib);
+		  if ( pt_angle > 0.4 && pt_angle < 3.0 )
+		  {
                   tp1f_reso2_CNT_FVTX1->Fill(0.0,cosfvtx_dphi2_docalib);
                   tp1f_reso3_CNT_FVTX1->Fill(0.0,cosfvtx_dphi3_docalib);
+		  }
 		  // ---
 		  helper = atan2(sin(2*fvtx_dphi2_docalib),cos(2*fvtx_dphi2_docalib));
                   if ( dcarm == 1 ) fvtxs1_v2_west_phipsi2->Fill(helper);
@@ -4379,8 +4394,11 @@ void flatten(int runNumber, int rp_recal_pass)
 		    }
 		  // ---
                   fvtxs2_v2_both_phipsi->Fill(fvtx_dphi2_docalib);
+		  if ( pt_angle > 0.4 && pt_angle < 3.0 )
+		  {
                   tp1f_reso2_CNT_FVTX2->Fill(0.0,cosfvtx_dphi2_docalib);
                   tp1f_reso3_CNT_FVTX2->Fill(0.0,cosfvtx_dphi3_docalib);
+		  }
 		  // ---
 		  helper = atan2(sin(2*fvtx_dphi2_docalib),cos(2*fvtx_dphi2_docalib));
                   if ( dcarm == 1 ) fvtxs2_v2_west_phipsi2->Fill(helper);
@@ -4442,8 +4460,11 @@ void flatten(int runNumber, int rp_recal_pass)
 		    }
 		  // ---
                   fvtxs3_v2_both_phipsi->Fill(fvtx_dphi2_docalib);
+		  if ( pt_angle > 0.4 && pt_angle < 3.0 )
+		  {
                   tp1f_reso2_CNT_FVTX3->Fill(0.0,cosfvtx_dphi2_docalib);
                   tp1f_reso3_CNT_FVTX3->Fill(0.0,cosfvtx_dphi3_docalib);
+		  }
 		  // ---
 		  helper = atan2(sin(2*fvtx_dphi2_docalib),cos(2*fvtx_dphi2_docalib));
                   if ( dcarm == 1 ) fvtxs3_v2_west_phipsi2->Fill(helper);
