@@ -48,10 +48,9 @@ void doenergy(int energy, int harmonic)
   float float_bbc_fvtx3 = tp1f_bbc_fvtx3->GetBinContent(1);
   float float_cnt_fvtx3 = tp1f_cnt_fvtx3->GetBinContent(1);
 
-  cout << "bbc-cnt " << float_bbc_cnt << endl;
-  cout << "bbc-fvtxs " << float_bbc_fvtx << endl;
-  cout << "cnt-fvtxs " << float_cnt_fvtx << endl;
-
+  // cout << "bbc-cnt " << float_bbc_cnt << endl;
+  // cout << "bbc-fvtxs " << float_bbc_fvtx << endl;
+  // cout << "cnt-fvtxs " << float_cnt_fvtx << endl;
 
   float reso_bbc = sqrt((float_bbc_cnt*float_bbc_fvtx)/float_cnt_fvtx); // BCBS/CS
   float reso_fvtx = sqrt((float_cnt_fvtx*float_bbc_fvtx)/float_bbc_cnt); // CSBS/BC
@@ -72,15 +71,81 @@ void doenergy(int energy, int harmonic)
   //return;
 
   TProfile* hvn_bbcs_B = (TProfile*)file->Get(Form("bbcs_v%d_both_docalib",harmonic));
-  hvn_bbcs_B->SetMarkerStyle(kOpenSquare);
-  hvn_bbcs_B->SetMarkerColor(kBlack);
-  hvn_bbcs_B->SetLineColor(kBlack);
-
   TProfile* hvn_fvtxs_B = (TProfile*)file->Get(Form("fvtxs_v%d_both_docalib",harmonic));
   TProfile* hvn_fvtxs0_B = (TProfile*)file->Get(Form("fvtxs0_v%d_both_docalib",harmonic));
   TProfile* hvn_fvtxs1_B = (TProfile*)file->Get(Form("fvtxs1_v%d_both_docalib",harmonic));
   TProfile* hvn_fvtxs2_B = (TProfile*)file->Get(Form("fvtxs2_v%d_both_docalib",harmonic));
   TProfile* hvn_fvtxs3_B = (TProfile*)file->Get(Form("fvtxs3_v%d_both_docalib",harmonic));
+
+  // --------------------------
+  // --- new stuff from Shengli
+  // ---
+
+  float fvtx0_cnt=0; float con_fvtx0=0; // for FVTX layer 0 resolution
+  float fvtx1_cnt=0; float con_fvtx1=0; // for FVTX layer 1 resolution
+  float fvtx2_cnt=0; float con_fvtx2=0; // for FVTX layer 2 resolution
+  float fvtx3_cnt=0; float con_fvtx3=0; // for FVTX layer 3 resolution
+  float fvtx4_cnt=0; float con_fvtx4=0; // for FVTX combined resolution
+  float fvtx5_cnt=0; float con_fvtx5=0; // for BBC resolution
+  for(int i=2; i<15; i++)
+    {
+      // --- layer 0
+      fvtx0_cnt+=hvn_fvtxs0_B->GetBinContent(i+1)*hvn_fvtxs0_B->GetBinEntries(i+1);
+      con_fvtx0+=hvn_fvtxs0_B->GetBinEntries(i+1);
+      // --- layer 1
+      fvtx1_cnt+=hvn_fvtxs1_B->GetBinContent(i+1)*hvn_fvtxs1_B->GetBinEntries(i+1);
+      con_fvtx1+=hvn_fvtxs1_B->GetBinEntries(i+1);
+      // --- layer 2
+      fvtx2_cnt+=hvn_fvtxs2_B->GetBinContent(i+1)*hvn_fvtxs2_B->GetBinEntries(i+1);
+      con_fvtx2+=hvn_fvtxs2_B->GetBinEntries(i+1);
+      // --- layer 3
+      fvtx3_cnt+=hvn_fvtxs3_B->GetBinContent(i+1)*hvn_fvtxs3_B->GetBinEntries(i+1);
+      con_fvtx3+=hvn_fvtxs3_B->GetBinEntries(i+1);
+      // --- combined layers
+      fvtx4_cnt+=hvn_fvtxs_B->GetBinContent(i+1)*hvn_fvtxs_B->GetBinEntries(i+1);
+      con_fvtx4+=hvn_fvtxs_B->GetBinEntries(i+1);
+      // --- bbc
+      fvtx5_cnt+=hvn_bbcs_B->GetBinContent(i+1)*hvn_bbcs_B->GetBinEntries(i+1);
+      con_fvtx5+=hvn_bbcs_B->GetBinEntries(i+1);
+    }
+  fvtx0_cnt/=con_fvtx0;
+  fvtx1_cnt/=con_fvtx1;
+  fvtx2_cnt/=con_fvtx2;
+  fvtx3_cnt/=con_fvtx3;
+  fvtx4_cnt/=con_fvtx4;
+  fvtx5_cnt/=con_fvtx5;
+
+  // --- reassign
+  float_bbc_cnt = fvtx5_cnt;
+  float_cnt_fvtx = fvtx4_cnt;
+  //float_cnt_fvtx3 = fvtx3_cnt;
+  //float_cnt_fvtx2 = fvtx2_cnt;
+  float_cnt_fvtx1 = fvtx1_cnt;
+  float_cnt_fvtx0 = fvtx0_cnt;
+
+  // --- reevaluate
+  reso_bbc = sqrt((float_bbc_cnt*float_bbc_fvtx)/float_cnt_fvtx); // BCBS/CS
+  reso_fvtx = sqrt((float_cnt_fvtx*float_bbc_fvtx)/float_bbc_cnt); // CSBS/BC
+  reso_fvtx0 = sqrt((float_cnt_fvtx0*float_bbc_fvtx0)/float_bbc_cnt); // CSBS/BC
+  reso_fvtx1 = sqrt((float_cnt_fvtx1*float_bbc_fvtx1)/float_bbc_cnt); // CSBS/BC
+  reso_fvtx2 = sqrt((float_cnt_fvtx2*float_bbc_fvtx2)/float_bbc_cnt); // CSBS/BC
+  reso_fvtx3 = sqrt((float_cnt_fvtx3*float_bbc_fvtx3)/float_bbc_cnt); // CSBS/BC
+
+  // --- recheck
+  cout << "bbc resolution is " << reso_bbc << endl;
+  cout << "fvtx resolution is " << reso_fvtx << endl;
+  cout << "fvtx0 resolution is " << reso_fvtx0 << endl;
+  cout << "fvtx1 resolution is " << reso_fvtx1 << endl;
+  cout << "fvtx2 resolution is " << reso_fvtx2 << endl;
+  cout << "fvtx3 resolution is " << reso_fvtx3 << endl;
+
+  // ---
+  // --- now resume
+  // ------------------------------------
+
+  hvn_bbcs_B->SetMarkerStyle(kOpenSquare);
+  hvn_bbcs_B->SetMarkerColor(kBlack);
+  hvn_bbcs_B->SetLineColor(kBlack);
 
   hvn_fvtxs_B->SetMarkerStyle(kOpenCircle);
   hvn_fvtxs_B->SetMarkerColor(kBlack);
