@@ -717,13 +717,14 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
       int   nfhits      = (int)fvtx_trk->get_nhits();
 
       // fix total momentum to 1.0 (for rotating due to beamtilt)
-      double px = 1.0 * TMath::Sin(the) * TMath::Cos(phi);
-      double py = 1.0 * TMath::Sin(the) * TMath::Sin(phi);
-      double pz = 1.0 * TMath::Cos(the);
+      double pxo = 1.0 * TMath::Sin(the) * TMath::Cos(phi);
+      double pyo = 1.0 * TMath::Sin(the) * TMath::Sin(phi);
+      double pzo = 1.0 * TMath::Cos(the);
 
       // rotate based on beamtilt
-      px = _utils->rotate_x(px, pz);
-      pz = _utils->rotate_z(px, pz);
+      double px = _utils->rotate_x(pxo, pzo);
+      double py = pyo;
+      double pz = _utils->rotate_z(pxo, pzo);
       phi = TMath::ATan2(py, px);
       the = TMath::ACos(pz / TMath::Sqrt(px * px + py * py + pz * pz));
 
@@ -747,8 +748,8 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
 
       //if ( nfhits < 3 ) continue;
       //if ( !pass_eta_cut(eta,ibbcz_bin) ) continue;
-      if ( fvtx_trk->get_chi2_ndf() > 5 ) continue;
-      if ( fabs(DCA_x - 0.3) > 2.0 || fabs(DCA_y - 0.02) > 2.0 ) continue;
+      // if ( fvtx_trk->get_chi2_ndf() > 5 ) continue;
+      // if ( fabs(DCA_x - 0.3) > 2.0 || fabs(DCA_y - 0.02) > 2.0 ) continue;
 
 
       //float DCA_R      = sqrt((DCA_x*DCA_x) + (DCA_y*DCA_y));
@@ -818,16 +819,17 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
       if ( fabs(zed) < 3.0 || fabs(zed) > 70.0 ) continue;
       if ( quality != 63 && quality != 31 ) continue;
 
-      float px = strk->get_px();
-      float py = strk->get_py();
-      float pz = strk->get_pz();
+      float pxo = strk->get_px();
+      float pyo = strk->get_py();
+      float pzo = strk->get_pz();
 
       // int arm = 0;
       // if ( px > 0 ) arm = 1;
 
       // rotate based on beamtilt
-      px = _utils->rotate_x(px, pz);
-      pz = _utils->rotate_z(px, pz);
+      double px = _utils->rotate_x(pxo, pzo);
+      double py = pyo;
+      double pz = _utils->rotate_z(pxo, pzo);
 
 
       int charge = strk->get_charge();
