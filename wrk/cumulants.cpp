@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
 
   cout << "Now processing with run number " << run << endl;
 
-  //dooffsets(run);
+  dooffsets(run);
   documulants(run);
 
   return 0;
@@ -767,8 +767,8 @@ void documulants(int runNumber)
       double ZVTX = -9999;
       if ( runNumber >= 454774 && runNumber <= 456283 ) ZVTX = d_bbcz;
       if ( runNumber >= 456652 && runNumber <= 458167 ) ZVTX = eventfvtx_z;
-      //if ( fabs(ZVTX) > 10.0 )
-      if ( fabs(ZVTX) > 5.0 )
+      if ( fabs(ZVTX) > 10.0 )
+      //if ( fabs(ZVTX) > 5.0 )
         {
           if ( verbosity > 1 ) cout << "vertex rejected" << endl;
           continue;
@@ -1137,7 +1137,7 @@ void documulants(int runNumber)
 	}
 
       bool fvtx_track_passes[nfvtxt];
-      int number_of_tracks_that_fail = 0;
+      //int number_of_tracks_that_fail = 0;
       int number_of_tracks_that_pass = 0;
       for ( int i = 0; i < nfvtxt; ++i )
 	{
@@ -1147,9 +1147,9 @@ void documulants(int runNumber)
 	{
 	  for ( int j = i+1; j < nfvtxt; ++j )
 	    {
-	      double phi1 = fphi[i];
+	      //double phi1 = fphi[i];
 	      double eta1 = feta[i];
-	      double phi2 = fphi[j];
+	      //double phi2 = fphi[j];
 	      double eta2 = feta[j];
 	      if ( fabs(eta1-eta2) < 0.01 )
 		{
