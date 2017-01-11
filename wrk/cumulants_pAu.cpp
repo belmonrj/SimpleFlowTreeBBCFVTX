@@ -579,6 +579,7 @@ void documulants(int runNumber)
   float        event;
   float        d_bbcz;    // bbcz
   float        centrality; // integer but stored as float in PHGlobal etc
+  float        frac; // oh yeah
   float        bbc_qn;
   float        bbc_qs;
   unsigned int trigger_scaled;
@@ -619,6 +620,7 @@ void documulants(int runNumber)
   TBranch* b_event;   //!
   TBranch* b_bbc_z;   //!
   TBranch* b_centrality;   //!
+  TBranch* b_frac;   //!
   TBranch* b_bbc_qn;   //!
   TBranch* b_bbc_qs;   //!
   TBranch* b_npc1;   //!
@@ -658,6 +660,7 @@ void documulants(int runNumber)
 
   ntp_event_chain->SetBranchAddress("bbc_z",&d_bbcz,&b_bbc_z);
   ntp_event_chain->SetBranchAddress("centrality",&centrality,&b_centrality);
+  ntp_event_chain->SetBranchAddress("frac",&frac,&b_frac);
   ntp_event_chain->SetBranchAddress("bbc_qn",&bbc_qn,&b_bbc_qn);
   ntp_event_chain->SetBranchAddress("bbc_qs",&bbc_qs,&b_bbc_qs);
   ntp_event_chain->SetBranchAddress("npc1",&npc1,&b_npc1);
@@ -780,6 +783,8 @@ void documulants(int runNumber)
       //     ++bad_vertex_counter;
       //      //     continue;
       //   }
+
+      if ( frac < 0.95 ) continue; // double interaction cut
 
       // make sure bin number doesn't exceed number of bins
       int izvtx = NZPS*(ZVTX+10)/20;
