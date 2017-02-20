@@ -11,7 +11,7 @@ void Run_SimpleFlowTreeBBCFVTX(
 
   //-- required for Run15pAu200FvtxMBPro107
   // not for Run16dAu
-  gSystem->Load("libfvtx_subsysreco.so");
+  //gSystem->Load("libfvtx_subsysreco.so");
 
   gSystem->Load("libdAuBES_utils.so");
   gSystem->Load("libDoubleInteractionUtil.so");
@@ -50,7 +50,7 @@ void InputData(vector<string> &indata)
 {
   indata.push_back("CNT");
   indata.push_back("DST_EVE");
-  indata.push_back("DST_FVTX");
+  // indata.push_back("DST_FVTX");
   // indata.push_back("MWG");
   return;
 }
