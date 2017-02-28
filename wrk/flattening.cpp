@@ -2037,7 +2037,7 @@ void flatten(int runNumber, int rp_recal_pass)
 	      else if ( centrality <= 60 ) icent = 3;
 	      else if ( centrality <= 88 ) icent = 4;
 	    }
-          if ( energyflag == 39  )
+          if ( energyflag == 20  )
 	    {
 	      if ( centrality <= 20 ) icent = 0;
 	      else if ( centrality <= 40 ) icent = 1;
