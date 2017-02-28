@@ -1,0 +1,342 @@
+Universe        = vanilla
+Notification    = Complete
+Executable      = /phenix/plhf/belmonrj/offline/AnalysisTrain/SimpleFlowTreeBBCFVTX/wrk/flattening.exe
+Requirements    = (CPU_Speed >= 1 && CPU_Experiment == "phenix")
+Rank            = CPU_Speed
+Priority        = +1
+GetEnv          = True
+Initialdir      = /phenix/plhf/belmonrj/offline/AnalysisTrain/SimpleFlowTreeBBCFVTX/wrk
+Error           = /phenix/plhf/belmonrj/offline/AnalysisTrain/SimpleFlowTreeBBCFVTX/wrk/log/job_$(Process).err
+Log             = /phenix/plhf/belmonrj/offline/AnalysisTrain/SimpleFlowTreeBBCFVTX/wrk/log/job_$(Process).log
+Output          = /phenix/plhf/belmonrj/offline/AnalysisTrain/SimpleFlowTreeBBCFVTX/wrk/log/job_$(Process).out
++Experiment     = "phenix"
++Job_Type       = "cas"
+
+
+Arguments = 454774
+Queue 1
+
+Arguments = 454777
+Queue 1
+
+Arguments = 454778
+Queue 1
+
+Arguments = 454782
+Queue 1
+
+Arguments = 454783
+Queue 1
+
+Arguments = 454784
+Queue 1
+
+Arguments = 454785
+Queue 1
+
+Arguments = 454786
+Queue 1
+
+Arguments = 454789
+Queue 1
+
+Arguments = 454794
+Queue 1
+
+Arguments = 454797
+Queue 1
+
+Arguments = 454798
+Queue 1
+
+Arguments = 454799
+Queue 1
+
+Arguments = 454800
+Queue 1
+
+Arguments = 454802
+Queue 1
+
+Arguments = 454808
+Queue 1
+
+Arguments = 454809
+Queue 1
+
+Arguments = 454810
+Queue 1
+
+Arguments = 454811
+Queue 1
+
+Arguments = 454933
+Queue 1
+
+Arguments = 454934
+Queue 1
+
+Arguments = 454935
+Queue 1
+
+Arguments = 454936
+Queue 1
+
+Arguments = 454937
+Queue 1
+
+Arguments = 454943
+Queue 1
+
+Arguments = 454944
+Queue 1
+
+Arguments = 454945
+Queue 1
+
+Arguments = 454946
+Queue 1
+
+Arguments = 454947
+Queue 1
+
+Arguments = 454948
+Queue 1
+
+Arguments = 455049
+Queue 1
+
+Arguments = 455050
+Queue 1
+
+Arguments = 455051
+Queue 1
+
+Arguments = 455052
+Queue 1
+
+Arguments = 455053
+Queue 1
+
+Arguments = 455056
+Queue 1
+
+Arguments = 455060
+Queue 1
+
+Arguments = 455062
+Queue 1
+
+Arguments = 455063
+Queue 1
+
+Arguments = 455064
+Queue 1
+
+Arguments = 455065
+Queue 1
+
+Arguments = 455066
+Queue 1
+
+Arguments = 455071
+Queue 1
+
+Arguments = 455073
+Queue 1
+
+Arguments = 455074
+Queue 1
+
+Arguments = 455077
+Queue 1
+
+Arguments = 455078
+Queue 1
+
+Arguments = 455080
+Queue 1
+
+Arguments = 455081
+Queue 1
+
+Arguments = 455082
+Queue 1
+
+Arguments = 455083
+Queue 1
+
+Arguments = 455200
+Queue 1
+
+Arguments = 455201
+Queue 1
+
+Arguments = 455202
+Queue 1
+
+Arguments = 455203
+Queue 1
+
+Arguments = 455206
+Queue 1
+
+Arguments = 455207
+Queue 1
+
+Arguments = 455208
+Queue 1
+
+Arguments = 455209
+Queue 1
+
+Arguments = 455211
+Queue 1
+
+Arguments = 455212
+Queue 1
+
+Arguments = 455213
+Queue 1
+
+Arguments = 455218
+Queue 1
+
+Arguments = 455220
+Queue 1
+
+Arguments = 455221
+Queue 1
+
+Arguments = 455222
+Queue 1
+
+Arguments = 455223
+Queue 1
+
+Arguments = 455224
+Queue 1
+
+Arguments = 455302
+Queue 1
+
+Arguments = 455303
+Queue 1
+
+Arguments = 455304
+Queue 1
+
+Arguments = 455306
+Queue 1
+
+Arguments = 455344
+Queue 1
+
+Arguments = 455346
+Queue 1
+
+Arguments = 455351
+Queue 1
+
+Arguments = 455352
+Queue 1
+
+Arguments = 455353
+Queue 1
+
+Arguments = 455355
+Queue 1
+
+Arguments = 455362
+Queue 1
+
+Arguments = 455363
+Queue 1
+
+Arguments = 455364
+Queue 1
+
+Arguments = 455365
+Queue 1
+
+Arguments = 455366
+Queue 1
+
+Arguments = 455367
+Queue 1
+
+Arguments = 455446
+Queue 1
+
+Arguments = 455449
+Queue 1
+
+Arguments = 455450
+Queue 1
+
+Arguments = 455451
+Queue 1
+
+Arguments = 455452
+Queue 1
+
+Arguments = 455476
+Queue 1
+
+Arguments = 455477
+Queue 1
+
+Arguments = 455478
+Queue 1
+
+Arguments = 455545
+Queue 1
+
+Arguments = 455547
+Queue 1
+
+Arguments = 455550
+Queue 1
+
+Arguments = 455551
+Queue 1
+
+Arguments = 455552
+Queue 1
+
+Arguments = 455557
+Queue 1
+
+Arguments = 455585
+Queue 1
+
+Arguments = 455586
+Queue 1
+
+Arguments = 455587
+Queue 1
+
+Arguments = 455589
+Queue 1
+
+Arguments = 455590
+Queue 1
+
+Arguments = 455592
+Queue 1
+
+Arguments = 455604
+Queue 1
+
+Arguments = 455605
+Queue 1
+
+Arguments = 455637
+Queue 1
+
+Arguments = 455638
+Queue 1
+
+Arguments = 455639
+Queue 1
+

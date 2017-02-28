@@ -53,6 +53,7 @@
 #include <PreviousEvent.h>
 
 #include "dAuBES_utils.h"
+#include "DoubleInteractionUtil.h"
 
 
 // ------------------------
@@ -86,6 +87,8 @@ SimpleFlowTreeBBCFVTX::SimpleFlowTreeBBCFVTX():
 
   m_bbccalib = new BbcCalib();
   m_bbcgeo   = new BbcGeo();
+  d_diutil   = new DoubleInteractionUtil();
+
   return;
 }
 
@@ -95,6 +98,7 @@ SimpleFlowTreeBBCFVTX::~SimpleFlowTreeBBCFVTX()
 {
   delete m_bbccalib;
   delete m_bbcgeo;
+  delete d_diutil;
   if ( _utils ) delete _utils;
 }
 
@@ -113,6 +117,7 @@ int SimpleFlowTreeBBCFVTX::Init(PHCompositeNode *topNode)
   {
     _ntp_event = new TTree("ntp_event", "event-wise ntuple");
     _ntp_event->SetAutoFlush(1000);
+    _ntp_event->SetMaxTreeSize(100000000000LL);
     _ntp_event -> Branch("event", &event, "event/F");
     _ntp_event -> Branch("bbc_z", &bbc_z, "bbc_z/F");
     _ntp_event -> Branch("centrality", &centrality, "centrality/F");
@@ -128,6 +133,7 @@ int SimpleFlowTreeBBCFVTX::Init(PHCompositeNode *topNode)
     _ntp_event -> Branch("fvtx_x", &FVTX_X, "fvtx_x/F");
     _ntp_event -> Branch("fvtx_y", &FVTX_Y, "fvtx_y/F");
     _ntp_event -> Branch("fvtx_z", &FVTX_Z, "fvtx_z/F");
+    _ntp_event -> Branch("frac", &frac, "frac/F");
     if (_write_bbc)
     {
       _ntp_event -> Branch("bbc_qn", &bbc_qn, "bbc_qn/F");
@@ -152,6 +158,7 @@ int SimpleFlowTreeBBCFVTX::Init(PHCompositeNode *topNode)
       _ntp_event -> Branch("d_cntpx", &d_cntpx, "d_cntpx[d_ntrk]/F");
       _ntp_event -> Branch("d_cntpy", &d_cntpy, "d_cntpy[d_ntrk]/F");
       _ntp_event -> Branch("d_cntpz", &d_cntpz, "d_cntpz[d_ntrk]/F");
+      _ntp_event -> Branch("d_cntcharge", &d_cntcharge, "d_cntcharge[d_ntrk]/F");
       _ntp_event -> Branch("d_cntpc3sdz", &d_cntpc3sdz, "d_cntpc3sdz[d_ntrk]/F");
       _ntp_event -> Branch("d_cntpc3sdphi", &d_cntpc3sdphi, "d_cntpc3sdphi[d_ntrk]/F");
     }
@@ -213,6 +220,12 @@ int SimpleFlowTreeBBCFVTX::InitRun(PHCompositeNode *topNode)
   // This is done in init run so that the collision system can be
   // determined from the run number
   TString _collsys = "Run16dAu200"; // default to 200 GeV
+  // --- Run15pAu200
+  if ( runnumber >= 432637 && runnumber <= 436647 )
+    _collsys = "Run15pAu200";
+  // --- Run15pAl200
+  if ( runnumber >= 436759 && runnumber <= 438422 )
+    _collsys = "Run15pAl200";
   // --- Run16dAu200
   if ( runnumber >= 454774 && runnumber <= 455639 )
     _collsys = "Run16dAu200";
@@ -229,6 +242,8 @@ int SimpleFlowTreeBBCFVTX::InitRun(PHCompositeNode *topNode)
   // --- delete this pointer in EndRun
   _utils = new dAuBES_utils(_collsys, true);
   // _utils->is_sim(_is_sim);
+
+  d_diutil->setBbcCalib(topNode);
 
 
   return EVENT_OK;
@@ -285,6 +300,8 @@ int SimpleFlowTreeBBCFVTX::ResetEvent(PHCompositeNode *topNode)
       fDCA_X[i]    = -9999;
       fDCA_Y[i]    = -9999;
     }
+
+  frac = -9999;
 
   return EVENT_OK;
 
@@ -469,7 +486,8 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
   if ( _verbosity > 1 ) cout << "FVTX vertex points: " << FVTX_X << " " << FVTX_Y << " " << FVTX_Z << endl;
 
 
-
+  // double interaction variable
+  frac = d_diutil->calcFrac(topNode);
 
   //int ibbcz_bin = (bbc_z+30.0)/10;//for fvtx eta cuts
 
@@ -699,13 +717,14 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
       int   nfhits      = (int)fvtx_trk->get_nhits();
 
       // fix total momentum to 1.0 (for rotating due to beamtilt)
-      double px = 1.0 * TMath::Sin(the) * TMath::Cos(phi);
-      double py = 1.0 * TMath::Sin(the) * TMath::Sin(phi);
-      double pz = 1.0 * TMath::Cos(the);
+      double pxo = 1.0 * TMath::Sin(the) * TMath::Cos(phi);
+      double pyo = 1.0 * TMath::Sin(the) * TMath::Sin(phi);
+      double pzo = 1.0 * TMath::Cos(the);
 
       // rotate based on beamtilt
-      px = _utils->rotate_x(px, pz);
-      pz = _utils->rotate_z(px, pz);
+      double px = _utils->rotate_x(pxo, pzo);
+      double py = pyo;
+      double pz = _utils->rotate_z(pxo, pzo);
       phi = TMath::ATan2(py, px);
       the = TMath::ACos(pz / TMath::Sqrt(px * px + py * py + pz * pz));
 
@@ -729,8 +748,8 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
 
       //if ( nfhits < 3 ) continue;
       //if ( !pass_eta_cut(eta,ibbcz_bin) ) continue;
-      if ( fvtx_trk->get_chi2_ndf() > 5 ) continue;
-      if ( fabs(DCA_x - 0.3) > 2.0 || fabs(DCA_y - 0.02) > 2.0 ) continue;
+      // if ( fvtx_trk->get_chi2_ndf() > 5 ) continue;
+      // if ( fabs(DCA_x - 0.3) > 2.0 || fabs(DCA_y - 0.02) > 2.0 ) continue;
 
 
       //float DCA_R      = sqrt((DCA_x*DCA_x) + (DCA_y*DCA_y));
@@ -800,19 +819,20 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
       if ( fabs(zed) < 3.0 || fabs(zed) > 70.0 ) continue;
       if ( quality != 63 && quality != 31 ) continue;
 
-      float px = strk->get_px();
-      float py = strk->get_py();
-      float pz = strk->get_pz();
+      float pxo = strk->get_px();
+      float pyo = strk->get_py();
+      float pzo = strk->get_pz();
 
       // int arm = 0;
       // if ( px > 0 ) arm = 1;
 
       // rotate based on beamtilt
-      px = _utils->rotate_x(px, pz);
-      pz = _utils->rotate_z(px, pz);
+      double px = _utils->rotate_x(pxo, pzo);
+      double py = pyo;
+      double pz = _utils->rotate_z(pxo, pzo);
 
 
-      // int charge = strk->get_charge();
+      int charge = strk->get_charge();
 
       float pc3dphi = strk->get_pc3dphi();
       float pc3dz = strk->get_pc3dz();
@@ -829,6 +849,7 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
       d_cntpx[counter] = px;
       d_cntpy[counter] = py;
       d_cntpz[counter] = pz;
+      d_cntcharge[counter] = charge;
       d_cntpc3sdz[counter] = pc3sdz;
       d_cntpc3sdphi[counter] = pc3sdphi;
 

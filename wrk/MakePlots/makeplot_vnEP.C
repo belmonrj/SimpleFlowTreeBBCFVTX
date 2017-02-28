@@ -15,10 +15,10 @@ void makeplot_vnEP()
       doenergy(39,i);
       doenergy(20,i);
       // ---
-      // diagnostic(200,i);
-      // diagnostic(62,i);
-      // diagnostic(39,i);
-      // diagnostic(20,i);
+      diagnostic(200,i);
+      diagnostic(62,i);
+      diagnostic(39,i);
+      diagnostic(20,i);
     }
 
   outfile->Write();
@@ -101,6 +101,11 @@ void doenergy(int energy, int harmonic)
 
   // ---
 
+  TProfile* hvn_fvtxs_east = (TProfile*)file->Get(Form("fvtxs_v%d_east_docalib",harmonic));
+  hvn_fvtxs_east->Scale(1.0/reso_fvtx);
+  TProfile* hvn_fvtxs_west = (TProfile*)file->Get(Form("fvtxs_v%d_west_docalib",harmonic));
+  hvn_fvtxs_west->Scale(1.0/reso_fvtx);
+
   TProfile* hvn_fvtxs = (TProfile*)file->Get(Form("fvtxs_v%d_both_docalib",harmonic));
   hvn_fvtxs->Scale(1.0/reso_fvtx);
   ofstream fout((const char*)Form("DataTextFiles/run16dau%d_v%dfvtxs.dat",energy,harmonic));
@@ -146,6 +151,13 @@ void doenergy(int energy, int harmonic)
 
   c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxs.pdf",energy,harmonic));
   c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxs.png",energy,harmonic));
+
+  // ---
+  TProfile* hvn_bbcs_east = (TProfile*)file->Get(Form("bbcs_v%d_east_docalib",harmonic));
+  hvn_bbcs_east->Scale(1.0/reso_bbc);
+  TProfile* hvn_bbcs_west = (TProfile*)file->Get(Form("bbcs_v%d_west_docalib",harmonic));
+  hvn_bbcs_west->Scale(1.0/reso_bbc);
+  // ---
 
   TProfile* hvn_bbcs = (TProfile*)file->Get(Form("bbcs_v%d_both_docalib",harmonic));
   hvn_bbcs->SetLineColor(kRed);
@@ -366,18 +378,18 @@ void doenergy(int energy, int harmonic)
   c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%deta_ratio_fvtxsbbcs.pdf",energy,harmonic));
   c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%deta_ratio_fvtxsbbcs.png",energy,harmonic));
 
-  TFile* fcorr = TFile::Open("ampt_vneta_correction.root");
-  //TProfile* tp1f_corr = (TProfile*)fcorr->Get("hv2eta_corr_sys");
-  TProfile* tp1f_corr = (TProfile*)fcorr->Get("v2eta_correction_dAu200");
-  TH1D* th1d_corr = tp1f_corr->ProjectionX();
-  hvneta_bbcs->Divide(th1d_corr);
-  hvneta_fvtxs->Divide(th1d_corr);
-  hvneta_bbcs->Draw();
-  hvneta_fvtxs->Draw("same");
-  leta->Draw();
+  // TFile* fcorr = TFile::Open("ampt_vneta_correction.root");
+  // //TProfile* tp1f_corr = (TProfile*)fcorr->Get("hv2eta_corr_sys");
+  // TProfile* tp1f_corr = (TProfile*)fcorr->Get("v2eta_correction_dAu200");
+  // TH1D* th1d_corr = tp1f_corr->ProjectionX();
+  // hvneta_bbcs->Divide(th1d_corr);
+  // hvneta_fvtxs->Divide(th1d_corr);
+  // hvneta_bbcs->Draw();
+  // hvneta_fvtxs->Draw("same");
+  // leta->Draw();
 
-  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%deta_corrected_fvtxsbbcs.pdf",energy,harmonic));
-  c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%deta_corrected_fvtxsbbcs.png",energy,harmonic));
+  // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%deta_corrected_fvtxsbbcs.pdf",energy,harmonic));
+  // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%deta_corrected_fvtxsbbcs.png",energy,harmonic));
 
   delete c1;
 
@@ -389,10 +401,20 @@ void doenergy(int energy, int harmonic)
   if ( energy == 20 ) hvneta_fvtxs->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = 19.6 GeV"));
 
   outfile->cd();
+  hvn_bbcs->SetName(Form("tprofile_v%d_pT_eventplane_bbcs_%d",harmonic,energy));
+  hvn_bbcs_east->SetName(Form("tprofile_v%d_pT_east_eventplane_bbcs_%d",harmonic,energy));
+  hvn_bbcs_west->SetName(Form("tprofile_v%d_pT_west_eventplane_bbcs_%d",harmonic,energy));
   hvn_fvtxs->SetName(Form("tprofile_v%d_pT_eventplane_fvtxs_%d",harmonic,energy));
+  hvn_fvtxs_east->SetName(Form("tprofile_v%d_pT_east_eventplane_fvtxs_%d",harmonic,energy));
+  hvn_fvtxs_west->SetName(Form("tprofile_v%d_pT_west_eventplane_fvtxs_%d",harmonic,energy));
   hvneta_bbcs->SetName(Form("tprofile_v%d_eta_eventplane_bbcs_%d",harmonic,energy));
   hvneta_fvtxs->SetName(Form("tprofile_v%d_eta_eventplane_fvtxs_%d",harmonic,energy));
+  hvn_bbcs->Write();
+  hvn_bbcs_east->Write();
+  hvn_bbcs_west->Write();
   hvn_fvtxs->Write();
+  hvn_fvtxs_east->Write();
+  hvn_fvtxs_west->Write();
   hvneta_bbcs->Write();
   hvneta_fvtxs->Write();
 
@@ -459,8 +481,8 @@ void diagnostic(int energy, int harmonic)
   c1->Print(Form("FigsHarmonicCoefficient/diagnostic_fvtxs_EBW_energy%d_harm%d.pdf",energy,harmonic));
 
 
-  if ( harmonic == 2 )
-  {
+  //if ( harmonic == 2 )
+  //{
   TProfile* hvn_fvtxs0_B = (TProfile*)file->Get(Form("fvtxs0_v%d_both_docalib",harmonic));
   TProfile* hvn_fvtxs1_B = (TProfile*)file->Get(Form("fvtxs1_v%d_both_docalib",harmonic));
   TProfile* hvn_fvtxs2_B = (TProfile*)file->Get(Form("fvtxs2_v%d_both_docalib",harmonic));
@@ -503,7 +525,7 @@ void diagnostic(int energy, int harmonic)
 
   c1->Print(Form("FigsHarmonicCoefficient/diagnostic_fvtxsL_B_energy%d_harm%d.png",energy,harmonic));
   c1->Print(Form("FigsHarmonicCoefficient/diagnostic_fvtxsL_B_energy%d_harm%d.pdf",energy,harmonic));
-  }
+  //}
 
 
   // ---------

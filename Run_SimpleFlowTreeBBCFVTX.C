@@ -9,7 +9,12 @@ void Run_SimpleFlowTreeBBCFVTX(
   gSystem->Load("libUltraLight");
   gSystem->Load("libCabanaBoy");
 
+  //-- required for Run15pAu200FvtxMBPro107
+  // not for Run16dAu
+  //gSystem->Load("libfvtx_subsysreco.so");
+
   gSystem->Load("libdAuBES_utils.so");
+  gSystem->Load("libDoubleInteractionUtil.so");
   gSystem->Load("libSimpleFlowTreeBBCFVTX.so");
 
   gSystem->ListLibraries();
@@ -45,7 +50,7 @@ void InputData(vector<string> &indata)
 {
   indata.push_back("CNT");
   indata.push_back("DST_EVE");
-  //indata.push_back("DST_SVX");
+  // indata.push_back("DST_FVTX");
   // indata.push_back("MWG");
   return;
 }
