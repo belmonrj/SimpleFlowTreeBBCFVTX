@@ -64,6 +64,18 @@ using namespace std;
 //       theodore.koblesky@colorado.edu                             //
 //                                                                  //
 //==================================================================//
+//                                                                  //
+//       Modify to calculate v2/v3 w/r/t CNT tracks using the EP    //
+//       framework. Also calculate v2/v3 vs eta from CNT & FVTX     //
+//       tracks. Remove all non-essential pieces to reduce runtime  //
+//       and improve readability.                                   //
+//                                                                  //
+//       Darren McGlinchey                                          //
+//       28 Feb 2017                                                //
+//       darren.mcglinchey@colorado.edu                             //
+//                                                                  //
+//==================================================================//
+
 
 
 
@@ -107,6 +119,12 @@ int main(int argc, char *argv[])
 void flatten(int runNumber, int rp_recal_pass)
 {
 
+  //------------------------------------------------------------//
+  //                                                            //
+  //       Set running conditions for this Run Number           //
+  //                                                            //
+  //------------------------------------------------------------//
+
   cout << "runNumber = " << runNumber << " rp_recal_pass = " << rp_recal_pass << endl;
 
   int energyflag = 0;
@@ -130,8 +148,16 @@ void flatten(int runNumber, int rp_recal_pass)
 
   float fracCut = 0.95 // pile up rejection < fracCut (better place??)
 
-  // --- get the number of files for this run number
-  string pipe_out = (string) gSystem->GetFromPipe(Form("ls input/%d_*.root | grep -c r", runNumber));
+
+                  //------------------------------------------------------------//
+                  //                                                            //
+                  //       Chain files for this Run Number                      //
+                  //                                                            //
+                  //------------------------------------------------------------//
+
+
+                  // --- get the number of files for this run number
+                  string pipe_out = (string) gSystem->GetFromPipe(Form("ls input/%d_*.root | grep -c r", runNumber));
   int nfiles = 0;
   nfiles = atoi(pipe_out.c_str());
   cout << "nfiles: " << nfiles << endl;
@@ -146,201 +172,20 @@ void flatten(int runNumber, int rp_recal_pass)
     ntp_event_chain->Add(filename);
   }
 
-  // TChain *ntp_event_chain = new TChain("ntp_event");
-  // sprintf(filename,"input/tree_%d.root",runNumber);
-  // cout << "adding to tchain: " << filename << endl;
-  // ntp_event_chain->Add(filename);
 
-  // ---
 
-  //bool doweights = true; // change to false if you don't want to bother
-  bool doweights = false; // change to false if you don't want to bother
-  TString phiweightfile_name = Form("SpecialProjects/WeightFiles/newweight2d_run%d.root", runNumber);
-  //TString phiweightfile_name = Form("SpecialProjects/Jamie/fout_grid_dau200central.root");
-  TFile* phi_weight_file = TFile::Open(phiweightfile_name); // COME BACK HERE AND HAVE A LOOK
-  if ( !phi_weight_file )
-  {
-    if ( doweights ) cout << "WARNING could not open phi weight file: " << phiweightfile_name.Data() << endl;
-    doweights = false;
-  }
 
-  // TGraph* tg_jamie_fvtxs0_zvtx[60];
-  // TGraph* tg_jamie_fvtxs1_zvtx[60];
-  // TGraph* tg_jamie_fvtxs2_zvtx[60];
-  // TGraph* tg_jamie_fvtxs3_zvtx[60];
-  // TGraph* tg_jamie_bbcs_zvtx[60];
-  // if ( doweights )
-  //   {
-  //     for ( int i = 0; i < 60; ++i )
-  //  {
-  //    tg_jamie_fvtxs0_zvtx[i] = (TGraph*)phi_weight_file->Get(Form("multcorr_layer_0_zvertex_%d",i));
-  //    tg_jamie_fvtxs1_zvtx[i] = (TGraph*)phi_weight_file->Get(Form("multcorr_layer_1_zvertex_%d",i));
-  //    tg_jamie_fvtxs2_zvtx[i] = (TGraph*)phi_weight_file->Get(Form("multcorr_layer_2_zvertex_%d",i));
-  //    tg_jamie_fvtxs3_zvtx[i] = (TGraph*)phi_weight_file->Get(Form("multcorr_layer_3_zvertex_%d",i));
-  //    tg_jamie_bbcs_zvtx[i] = (TGraph*)phi_weight_file->Get(Form("multcorr_layer_4_zvertex_%d",i));
-  //    if ( ! tg_jamie_fvtxs0_zvtx[i] ) doweights = false;
-  //    if ( ! tg_jamie_fvtxs1_zvtx[i] ) doweights = false;
-  //    if ( ! tg_jamie_fvtxs2_zvtx[i] ) doweights = false;
-  //    if ( ! tg_jamie_fvtxs3_zvtx[i] ) doweights = false;
-  //    if ( ! tg_jamie_bbcs_zvtx[i] ) doweights = false;
-  //  }
-  //   }
+  //------------------------------------------------------------//
+  //                                                            //
+  //       Initializing Calibration Arrays & Histograms         //
+  //                                                            //
+  //------------------------------------------------------------//
 
-  // TH2D* th2d_fvtxs_phi_weight[5];
-  // TH2D* th2d_fvtxn_phi_weight[5];
-  // if ( doweights )
-  //   {
-  //     TString histname0 = Form("th2d_fvtxs_clus_phi_weight" );
-  //     TString histname1 = Form("th2d_fvtxs0_clus_phi_weight");
-  //     TString histname2 = Form("th2d_fvtxs1_clus_phi_weight");
-  //     TString histname3 = Form("th2d_fvtxs2_clus_phi_weight");
-  //     TString histname4 = Form("th2d_fvtxs3_clus_phi_weight");
-  //     th2d_fvtxs_phi_weight[0] = (TH2D*)phi_weight_file->Get(histname0);
-  //     th2d_fvtxs_phi_weight[1] = (TH2D*)phi_weight_file->Get(histname1);
-  //     th2d_fvtxs_phi_weight[2] = (TH2D*)phi_weight_file->Get(histname2);
-  //     th2d_fvtxs_phi_weight[3] = (TH2D*)phi_weight_file->Get(histname3);
-  //     th2d_fvtxs_phi_weight[4] = (TH2D*)phi_weight_file->Get(histname4);
-  //     bool have_all_weight_histos =
-  //       th2d_fvtxs_phi_weight[0] &&
-  //       th2d_fvtxs_phi_weight[1] &&
-  //       th2d_fvtxs_phi_weight[2] &&
-  //       th2d_fvtxs_phi_weight[3] &&
-  //       th2d_fvtxs_phi_weight[4];
-  //     if ( verbosity > 0 || ( !have_all_weight_histos ) )
-  //       {
-  //         cout << "memory address of th2d_fvtxs_phi_weight[0] is " << th2d_fvtxs_phi_weight[0] << endl;
-  //         cout << "memory address of th2d_fvtxs_phi_weight[1] is " << th2d_fvtxs_phi_weight[1] << endl;
-  //         cout << "memory address of th2d_fvtxs_phi_weight[2] is " << th2d_fvtxs_phi_weight[2] << endl;
-  //         cout << "memory address of th2d_fvtxs_phi_weight[3] is " << th2d_fvtxs_phi_weight[3] << endl;
-  //         cout << "memory address of th2d_fvtxs_phi_weight[4] is " << th2d_fvtxs_phi_weight[4] << endl;
-  //         cout << "name of th2d_fvtxs_phi_weight[0] is " << histname0.Data() << endl;
-  //         cout << "name of th2d_fvtxs_phi_weight[1] is " << histname1.Data() << endl;
-  //         cout << "name of th2d_fvtxs_phi_weight[2] is " << histname2.Data() << endl;
-  //         cout << "name of th2d_fvtxs_phi_weight[3] is " << histname3.Data() << endl;
-  //         cout << "name of th2d_fvtxs_phi_weight[4] is " << histname4.Data() << endl;
-  //         cout << "The phi weight file read in was " << phiweightfile_name.Data() << endl;
-  //       } // verbosity check
-  //     if ( !have_all_weight_histos )
-  //       {
-  //         cout << "WARNING: not all weight histograms present" << endl;
-  //         doweights = false;
-  //       } // check on existence of histos
-  //         // --- now get the weights for FVTX North
-  //     histname0 = Form("th2d_fvtxn_clus_phi_weight" );
-  //     histname1 = Form("th2d_fvtxn0_clus_phi_weight");
-  //     histname2 = Form("th2d_fvtxn1_clus_phi_weight");
-  //     histname3 = Form("th2d_fvtxn2_clus_phi_weight");
-  //     histname4 = Form("th2d_fvtxn3_clus_phi_weight");
-  //     th2d_fvtxn_phi_weight[0] = (TH2D*)phi_weight_file->Get(histname0);
-  //     th2d_fvtxn_phi_weight[1] = (TH2D*)phi_weight_file->Get(histname1);
-  //     th2d_fvtxn_phi_weight[2] = (TH2D*)phi_weight_file->Get(histname2);
-  //     th2d_fvtxn_phi_weight[3] = (TH2D*)phi_weight_file->Get(histname3);
-  //     th2d_fvtxn_phi_weight[4] = (TH2D*)phi_weight_file->Get(histname4);
-  //     have_all_weight_histos =
-  //       th2d_fvtxn_phi_weight[0] &&
-  //       th2d_fvtxn_phi_weight[1] &&
-  //       th2d_fvtxn_phi_weight[2] &&
-  //       th2d_fvtxn_phi_weight[3] &&
-  //       th2d_fvtxn_phi_weight[4];
-  //     if ( verbosity > 0 || ( !have_all_weight_histos ) )
-  //       {
-  //         cout << "memory address of th2d_fvtxn_phi_weight[0] is " << th2d_fvtxn_phi_weight[0] << endl;
-  //         cout << "memory address of th2d_fvtxn_phi_weight[1] is " << th2d_fvtxn_phi_weight[1] << endl;
-  //         cout << "memory address of th2d_fvtxn_phi_weight[2] is " << th2d_fvtxn_phi_weight[2] << endl;
-  //         cout << "memory address of th2d_fvtxn_phi_weight[3] is " << th2d_fvtxn_phi_weight[3] << endl;
-  //         cout << "memory address of th2d_fvtxn_phi_weight[4] is " << th2d_fvtxn_phi_weight[4] << endl;
-  //         cout << "name of th2d_fvtxn_phi_weight[0] is " << histname0.Data() << endl;
-  //         cout << "name of th2d_fvtxn_phi_weight[1] is " << histname1.Data() << endl;
-  //         cout << "name of th2d_fvtxn_phi_weight[2] is " << histname2.Data() << endl;
-  //         cout << "name of th2d_fvtxn_phi_weight[3] is " << histname3.Data() << endl;
-  //         cout << "name of th2d_fvtxn_phi_weight[4] is " << histname4.Data() << endl;
-  //         cout << "The phi weight file read in was " << phiweightfile_name.Data() << endl;
-  //       } // verbosity check
-  //     if ( !have_all_weight_histos )
-  //       {
-  //         cout << "WARNING: not all weight histograms present" << endl;
-  //         doweights = false;
-  //       } // check on existence of histos
-  //   } // check on doweights
 
+  // (CHECK) leftover from doweights, may be able to delete
   TH1D* th1d_fvtxs_phi_weight[5];
   TH1D* th1d_fvtxn_phi_weight[5];
-  if ( doweights )
-  {
-    TString histname0 = Form("th1d_fvtxs_clus_phi_weight" );
-    TString histname1 = Form("th1d_fvtxs0_clus_phi_weight");
-    TString histname2 = Form("th1d_fvtxs1_clus_phi_weight");
-    TString histname3 = Form("th1d_fvtxs2_clus_phi_weight");
-    TString histname4 = Form("th1d_fvtxs3_clus_phi_weight");
-    th1d_fvtxs_phi_weight[0] = (TH1D*)phi_weight_file->Get(histname0); // COME BACK HERE AND HAVE A LOOK
-    th1d_fvtxs_phi_weight[1] = (TH1D*)phi_weight_file->Get(histname1);
-    th1d_fvtxs_phi_weight[2] = (TH1D*)phi_weight_file->Get(histname2);
-    th1d_fvtxs_phi_weight[3] = (TH1D*)phi_weight_file->Get(histname3);
-    th1d_fvtxs_phi_weight[4] = (TH1D*)phi_weight_file->Get(histname4);
-    bool have_all_weight_histos =
-      th1d_fvtxs_phi_weight[0] &&
-      th1d_fvtxs_phi_weight[1] &&
-      th1d_fvtxs_phi_weight[2] &&
-      th1d_fvtxs_phi_weight[3] &&
-      th1d_fvtxs_phi_weight[4];
-    if ( verbosity > 0 || ( !have_all_weight_histos ) )
-    {
-      cout << "memory address of th1d_fvtxs_phi_weight[0] is " << th1d_fvtxs_phi_weight[0] << endl;
-      cout << "memory address of th1d_fvtxs_phi_weight[1] is " << th1d_fvtxs_phi_weight[1] << endl;
-      cout << "memory address of th1d_fvtxs_phi_weight[2] is " << th1d_fvtxs_phi_weight[2] << endl;
-      cout << "memory address of th1d_fvtxs_phi_weight[3] is " << th1d_fvtxs_phi_weight[3] << endl;
-      cout << "memory address of th1d_fvtxs_phi_weight[4] is " << th1d_fvtxs_phi_weight[4] << endl;
-      cout << "name of th1d_fvtxs_phi_weight[0] is " << histname0.Data() << endl;
-      cout << "name of th1d_fvtxs_phi_weight[1] is " << histname1.Data() << endl;
-      cout << "name of th1d_fvtxs_phi_weight[2] is " << histname2.Data() << endl;
-      cout << "name of th1d_fvtxs_phi_weight[3] is " << histname3.Data() << endl;
-      cout << "name of th1d_fvtxs_phi_weight[4] is " << histname4.Data() << endl;
-      cout << "The phi weight file read in was " << phiweightfile_name.Data() << endl;
-    } // verbosity check
-    if ( !have_all_weight_histos )
-    {
-      cout << "WARNING: not all weight histograms present" << endl;
-      doweights = false;
-    } // check on existence of histos
-    // --- now get the weights for FVTX North
-    histname0 = Form("th1d_fvtxn_clus_phi_weight" );
-    histname1 = Form("th1d_fvtxn0_clus_phi_weight");
-    histname2 = Form("th1d_fvtxn1_clus_phi_weight");
-    histname3 = Form("th1d_fvtxn2_clus_phi_weight");
-    histname4 = Form("th1d_fvtxn3_clus_phi_weight");
-    th1d_fvtxn_phi_weight[0] = (TH1D*)phi_weight_file->Get(histname0);
-    th1d_fvtxn_phi_weight[1] = (TH1D*)phi_weight_file->Get(histname1);
-    th1d_fvtxn_phi_weight[2] = (TH1D*)phi_weight_file->Get(histname2);
-    th1d_fvtxn_phi_weight[3] = (TH1D*)phi_weight_file->Get(histname3);
-    th1d_fvtxn_phi_weight[4] = (TH1D*)phi_weight_file->Get(histname4);
-    have_all_weight_histos =
-      th1d_fvtxn_phi_weight[0] &&
-      th1d_fvtxn_phi_weight[1] &&
-      th1d_fvtxn_phi_weight[2] &&
-      th1d_fvtxn_phi_weight[3] &&
-      th1d_fvtxn_phi_weight[4];
-    if ( verbosity > 0 || ( !have_all_weight_histos ) )
-    {
-      cout << "memory address of th1d_fvtxn_phi_weight[0] is " << th1d_fvtxn_phi_weight[0] << endl;
-      cout << "memory address of th1d_fvtxn_phi_weight[1] is " << th1d_fvtxn_phi_weight[1] << endl;
-      cout << "memory address of th1d_fvtxn_phi_weight[2] is " << th1d_fvtxn_phi_weight[2] << endl;
-      cout << "memory address of th1d_fvtxn_phi_weight[3] is " << th1d_fvtxn_phi_weight[3] << endl;
-      cout << "memory address of th1d_fvtxn_phi_weight[4] is " << th1d_fvtxn_phi_weight[4] << endl;
-      cout << "name of th1d_fvtxn_phi_weight[0] is " << histname0.Data() << endl;
-      cout << "name of th1d_fvtxn_phi_weight[1] is " << histname1.Data() << endl;
-      cout << "name of th1d_fvtxn_phi_weight[2] is " << histname2.Data() << endl;
-      cout << "name of th1d_fvtxn_phi_weight[3] is " << histname3.Data() << endl;
-      cout << "name of th1d_fvtxn_phi_weight[4] is " << histname4.Data() << endl;
-      cout << "The phi weight file read in was " << phiweightfile_name.Data() << endl;
-    } // verbosity check
-    if ( !have_all_weight_histos )
-    {
-      cout << "WARNING: not all weight histograms present" << endl;
-      doweights = false;
-    } // check on existence of histos
-  } // check on doweights
 
-  if ( doweights ) cout << "All histograms present and ready for inverse phi weighting" << endl;
 
   // ---
 
@@ -367,6 +212,8 @@ void flatten(int runNumber, int rp_recal_pass)
   cout << "Initalizing PMT positions for the BBC" << endl;
 
   initialize_pmt_position();
+
+  cout << "Setting flags and indecies" << endl;
 
   bool fvtx_clusters = true;
   bool bbc_pmts      = true;
@@ -408,8 +255,6 @@ void flatten(int runNumber, int rp_recal_pass)
   int fvtxs123_index  = 33;
 
 
-  float pi = acos(-1.0); // defined in RpPar.h, i wonder why no warning
-
   //------------------------------------------------------------//
   //                                                            //
   //       Initializing Calibration Arrays & Histograms         //
@@ -424,19 +269,11 @@ void flatten(int runNumber, int rp_recal_pass)
 
   char outFile1[300];
   sprintf(outFile1, "%s%d%s%d%s", "output/files_", energyflag, "/hist_", runNumber, ".root");
-
-  // char outFile2[100];
-  // sprintf(outFile2,"%s%d%s","output/hrp_",runNumber,".root");
-
-  // cout << "v2 histogram output file: " << outFile1 << endl;
-  // cout << "EP histogram output file: " << outFile2 << endl;
   cout << "histogram output file: " << outFile1 << endl;
 
   TFile *mData1 = TFile::Open(outFile1, "recreate");
   mData1->cd();
 
-  // TFile *mData2=TFile::Open(outFile2,"recreate");
-  // mData2->cd();
 
   // --- lots of comments needed here
   // --- flattening parameters output to file
@@ -455,11 +292,9 @@ void flatten(int runNumber, int rp_recal_pass)
   float    widt[NMUL][NZPS][NHAR][NDET][2]; // width of qx, qy (?? double check)
   float    four[NMUL][NZPS][NHAR][NDET][2][NORD]; // fourier components for flattening
 
-  // TFile *mData1=TFile::Open(outFile1,"recreate");
-  // mData1->cd();
 
 
-  // ---
+  // --- diagnostic histograms
   TH1D* th1d_BBC_charge = new TH1D("th1d_BBC_charge", "", 200, -0.5, 199.5);
   TH1D* th1d_FVTX_nclus = new TH1D("th1d_FVTX_nclus", "", 200, -0.5, 1999.5);
   TH1D* th1d_FVTX_ntrk = new TH1D("th1d_FVTX_ntrk", "", 100, -0.5, 99.5);
@@ -467,273 +302,80 @@ void flatten(int runNumber, int rp_recal_pass)
   TH1D* th1d_FVTXS_nclus = new TH1D("th1d_FVTXS_nclus", "", 200, -0.5, 1999.5);
   TH1D* th1d_FVTXN_nclus = new TH1D("th1d_FVTXN_nclus", "", 200, -0.5, 1999.5);
 
-  TProfile* tp1f_bbc_charge_phi = new TProfile("tp1f_bbc_charge_phi", "", 50, -pi, pi);
-  TProfile* tp1f_bbc0_charge_phi = new TProfile("tp1f_bbc0_charge_phi", "", 50, -pi, pi);
-  TProfile* tp1f_bbc1_charge_phi = new TProfile("tp1f_bbc1_charge_phi", "", 50, -pi, pi);
-  TProfile* tp1f_bbc2_charge_phi = new TProfile("tp1f_bbc2_charge_phi", "", 50, -pi, pi);
-  TProfile* tp1f_bbc3_charge_phi = new TProfile("tp1f_bbc3_charge_phi", "", 50, -pi, pi);
-  TProfile* tp1f_bbc4_charge_phi = new TProfile("tp1f_bbc4_charge_phi", "", 50, -pi, pi);
-
-  TProfile* tp1f_bbc_charge_tube = new TProfile("tp1f_bbc_charge_tube", "", 64, -0.5, 63.5);
-  TProfile* tp1f_bbc0_charge_tube = new TProfile("tp1f_bbc0_charge_tube", "", 64, -0.5, 63.5);
-  TProfile* tp1f_bbc1_charge_tube = new TProfile("tp1f_bbc1_charge_tube", "", 64, -0.5, 63.5);
-  TProfile* tp1f_bbc2_charge_tube = new TProfile("tp1f_bbc2_charge_tube", "", 64, -0.5, 63.5);
-  TProfile* tp1f_bbc3_charge_tube = new TProfile("tp1f_bbc3_charge_tube", "", 64, -0.5, 63.5);
-  TProfile* tp1f_bbc4_charge_tube = new TProfile("tp1f_bbc4_charge_tube", "", 64, -0.5, 63.5);
-
-  TProfile* tp1f_bbc_charge_wphi = new TProfile("tp1f_bbc_charge_wphi", "", 50, -pi, pi);
-  TProfile* tp1f_bbc0_charge_wphi = new TProfile("tp1f_bbc0_charge_wphi", "", 50, -pi, pi);
-  TProfile* tp1f_bbc1_charge_wphi = new TProfile("tp1f_bbc1_charge_wphi", "", 50, -pi, pi);
-  TProfile* tp1f_bbc2_charge_wphi = new TProfile("tp1f_bbc2_charge_wphi", "", 50, -pi, pi);
-  TProfile* tp1f_bbc3_charge_wphi = new TProfile("tp1f_bbc3_charge_wphi", "", 50, -pi, pi);
-  TProfile* tp1f_bbc4_charge_wphi = new TProfile("tp1f_bbc4_charge_wphi", "", 50, -pi, pi);
-
-  TProfile* tp1f_bbc_charge_wtube = new TProfile("tp1f_bbc_charge_wtube", "", 64, -0.5, 63.5);
-  TProfile* tp1f_bbc0_charge_wtube = new TProfile("tp1f_bbc0_charge_wtube", "", 64, -0.5, 63.5);
-  TProfile* tp1f_bbc1_charge_wtube = new TProfile("tp1f_bbc1_charge_wtube", "", 64, -0.5, 63.5);
-  TProfile* tp1f_bbc2_charge_wtube = new TProfile("tp1f_bbc2_charge_wtube", "", 64, -0.5, 63.5);
-  TProfile* tp1f_bbc3_charge_wtube = new TProfile("tp1f_bbc3_charge_wtube", "", 64, -0.5, 63.5);
-  TProfile* tp1f_bbc4_charge_wtube = new TProfile("tp1f_bbc4_charge_wtube", "", 64, -0.5, 63.5);
-
-  TH2D* th2d_fvtxs_clus_xy = new TH2D("th2d_fvtxs_clus_xy", "", 200, -20, 20, 200, -20, 20);
-  TH2D* th2d_fvtxs0_clus_xy = new TH2D("th2d_fvtxs0_clus_xy", "", 200, -20, 20, 200, -20, 20);
-  TH2D* th2d_fvtxs1_clus_xy = new TH2D("th2d_fvtxs1_clus_xy", "", 200, -20, 20, 200, -20, 20);
-  TH2D* th2d_fvtxs2_clus_xy = new TH2D("th2d_fvtxs2_clus_xy", "", 200, -20, 20, 200, -20, 20);
-  TH2D* th2d_fvtxs3_clus_xy = new TH2D("th2d_fvtxs3_clus_xy", "", 200, -20, 20, 200, -20, 20);
-
-  TH2D* th2d_fvtxs_clus_rphi = new TH2D("th2d_fvtxs_clus_rphi", "", 200, -pi, pi, 20, 0, 20);
-  TH2D* th2d_fvtxs0_clus_rphi = new TH2D("th2d_fvtxs0_clus_rphi", "", 200, -pi, pi, 20, 0, 20);
-  TH2D* th2d_fvtxs1_clus_rphi = new TH2D("th2d_fvtxs1_clus_rphi", "", 200, -pi, pi, 20, 0, 20);
-  TH2D* th2d_fvtxs2_clus_rphi = new TH2D("th2d_fvtxs2_clus_rphi", "", 200, -pi, pi, 20, 0, 20);
-  TH2D* th2d_fvtxs3_clus_rphi = new TH2D("th2d_fvtxs3_clus_rphi", "", 200, -pi, pi, 20, 0, 20);
-
-  TH2D* th2d_fvtxs_clus_rphi_ro = new TH2D("th2d_fvtxs_clus_rphi_ro", "", 200, -pi, pi, 20, 0, 20);
-  TH2D* th2d_fvtxs0_clus_rphi_ro = new TH2D("th2d_fvtxs0_clus_rphi_ro", "", 200, -pi, pi, 20, 0, 20);
-  TH2D* th2d_fvtxs1_clus_rphi_ro = new TH2D("th2d_fvtxs1_clus_rphi_ro", "", 200, -pi, pi, 20, 0, 20);
-  TH2D* th2d_fvtxs2_clus_rphi_ro = new TH2D("th2d_fvtxs2_clus_rphi_ro", "", 200, -pi, pi, 20, 0, 20);
-  TH2D* th2d_fvtxs3_clus_rphi_ro = new TH2D("th2d_fvtxs3_clus_rphi_ro", "", 200, -pi, pi, 20, 0, 20);
-
-  TH1D* th1d_fvtxs_clus_phi = new TH1D("th1d_fvtxs_clus_phi", "", 50, -pi, pi);
-  TH1D* th1d_fvtxs0_clus_phi = new TH1D("th1d_fvtxs0_clus_phi", "", 50, -pi, pi);
-  TH1D* th1d_fvtxs1_clus_phi = new TH1D("th1d_fvtxs1_clus_phi", "", 50, -pi, pi);
-  TH1D* th1d_fvtxs2_clus_phi = new TH1D("th1d_fvtxs2_clus_phi", "", 50, -pi, pi);
-  TH1D* th1d_fvtxs3_clus_phi = new TH1D("th1d_fvtxs3_clus_phi", "", 50, -pi, pi);
-
-  TH1D* th1d_fvtxn_clus_phi = new TH1D("th1d_fvtxn_clus_phi", "", 50, -pi, pi);
-  TH1D* th1d_fvtxn0_clus_phi = new TH1D("th1d_fvtxn0_clus_phi", "", 50, -pi, pi);
-  TH1D* th1d_fvtxn1_clus_phi = new TH1D("th1d_fvtxn1_clus_phi", "", 50, -pi, pi);
-  TH1D* th1d_fvtxn2_clus_phi = new TH1D("th1d_fvtxn2_clus_phi", "", 50, -pi, pi);
-  TH1D* th1d_fvtxn3_clus_phi = new TH1D("th1d_fvtxn3_clus_phi", "", 50, -pi, pi);
-
-  TH1D* th1d_fvtxs_clus_wphi = new TH1D("th1d_fvtxs_clus_wphi", "", 50, -pi, pi);
-  TH1D* th1d_fvtxs0_clus_wphi = new TH1D("th1d_fvtxs0_clus_wphi", "", 50, -pi, pi);
-  TH1D* th1d_fvtxs1_clus_wphi = new TH1D("th1d_fvtxs1_clus_wphi", "", 50, -pi, pi);
-  TH1D* th1d_fvtxs2_clus_wphi = new TH1D("th1d_fvtxs2_clus_wphi", "", 50, -pi, pi);
-  TH1D* th1d_fvtxs3_clus_wphi = new TH1D("th1d_fvtxs3_clus_wphi", "", 50, -pi, pi);
-
-  TH1D* th1d_fvtxn_clus_wphi = new TH1D("th1d_fvtxn_clus_wphi", "", 50, -pi, pi);
-  TH1D* th1d_fvtxn0_clus_wphi = new TH1D("th1d_fvtxn0_clus_wphi", "", 50, -pi, pi);
-  TH1D* th1d_fvtxn1_clus_wphi = new TH1D("th1d_fvtxn1_clus_wphi", "", 50, -pi, pi);
-  TH1D* th1d_fvtxn2_clus_wphi = new TH1D("th1d_fvtxn2_clus_wphi", "", 50, -pi, pi);
-  TH1D* th1d_fvtxn3_clus_wphi = new TH1D("th1d_fvtxn3_clus_wphi", "", 50, -pi, pi);
-
-  TH1D* th1d_fvtxs_track_phi = new TH1D("th1d_fvtxs_track_phi", "", 50, -pi, pi);
-  TH1D* th1d_fvtxs0_track_phi = new TH1D("th1d_fvtxs0_track_phi", "", 50, -pi, pi);
-  TH1D* th1d_fvtxs1_track_phi = new TH1D("th1d_fvtxs1_track_phi", "", 50, -pi, pi);
-
-  TH1D* th1d_fvtxn_track_phi = new TH1D("th1d_fvtxn_track_phi", "", 50, -pi, pi);
-  TH1D* th1d_fvtxn0_track_phi = new TH1D("th1d_fvtxn0_track_phi", "", 50, -pi, pi);
-  TH1D* th1d_fvtxn1_track_phi = new TH1D("th1d_fvtxn1_track_phi", "", 50, -pi, pi);
-
-  TH2D* th2d_fvtxs_track_phi = new TH2D("th2d_fvtxs_track_phi", "", 20, -10.0, 10.0, 50, -pi, pi);
-  TH2D* th2d_fvtxs0_track_phi = new TH2D("th2d_fvtxs0_track_phi", "", 20, -10.0, 10.0, 50, -pi, pi);
-  TH2D* th2d_fvtxs1_track_phi = new TH2D("th2d_fvtxs1_track_phi", "", 20, -10.0, 10.0, 50, -pi, pi);
-
-  TH2D* th2d_fvtxn_track_phi = new TH2D("th2d_fvtxn_track_phi", "", 20, -10.0, 10.0, 50, -pi, pi);
-  TH2D* th2d_fvtxn0_track_phi = new TH2D("th2d_fvtxn0_track_phi", "", 20, -10.0, 10.0, 50, -pi, pi);
-  TH2D* th2d_fvtxn1_track_phi = new TH2D("th2d_fvtxn1_track_phi", "", 20, -10.0, 10.0, 50, -pi, pi);
-
-  // --- event plane resolution
-  TProfile* tp1f_reso2_BBC_CNT = new TProfile("tp1f_reso2_BBC_CNT", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso2_BBC_FVTX = new TProfile("tp1f_reso2_BBC_FVTX", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso2_CNT_FVTX = new TProfile("tp1f_reso2_CNT_FVTX", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso2_BBC_FVTX0 = new TProfile("tp1f_reso2_BBC_FVTX0", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso2_CNT_FVTX0 = new TProfile("tp1f_reso2_CNT_FVTX0", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso2_BBC_FVTX1 = new TProfile("tp1f_reso2_BBC_FVTX1", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso2_CNT_FVTX1 = new TProfile("tp1f_reso2_CNT_FVTX1", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso2_BBC_FVTX2 = new TProfile("tp1f_reso2_BBC_FVTX2", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso2_CNT_FVTX2 = new TProfile("tp1f_reso2_CNT_FVTX2", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso2_BBC_FVTX3 = new TProfile("tp1f_reso2_BBC_FVTX3", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso2_CNT_FVTX3 = new TProfile("tp1f_reso2_CNT_FVTX3", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso2_BBC_FVTX012 = new TProfile("tp1f_reso2_BBC_FVTX012", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso2_CNT_FVTX012 = new TProfile("tp1f_reso2_CNT_FVTX012", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso2_BBC_FVTX013 = new TProfile("tp1f_reso2_BBC_FVTX013", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso2_CNT_FVTX013 = new TProfile("tp1f_reso2_CNT_FVTX013", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso2_BBC_FVTX023 = new TProfile("tp1f_reso2_BBC_FVTX023", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso2_CNT_FVTX023 = new TProfile("tp1f_reso2_CNT_FVTX023", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso2_BBC_FVTX123 = new TProfile("tp1f_reso2_BBC_FVTX123", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso2_CNT_FVTX123 = new TProfile("tp1f_reso2_CNT_FVTX123", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-
-  TProfile* tp1f_reso3_BBC_CNT = new TProfile("tp1f_reso3_BBC_CNT", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso3_BBC_FVTX = new TProfile("tp1f_reso3_BBC_FVTX", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso3_CNT_FVTX = new TProfile("tp1f_reso3_CNT_FVTX", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso3_BBC_FVTX0 = new TProfile("tp1f_reso3_BBC_FVTX0", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso3_CNT_FVTX0 = new TProfile("tp1f_reso3_CNT_FVTX0", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso3_BBC_FVTX1 = new TProfile("tp1f_reso3_BBC_FVTX1", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso3_CNT_FVTX1 = new TProfile("tp1f_reso3_CNT_FVTX1", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso3_BBC_FVTX2 = new TProfile("tp1f_reso3_BBC_FVTX2", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso3_CNT_FVTX2 = new TProfile("tp1f_reso3_CNT_FVTX2", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso3_BBC_FVTX3 = new TProfile("tp1f_reso3_BBC_FVTX3", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso3_CNT_FVTX3 = new TProfile("tp1f_reso3_CNT_FVTX3", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso3_BBC_FVTX012 = new TProfile("tp1f_reso3_BBC_FVTX012", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso3_CNT_FVTX012 = new TProfile("tp1f_reso3_CNT_FVTX012", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso3_BBC_FVTX013 = new TProfile("tp1f_reso3_BBC_FVTX013", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso3_CNT_FVTX013 = new TProfile("tp1f_reso3_CNT_FVTX013", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso3_BBC_FVTX023 = new TProfile("tp1f_reso3_BBC_FVTX023", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso3_CNT_FVTX023 = new TProfile("tp1f_reso3_CNT_FVTX023", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso3_BBC_FVTX123 = new TProfile("tp1f_reso3_BBC_FVTX123", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso3_CNT_FVTX123 = new TProfile("tp1f_reso3_CNT_FVTX123", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-
-  // ---
-  TProfile* tp1f_z_reso2_BBC_CNT = new TProfile("tp1f_z_reso2_BBC_CNT", "", 20, -10, 10, -1e6, 1e6, "");
-  TProfile* tp1f_z_reso2_BBC_FVTX = new TProfile("tp1f_z_reso2_BBC_FVTX", "", 20, -10, 10, -1e6, 1e6, "");
-  TProfile* tp1f_z_reso2_CNT_FVTX = new TProfile("tp1f_z_reso2_CNT_FVTX", "", 20, -10, 10, -1e6, 1e6, "");
-  TProfile* tp1f_z_reso3_BBC_CNT = new TProfile("tp1f_z_reso3_BBC_CNT", "", 20, -10, 10, -1e6, 1e6, "");
-  TProfile* tp1f_z_reso3_BBC_FVTX = new TProfile("tp1f_z_reso3_BBC_FVTX", "", 20, -10, 10, -1e6, 1e6, "");
-  TProfile* tp1f_z_reso3_CNT_FVTX = new TProfile("tp1f_z_reso3_CNT_FVTX", "", 20, -10, 10, -1e6, 1e6, "");
-  // ---
-
-  TH1D* th1d_reso2_BBC_CNT = new TH1D("th1d_reso2_BBC_CNT", "", 220, -1.1, 1.1);
-  TH1D* th1d_reso2_BBC_FVTX = new TH1D("th1d_reso2_BBC_FVTX", "", 220, -1.1, 1.1);
-  TH1D* th1d_reso2_CNT_FVTX = new TH1D("th1d_reso2_CNT_FVTX", "", 220, -1.1, 1.1);
-  TH1D* th1d_reso3_BBC_CNT = new TH1D("th1d_reso3_BBC_CNT", "", 220, -1.1, 1.1);
-  TH1D* th1d_reso3_BBC_FVTX = new TH1D("th1d_reso3_BBC_FVTX", "", 220, -1.1, 1.1);
-  TH1D* th1d_reso3_CNT_FVTX = new TH1D("th1d_reso3_CNT_FVTX", "", 220, -1.1, 1.1);
-
-  TH1D* th1d_dreso2_BBC_CNT = new TH1D("th1d_dreso2_BBC_CNT", "", 252, -6.3, 6.3);
-  TH1D* th1d_dreso2_BBC_FVTX = new TH1D("th1d_dreso2_BBC_FVTX", "", 252, -6.3, 6.3);
-  TH1D* th1d_dreso2_CNT_FVTX = new TH1D("th1d_dreso2_CNT_FVTX", "", 252, -6.3, 6.3);
-  TH1D* th1d_dreso3_BBC_CNT = new TH1D("th1d_dreso3_BBC_CNT", "", 252, -6.3, 6.3);
-  TH1D* th1d_dreso3_BBC_FVTX = new TH1D("th1d_dreso3_BBC_FVTX", "", 252, -6.3, 6.3);
-  TH1D* th1d_dreso3_CNT_FVTX = new TH1D("th1d_dreso3_CNT_FVTX", "", 252, -6.3, 6.3);
-
-  // --- have a quick look at fvtxs clusters and trucks, because why not
-  TProfile* tp1f_reso2_FVTX_FVTX = new TProfile("tp1f_reso2_FVTX_FVTX", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TH1D* th1d_reso2_FVTX_FVTX = new TH1D("th1d_reso2_FVTX_FVTX", "", 220, -1.1, 1.1);
-  TH1D* th1d_dreso2_FVTX_FVTX = new TH1D("th1d_dreso2_FVTX_FVTX", "", 252, -6.3, 6.3);
-  TProfile* tp1f_reso3_FVTX_FVTX = new TProfile("tp1f_reso3_FVTX_FVTX", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TH1D* th1d_reso3_FVTX_FVTX = new TH1D("th1d_reso3_FVTX_FVTX", "", 220, -1.1, 1.1);
-  TH1D* th1d_dreso3_FVTX_FVTX = new TH1D("th1d_dreso3_FVTX_FVTX", "", 252, -6.3, 6.3);
+  TProfile* tp1f_bbc_fcharge_ring = new TProfile("tp1f_bbc_fcharge_ring", ";BBC ring; charge/total", 5, -0.5, 4.5);
 
 
-  // --- new EP resolution histograms using FVTX north
-  TProfile* tp1f_reso2_BBC_FVTXN = new TProfile("tp1f_reso2_BBC_FVTXN", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso3_BBC_FVTXN = new TProfile("tp1f_reso3_BBC_FVTXN", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso2_CNT_FVTXN = new TProfile("tp1f_reso2_CNT_FVTXN", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso3_CNT_FVTXN = new TProfile("tp1f_reso3_CNT_FVTXN", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso2_FVTXS_FVTXN = new TProfile("tp1f_reso2_FVTXS_FVTXN", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso3_FVTXS_FVTXN = new TProfile("tp1f_reso3_FVTXS_FVTXN", "", 1, -0.5, 0.5, -1e6, 1e6, "");
+  // --- event plane resolution, need to be centrality dependent
+  TProfile* tp1f_reso2_BBC_CNT[NMUL];
+  TProfile* tp1f_reso2_BBC_FVTX[NMUL];
+  TProfile* tp1f_reso2_CNT_FVTX[NMUL];
+  TProfile* tp1f_reso2_BBC_FVTXN[NMUL];
+  TProfile* tp1f_reso2_CNT_FVTXN[NMUL];
+  TProfile* tp1f_reso2_FVTXS_FVTXN[NMUL];
 
-  TH1D* th1d_reso2_BBC_FVTXN = new TH1D("th1d_reso2_BBC_FVTXN", "", 220, -1.1, 1.1);
-  TH1D* th1d_reso3_BBC_FVTXN = new TH1D("th1d_reso3_BBC_FVTXN", "", 220, -1.1, 1.1);
-  TH1D* th1d_reso2_CNT_FVTXN = new TH1D("th1d_reso2_CNT_FVTXN", "", 220, -1.1, 1.1);
-  TH1D* th1d_reso3_CNT_FVTXN = new TH1D("th1d_reso3_CNT_FVTXN", "", 220, -1.1, 1.1);
-  TH1D* th1d_reso2_FVTXS_FVTXN = new TH1D("th1d_reso2_FVTXS_FVTXN", "", 220, -1.1, 1.1);
-  TH1D* th1d_reso3_FVTXS_FVTXN = new TH1D("th1d_reso3_FVTXS_FVTXN", "", 220, -1.1, 1.1);
+  TProfile* tp1f_reso3_BBC_CNT[NMUL];
+  TProfile* tp1f_reso3_BBC_FVTX[NMUL];
+  TProfile* tp1f_reso3_CNT_FVTX[NMUL];
+  TProfile* tp1f_reso3_BBC_FVTXN[NMUL];
+  TProfile* tp1f_reso3_CNT_FVTXN[NMUL];
+  TProfile* tp1f_reso3_FVTXS_FVTXN[NMUL];
 
-  TH1D* th1d_dreso2_BBC_FVTXN = new TH1D("th1d_dreso2_BBC_FVTXN", "", 252, -6.3, 6.3);
-  TH1D* th1d_dreso3_BBC_FVTXN = new TH1D("th1d_dreso3_BBC_FVTXN", "", 252, -6.3, 6.3);
-  TH1D* th1d_dreso2_CNT_FVTXN = new TH1D("th1d_dreso2_CNT_FVTXN", "", 252, -6.3, 6.3);
-  TH1D* th1d_dreso3_CNT_FVTXN = new TH1D("th1d_dreso3_CNT_FVTXN", "", 252, -6.3, 6.3);
-  TH1D* th1d_dreso2_FVTXS_FVTXN = new TH1D("th1d_dreso2_FVTXS_FVTXN", "", 252, -6.3, 6.3);
-  TH1D* th1d_dreso3_FVTXS_FVTXN = new TH1D("th1d_dreso3_FVTXS_FVTXN", "", 252, -6.3, 6.3);
+  for (int ic = 0; ic < NMUL; ic++)
+  {
+    tp1f_reso2_BBC_CNT[ic]  = new TProfile(Form("tp1f_c%i_reso2_BBC_CNT", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+    tp1f_reso2_BBC_FVTX[ic] = new TProfile(Form("tp1f_c%i_reso2_BBC_FVTX", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+    tp1f_reso2_CNT_FVTX[ic] = new TProfile(Form("tp1f_c%i_reso2_CNT_FVTX", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+    tp1f_reso2_BBC_FVTXN[ic] = new TProfile(Form("tp1f_c%i_reso2_BBC_FVTXN", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+    tp1f_reso2_CNT_FVTXN[ic] = new TProfile(Form("tp1f_c%i_reso2_CNT_FVTXN", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+    tp1f_reso2_FVTXS_FVTXN[ic] = new TProfile(Form("tp1f_c%i_reso2_FVTXS_FVTXN", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
 
-  // --- even more stuff, for v4{psi2}
+    tp1f_reso3_BBC_CNT[ic]  = new TProfile(Form("tp1f_c%i_reso3_BBC_CNT", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+    tp1f_reso3_BBC_FVTX[ic] = new TProfile(Form("tp1f_c%i_reso3_BBC_FVTX", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+    tp1f_reso3_CNT_FVTX[ic] = new TProfile(Form("tp1f_c%i_reso3_CNT_FVTX", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+    tp1f_reso3_BBC_FVTXN[ic] = new TProfile(Form("tp1f_c%i_reso2_BBC_FVTXN", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+    tp1f_reso3_CNT_FVTXN[ic] = new TProfile(Form("tp1f_c%i_reso2_CNT_FVTXN", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+    tp1f_reso3_FVTXS_FVTXN[ic] = new TProfile(Form("tp1f_c%i_reso2_FVTXS_FVTXN", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+  } // ic
 
-  TProfile* tp1f_reso42_BBC_CNT = new TProfile("tp1f_reso42_BBC_CNT", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso42_BBC_FVTX = new TProfile("tp1f_reso42_BBC_FVTX", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso42_CNT_FVTX = new TProfile("tp1f_reso42_CNT_FVTX", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso42_BBC_FVTXN = new TProfile("tp1f_reso42_BBC_FVTXN", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso42_CNT_FVTXN = new TProfile("tp1f_reso42_CNT_FVTXN", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_reso42_FVTXS_FVTXN = new TProfile("tp1f_reso42_FVTXS_FVTXN", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-
-  TProfile* tp1f_nw_reso2_BBC_CNT = new TProfile("tp1f_nw_reso2_BBC_CNT", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_nw_reso2_BBC_FVTX = new TProfile("tp1f_nw_reso2_BBC_FVTX", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_nw_reso2_CNT_FVTX = new TProfile("tp1f_nw_reso2_CNT_FVTX", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_nw_reso2_BBC_FVTXN = new TProfile("tp1f_nw_reso2_BBC_FVTXN", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_nw_reso2_CNT_FVTXN = new TProfile("tp1f_nw_reso2_CNT_FVTXN", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_nw_reso2_FVTXS_FVTXN = new TProfile("tp1f_nw_reso2_FVTXS_FVTXN", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-
-  TProfile* tp1f_nw_reso3_BBC_CNT = new TProfile("tp1f_nw_reso3_BBC_CNT", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_nw_reso3_BBC_FVTX = new TProfile("tp1f_nw_reso3_BBC_FVTX", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_nw_reso3_CNT_FVTX = new TProfile("tp1f_nw_reso3_CNT_FVTX", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_nw_reso3_BBC_FVTXN = new TProfile("tp1f_nw_reso3_BBC_FVTXN", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_nw_reso3_CNT_FVTXN = new TProfile("tp1f_nw_reso3_CNT_FVTXN", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_nw_reso3_FVTXS_FVTXN = new TProfile("tp1f_nw_reso3_FVTXS_FVTXN", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-
-  TProfile* tp1f_nw_reso42_BBC_CNT = new TProfile("tp1f_nw_reso42_BBC_CNT", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_nw_reso42_BBC_FVTX = new TProfile("tp1f_nw_reso42_BBC_FVTX", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_nw_reso42_CNT_FVTX = new TProfile("tp1f_nw_reso42_CNT_FVTX", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_nw_reso42_BBC_FVTXN = new TProfile("tp1f_nw_reso42_BBC_FVTXN", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_nw_reso42_CNT_FVTXN = new TProfile("tp1f_nw_reso42_CNT_FVTXN", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_nw_reso42_FVTXS_FVTXN = new TProfile("tp1f_nw_reso42_FVTXS_FVTXN", "", 1, -0.5, 0.5, -1e6, 1e6, "");
 
   // --- event plane resolutions with offset q-vectors
+  TProfile* tp1f_os_reso2_BBC_CNT[NMUL];
+  TProfile* tp1f_os_reso2_BBC_FVTX[NMUL];
+  TProfile* tp1f_os_reso2_CNT_FVTX[NMUL];
+  TProfile* tp1f_os_reso2_BBC_FVTXN[NMUL];
+  TProfile* tp1f_os_reso2_CNT_FVTXN[NMUL];
+  TProfile* tp1f_os_reso2_FVTXS_FVTXN[NMUL];
 
-  // --- event plane resolution
-  TProfile* tp1f_os_reso2_BBC_CNT = new TProfile("tp1f_os_reso2_BBC_CNT", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_os_reso2_BBC_FVTX = new TProfile("tp1f_os_reso2_BBC_FVTX", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_os_reso2_CNT_FVTX = new TProfile("tp1f_os_reso2_CNT_FVTX", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_os_reso3_BBC_CNT = new TProfile("tp1f_os_reso3_BBC_CNT", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_os_reso3_BBC_FVTX = new TProfile("tp1f_os_reso3_BBC_FVTX", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_os_reso3_CNT_FVTX = new TProfile("tp1f_os_reso3_CNT_FVTX", "", 1, -0.5, 0.5, -1e6, 1e6, "");
+  TProfile* tp1f_os_reso3_BBC_CNT[NMUL];
+  TProfile* tp1f_os_reso3_BBC_FVTX[NMUL];
+  TProfile* tp1f_os_reso3_CNT_FVTX[NMUL];
+  TProfile* tp1f_os_reso3_BBC_FVTXN[NMUL];
+  TProfile* tp1f_os_reso3_CNT_FVTXN[NMUL];
+  TProfile* tp1f_os_reso3_FVTXS_FVTXN[NMUL];
 
-  TH1D* th1d_os_reso2_BBC_CNT = new TH1D("th1d_os_reso2_BBC_CNT", "", 220, -1.1, 1.1);
-  TH1D* th1d_os_reso2_BBC_FVTX = new TH1D("th1d_os_reso2_BBC_FVTX", "", 220, -1.1, 1.1);
-  TH1D* th1d_os_reso2_CNT_FVTX = new TH1D("th1d_os_reso2_CNT_FVTX", "", 220, -1.1, 1.1);
-  TH1D* th1d_os_reso3_BBC_CNT = new TH1D("th1d_os_reso3_BBC_CNT", "", 220, -1.1, 1.1);
-  TH1D* th1d_os_reso3_BBC_FVTX = new TH1D("th1d_os_reso3_BBC_FVTX", "", 220, -1.1, 1.1);
-  TH1D* th1d_os_reso3_CNT_FVTX = new TH1D("th1d_os_reso3_CNT_FVTX", "", 220, -1.1, 1.1);
+  for (int ic = 0; ic < NMUL; ic++)
+  {
+    tp1f_os_reso2_BBC_CNT[ic]  = new TProfile(Form("tp1f_os_c%i_reso2_BBC_CNT", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+    tp1f_os_reso2_BBC_FVTX[ic] = new TProfile(Form("tp1f_os_c%i_reso2_BBC_FVTX", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+    tp1f_os_reso2_CNT_FVTX[ic] = new TProfile(Form("tp1f_os_c%i_reso2_CNT_FVTX", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+    tp1f_os_reso2_BBC_FVTXN[ic] = new TProfile(Form("tp1f_os_c%i_reso2_BBC_FVTXN", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+    tp1f_os_reso2_CNT_FVTXN[ic] = new TProfile(Form("tp1f_os_c%i_reso2_CNT_FVTXN", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+    tp1f_os_reso2_FVTXS_FVTXN[ic] = new TProfile(Form("tp1f_os_c%i_reso2_FVTXS_FVTXN", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
 
-  TH1D* th1d_os_dreso2_BBC_CNT = new TH1D("th1d_os_dreso2_BBC_CNT", "", 252, -6.3, 6.3);
-  TH1D* th1d_os_dreso2_BBC_FVTX = new TH1D("th1d_os_dreso2_BBC_FVTX", "", 252, -6.3, 6.3);
-  TH1D* th1d_os_dreso2_CNT_FVTX = new TH1D("th1d_os_dreso2_CNT_FVTX", "", 252, -6.3, 6.3);
-  TH1D* th1d_os_dreso3_BBC_CNT = new TH1D("th1d_os_dreso3_BBC_CNT", "", 252, -6.3, 6.3);
-  TH1D* th1d_os_dreso3_BBC_FVTX = new TH1D("th1d_os_dreso3_BBC_FVTX", "", 252, -6.3, 6.3);
-  TH1D* th1d_os_dreso3_CNT_FVTX = new TH1D("th1d_os_dreso3_CNT_FVTX", "", 252, -6.3, 6.3);
-
-  // --- new EP resolution histograms using FVTX north
-  TProfile* tp1f_os_reso2_BBC_FVTXN = new TProfile("tp1f_os_reso2_BBC_FVTXN", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_os_reso3_BBC_FVTXN = new TProfile("tp1f_os_reso3_BBC_FVTXN", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_os_reso2_CNT_FVTXN = new TProfile("tp1f_os_reso2_CNT_FVTXN", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_os_reso3_CNT_FVTXN = new TProfile("tp1f_os_reso3_CNT_FVTXN", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_os_reso2_FVTXS_FVTXN = new TProfile("tp1f_os_reso2_FVTXS_FVTXN", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  TProfile* tp1f_os_reso3_FVTXS_FVTXN = new TProfile("tp1f_os_reso3_FVTXS_FVTXN", "", 1, -0.5, 0.5, -1e6, 1e6, "");
-
-  TH1D* th1d_os_reso2_BBC_FVTXN = new TH1D("th1d_os_reso2_BBC_FVTXN", "", 220, -1.1, 1.1);
-  TH1D* th1d_os_reso3_BBC_FVTXN = new TH1D("th1d_os_reso3_BBC_FVTXN", "", 220, -1.1, 1.1);
-  TH1D* th1d_os_reso2_CNT_FVTXN = new TH1D("th1d_os_reso2_CNT_FVTXN", "", 220, -1.1, 1.1);
-  TH1D* th1d_os_reso3_CNT_FVTXN = new TH1D("th1d_os_reso3_CNT_FVTXN", "", 220, -1.1, 1.1);
-  TH1D* th1d_os_reso2_FVTXS_FVTXN = new TH1D("th1d_os_reso2_FVTXS_FVTXN", "", 220, -1.1, 1.1);
-  TH1D* th1d_os_reso3_FVTXS_FVTXN = new TH1D("th1d_os_reso3_FVTXS_FVTXN", "", 220, -1.1, 1.1);
-
-  TH1D* th1d_os_dreso2_BBC_FVTXN = new TH1D("th1d_os_dreso2_BBC_FVTXN", "", 252, -6.3, 6.3);
-  TH1D* th1d_os_dreso3_BBC_FVTXN = new TH1D("th1d_os_dreso3_BBC_FVTXN", "", 252, -6.3, 6.3);
-  TH1D* th1d_os_dreso2_CNT_FVTXN = new TH1D("th1d_os_dreso2_CNT_FVTXN", "", 252, -6.3, 6.3);
-  TH1D* th1d_os_dreso3_CNT_FVTXN = new TH1D("th1d_os_dreso3_CNT_FVTXN", "", 252, -6.3, 6.3);
-  TH1D* th1d_os_dreso2_FVTXS_FVTXN = new TH1D("th1d_os_dreso2_FVTXS_FVTXN", "", 252, -6.3, 6.3);
-  TH1D* th1d_os_dreso3_FVTXS_FVTXN = new TH1D("th1d_os_dreso3_FVTXS_FVTXN", "", 252, -6.3, 6.3);
+    tp1f_os_reso3_BBC_CNT[ic]  = new TProfile(Form("tp1f_os_c%i_reso3_BBC_CNT", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+    tp1f_os_reso3_BBC_FVTX[ic] = new TProfile(Form("tp1f_os_c%i_reso3_BBC_FVTX", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+    tp1f_os_reso3_CNT_FVTX[ic] = new TProfile(Form("tp1f_os_c%i_reso3_CNT_FVTX", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+    tp1f_os_reso3_BBC_FVTXN[ic] = new TProfile(Form("tp1f_os_c%i_reso2_BBC_FVTXN", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+    tp1f_os_reso3_CNT_FVTXN[ic] = new TProfile(Form("tp1f_os_c%i_reso2_CNT_FVTXN", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+    tp1f_os_reso3_FVTXS_FVTXN[ic] = new TProfile(Form("tp1f_os_c%i_reso2_FVTXS_FVTXN", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+  } // ic
 
 
 
   cout << "Making TProfile histograms" << endl;
 
-  // icent upto NMUL... 0-5, 5-10, 10-20, 20-40, 40-60, 60-88
-
   // --- profile histograms for average of Psi and flattening parameters
   char name[200];
-  // int icent = 0;
-  // int ic = icent;
   for ( int ic = 0; ic < NMUL; ic ++ )
   {
     for ( int iz = 0; iz < NZPS; iz++ )
@@ -763,18 +405,23 @@ void flatten(int runNumber, int rp_recal_pass)
         // --- dis (?)
         sprintf(name, "dis_%d_%d_%d", ic, ih, id);
         dis[ic][ih][id] = new TH2D(name, name, NZPS * 3, -0.5, NZPS * 3.0 - 0.5, 50, -pi, pi);
+
         // --- qx (q-vector x component)
         sprintf(name, "qx_%d_%d_%d", ic, ih, id);
         qx[ic][ih][id] = new TH2D(name, name, NZPS * 3, -0.5, NZPS * 3.0 - 0.5, 220, -4.1, 4.1);
+
         // --- qy (q-vector y component)
         sprintf(name, "qy_%d_%d_%d", ic, ih, id);
         qy[ic][ih][id] = new TH2D(name, name, NZPS * 3, -0.5, NZPS * 3.0 - 0.5, 220, -4.1, 4.1);
+
         // --- psi_bf (event plane before recentering and flattening)
         sprintf(name, "psi_bf_%d_%d_%d", ic, ih, id);
         psi_bf[ic][ih][id] = new TH2D(name, name, NZPS * 3, -0.5, NZPS * 3.0 - 0.5, 220, -4.1, 4.1);
+
         // --- psi_mf (event plane after recentering but before flattening)
         sprintf(name, "psi_mf_%d_%d_%d", ic, ih, id);
         psi_mf[ic][ih][id] = new TH2D(name, name, NZPS * 3, -0.5, NZPS * 3.0 - 0.5, 220, -4.1, 4.1);
+
         // --- psi_af (event plane after recentering and flattening)
         sprintf(name, "psi_af_%d_%d_%d", ic, ih, id);
         psi_af[ic][ih][id] = new TH2D(name, name, NZPS * 3, -0.5, NZPS * 3.0 - 0.5, 220, -4.1, 4.1);
@@ -797,11 +444,13 @@ void flatten(int runNumber, int rp_recal_pass)
           {
             // --- mean (of q-vectors)
             mean[ic][iz][ih][id][ib] = 0.0;
+
             // --- width (of q-vectors)
             widt[ic][iz][ih][id][ib] = 1.0;
+
+            // --- fourier components for flattening
             for ( int io = 0; io < NORD; io++ )
             {
-              // --- fourier components for flattening
               four[ic][iz][ih][id][ib][io] = 0.0;
             } // orders
           } // x and y
@@ -886,49 +535,114 @@ void flatten(int runNumber, int rp_recal_pass)
 
   // --- docalib
 
-  TProfile* bbcs_v2_both_docalib_cent[NMUL];
-  TProfile* fvtxs_v2_both_docalib_cent[NMUL];
-  TProfile* bbcs_v2eta_both_docalib_cent[NMUL];
-  TProfile* fvtxs_v2eta_both_docalib_cent[NMUL];
-  TProfile* tp1f_reso2_BBC_CNT_cent[NMUL];
-  TProfile* tp1f_reso2_BBC_FVTX_cent[NMUL];
-  TProfile* tp1f_reso2_CNT_FVTX_cent[NMUL];
+  // vs pT
+  TProfile* bbcs_v2_east_docalib[NMUL];
+  TProfile* bbcs_v2_west_docalib[NMUL];
+  TProfile* bbcs_v2_both_docalib[NMUL];
+
+  TProfile* fvtxs_v2_east_docalib[NMUL];
+  TProfile* fvtxs_v2_west_docalib[NMUL];
+  TProfile* fvtxs_v2_both_docalib[NMUL];
+
+  TProfile* fvtxn_v2_east_docalib[NMUL];
+  TProfile* fvtxn_v2_west_docalib[NMUL];
+  TProfile* fvtxn_v2_both_docalib[NMUL];
+
+  TProfile* bbcs_v3_east_docalib[NMUL];
+  TProfile* bbcs_v3_west_docalib[NMUL];
+  TProfile* bbcs_v3_both_docalib[NMUL];
+
+  TProfile* fvtxs_v3_east_docalib[NMUL];
+  TProfile* fvtxs_v3_west_docalib[NMUL];
+  TProfile* fvtxs_v3_both_docalib[NMUL];
+
+  TProfile* fvtxn_v3_east_docalib[NMUL];
+  TProfile* fvtxn_v3_west_docalib[NMUL];
+  TProfile* fvtxn_v3_both_docalib[NMUL];
+
   for ( int ic = 0; ic < NMUL; ++ic )
   {
-    bbcs_v2_both_docalib_cent[ic] = new TProfile(Form("bbcs_v2_both_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
-    fvtxs_v2_both_docalib_cent[ic] = new TProfile(Form("fvtxs_v2_both_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
-    bbcs_v2eta_both_docalib_cent[ic] = new TProfile(Form("bbcs_v2eta_both_docalib_cent%d", ic), "", 32, -3.2, 3.2, -1.1, 1.1);
-    fvtxs_v2eta_both_docalib_cent[ic] = new TProfile(Form("fvtxs_v2eta_both_docalib_cent%d", ic), "", 32, -3.2, 3.2, -1.1, 1.1);
-    tp1f_reso2_BBC_CNT_cent[ic] = new TProfile(Form("tp1f_reso2_BBC_CNT_cent%d", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
-    tp1f_reso2_BBC_FVTX_cent[ic] = new TProfile(Form("tp1f_reso2_BBC_FVTX_cent%d", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
-    tp1f_reso2_CNT_FVTX_cent[ic] = new TProfile(Form("tp1f_reso2_CNT_FVTX_cent%d", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
-  }
+    bbcs_v2_both_docalib[ic] = new TProfile(Form("bbcs_v2_both_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+    bbcs_v2_east_docalib[ic] = new TProfile(Form("bbcs_v2_east_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+    bbcs_v2_west_docalib[ic] = new TProfile(Form("bbcs_v2_west_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+
+    fvtxs_v2_both_docalib[ic] = new TProfile(Form("fvtxs_v2_both_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+    fvtxs_v2_east_docalib[ic] = new TProfile(Form("fvtxs_v2_east_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+    fvtxs_v2_west_docalib[ic] = new TProfile(Form("fvtxs_v2_west_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+
+    fvtxn_v2_both_docalib[ic] = new TProfile(Form("fvtxn_v2_both_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+    fvtxn_v2_east_docalib[ic] = new TProfile(Form("fvtxn_v2_east_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+    fvtxn_v2_west_docalib[ic] = new TProfile(Form("fvtxn_v2_west_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+
+    bbcs_v3_both_docalib[ic] = new TProfile(Form("bbcs_v3_both_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+    bbcs_v3_east_docalib[ic] = new TProfile(Form("bbcs_v3_east_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+    bbcs_v3_west_docalib[ic] = new TProfile(Form("bbcs_v3_west_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+
+    fvtxs_v3_both_docalib[ic] = new TProfile(Form("fvtxs_v3_both_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+    fvtxs_v3_east_docalib[ic] = new TProfile(Form("fvtxs_v3_east_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+    fvtxs_v3_west_docalib[ic] = new TProfile(Form("fvtxs_v3_west_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+
+    fvtxn_v3_both_docalib[ic] = new TProfile(Form("fvtxn_v3_both_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+    fvtxn_v3_east_docalib[ic] = new TProfile(Form("fvtxn_v3_east_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+    fvtxn_v3_west_docalib[ic] = new TProfile(Form("fvtxn_v3_west_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+  } // ic
 
 
+  // vs eta
+  TProfile* bbcs_v2eta_east_docalib[NMUL];
+  TProfile* bbcs_v2eta_west_docalib[NMUL];
+  TProfile* bbcs_v2eta_both_docalib[NMUL];
 
-  TProfile* bbcs_v2_west_docalib = new TProfile(Form("bbcs_v2_west_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_v2_east_docalib = new TProfile(Form("bbcs_v2_east_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_v2_both_docalib = new TProfile(Form("bbcs_v2_both_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_v2eta_east_docalib[NMUL];
+  TProfile* fvtxs_v2eta_west_docalib[NMUL];
+  TProfile* fvtxs_v2eta_both_docalib[NMUL];
 
-  TProfile* fvtxs_v2_west_docalib = new TProfile(Form("fvtxs_v2_west_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_v2_east_docalib = new TProfile(Form("fvtxs_v2_east_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_v2_both_docalib = new TProfile(Form("fvtxs_v2_both_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxn_v2eta_east_docalib[NMUL];
+  TProfile* fvtxn_v2eta_west_docalib[NMUL];
+  TProfile* fvtxn_v2eta_both_docalib[NMUL];
 
-  TProfile* fvtxs0_v2_west_docalib = new TProfile(Form("fvtxs0_v2_west_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs0_v2_east_docalib = new TProfile(Form("fvtxs0_v2_east_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs0_v2_both_docalib = new TProfile(Form("fvtxs0_v2_both_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* bbcs_v3eta_east_docalib[NMUL];
+  TProfile* bbcs_v3eta_west_docalib[NMUL];
+  TProfile* bbcs_v3eta_both_docalib[NMUL];
 
-  TProfile* fvtxs1_v2_west_docalib = new TProfile(Form("fvtxs1_v2_west_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs1_v2_east_docalib = new TProfile(Form("fvtxs1_v2_east_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs1_v2_both_docalib = new TProfile(Form("fvtxs1_v2_both_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxs_v3eta_east_docalib[NMUL];
+  TProfile* fvtxs_v3eta_west_docalib[NMUL];
+  TProfile* fvtxs_v3eta_both_docalib[NMUL];
 
-  TProfile* fvtxs2_v2_west_docalib = new TProfile(Form("fvtxs2_v2_west_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs2_v2_east_docalib = new TProfile(Form("fvtxs2_v2_east_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs2_v2_both_docalib = new TProfile(Form("fvtxs2_v2_both_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
+  TProfile* fvtxn_v3eta_east_docalib[NMUL];
+  TProfile* fvtxn_v3eta_west_docalib[NMUL];
+  TProfile* fvtxn_v3eta_both_docalib[NMUL];
 
-  TProfile* fvtxs3_v2_west_docalib = new TProfile(Form("fvtxs3_v2_west_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs3_v2_east_docalib = new TProfile(Form("fvtxs3_v2_east_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs3_v2_both_docalib = new TProfile(Form("fvtxs3_v2_both_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
+  for ( int ic = 0; ic < NMUL; ++ic )
+  {
+    bbcs_v2eta_both_docalib[ic] = new TProfile(Form("bbcs_v2eta_both_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+    bbcs_v2eta_east_docalib[ic] = new TProfile(Form("bbcs_v2eta_east_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+    bbcs_v2eta_west_docalib[ic] = new TProfile(Form("bbcs_v2eta_west_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+
+    fvtxs_v2eta_both_docalib[ic] = new TProfile(Form("fvtxs_v2eta_both_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+    fvtxs_v2eta_east_docalib[ic] = new TProfile(Form("fvtxs_v2eta_east_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+    fvtxs_v2eta_west_docalib[ic] = new TProfile(Form("fvtxs_v2eta_west_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+
+    fvtxn_v2eta_both_docalib[ic] = new TProfile(Form("fvtxn_v2eta_both_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+    fvtxn_v2eta_east_docalib[ic] = new TProfile(Form("fvtxn_v2eta_east_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+    fvtxn_v2eta_west_docalib[ic] = new TProfile(Form("fvtxn_v2eta_west_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+
+    bbcs_v3eta_both_docalib[ic] = new TProfile(Form("bbcs_v3eta_both_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+    bbcs_v3eta_east_docalib[ic] = new TProfile(Form("bbcs_v3eta_east_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+    bbcs_v3eta_west_docalib[ic] = new TProfile(Form("bbcs_v3eta_west_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+
+    fvtxs_v3eta_both_docalib[ic] = new TProfile(Form("fvtxs_v3eta_both_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+    fvtxs_v3eta_east_docalib[ic] = new TProfile(Form("fvtxs_v3eta_east_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+    fvtxs_v3eta_west_docalib[ic] = new TProfile(Form("fvtxs_v3eta_west_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+
+    fvtxn_v3eta_both_docalib[ic] = new TProfile(Form("fvtxn_v3eta_both_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+    fvtxn_v3eta_east_docalib[ic] = new TProfile(Form("fvtxn_v3eta_east_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+    fvtxn_v3eta_west_docalib[ic] = new TProfile(Form("fvtxn_v3eta_west_docalib_cent%d", ic), "", 15, 0.0, 3.0, -1.1, 1.1);
+  } // ic
+
+  // ---------------------------------------------------------------------------------------------------------
+
+
 
   TH1D* bbcs_v2_west_phipsi = new TH1D(Form("bbcs_v2_west_phipsi"), "", 126, -6.3, 6.3);
   TH1D* bbcs_v2_east_phipsi = new TH1D(Form("bbcs_v2_east_phipsi"), "", 126, -6.3, 6.3);
@@ -938,22 +652,6 @@ void flatten(int runNumber, int rp_recal_pass)
   TH1D* fvtxs_v2_east_phipsi = new TH1D(Form("fvtxs_v2_east_phipsi"), "", 126, -6.3, 6.3);
   TH1D* fvtxs_v2_both_phipsi = new TH1D(Form("fvtxs_v2_both_phipsi"), "", 126, -6.3, 6.3);
 
-  TH1D* fvtxs0_v2_west_phipsi = new TH1D(Form("fvtxs0_v2_west_phipsi"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs0_v2_east_phipsi = new TH1D(Form("fvtxs0_v2_east_phipsi"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs0_v2_both_phipsi = new TH1D(Form("fvtxs0_v2_both_phipsi"), "", 126, -6.3, 6.3);
-
-  TH1D* fvtxs1_v2_west_phipsi = new TH1D(Form("fvtxs1_v2_west_phipsi"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs1_v2_east_phipsi = new TH1D(Form("fvtxs1_v2_east_phipsi"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs1_v2_both_phipsi = new TH1D(Form("fvtxs1_v2_both_phipsi"), "", 126, -6.3, 6.3);
-
-  TH1D* fvtxs2_v2_west_phipsi = new TH1D(Form("fvtxs2_v2_west_phipsi"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs2_v2_east_phipsi = new TH1D(Form("fvtxs2_v2_east_phipsi"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs2_v2_both_phipsi = new TH1D(Form("fvtxs2_v2_both_phipsi"), "", 126, -6.3, 6.3);
-
-  TH1D* fvtxs3_v2_west_phipsi = new TH1D(Form("fvtxs3_v2_west_phipsi"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs3_v2_east_phipsi = new TH1D(Form("fvtxs3_v2_east_phipsi"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs3_v2_both_phipsi = new TH1D(Form("fvtxs3_v2_both_phipsi"), "", 126, -6.3, 6.3);
-
   TH1D* bbcs_v2_west_phipsi2 = new TH1D(Form("bbcs_v2_west_phipsi2"), "", 126, -6.3, 6.3);
   TH1D* bbcs_v2_east_phipsi2 = new TH1D(Form("bbcs_v2_east_phipsi2"), "", 126, -6.3, 6.3);
   TH1D* bbcs_v2_both_phipsi2 = new TH1D(Form("bbcs_v2_both_phipsi2"), "", 126, -6.3, 6.3);
@@ -961,22 +659,6 @@ void flatten(int runNumber, int rp_recal_pass)
   TH1D* fvtxs_v2_west_phipsi2 = new TH1D(Form("fvtxs_v2_west_phipsi2"), "", 126, -6.3, 6.3);
   TH1D* fvtxs_v2_east_phipsi2 = new TH1D(Form("fvtxs_v2_east_phipsi2"), "", 126, -6.3, 6.3);
   TH1D* fvtxs_v2_both_phipsi2 = new TH1D(Form("fvtxs_v2_both_phipsi2"), "", 126, -6.3, 6.3);
-
-  TH1D* fvtxs0_v2_west_phipsi2 = new TH1D(Form("fvtxs0_v2_west_phipsi2"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs0_v2_east_phipsi2 = new TH1D(Form("fvtxs0_v2_east_phipsi2"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs0_v2_both_phipsi2 = new TH1D(Form("fvtxs0_v2_both_phipsi2"), "", 126, -6.3, 6.3);
-
-  TH1D* fvtxs1_v2_west_phipsi2 = new TH1D(Form("fvtxs1_v2_west_phipsi2"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs1_v2_east_phipsi2 = new TH1D(Form("fvtxs1_v2_east_phipsi2"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs1_v2_both_phipsi2 = new TH1D(Form("fvtxs1_v2_both_phipsi2"), "", 126, -6.3, 6.3);
-
-  TH1D* fvtxs2_v2_west_phipsi2 = new TH1D(Form("fvtxs2_v2_west_phipsi2"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs2_v2_east_phipsi2 = new TH1D(Form("fvtxs2_v2_east_phipsi2"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs2_v2_both_phipsi2 = new TH1D(Form("fvtxs2_v2_both_phipsi2"), "", 126, -6.3, 6.3);
-
-  TH1D* fvtxs3_v2_west_phipsi2 = new TH1D(Form("fvtxs3_v2_west_phipsi2"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs3_v2_east_phipsi2 = new TH1D(Form("fvtxs3_v2_east_phipsi2"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs3_v2_both_phipsi2 = new TH1D(Form("fvtxs3_v2_both_phipsi2"), "", 126, -6.3, 6.3);
 
   TH1D* bbcs_v2_west_phipsi2_pT13 = new TH1D(Form("bbcs_v2_west_phipsi2_pT13"), "", 126, -6.3, 6.3);
   TH1D* bbcs_v2_east_phipsi2_pT13 = new TH1D(Form("bbcs_v2_east_phipsi2_pT13"), "", 126, -6.3, 6.3);
@@ -986,77 +668,6 @@ void flatten(int runNumber, int rp_recal_pass)
   TH1D* fvtxs_v2_east_phipsi2_pT13 = new TH1D(Form("fvtxs_v2_east_phipsi2_pT13"), "", 126, -6.3, 6.3);
   TH1D* fvtxs_v2_both_phipsi2_pT13 = new TH1D(Form("fvtxs_v2_both_phipsi2_pT13"), "", 126, -6.3, 6.3);
 
-  TH1D* fvtxs0_v2_west_phipsi2_pT13 = new TH1D(Form("fvtxs0_v2_west_phipsi2_pT13"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs0_v2_east_phipsi2_pT13 = new TH1D(Form("fvtxs0_v2_east_phipsi2_pT13"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs0_v2_both_phipsi2_pT13 = new TH1D(Form("fvtxs0_v2_both_phipsi2_pT13"), "", 126, -6.3, 6.3);
-
-  TH1D* fvtxs1_v2_west_phipsi2_pT13 = new TH1D(Form("fvtxs1_v2_west_phipsi2_pT13"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs1_v2_east_phipsi2_pT13 = new TH1D(Form("fvtxs1_v2_east_phipsi2_pT13"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs1_v2_both_phipsi2_pT13 = new TH1D(Form("fvtxs1_v2_both_phipsi2_pT13"), "", 126, -6.3, 6.3);
-
-  TH1D* fvtxs2_v2_west_phipsi2_pT13 = new TH1D(Form("fvtxs2_v2_west_phipsi2_pT13"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs2_v2_east_phipsi2_pT13 = new TH1D(Form("fvtxs2_v2_east_phipsi2_pT13"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs2_v2_both_phipsi2_pT13 = new TH1D(Form("fvtxs2_v2_both_phipsi2_pT13"), "", 126, -6.3, 6.3);
-
-  TH1D* fvtxs3_v2_west_phipsi2_pT13 = new TH1D(Form("fvtxs3_v2_west_phipsi2_pT13"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs3_v2_east_phipsi2_pT13 = new TH1D(Form("fvtxs3_v2_east_phipsi2_pT13"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs3_v2_both_phipsi2_pT13 = new TH1D(Form("fvtxs3_v2_both_phipsi2_pT13"), "", 126, -6.3, 6.3);
-
-  TProfile* fvtxs012_v2_west_docalib = new TProfile(Form("fvtxs012_v2_west_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs012_v2_east_docalib = new TProfile(Form("fvtxs012_v2_east_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs012_v2_both_docalib = new TProfile(Form("fvtxs012_v2_both_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs013_v2_west_docalib = new TProfile(Form("fvtxs013_v2_west_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs013_v2_east_docalib = new TProfile(Form("fvtxs013_v2_east_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs013_v2_both_docalib = new TProfile(Form("fvtxs013_v2_both_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs023_v2_west_docalib = new TProfile(Form("fvtxs023_v2_west_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs023_v2_east_docalib = new TProfile(Form("fvtxs023_v2_east_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs023_v2_both_docalib = new TProfile(Form("fvtxs023_v2_both_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs123_v2_west_docalib = new TProfile(Form("fvtxs123_v2_west_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs123_v2_east_docalib = new TProfile(Form("fvtxs123_v2_east_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs123_v2_both_docalib = new TProfile(Form("fvtxs123_v2_both_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TH1D* fvtxs012_v2_west_phipsi = new TH1D(Form("fvtxs012_v2_west_phipsi"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs012_v2_east_phipsi = new TH1D(Form("fvtxs012_v2_east_phipsi"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs012_v2_both_phipsi = new TH1D(Form("fvtxs012_v2_both_phipsi"), "", 126, -6.3, 6.3);
-
-  TH1D* fvtxs013_v2_west_phipsi = new TH1D(Form("fvtxs013_v2_west_phipsi"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs013_v2_east_phipsi = new TH1D(Form("fvtxs013_v2_east_phipsi"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs013_v2_both_phipsi = new TH1D(Form("fvtxs013_v2_both_phipsi"), "", 126, -6.3, 6.3);
-
-  TH1D* fvtxs023_v2_west_phipsi = new TH1D(Form("fvtxs023_v2_west_phipsi"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs023_v2_east_phipsi = new TH1D(Form("fvtxs023_v2_east_phipsi"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs023_v2_both_phipsi = new TH1D(Form("fvtxs023_v2_both_phipsi"), "", 126, -6.3, 6.3);
-
-  TH1D* fvtxs123_v2_west_phipsi = new TH1D(Form("fvtxs123_v2_west_phipsi"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs123_v2_east_phipsi = new TH1D(Form("fvtxs123_v2_east_phipsi"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs123_v2_both_phipsi = new TH1D(Form("fvtxs123_v2_both_phipsi"), "", 126, -6.3, 6.3);
-
-  TProfile* bbcs_v3_west_docalib = new TProfile(Form("bbcs_v3_west_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_v3_east_docalib = new TProfile(Form("bbcs_v3_east_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_v3_both_docalib = new TProfile(Form("bbcs_v3_both_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs_v3_west_docalib = new TProfile(Form("fvtxs_v3_west_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_v3_east_docalib = new TProfile(Form("fvtxs_v3_east_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_v3_both_docalib = new TProfile(Form("fvtxs_v3_both_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs0_v3_west_docalib = new TProfile(Form("fvtxs0_v3_west_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs0_v3_east_docalib = new TProfile(Form("fvtxs0_v3_east_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs0_v3_both_docalib = new TProfile(Form("fvtxs0_v3_both_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs1_v3_west_docalib = new TProfile(Form("fvtxs1_v3_west_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs1_v3_east_docalib = new TProfile(Form("fvtxs1_v3_east_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs1_v3_both_docalib = new TProfile(Form("fvtxs1_v3_both_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs2_v3_west_docalib = new TProfile(Form("fvtxs2_v3_west_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs2_v3_east_docalib = new TProfile(Form("fvtxs2_v3_east_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs2_v3_both_docalib = new TProfile(Form("fvtxs2_v3_both_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs3_v3_west_docalib = new TProfile(Form("fvtxs3_v3_west_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs3_v3_east_docalib = new TProfile(Form("fvtxs3_v3_east_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs3_v3_both_docalib = new TProfile(Form("fvtxs3_v3_both_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
 
   TProfile* bbcs_v3_west_cosphi = new TProfile(Form("bbcs_v3_west_cosphi"), "", 15, 0.0, 3.0, -1.1, 1.1);
   TProfile* bbcs_v3_east_cosphi = new TProfile(Form("bbcs_v3_east_cosphi"), "", 15, 0.0, 3.0, -1.1, 1.1);
@@ -1066,22 +677,6 @@ void flatten(int runNumber, int rp_recal_pass)
   TProfile* fvtxs_v3_east_cosphi = new TProfile(Form("fvtxs_v3_east_cosphi"), "", 15, 0.0, 3.0, -1.1, 1.1);
   TProfile* fvtxs_v3_both_cosphi = new TProfile(Form("fvtxs_v3_both_cosphi"), "", 15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* fvtxs0_v3_west_cosphi = new TProfile(Form("fvtxs0_v3_west_cosphi"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs0_v3_east_cosphi = new TProfile(Form("fvtxs0_v3_east_cosphi"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs0_v3_both_cosphi = new TProfile(Form("fvtxs0_v3_both_cosphi"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs1_v3_west_cosphi = new TProfile(Form("fvtxs1_v3_west_cosphi"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs1_v3_east_cosphi = new TProfile(Form("fvtxs1_v3_east_cosphi"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs1_v3_both_cosphi = new TProfile(Form("fvtxs1_v3_both_cosphi"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs2_v3_west_cosphi = new TProfile(Form("fvtxs2_v3_west_cosphi"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs2_v3_east_cosphi = new TProfile(Form("fvtxs2_v3_east_cosphi"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs2_v3_both_cosphi = new TProfile(Form("fvtxs2_v3_both_cosphi"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs3_v3_west_cosphi = new TProfile(Form("fvtxs3_v3_west_cosphi"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs3_v3_east_cosphi = new TProfile(Form("fvtxs3_v3_east_cosphi"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs3_v3_both_cosphi = new TProfile(Form("fvtxs3_v3_both_cosphi"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
   TProfile* bbcs_v3_west_cospsi3 = new TProfile(Form("bbcs_v3_west_cospsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
   TProfile* bbcs_v3_east_cospsi3 = new TProfile(Form("bbcs_v3_east_cospsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
   TProfile* bbcs_v3_both_cospsi3 = new TProfile(Form("bbcs_v3_both_cospsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
@@ -1089,22 +684,6 @@ void flatten(int runNumber, int rp_recal_pass)
   TProfile* fvtxs_v3_west_cospsi3 = new TProfile(Form("fvtxs_v3_west_cospsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
   TProfile* fvtxs_v3_east_cospsi3 = new TProfile(Form("fvtxs_v3_east_cospsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
   TProfile* fvtxs_v3_both_cospsi3 = new TProfile(Form("fvtxs_v3_both_cospsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs0_v3_west_cospsi3 = new TProfile(Form("fvtxs0_v3_west_cospsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs0_v3_east_cospsi3 = new TProfile(Form("fvtxs0_v3_east_cospsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs0_v3_both_cospsi3 = new TProfile(Form("fvtxs0_v3_both_cospsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs1_v3_west_cospsi3 = new TProfile(Form("fvtxs1_v3_west_cospsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs1_v3_east_cospsi3 = new TProfile(Form("fvtxs1_v3_east_cospsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs1_v3_both_cospsi3 = new TProfile(Form("fvtxs1_v3_both_cospsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs2_v3_west_cospsi3 = new TProfile(Form("fvtxs2_v3_west_cospsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs2_v3_east_cospsi3 = new TProfile(Form("fvtxs2_v3_east_cospsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs2_v3_both_cospsi3 = new TProfile(Form("fvtxs2_v3_both_cospsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs3_v3_west_cospsi3 = new TProfile(Form("fvtxs3_v3_west_cospsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs3_v3_east_cospsi3 = new TProfile(Form("fvtxs3_v3_east_cospsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs3_v3_both_cospsi3 = new TProfile(Form("fvtxs3_v3_both_cospsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
 
   TProfile* bbcs_v3_west_sinphi = new TProfile(Form("bbcs_v3_west_sinphi"), "", 15, 0.0, 3.0, -1.1, 1.1);
   TProfile* bbcs_v3_east_sinphi = new TProfile(Form("bbcs_v3_east_sinphi"), "", 15, 0.0, 3.0, -1.1, 1.1);
@@ -1114,22 +693,6 @@ void flatten(int runNumber, int rp_recal_pass)
   TProfile* fvtxs_v3_east_sinphi = new TProfile(Form("fvtxs_v3_east_sinphi"), "", 15, 0.0, 3.0, -1.1, 1.1);
   TProfile* fvtxs_v3_both_sinphi = new TProfile(Form("fvtxs_v3_both_sinphi"), "", 15, 0.0, 3.0, -1.1, 1.1);
 
-  TProfile* fvtxs0_v3_west_sinphi = new TProfile(Form("fvtxs0_v3_west_sinphi"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs0_v3_east_sinphi = new TProfile(Form("fvtxs0_v3_east_sinphi"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs0_v3_both_sinphi = new TProfile(Form("fvtxs0_v3_both_sinphi"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs1_v3_west_sinphi = new TProfile(Form("fvtxs1_v3_west_sinphi"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs1_v3_east_sinphi = new TProfile(Form("fvtxs1_v3_east_sinphi"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs1_v3_both_sinphi = new TProfile(Form("fvtxs1_v3_both_sinphi"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs2_v3_west_sinphi = new TProfile(Form("fvtxs2_v3_west_sinphi"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs2_v3_east_sinphi = new TProfile(Form("fvtxs2_v3_east_sinphi"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs2_v3_both_sinphi = new TProfile(Form("fvtxs2_v3_both_sinphi"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs3_v3_west_sinphi = new TProfile(Form("fvtxs3_v3_west_sinphi"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs3_v3_east_sinphi = new TProfile(Form("fvtxs3_v3_east_sinphi"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs3_v3_both_sinphi = new TProfile(Form("fvtxs3_v3_both_sinphi"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
   TProfile* bbcs_v3_west_sinpsi3 = new TProfile(Form("bbcs_v3_west_sinpsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
   TProfile* bbcs_v3_east_sinpsi3 = new TProfile(Form("bbcs_v3_east_sinpsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
   TProfile* bbcs_v3_both_sinpsi3 = new TProfile(Form("bbcs_v3_both_sinpsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
@@ -1137,38 +700,6 @@ void flatten(int runNumber, int rp_recal_pass)
   TProfile* fvtxs_v3_west_sinpsi3 = new TProfile(Form("fvtxs_v3_west_sinpsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
   TProfile* fvtxs_v3_east_sinpsi3 = new TProfile(Form("fvtxs_v3_east_sinpsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
   TProfile* fvtxs_v3_both_sinpsi3 = new TProfile(Form("fvtxs_v3_both_sinpsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs0_v3_west_sinpsi3 = new TProfile(Form("fvtxs0_v3_west_sinpsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs0_v3_east_sinpsi3 = new TProfile(Form("fvtxs0_v3_east_sinpsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs0_v3_both_sinpsi3 = new TProfile(Form("fvtxs0_v3_both_sinpsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs1_v3_west_sinpsi3 = new TProfile(Form("fvtxs1_v3_west_sinpsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs1_v3_east_sinpsi3 = new TProfile(Form("fvtxs1_v3_east_sinpsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs1_v3_both_sinpsi3 = new TProfile(Form("fvtxs1_v3_both_sinpsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs2_v3_west_sinpsi3 = new TProfile(Form("fvtxs2_v3_west_sinpsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs2_v3_east_sinpsi3 = new TProfile(Form("fvtxs2_v3_east_sinpsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs2_v3_both_sinpsi3 = new TProfile(Form("fvtxs2_v3_both_sinpsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs3_v3_west_sinpsi3 = new TProfile(Form("fvtxs3_v3_west_sinpsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs3_v3_east_sinpsi3 = new TProfile(Form("fvtxs3_v3_east_sinpsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs3_v3_both_sinpsi3 = new TProfile(Form("fvtxs3_v3_both_sinpsi3"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs012_v3_west_docalib = new TProfile(Form("fvtxs012_v3_west_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs012_v3_east_docalib = new TProfile(Form("fvtxs012_v3_east_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs012_v3_both_docalib = new TProfile(Form("fvtxs012_v3_both_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs013_v3_west_docalib = new TProfile(Form("fvtxs013_v3_west_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs013_v3_east_docalib = new TProfile(Form("fvtxs013_v3_east_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs013_v3_both_docalib = new TProfile(Form("fvtxs013_v3_both_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs023_v3_west_docalib = new TProfile(Form("fvtxs023_v3_west_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs023_v3_east_docalib = new TProfile(Form("fvtxs023_v3_east_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs023_v3_both_docalib = new TProfile(Form("fvtxs023_v3_both_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs123_v3_west_docalib = new TProfile(Form("fvtxs123_v3_west_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs123_v3_east_docalib = new TProfile(Form("fvtxs123_v3_east_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs123_v3_both_docalib = new TProfile(Form("fvtxs123_v3_both_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
 
   TH1D* bbcs_v3_west_phipsi = new TH1D(Form("bbcs_v3_west_phipsi"), "", 126, -6.3, 6.3);
   TH1D* bbcs_v3_east_phipsi = new TH1D(Form("bbcs_v3_east_phipsi"), "", 126, -6.3, 6.3);
@@ -1178,22 +709,6 @@ void flatten(int runNumber, int rp_recal_pass)
   TH1D* fvtxs_v3_east_phipsi = new TH1D(Form("fvtxs_v3_east_phipsi"), "", 126, -6.3, 6.3);
   TH1D* fvtxs_v3_both_phipsi = new TH1D(Form("fvtxs_v3_both_phipsi"), "", 126, -6.3, 6.3);
 
-  TH1D* fvtxs0_v3_west_phipsi = new TH1D(Form("fvtxs0_v3_west_phipsi"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs0_v3_east_phipsi = new TH1D(Form("fvtxs0_v3_east_phipsi"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs0_v3_both_phipsi = new TH1D(Form("fvtxs0_v3_both_phipsi"), "", 126, -6.3, 6.3);
-
-  TH1D* fvtxs1_v3_west_phipsi = new TH1D(Form("fvtxs1_v3_west_phipsi"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs1_v3_east_phipsi = new TH1D(Form("fvtxs1_v3_east_phipsi"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs1_v3_both_phipsi = new TH1D(Form("fvtxs1_v3_both_phipsi"), "", 126, -6.3, 6.3);
-
-  TH1D* fvtxs2_v3_west_phipsi = new TH1D(Form("fvtxs2_v3_west_phipsi"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs2_v3_east_phipsi = new TH1D(Form("fvtxs2_v3_east_phipsi"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs2_v3_both_phipsi = new TH1D(Form("fvtxs2_v3_both_phipsi"), "", 126, -6.3, 6.3);
-
-  TH1D* fvtxs3_v3_west_phipsi = new TH1D(Form("fvtxs3_v3_west_phipsi"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs3_v3_east_phipsi = new TH1D(Form("fvtxs3_v3_east_phipsi"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs3_v3_both_phipsi = new TH1D(Form("fvtxs3_v3_both_phipsi"), "", 126, -6.3, 6.3);
-
   TH1D* bbcs_v3_west_phipsi3 = new TH1D(Form("bbcs_v3_west_phipsi3"), "", 126, -6.3, 6.3);
   TH1D* bbcs_v3_east_phipsi3 = new TH1D(Form("bbcs_v3_east_phipsi3"), "", 126, -6.3, 6.3);
   TH1D* bbcs_v3_both_phipsi3 = new TH1D(Form("bbcs_v3_both_phipsi3"), "", 126, -6.3, 6.3);
@@ -1201,22 +716,6 @@ void flatten(int runNumber, int rp_recal_pass)
   TH1D* fvtxs_v3_west_phipsi3 = new TH1D(Form("fvtxs_v3_west_phipsi3"), "", 126, -6.3, 6.3);
   TH1D* fvtxs_v3_east_phipsi3 = new TH1D(Form("fvtxs_v3_east_phipsi3"), "", 126, -6.3, 6.3);
   TH1D* fvtxs_v3_both_phipsi3 = new TH1D(Form("fvtxs_v3_both_phipsi3"), "", 126, -6.3, 6.3);
-
-  TH1D* fvtxs0_v3_west_phipsi3 = new TH1D(Form("fvtxs0_v3_west_phipsi3"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs0_v3_east_phipsi3 = new TH1D(Form("fvtxs0_v3_east_phipsi3"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs0_v3_both_phipsi3 = new TH1D(Form("fvtxs0_v3_both_phipsi3"), "", 126, -6.3, 6.3);
-
-  TH1D* fvtxs1_v3_west_phipsi3 = new TH1D(Form("fvtxs1_v3_west_phipsi3"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs1_v3_east_phipsi3 = new TH1D(Form("fvtxs1_v3_east_phipsi3"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs1_v3_both_phipsi3 = new TH1D(Form("fvtxs1_v3_both_phipsi3"), "", 126, -6.3, 6.3);
-
-  TH1D* fvtxs2_v3_west_phipsi3 = new TH1D(Form("fvtxs2_v3_west_phipsi3"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs2_v3_east_phipsi3 = new TH1D(Form("fvtxs2_v3_east_phipsi3"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs2_v3_both_phipsi3 = new TH1D(Form("fvtxs2_v3_both_phipsi3"), "", 126, -6.3, 6.3);
-
-  TH1D* fvtxs3_v3_west_phipsi3 = new TH1D(Form("fvtxs3_v3_west_phipsi3"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs3_v3_east_phipsi3 = new TH1D(Form("fvtxs3_v3_east_phipsi3"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs3_v3_both_phipsi3 = new TH1D(Form("fvtxs3_v3_both_phipsi3"), "", 126, -6.3, 6.3);
 
   TH1D* bbcs_v3_west_phipsi3_pT13 = new TH1D(Form("bbcs_v3_west_phipsi3_pT13"), "", 126, -6.3, 6.3);
   TH1D* bbcs_v3_east_phipsi3_pT13 = new TH1D(Form("bbcs_v3_east_phipsi3_pT13"), "", 126, -6.3, 6.3);
@@ -1226,592 +725,16 @@ void flatten(int runNumber, int rp_recal_pass)
   TH1D* fvtxs_v3_east_phipsi3_pT13 = new TH1D(Form("fvtxs_v3_east_phipsi3_pT13"), "", 126, -6.3, 6.3);
   TH1D* fvtxs_v3_both_phipsi3_pT13 = new TH1D(Form("fvtxs_v3_both_phipsi3_pT13"), "", 126, -6.3, 6.3);
 
-  TH1D* fvtxs0_v3_west_phipsi3_pT13 = new TH1D(Form("fvtxs0_v3_west_phipsi3_pT13"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs0_v3_east_phipsi3_pT13 = new TH1D(Form("fvtxs0_v3_east_phipsi3_pT13"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs0_v3_both_phipsi3_pT13 = new TH1D(Form("fvtxs0_v3_both_phipsi3_pT13"), "", 126, -6.3, 6.3);
-
-  TH1D* fvtxs1_v3_west_phipsi3_pT13 = new TH1D(Form("fvtxs1_v3_west_phipsi3_pT13"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs1_v3_east_phipsi3_pT13 = new TH1D(Form("fvtxs1_v3_east_phipsi3_pT13"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs1_v3_both_phipsi3_pT13 = new TH1D(Form("fvtxs1_v3_both_phipsi3_pT13"), "", 126, -6.3, 6.3);
-
-  TH1D* fvtxs2_v3_west_phipsi3_pT13 = new TH1D(Form("fvtxs2_v3_west_phipsi3_pT13"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs2_v3_east_phipsi3_pT13 = new TH1D(Form("fvtxs2_v3_east_phipsi3_pT13"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs2_v3_both_phipsi3_pT13 = new TH1D(Form("fvtxs2_v3_both_phipsi3_pT13"), "", 126, -6.3, 6.3);
-
-  TH1D* fvtxs3_v3_west_phipsi3_pT13 = new TH1D(Form("fvtxs3_v3_west_phipsi3_pT13"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs3_v3_east_phipsi3_pT13 = new TH1D(Form("fvtxs3_v3_east_phipsi3_pT13"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs3_v3_both_phipsi3_pT13 = new TH1D(Form("fvtxs3_v3_both_phipsi3_pT13"), "", 126, -6.3, 6.3);
-
-  TH1D* fvtxs012_v3_west_phipsi = new TH1D(Form("fvtxs012_v3_west_phipsi"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs012_v3_east_phipsi = new TH1D(Form("fvtxs012_v3_east_phipsi"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs012_v3_both_phipsi = new TH1D(Form("fvtxs012_v3_both_phipsi"), "", 126, -6.3, 6.3);
-
-  TH1D* fvtxs013_v3_west_phipsi = new TH1D(Form("fvtxs013_v3_west_phipsi"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs013_v3_east_phipsi = new TH1D(Form("fvtxs013_v3_east_phipsi"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs013_v3_both_phipsi = new TH1D(Form("fvtxs013_v3_both_phipsi"), "", 126, -6.3, 6.3);
-
-  TH1D* fvtxs023_v3_west_phipsi = new TH1D(Form("fvtxs023_v3_west_phipsi"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs023_v3_east_phipsi = new TH1D(Form("fvtxs023_v3_east_phipsi"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs023_v3_both_phipsi = new TH1D(Form("fvtxs023_v3_both_phipsi"), "", 126, -6.3, 6.3);
-
-  TH1D* fvtxs123_v3_west_phipsi = new TH1D(Form("fvtxs123_v3_west_phipsi"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs123_v3_east_phipsi = new TH1D(Form("fvtxs123_v3_east_phipsi"), "", 126, -6.3, 6.3);
-  TH1D* fvtxs123_v3_both_phipsi = new TH1D(Form("fvtxs123_v3_both_phipsi"), "", 126, -6.3, 6.3);
-
-  TProfile* bbcs_v4_4Psi2_west_docalib = new TProfile(Form("bbcs_v4_4Psi2_west_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_v4_4Psi2_east_docalib = new TProfile(Form("bbcs_v4_4Psi2_east_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_v4_4Psi2_both_docalib = new TProfile(Form("bbcs_v4_4Psi2_both_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs_v4_4Psi2_west_docalib = new TProfile(Form("fvtxs_v4_4Psi2_west_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_v4_4Psi2_east_docalib = new TProfile(Form("fvtxs_v4_4Psi2_east_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_v4_4Psi2_both_docalib = new TProfile(Form("fvtxs_v4_4Psi2_both_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxn_v2_west_docalib = new TProfile(Form("fvtxn_v2_west_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxn_v2_east_docalib = new TProfile(Form("fvtxn_v2_east_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxn_v2_both_docalib = new TProfile(Form("fvtxn_v2_both_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxn_v3_west_docalib = new TProfile(Form("fvtxn_v3_west_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxn_v3_east_docalib = new TProfile(Form("fvtxn_v3_east_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxn_v3_both_docalib = new TProfile(Form("fvtxn_v3_both_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxn_v4_4Psi2_west_docalib = new TProfile(Form("fvtxn_v4_4Psi2_west_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxn_v4_4Psi2_east_docalib = new TProfile(Form("fvtxn_v4_4Psi2_east_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxn_v4_4Psi2_both_docalib = new TProfile(Form("fvtxn_v4_4Psi2_both_docalib"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  // --- dcnw (docalib noweight)
-
-  TProfile* bbcs_v2_west_dcnw = new TProfile(Form("bbcs_v2_west_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_v2_east_dcnw = new TProfile(Form("bbcs_v2_east_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_v2_both_dcnw = new TProfile(Form("bbcs_v2_both_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs_v2_west_dcnw = new TProfile(Form("fvtxs_v2_west_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_v2_east_dcnw = new TProfile(Form("fvtxs_v2_east_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_v2_both_dcnw = new TProfile(Form("fvtxs_v2_both_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs0_v2_west_dcnw = new TProfile(Form("fvtxs0_v2_west_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs0_v2_east_dcnw = new TProfile(Form("fvtxs0_v2_east_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs0_v2_both_dcnw = new TProfile(Form("fvtxs0_v2_both_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs1_v2_west_dcnw = new TProfile(Form("fvtxs1_v2_west_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs1_v2_east_dcnw = new TProfile(Form("fvtxs1_v2_east_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs1_v2_both_dcnw = new TProfile(Form("fvtxs1_v2_both_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs2_v2_west_dcnw = new TProfile(Form("fvtxs2_v2_west_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs2_v2_east_dcnw = new TProfile(Form("fvtxs2_v2_east_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs2_v2_both_dcnw = new TProfile(Form("fvtxs2_v2_both_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs3_v2_west_dcnw = new TProfile(Form("fvtxs3_v2_west_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs3_v2_east_dcnw = new TProfile(Form("fvtxs3_v2_east_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs3_v2_both_dcnw = new TProfile(Form("fvtxs3_v2_both_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* bbcs_v3_west_dcnw = new TProfile(Form("bbcs_v3_west_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_v3_east_dcnw = new TProfile(Form("bbcs_v3_east_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_v3_both_dcnw = new TProfile(Form("bbcs_v3_both_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs_v3_west_dcnw = new TProfile(Form("fvtxs_v3_west_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_v3_east_dcnw = new TProfile(Form("fvtxs_v3_east_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_v3_both_dcnw = new TProfile(Form("fvtxs_v3_both_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* bbcs_v4_4Psi2_west_dcnw = new TProfile(Form("bbcs_v4_4Psi2_west_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_v4_4Psi2_east_dcnw = new TProfile(Form("bbcs_v4_4Psi2_east_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_v4_4Psi2_both_dcnw = new TProfile(Form("bbcs_v4_4Psi2_both_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs_v4_4Psi2_west_dcnw = new TProfile(Form("fvtxs_v4_4Psi2_west_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_v4_4Psi2_east_dcnw = new TProfile(Form("fvtxs_v4_4Psi2_east_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_v4_4Psi2_both_dcnw = new TProfile(Form("fvtxs_v4_4Psi2_both_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxn_v2_west_dcnw = new TProfile(Form("fvtxn_v2_west_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxn_v2_east_dcnw = new TProfile(Form("fvtxn_v2_east_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxn_v2_both_dcnw = new TProfile(Form("fvtxn_v2_both_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxn_v3_west_dcnw = new TProfile(Form("fvtxn_v3_west_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxn_v3_east_dcnw = new TProfile(Form("fvtxn_v3_east_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxn_v3_both_dcnw = new TProfile(Form("fvtxn_v3_both_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxn_v4_4Psi2_west_dcnw = new TProfile(Form("fvtxn_v4_4Psi2_west_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxn_v4_4Psi2_east_dcnw = new TProfile(Form("fvtxn_v4_4Psi2_east_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxn_v4_4Psi2_both_dcnw = new TProfile(Form("fvtxn_v4_4Psi2_both_dcnw"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  // ---------------------------------------------------------------------------------------------------------
-  // --- COME BACK HERE FOR 2PC HISTOGRAMS
-
-  TProfile* bbcs_d22_west = new TProfile(Form("bbcs_d22_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_d22_east = new TProfile(Form("bbcs_d22_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_d22_both = new TProfile(Form("bbcs_d22_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs_d22_west = new TProfile(Form("fvtxs_d22_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_d22_east = new TProfile(Form("fvtxs_d22_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_d22_both = new TProfile(Form("fvtxs_d22_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* bbcs_d32_west = new TProfile(Form("bbcs_d32_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_d32_east = new TProfile(Form("bbcs_d32_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_d32_both = new TProfile(Form("bbcs_d32_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs_d32_west = new TProfile(Form("fvtxs_d32_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_d32_east = new TProfile(Form("fvtxs_d32_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_d32_both = new TProfile(Form("fvtxs_d32_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* bbcs_sin22_west = new TProfile(Form("bbcs_sin22_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_sin22_east = new TProfile(Form("bbcs_sin22_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_sin22_both = new TProfile(Form("bbcs_sin22_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs_sin22_west = new TProfile(Form("fvtxs_sin22_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_sin22_east = new TProfile(Form("fvtxs_sin22_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_sin22_both = new TProfile(Form("fvtxs_sin22_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* bbcs_sin32_west = new TProfile(Form("bbcs_sin32_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_sin32_east = new TProfile(Form("bbcs_sin32_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_sin32_both = new TProfile(Form("bbcs_sin32_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs_sin32_west = new TProfile(Form("fvtxs_sin32_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_sin32_east = new TProfile(Form("fvtxs_sin32_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_sin32_both = new TProfile(Form("fvtxs_sin32_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* bbcs_cos22_west = new TProfile(Form("bbcs_cos22_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_cos22_east = new TProfile(Form("bbcs_cos22_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_cos22_both = new TProfile(Form("bbcs_cos22_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs_cos22_west = new TProfile(Form("fvtxs_cos22_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_cos22_east = new TProfile(Form("fvtxs_cos22_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_cos22_both = new TProfile(Form("fvtxs_cos22_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* bbcs_cos32_west = new TProfile(Form("bbcs_cos32_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_cos32_east = new TProfile(Form("bbcs_cos32_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_cos32_both = new TProfile(Form("bbcs_cos32_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs_cos32_west = new TProfile(Form("fvtxs_cos32_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_cos32_east = new TProfile(Form("fvtxs_cos32_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_cos32_both = new TProfile(Form("fvtxs_cos32_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* bbcs_c22 = new TProfile(Form("bbcs_c22"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* fvtxs_c22 = new TProfile(Form("fvtxs_c22"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* bbcs_c32 = new TProfile(Form("bbcs_c32"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* fvtxs_c32 = new TProfile(Form("fvtxs_c32"), "", 1, -0.5, 0.5, -1.1, 1.1);
-
-  TProfile* bbcs_sin22 = new TProfile(Form("bbcs_sin22"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* fvtxs_sin22 = new TProfile(Form("fvtxs_sin22"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* bbcs_sin32 = new TProfile(Form("bbcs_sin32"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* fvtxs_sin32 = new TProfile(Form("fvtxs_sin32"), "", 1, -0.5, 0.5, -1.1, 1.1);
-
-  TProfile* bbcs_cos22 = new TProfile(Form("bbcs_cos22"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* fvtxs_cos22 = new TProfile(Form("fvtxs_cos22"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* bbcs_cos32 = new TProfile(Form("bbcs_cos32"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* fvtxs_cos32 = new TProfile(Form("fvtxs_cos32"), "", 1, -0.5, 0.5, -1.1, 1.1);
-
-  // ---------------------------------------------------------------------------------------------------------
-
-  TProfile* os_bbcs_d22_west = new TProfile(Form("os_bbcs_d22_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_bbcs_d22_east = new TProfile(Form("os_bbcs_d22_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_bbcs_d22_both = new TProfile(Form("os_bbcs_d22_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_d22_west = new TProfile(Form("os_fvtxs_d22_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_d22_east = new TProfile(Form("os_fvtxs_d22_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_d22_both = new TProfile(Form("os_fvtxs_d22_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_d22_west = new TProfile(Form("os_fvtxn_d22_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_d22_east = new TProfile(Form("os_fvtxn_d22_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_d22_both = new TProfile(Form("os_fvtxn_d22_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_tracks_d22_west = new TProfile(Form("os_fvtxs_tracks_d22_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_tracks_d22_east = new TProfile(Form("os_fvtxs_tracks_d22_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_tracks_d22_both = new TProfile(Form("os_fvtxs_tracks_d22_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_tracks_d22_west = new TProfile(Form("os_fvtxn_tracks_d22_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_tracks_d22_east = new TProfile(Form("os_fvtxn_tracks_d22_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_tracks_d22_both = new TProfile(Form("os_fvtxn_tracks_d22_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* os_bbcs_d32_west = new TProfile(Form("os_bbcs_d32_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_bbcs_d32_east = new TProfile(Form("os_bbcs_d32_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_bbcs_d32_both = new TProfile(Form("os_bbcs_d32_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_d32_west = new TProfile(Form("os_fvtxs_d32_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_d32_east = new TProfile(Form("os_fvtxs_d32_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_d32_both = new TProfile(Form("os_fvtxs_d32_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_d32_west = new TProfile(Form("os_fvtxn_d32_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_d32_east = new TProfile(Form("os_fvtxn_d32_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_d32_both = new TProfile(Form("os_fvtxn_d32_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_tracks_d32_west = new TProfile(Form("os_fvtxs_tracks_d32_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_tracks_d32_east = new TProfile(Form("os_fvtxs_tracks_d32_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_tracks_d32_both = new TProfile(Form("os_fvtxs_tracks_d32_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_tracks_d32_west = new TProfile(Form("os_fvtxn_tracks_d32_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_tracks_d32_east = new TProfile(Form("os_fvtxn_tracks_d32_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_tracks_d32_both = new TProfile(Form("os_fvtxn_tracks_d32_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* os_bbcs_sin22_west = new TProfile(Form("os_bbcs_sin22_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_bbcs_sin22_east = new TProfile(Form("os_bbcs_sin22_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_bbcs_sin22_both = new TProfile(Form("os_bbcs_sin22_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* os_fvtxs_sin22_west = new TProfile(Form("os_fvtxs_sin22_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_sin22_east = new TProfile(Form("os_fvtxs_sin22_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_sin22_both = new TProfile(Form("os_fvtxs_sin22_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* os_fvtxn_sin22_west = new TProfile(Form("os_fvtxn_sin22_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_sin22_east = new TProfile(Form("os_fvtxn_sin22_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_sin22_both = new TProfile(Form("os_fvtxn_sin22_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* os_bbcs_sin32_west = new TProfile(Form("os_bbcs_sin32_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_bbcs_sin32_east = new TProfile(Form("os_bbcs_sin32_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_bbcs_sin32_both = new TProfile(Form("os_bbcs_sin32_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* os_fvtxs_sin32_west = new TProfile(Form("os_fvtxs_sin32_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_sin32_east = new TProfile(Form("os_fvtxs_sin32_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_sin32_both = new TProfile(Form("os_fvtxs_sin32_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* os_fvtxn_sin32_west = new TProfile(Form("os_fvtxn_sin32_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_sin32_east = new TProfile(Form("os_fvtxn_sin32_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_sin32_both = new TProfile(Form("os_fvtxn_sin32_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* os_bbcs_cos22_west = new TProfile(Form("os_bbcs_cos22_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_bbcs_cos22_east = new TProfile(Form("os_bbcs_cos22_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_bbcs_cos22_both = new TProfile(Form("os_bbcs_cos22_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* os_fvtxs_cos22_west = new TProfile(Form("os_fvtxs_cos22_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_cos22_east = new TProfile(Form("os_fvtxs_cos22_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_cos22_both = new TProfile(Form("os_fvtxs_cos22_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* os_fvtxn_cos22_west = new TProfile(Form("os_fvtxn_cos22_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_cos22_east = new TProfile(Form("os_fvtxn_cos22_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_cos22_both = new TProfile(Form("os_fvtxn_cos22_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* os_bbcs_cos32_west = new TProfile(Form("os_bbcs_cos32_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_bbcs_cos32_east = new TProfile(Form("os_bbcs_cos32_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_bbcs_cos32_both = new TProfile(Form("os_bbcs_cos32_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* os_fvtxs_cos32_west = new TProfile(Form("os_fvtxs_cos32_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_cos32_east = new TProfile(Form("os_fvtxs_cos32_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_cos32_both = new TProfile(Form("os_fvtxs_cos32_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* os_fvtxn_cos32_west = new TProfile(Form("os_fvtxn_cos32_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_cos32_east = new TProfile(Form("os_fvtxn_cos32_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_cos32_both = new TProfile(Form("os_fvtxn_cos32_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* os_bbcs_c22 = new TProfile(Form("os_bbcs_c22"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxs_c22 = new TProfile(Form("os_fvtxs_c22"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxn_c22 = new TProfile(Form("os_fvtxn_c22"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxc_c22 = new TProfile(Form("os_fvtxc_c22"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  //TProfile* os_fvtxa_c22 = new TProfile(Form("os_fvtxa_c22"),"",1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxs_tracks_c22 = new TProfile(Form("os_fvtxs_tracks_c22"), "" , 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxn_tracks_c22 = new TProfile(Form("os_fvtxn_tracks_c22"), "" , 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxc_tracks_c22 = new TProfile(Form("os_fvtxc_tracks_c22"), "" , 1, -0.5, 0.5, -1.1, 1.1);
-  //TProfile* os_fvtxa_tracks_c22 = new TProfile(Form("os_fvtxa_tracks_c22"),"" ,1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_bbcs_c32 = new TProfile(Form("os_bbcs_c32"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxs_c32 = new TProfile(Form("os_fvtxs_c32"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxn_c32 = new TProfile(Form("os_fvtxn_c32"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxc_c32 = new TProfile(Form("os_fvtxc_c32"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  //TProfile* os_fvtxa_c32 = new TProfile(Form("os_fvtxa_c32"),"",1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxs_tracks_c32 = new TProfile(Form("os_fvtxs_tracks_c32"), "" , 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxn_tracks_c32 = new TProfile(Form("os_fvtxn_tracks_c32"), "" , 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxc_tracks_c32 = new TProfile(Form("os_fvtxc_tracks_c32"), "" , 1, -0.5, 0.5, -1.1, 1.1);
-  //TProfile* os_fvtxa_tracks_c32 = new TProfile(Form("os_fvtxa_tracks_c32"),"" ,1, -0.5, 0.5, -1.1, 1.1);
-
-  TProfile* os_bbcs_sin22 = new TProfile(Form("os_bbcs_sin22"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxs_sin22 = new TProfile(Form("os_fvtxs_sin22"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxn_sin22 = new TProfile(Form("os_fvtxn_sin22"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxs_tracks_sin22 = new TProfile(Form("os_fvtxs_tracks_sin22"), "" , 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxn_tracks_sin22 = new TProfile(Form("os_fvtxn_tracks_sin22"), "" , 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_bbcs_sin32 = new TProfile(Form("os_bbcs_sin32"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxs_sin32 = new TProfile(Form("os_fvtxs_sin32"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxn_sin32 = new TProfile(Form("os_fvtxn_sin32"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxs_tracks_sin32 = new TProfile(Form("os_fvtxs_tracks_sin32"), "" , 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxn_tracks_sin32 = new TProfile(Form("os_fvtxn_tracks_sin32"), "" , 1, -0.5, 0.5, -1.1, 1.1);
-
-  TProfile* os_bbcs_cos22 = new TProfile(Form("os_bbcs_cos22"),  "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxs_cos22 = new TProfile(Form("os_fvtxs_cos22"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxn_cos22 = new TProfile(Form("os_fvtxn_cos22"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxs_tracks_cos22 = new TProfile(Form("os_fvtxs_tracks_cos22"),     "" , 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxn_tracks_cos22 = new TProfile(Form("os_fvtxn_tracks_cos22"),     "" , 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_bbcs_cos32 = new TProfile(Form("os_bbcs_cos32"),  "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxs_cos32 = new TProfile(Form("os_fvtxs_cos32"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxn_cos32 = new TProfile(Form("os_fvtxn_cos32"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxs_tracks_cos32 = new TProfile(Form("os_fvtxs_tracks_cos32"),     "" , 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxn_tracks_cos32 = new TProfile(Form("os_fvtxn_tracks_cos32"),     "" , 1, -0.5, 0.5, -1.1, 1.1);
-
-  TProfile* os_bbcsfvtxs_c22 = new TProfile(Form("os_bbcsfvtxs_c22"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_bbcsfvtxs_c32 = new TProfile(Form("os_bbcsfvtxs_c32"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_bbcsfvtxn_c22 = new TProfile(Form("os_bbcsfvtxn_c22"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_bbcsfvtxn_c32 = new TProfile(Form("os_bbcsfvtxn_c32"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxsfvtxn_c22 = new TProfile(Form("os_fvtxsfvtxn_c22"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxsfvtxn_c32 = new TProfile(Form("os_fvtxsfvtxn_c32"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxsfvtxn_tracks_c22 = new TProfile(Form("os_fvtxsfvtxn_tracks_c22"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxsfvtxn_tracks_c32 = new TProfile(Form("os_fvtxsfvtxn_tracks_c32"), "", 1, -0.5, 0.5, -1.1, 1.1);
-
-  TH1D* os_bbcs_1dPsi2 = new TH1D(Form("os_bbcs_1dPsi2"), "", 220, -4.1, 4.1); // weird binning from elsewhere, leave the same to match
-  TH1D* os_bbcs_1dPsi3 = new TH1D(Form("os_bbcs_1dPsi3"), "", 220, -4.1, 4.1); // weird binning from elsewhere, leave the same to match
-  TH1D* os_fvtxs_1dPsi2 = new TH1D(Form("os_fvtxs_1dPsi2"), "", 200, -4.1, 4.1); // weird binning from elsewhere, leave the same to match
-  TH1D* os_fvtxs_1dPsi3 = new TH1D(Form("os_fvtxs_1dPsi3"), "", 200, -4.1, 4.1); // weird binning from elsewhere, leave the same to match
-  TH1D* os_fvtxn_1dPsi2 = new TH1D(Form("os_fvtxn_1dPsi2"), "", 200, -4.1, 4.1); // weird binning from elsewhere, leave the same to match
-  TH1D* os_fvtxn_1dPsi3 = new TH1D(Form("os_fvtxn_1dPsi3"), "", 200, -4.1, 4.1); // weird binning from elsewhere, leave the same to match
-  TH1D* os_fvtxs_tracks_1dPsi2 = new TH1D(Form("os_fvtxs_tracks_1dPsi2"),     "" , 200, -4.1, 4.1); // weird binning from elsewhere, leave the same to match
-  TH1D* os_fvtxs_tracks_1dPsi3 = new TH1D(Form("os_fvtxs_tracks_1dPsi3"),     "" , 200, -4.1, 4.1); // weird binning from elsewhere, leave the same to match
-  TH1D* os_fvtxn_tracks_1dPsi2 = new TH1D(Form("os_fvtxn_tracks_1dPsi2"),     "" , 200, -4.1, 4.1); // weird binning from elsewhere, leave the same to match
-  TH1D* os_fvtxn_tracks_1dPsi3 = new TH1D(Form("os_fvtxn_tracks_1dPsi3"),     "" , 200, -4.1, 4.1); // weird binning from elsewhere, leave the same to match
-
-  TProfile* os_bbcs_v2_west = new TProfile(Form("os_bbcs_v2_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_bbcs_v2_east = new TProfile(Form("os_bbcs_v2_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_bbcs_v2_both = new TProfile(Form("os_bbcs_v2_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* os_fvtxs_v2_west = new TProfile(Form("os_fvtxs_v2_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_v2_east = new TProfile(Form("os_fvtxs_v2_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_v2_both = new TProfile(Form("os_fvtxs_v2_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* os_fvtxn_v2_west = new TProfile(Form("os_fvtxn_v2_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_v2_east = new TProfile(Form("os_fvtxn_v2_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_v2_both = new TProfile(Form("os_fvtxn_v2_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* os_bbcs_v3_west = new TProfile(Form("os_bbcs_v3_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_bbcs_v3_east = new TProfile(Form("os_bbcs_v3_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_bbcs_v3_both = new TProfile(Form("os_bbcs_v3_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* os_fvtxs_v3_west = new TProfile(Form("os_fvtxs_v3_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_v3_east = new TProfile(Form("os_fvtxs_v3_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_v3_both = new TProfile(Form("os_fvtxs_v3_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* os_fvtxn_v3_west = new TProfile(Form("os_fvtxn_v3_west"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_v3_east = new TProfile(Form("os_fvtxn_v3_east"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_v3_both = new TProfile(Form("os_fvtxn_v3_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* os_bbcs_c24 = new TProfile(Form("os_bbcs_c24"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxs_c24 = new TProfile(Form("os_fvtxs_c24"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_fvtxn_c24 = new TProfile(Form("os_fvtxn_c24"), "", 1, -0.5, 0.5, -1.1, 1.1);
-  TProfile* os_bbcs_c24_vs_cent = new TProfile(Form("os_bbcs_c24_vs_cent"), "", 101, -0.5, 100.5, -1.1, 1.1);
-  TProfile* os_fvtxs_c24_vs_cent = new TProfile(Form("os_fvtxs_c24_vs_cent"), "", 101, -0.5, 100.5, -1.1, 1.1);
-  TProfile* os_fvtxn_c24_vs_cent = new TProfile(Form("os_fvtxn_c24_vs_cent"), "", 101, -0.5, 100.5, -1.1, 1.1);
-  TProfile* os_bbcs_c24_vs_bbcqs = new TProfile(Form("os_bbcs_c24_vs_bbcqs"), "", 200, 0, 200, -1.1, 1.1);
-  TProfile* os_fvtxs_c24_vs_bbcqs = new TProfile(Form("os_fvtxs_c24_vs_bbcqs"), "", 200, 0, 200, -1.1, 1.1);
-  TProfile* os_fvtxn_c24_vs_bbcqs = new TProfile(Form("os_fvtxn_c24_vs_bbcqs"), "", 200, 0, 200, -1.1, 1.1);
-  TProfile* os_bbcs_c24_vs_nfvtxs = new TProfile(Form("os_bbcs_c24_vs_nfvtxs"), "", 1000, -0.5, 999.5, -1.1, 1.1);
-  TProfile* os_fvtxs_c24_vs_nfvtxs = new TProfile(Form("os_fvtxs_c24_vs_nfvtxs"), "", 1000, -0.5, 999.5, -1.1, 1.1);
-  TProfile* os_fvtxn_c24_vs_nfvtxs = new TProfile(Form("os_fvtxn_c24_vs_nfvtxs"), "", 1000, -0.5, 999.5, -1.1, 1.1);
-  TProfile* os_bbcs_d24_in_both = new TProfile(Form("os_bbcs_d24_in_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_d24_in_both = new TProfile(Form("os_fvtxs_d24_in_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_d24_in_both = new TProfile(Form("os_fvtxn_d24_in_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_bbcs_d24_out_both = new TProfile(Form("os_bbcs_d24_out_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxs_d24_out_both = new TProfile(Form("os_fvtxs_d24_out_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* os_fvtxn_d24_out_both = new TProfile(Form("os_fvtxn_d24_out_both"), "", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* npc1_bbcs_v2 = new TProfile(Form("npc1_bbcs_v2"), "", 61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_fvtxs_v2 = new TProfile(Form("npc1_fvtxs_v2"), "", 61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_fvtxn_v2 = new TProfile(Form("npc1_fvtxn_v2"), "", 61, -0.5, 60.5, -1.1, 1.1);
-  //TProfile* npc1_os_cnt_c22 = new TProfile(Form("npc1_os_cnt_c22"),"",61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_bbcs_c22 = new TProfile(Form("npc1_os_bbcs_c22"), "", 61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_fvtxs_c22 = new TProfile(Form("npc1_os_fvtxs_c22"), "", 61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_fvtxn_c22 = new TProfile(Form("npc1_os_fvtxn_c22"), "", 61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_fvtxs_tracks_c22 = new TProfile(Form("npc1_os_fvtxs_tracks_c22"),     "" , 61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_fvtxn_tracks_c22 = new TProfile(Form("npc1_os_fvtxn_tracks_c22"),     "" , 61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_cntbbcs_c22 = new TProfile(Form("npc1_os_cntbbcs_c22"), "", 61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_cntfvtxs_c22 = new TProfile(Form("npc1_os_cntfvtxs_c22"), "", 61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_cntfvtxn_c22 = new TProfile(Form("npc1_os_cntfvtxn_c22"), "", 61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_bbcsfvtxs_c22 = new TProfile(Form("npc1_os_bbcsfvtxs_c22"), "", 61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_bbcsfvtxn_c22 = new TProfile(Form("npc1_os_bbcsfvtxn_c22"), "", 61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_fvtxsfvtxn_c22 = new TProfile(Form("npc1_os_fvtxsfvtxn_c22"), "", 61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_fvtxsfvtxn_tracks_c22 = new TProfile(Form("npc1_os_fvtxsfvtxn_tracks_c22"), "", 61, -0.5, 60.5, -1.1, 1.1);
-
-  TProfile* npc1_bbcs_v3 = new TProfile(Form("npc1_bbcs_v3"), "", 61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_fvtxs_v3 = new TProfile(Form("npc1_fvtxs_v3"), "", 61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_fvtxn_v3 = new TProfile(Form("npc1_fvtxn_v3"), "", 61, -0.5, 60.5, -1.1, 1.1);
-  //TProfile* npc1_os_cnt_c32 = new TProfile(Form("npc1_os_cnt_c32"),"",61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_bbcs_c32 = new TProfile(Form("npc1_os_bbcs_c32"), "", 61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_fvtxs_c32 = new TProfile(Form("npc1_os_fvtxs_c32"), "", 61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_fvtxn_c32 = new TProfile(Form("npc1_os_fvtxn_c32"), "", 61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_fvtxs_tracks_c32 = new TProfile(Form("npc1_os_fvtxs_tracks_c32"),     "" , 61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_fvtxn_tracks_c32 = new TProfile(Form("npc1_os_fvtxn_tracks_c32"),     "" , 61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_cntbbcs_c32 = new TProfile(Form("npc1_os_cntbbcs_c32"), "", 61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_cntfvtxs_c32 = new TProfile(Form("npc1_os_cntfvtxs_c32"), "", 61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_cntfvtxn_c32 = new TProfile(Form("npc1_os_cntfvtxn_c32"), "", 61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_bbcsfvtxs_c32 = new TProfile(Form("npc1_os_bbcsfvtxs_c32"), "", 61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_bbcsfvtxn_c32 = new TProfile(Form("npc1_os_bbcsfvtxn_c32"), "", 61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_fvtxsfvtxn_c32 = new TProfile(Form("npc1_os_fvtxsfvtxn_c32"), "", 61, -0.5, 60.5, -1.1, 1.1);
-  TProfile* npc1_os_fvtxsfvtxn_tracks_c32 = new TProfile(Form("npc1_os_fvtxsfvtxn_tracks_c32"), "", 61, -0.5, 60.5, -1.1, 1.1);
-
-  TProfile* nfvtxt_bbcs_v2 = new TProfile(Form("nfvtxt_bbcs_v2"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_fvtxs_v2 = new TProfile(Form("nfvtxt_fvtxs_v2"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_fvtxn_v2 = new TProfile(Form("nfvtxt_fvtxn_v2"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  //TProfile* nfvtxt_os_cnt_c22 = new TProfile(Form("nfvtxt_os_cnt_c22"),"",80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_bbcs_c22 = new TProfile(Form("nfvtxt_os_bbcs_c22"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  //TProfile* nfvtxt_os_fvtxs_c22 = new TProfile(Form("nfvtxt_os_fvtxs_c22"),"",80, -0.5, 79.5, -1.1, 1.1);
-  //TProfile* nfvtxt_os_fvtxn_c22 = new TProfile(Form("nfvtxt_os_fvtxn_c22"),"",80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_cntbbcs_c22 = new TProfile(Form("nfvtxt_os_cntbbcs_c22"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_cntfvtxs_c22 = new TProfile(Form("nfvtxt_os_cntfvtxs_c22"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_cntfvtxn_c22 = new TProfile(Form("nfvtxt_os_cntfvtxn_c22"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_bbcsfvtxs_c22 = new TProfile(Form("nfvtxt_os_bbcsfvtxs_c22"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_bbcsfvtxn_c22 = new TProfile(Form("nfvtxt_os_bbcsfvtxn_c22"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  // ---
-  TProfile* nfvtxt_bbcs_v3 = new TProfile(Form("nfvtxt_bbcs_v3"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_fvtxs_v3 = new TProfile(Form("nfvtxt_fvtxs_v3"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_fvtxn_v3 = new TProfile(Form("nfvtxt_fvtxn_v3"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  //TProfile* nfvtxt_os_cnt_c32 = new TProfile(Form("nfvtxt_os_cnt_c32"),"",80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_bbcs_c32 = new TProfile(Form("nfvtxt_os_bbcs_c32"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_fvtxs_c32 = new TProfile(Form("nfvtxt_os_fvtxs_c32"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_fvtxn_c32 = new TProfile(Form("nfvtxt_os_fvtxn_c32"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_fvtxc_c32 = new TProfile(Form("nfvtxt_os_fvtxc_c32"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  //TProfile* nfvtxt_os_fvtxa_c32 = new TProfile(Form("nfvtxt_os_fvtxa_c32"),"",80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_fvtxs_tracks_c32 = new TProfile(Form("nfvtxt_os_fvtxs_tracks_c32"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_fvtxn_tracks_c32 = new TProfile(Form("nfvtxt_os_fvtxn_tracks_c32"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_fvtxc_tracks_c32 = new TProfile(Form("nfvtxt_os_fvtxc_tracks_c32"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  //TProfile* nfvtxt_os_fvtxa_tracks_c32 = new TProfile(Form("nfvtxt_os_fvtxa_tracks_c32"),"",80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_cntbbcs_c32 = new TProfile(Form("nfvtxt_os_cntbbcs_c32"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_cntfvtxs_c32 = new TProfile(Form("nfvtxt_os_cntfvtxs_c32"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_cntfvtxn_c32 = new TProfile(Form("nfvtxt_os_cntfvtxn_c32"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_bbcsfvtxs_c32 = new TProfile(Form("nfvtxt_os_bbcsfvtxs_c32"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_bbcsfvtxn_c32 = new TProfile(Form("nfvtxt_os_bbcsfvtxn_c32"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_fvtxsfvtxn_c32 = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_c32"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  // ---
-  TProfile* nfvtxc_bbcs_v2 = new TProfile(Form("nfvtxc_bbcs_v2"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_fvtxs_v2 = new TProfile(Form("nfvtxc_fvtxs_v2"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_fvtxn_v2 = new TProfile(Form("nfvtxc_fvtxn_v2"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  //TProfile* nfvtxc_os_cnt_c22 = new TProfile(Form("nfvtxc_os_cnt_c22"),"",200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_bbcs_c22 = new TProfile(Form("nfvtxc_os_bbcs_c22"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  //TProfile* nfvtxc_os_fvtxs_c22 = new TProfile(Form("nfvtxc_os_fvtxs_c22"),"",200, -0.5, 1999.5, -1.1, 1.1);
-  //TProfile* nfvtxc_os_fvtxn_c22 = new TProfile(Form("nfvtxc_os_fvtxn_c22"),"",200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_cntbbcs_c22 = new TProfile(Form("nfvtxc_os_cntbbcs_c22"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_cntfvtxs_c22 = new TProfile(Form("nfvtxc_os_cntfvtxs_c22"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_cntfvtxn_c22 = new TProfile(Form("nfvtxc_os_cntfvtxn_c22"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_bbcsfvtxs_c22 = new TProfile(Form("nfvtxc_os_bbcsfvtxs_c22"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_bbcsfvtxn_c22 = new TProfile(Form("nfvtxc_os_bbcsfvtxn_c22"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  // ---
-  TProfile* nfvtxc_bbcs_v3 = new TProfile(Form("nfvtxc_bbcs_v3"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_fvtxs_v3 = new TProfile(Form("nfvtxc_fvtxs_v3"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_fvtxn_v3 = new TProfile(Form("nfvtxc_fvtxn_v3"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  //TProfile* nfvtxc_os_cnt_c32 = new TProfile(Form("nfvtxc_os_cnt_c32"),"",200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_bbcs_c32 = new TProfile(Form("nfvtxc_os_bbcs_c32"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_fvtxs_c32 = new TProfile(Form("nfvtxc_os_fvtxs_c32"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_fvtxn_c32 = new TProfile(Form("nfvtxc_os_fvtxn_c32"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_fvtxc_c32 = new TProfile(Form("nfvtxc_os_fvtxc_c32"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  //TProfile* nfvtxc_os_fvtxa_c32 = new TProfile(Form("nfvtxc_os_fvtxa_c32"),"",200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_fvtxs_tracks_c32 = new TProfile(Form("nfvtxc_os_fvtxs_tracks_c32"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_fvtxn_tracks_c32 = new TProfile(Form("nfvtxc_os_fvtxn_tracks_c32"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_fvtxc_tracks_c32 = new TProfile(Form("nfvtxc_os_fvtxc_tracks_c32"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  //TProfile* nfvtxc_os_fvtxa_tracks_c32 = new TProfile(Form("nfvtxc_os_fvtxa_tracks_c32"),"",200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_cntbbcs_c32 = new TProfile(Form("nfvtxc_os_cntbbcs_c32"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_cntfvtxs_c32 = new TProfile(Form("nfvtxc_os_cntfvtxs_c32"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_cntfvtxn_c32 = new TProfile(Form("nfvtxc_os_cntfvtxn_c32"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_bbcsfvtxs_c32 = new TProfile(Form("nfvtxc_os_bbcsfvtxs_c32"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_bbcsfvtxn_c32 = new TProfile(Form("nfvtxc_os_bbcsfvtxn_c32"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_fvtxsfvtxn_c32 = new TProfile(Form("nfvtxc_os_fvtxsfvtxn_c32"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  /// ---
-  TProfile* nfvtxt_os_fvtxs_c22 = new TProfile(Form("nfvtxt_os_fvtxs_c22"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_fvtxn_c22 = new TProfile(Form("nfvtxt_os_fvtxn_c22"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_fvtxc_c22 = new TProfile(Form("nfvtxt_os_fvtxc_c22"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  //TProfile* nfvtxt_os_fvtxa_c22 = new TProfile(Form("nfvtxt_os_fvtxa_c22"),"",80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_fvtxs_c24 = new TProfile(Form("nfvtxt_os_fvtxs_c24"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_fvtxn_c24 = new TProfile(Form("nfvtxt_os_fvtxn_c24"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_fvtxc_c24 = new TProfile(Form("nfvtxt_os_fvtxc_c24"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  //TProfile* nfvtxt_os_fvtxa_c24 = new TProfile(Form("nfvtxt_os_fvtxa_c24"),"",80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_fvtxs_tracks_c22 = new TProfile(Form("nfvtxt_os_fvtxs_tracks_c22"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_fvtxn_tracks_c22 = new TProfile(Form("nfvtxt_os_fvtxn_tracks_c22"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_fvtxc_tracks_c22 = new TProfile(Form("nfvtxt_os_fvtxc_tracks_c22"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  //TProfile* nfvtxt_os_fvtxa_tracks_c22 = new TProfile(Form("nfvtxt_os_fvtxa_tracks_c22"),"",80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_fvtxs_tracks_c24 = new TProfile(Form("nfvtxt_os_fvtxs_tracks_c24"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_fvtxn_tracks_c24 = new TProfile(Form("nfvtxt_os_fvtxn_tracks_c24"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_fvtxc_tracks_c24 = new TProfile(Form("nfvtxt_os_fvtxc_tracks_c24"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  //TProfile* nfvtxt_os_fvtxa_tracks_c24 = new TProfile(Form("nfvtxt_os_fvtxa_tracks_c24"),"",80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_fvtxsfvtxn_c22  = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_c22"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_fvtxsfvtxn_c24  = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_c24"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_fvtxsfvtxn_c24a = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_c24a"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_fvtxsfvtxn_c24b = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_c24b"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_fvtxsfvtxn_c24c = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_c24c"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_fvtxsfvtxn_c24d = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_c24d"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_fvtxsfvtxn_tracks_c22  = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_tracks_c22"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_fvtxsfvtxn_tracks_c24  = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_tracks_c24"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_fvtxsfvtxn_tracks_c24a = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_tracks_c24a"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_fvtxsfvtxn_tracks_c24b = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_tracks_c24b"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_fvtxsfvtxn_tracks_c24c = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_tracks_c24c"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_fvtxsfvtxn_tracks_c24d = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_tracks_c24d"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_os_fvtxsfvtxn_tracks_c32  = new TProfile(Form("nfvtxt_os_fvtxsfvtxn_tracks_c32"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  /// ---
-  TProfile* nfvtxc_os_fvtxs_c22 = new TProfile(Form("nfvtxc_os_fvtxs_c22"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_fvtxn_c22 = new TProfile(Form("nfvtxc_os_fvtxn_c22"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_fvtxc_c22 = new TProfile(Form("nfvtxc_os_fvtxc_c22"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  //TProfile* nfvtxc_os_fvtxa_c22 = new TProfile(Form("nfvtxc_os_fvtxa_c22"),"",200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_fvtxs_c24 = new TProfile(Form("nfvtxc_os_fvtxs_c24"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_fvtxn_c24 = new TProfile(Form("nfvtxc_os_fvtxn_c24"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_fvtxc_c24 = new TProfile(Form("nfvtxc_os_fvtxc_c24"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  //TProfile* nfvtxc_os_fvtxa_c24 = new TProfile(Form("nfvtxc_os_fvtxa_c24"),"",200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_fvtxs_tracks_c22 = new TProfile(Form("nfvtxc_os_fvtxs_tracks_c22"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_fvtxn_tracks_c22 = new TProfile(Form("nfvtxc_os_fvtxn_tracks_c22"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_fvtxc_tracks_c22 = new TProfile(Form("nfvtxc_os_fvtxc_tracks_c22"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  //TProfile* nfvtxc_os_fvtxa_tracks_c22 = new TProfile(Form("nfvtxc_os_fvtxa_tracks_c22"),"",200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_fvtxs_tracks_c24 = new TProfile(Form("nfvtxc_os_fvtxs_tracks_c24"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_fvtxn_tracks_c24 = new TProfile(Form("nfvtxc_os_fvtxn_tracks_c24"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_fvtxc_tracks_c24 = new TProfile(Form("nfvtxc_os_fvtxc_tracks_c24"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  //TProfile* nfvtxc_os_fvtxa_tracks_c24 = new TProfile(Form("nfvtxc_os_fvtxa_tracks_c24"),"",200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_fvtxsfvtxn_c22  = new TProfile(Form("nfvtxc_os_fvtxsfvtxn_c22"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_fvtxsfvtxn_c24  = new TProfile(Form("nfvtxc_os_fvtxsfvtxn_c24"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_fvtxsfvtxn_c24a = new TProfile(Form("nfvtxc_os_fvtxsfvtxn_c24a"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_fvtxsfvtxn_c24b = new TProfile(Form("nfvtxc_os_fvtxsfvtxn_c24b"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_fvtxsfvtxn_c24c = new TProfile(Form("nfvtxc_os_fvtxsfvtxn_c24c"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_fvtxsfvtxn_c24d = new TProfile(Form("nfvtxc_os_fvtxsfvtxn_c24d"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_fvtxsfvtxn_tracks_c22  = new TProfile(Form("nfvtxc_os_fvtxsfvtxn_tracks_c22"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_fvtxsfvtxn_tracks_c24  = new TProfile(Form("nfvtxc_os_fvtxsfvtxn_tracks_c24"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_fvtxsfvtxn_tracks_c24a = new TProfile(Form("nfvtxc_os_fvtxsfvtxn_tracks_c24a"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_fvtxsfvtxn_tracks_c24b = new TProfile(Form("nfvtxc_os_fvtxsfvtxn_tracks_c24b"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_fvtxsfvtxn_tracks_c24c = new TProfile(Form("nfvtxc_os_fvtxsfvtxn_tracks_c24c"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_fvtxsfvtxn_tracks_c24d = new TProfile(Form("nfvtxc_os_fvtxsfvtxn_tracks_c24d"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-  TProfile* nfvtxc_os_fvtxsfvtxn_tracks_c32  = new TProfile(Form("nfvtxc_os_fvtxsfvtxn_tracks_c32"), "", 200, -0.5, 1999.5, -1.1, 1.1);
-
-
-  // --- now we'll do some pseudorapidity depenence
-  TProfile* bbcs_v2eta_west_docalib = new TProfile(Form("bbcs_v2eta_west_docalib"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* bbcs_v2eta_east_docalib = new TProfile(Form("bbcs_v2eta_east_docalib"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* bbcs_v2eta_both_docalib = new TProfile(Form("bbcs_v2eta_both_docalib"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* fvtxs_v2eta_west_docalib = new TProfile(Form("fvtxs_v2eta_west_docalib"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* fvtxs_v2eta_east_docalib = new TProfile(Form("fvtxs_v2eta_east_docalib"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* fvtxs_v2eta_both_docalib = new TProfile(Form("fvtxs_v2eta_both_docalib"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* fvtxn_v2eta_west_docalib = new TProfile(Form("fvtxn_v2eta_west_docalib"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* fvtxn_v2eta_east_docalib = new TProfile(Form("fvtxn_v2eta_east_docalib"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* fvtxn_v2eta_both_docalib = new TProfile(Form("fvtxn_v2eta_both_docalib"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* bbcs_v3eta_west_docalib = new TProfile(Form("bbcs_v3eta_west_docalib"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* bbcs_v3eta_east_docalib = new TProfile(Form("bbcs_v3eta_east_docalib"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* bbcs_v3eta_both_docalib = new TProfile(Form("bbcs_v3eta_both_docalib"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* fvtxs_v3eta_west_docalib = new TProfile(Form("fvtxs_v3eta_west_docalib"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* fvtxs_v3eta_east_docalib = new TProfile(Form("fvtxs_v3eta_east_docalib"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* fvtxs_v3eta_both_docalib = new TProfile(Form("fvtxs_v3eta_both_docalib"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* fvtxn_v3eta_west_docalib = new TProfile(Form("fvtxn_v3eta_west_docalib"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* fvtxn_v3eta_east_docalib = new TProfile(Form("fvtxn_v3eta_east_docalib"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* fvtxn_v3eta_both_docalib = new TProfile(Form("fvtxn_v3eta_both_docalib"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  // ---
-  TProfile* os_bbcs_d22eta_west = new TProfile(Form("os_bbcs_d22eta_west"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_bbcs_d22eta_east = new TProfile(Form("os_bbcs_d22eta_east"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_bbcs_d22eta_both = new TProfile(Form("os_bbcs_d22eta_both"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxs_d22eta_west = new TProfile(Form("os_fvtxs_d22eta_west"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxs_d22eta_east = new TProfile(Form("os_fvtxs_d22eta_east"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxs_d22eta_both = new TProfile(Form("os_fvtxs_d22eta_both"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxn_d22eta_west = new TProfile(Form("os_fvtxn_d22eta_west"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxn_d22eta_east = new TProfile(Form("os_fvtxn_d22eta_east"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxn_d22eta_both = new TProfile(Form("os_fvtxn_d22eta_both"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxs_tracks_d22eta_west = new TProfile(Form("os_fvtxs_tracks_d22eta_west"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxs_tracks_d22eta_east = new TProfile(Form("os_fvtxs_tracks_d22eta_east"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxs_tracks_d22eta_both = new TProfile(Form("os_fvtxs_tracks_d22eta_both"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxn_tracks_d22eta_west = new TProfile(Form("os_fvtxn_tracks_d22eta_west"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxn_tracks_d22eta_east = new TProfile(Form("os_fvtxn_tracks_d22eta_east"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxn_tracks_d22eta_both = new TProfile(Form("os_fvtxn_tracks_d22eta_both"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_bbcs_d32eta_west = new TProfile(Form("os_bbcs_d32eta_west"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_bbcs_d32eta_east = new TProfile(Form("os_bbcs_d32eta_east"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_bbcs_d32eta_both = new TProfile(Form("os_bbcs_d32eta_both"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxs_d32eta_west = new TProfile(Form("os_fvtxs_d32eta_west"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxs_d32eta_east = new TProfile(Form("os_fvtxs_d32eta_east"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxs_d32eta_both = new TProfile(Form("os_fvtxs_d32eta_both"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxn_d32eta_west = new TProfile(Form("os_fvtxn_d32eta_west"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxn_d32eta_east = new TProfile(Form("os_fvtxn_d32eta_east"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxn_d32eta_both = new TProfile(Form("os_fvtxn_d32eta_both"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxs_tracks_d32eta_west = new TProfile(Form("os_fvtxs_tracks_d32eta_west"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxs_tracks_d32eta_east = new TProfile(Form("os_fvtxs_tracks_d32eta_east"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxs_tracks_d32eta_both = new TProfile(Form("os_fvtxs_tracks_d32eta_both"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxn_tracks_d32eta_west = new TProfile(Form("os_fvtxn_tracks_d32eta_west"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxn_tracks_d32eta_east = new TProfile(Form("os_fvtxn_tracks_d32eta_east"), "", 32, -3.2, 3.2, -1.1, 1.1);
-  TProfile* os_fvtxn_tracks_d32eta_both = new TProfile(Form("os_fvtxn_tracks_d32eta_both"), "", 32, -3.2, 3.2, -1.1, 1.1);
-
-  //TProfile* nfvtxt_CME_fvtxsEP = new TProfile(Form("nfvtxt_CME_fvtxsEP"),"",80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_CME_PosPos_fvtxsEP = new TProfile(Form("nfvtxt_CME_PosPos_fvtxsEP"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_CME_NegNeg_fvtxsEP = new TProfile(Form("nfvtxt_CME_NegNeg_fvtxsEP"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_CME_PosNeg_fvtxsEP = new TProfile(Form("nfvtxt_CME_PosNeg_fvtxsEP"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_CME_NegPos_fvtxsEP = new TProfile(Form("nfvtxt_CME_NegPos_fvtxsEP"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_CME_EastPosWestPos_fvtxsEP = new TProfile(Form("nfvtxt_CME_EastPosWestPos_fvtxsEP"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_CME_EastNegWestNeg_fvtxsEP = new TProfile(Form("nfvtxt_CME_EastNegWestNeg_fvtxsEP"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_CME_EastPosWestNeg_fvtxsEP = new TProfile(Form("nfvtxt_CME_EastPosWestNeg_fvtxsEP"), "", 80, -0.5, 79.5, -1.1, 1.1);
-  TProfile* nfvtxt_CME_EastNegWestPos_fvtxsEP = new TProfile(Form("nfvtxt_CME_EastNegWestPos_fvtxsEP"), "", 80, -0.5, 79.5, -1.1, 1.1);
-
-  // ---------------------------------------------------------------------------------------------------------
+  //------------------------------------------------------------//
+  //  Finished initializing histograms                          //
+  //------------------------------------------------------------//
 
 
 
   //------------------------------------------------------------//
+  //                                                            //
   //               Initializing Tree Variables                  //
+  //                                                            //
   //------------------------------------------------------------//
 
   cout << "Now getting ready to read in the tree branch addresses and stuff...." << endl;
@@ -1954,12 +877,13 @@ void flatten(int runNumber, int rp_recal_pass)
 
 
 
-  //------------------------------------------------------------//
-  //          Finished Initializing Tree Variables              //
-  //------------------------------------------------------------//
 
   //------------------------------------------------------------//
+  //------------------------------------------------------------//
+  //                                                            //
   //                   Looping Over Event Tree                  //
+  //                                                            //
+  //------------------------------------------------------------//
   //------------------------------------------------------------//
 
   int event_counter = 0;
@@ -1973,8 +897,10 @@ void flatten(int runNumber, int rp_recal_pass)
   Long64_t gapcut_counter = 0;
 
   cout << "starting loop over events in the tree" << endl;
+
   int nentries = ntp_event_chain->GetEntries();
   cout << "total events = " << nentries << endl;
+
   for ( int ievt = 0; ievt < nentries; ++ievt )
   {
 
@@ -1996,7 +922,6 @@ void flatten(int runNumber, int rp_recal_pass)
     // ---------------------
     // --- trigger selection
     // ---------------------
-
     unsigned int trigger_FVTXNSBBCScentral = 0x00100000;
     unsigned int trigger_FVTXNSBBCS        = 0x00400000;
     unsigned int trigger_BBCLL1narrowcent  = 0x00000008;
@@ -2010,18 +935,15 @@ void flatten(int runNumber, int rp_recal_pass)
 
     unsigned int passes_trigger = trigger_scaled & accepted_triggers;
 
-    // cout << "trigger_BBCLL1narrowcent  is " << trigger_BBCLL1narrowcent << endl;
-    // cout << "trigger_BBCLL1narrow  is " << trigger_BBCLL1narrow << endl;
-    // cout << "accepted_triggers is " << accepted_triggers << endl;
-    // cout << "trigger_scaled is " << trigger_scaled << endl;
-    // cout << "passes_trigger is " << passes_trigger << endl;
-
     if ( passes_trigger == 0 )
     {
       if ( verbosity > 1 ) cout << "trigger rejected" << endl;
       continue;
     }
 
+    // ---------------------
+    // --- centrality
+    // ---------------------
     int icent = -1;
     if ( centrality > -1 )
     {
@@ -2050,6 +972,12 @@ void flatten(int runNumber, int rp_recal_pass)
         else if ( centrality <= 88 ) icent = 3;
       }
     }
+    else
+    {
+      if ( verbosity > 1 ) cout << "centrality undefined, skipping event" << endl;
+      ++bad_cent_counter;
+      continue;
+    }
     if ( icent < 0 || icent > 5 )
     {
       if ( verbosity > 0 ) cout << "Well this is embarrassing.  icent is " << icent << " because centrality is " << centrality << endl;
@@ -2067,6 +995,9 @@ void flatten(int runNumber, int rp_recal_pass)
       continue;
 
 
+    // ---------------------
+    // --- vertex binning
+    // ---------------------
     double ZVTX = -9999;
     if ( runNumber >= 454774 && runNumber <= 456283 ) ZVTX = d_bbcz;
     if ( runNumber >= 456652 && runNumber <= 458167 ) ZVTX = eventfvtx_z;
@@ -2075,13 +1006,6 @@ void flatten(int runNumber, int rp_recal_pass)
       if ( verbosity > 1 ) cout << "vertex rejected" << endl;
       continue;
     }
-    // --- this cut might be a good idea but it throws out too many events, further study needed
-    // if ( d_bbcz > -999 && eventfvtx_z > -999 && fabs(d_bbcz-eventfvtx_z) > 5 )
-    //   {
-    //     if ( verbosity > 0 ) cout << "bbc and fvtx vertex exist but out of range of each other " << d_bbcz << " " << eventfvtx_z << endl;
-    //     ++bad_vertex_counter;
-    //     continue;
-    //   }
 
     // make sure bin number doesn't exceed number of bins
     int izvtx = NZPS * (ZVTX + 10) / 20;
@@ -2100,6 +1024,9 @@ void flatten(int runNumber, int rp_recal_pass)
       continue;
     }
 
+    // ---------------------
+    // --- max clusters
+    // ---------------------
     int toomanyclusters = 9999;
     if ( energyflag == 200 ) toomanyclusters = 4000;
     if ( energyflag == 62  ) toomanyclusters = 4000;
@@ -2117,7 +1044,6 @@ void flatten(int runNumber, int rp_recal_pass)
     int nfvtxc_south = d_nFVTXN_clus;
     int nfvtxc_north = d_nFVTXS_clus;
 
-    // ---------------------------------------------------------------------------------------
 
     //------------------------------------------------------------//
     //                Calculating Event Planes                    //
@@ -2160,6 +1086,8 @@ void flatten(int runNumber, int rp_recal_pass)
     float bbc_nw_qy4 = 0;
     float bbc_nw_qw = 0;
 
+    float bbcq_ring[5] = {0};
+
     //if ( ( say_event && verbosity > 0 ) || verbosity > 4 ) cout << "Looping over BBC stuff now" << endl;
 
     if ( bbc_pmts )
@@ -2192,34 +1120,6 @@ void flatten(int runNumber, int rp_recal_pass)
         // float bbc_charge_corrected = bbc_charge * correction;
         if ( bbc_charge_corrected <= 0 ) continue;
 
-        tp1f_bbc_charge_phi->Fill(phi, bbc_charge);
-        if ( ring == 0 ) tp1f_bbc0_charge_phi->Fill(phi, bbc_charge);
-        if ( ring == 1 ) tp1f_bbc1_charge_phi->Fill(phi, bbc_charge);
-        if ( ring == 2 ) tp1f_bbc2_charge_phi->Fill(phi, bbc_charge);
-        if ( ring == 3 ) tp1f_bbc3_charge_phi->Fill(phi, bbc_charge);
-        if ( ring == 4 ) tp1f_bbc4_charge_phi->Fill(phi, bbc_charge);
-
-        tp1f_bbc_charge_tube->Fill(tube, bbc_charge);
-        if ( ring == 0 ) tp1f_bbc0_charge_tube->Fill(tube, bbc_charge);
-        if ( ring == 1 ) tp1f_bbc1_charge_tube->Fill(tube, bbc_charge);
-        if ( ring == 2 ) tp1f_bbc2_charge_tube->Fill(tube, bbc_charge);
-        if ( ring == 3 ) tp1f_bbc3_charge_tube->Fill(tube, bbc_charge);
-        if ( ring == 4 ) tp1f_bbc4_charge_tube->Fill(tube, bbc_charge);
-
-        tp1f_bbc_charge_wphi->Fill(phi, bbc_charge_corrected);
-        if ( ring == 0 ) tp1f_bbc0_charge_wphi->Fill(phi, bbc_charge_corrected);
-        if ( ring == 1 ) tp1f_bbc1_charge_wphi->Fill(phi, bbc_charge_corrected);
-        if ( ring == 2 ) tp1f_bbc2_charge_wphi->Fill(phi, bbc_charge_corrected);
-        if ( ring == 3 ) tp1f_bbc3_charge_wphi->Fill(phi, bbc_charge_corrected);
-        if ( ring == 4 ) tp1f_bbc4_charge_wphi->Fill(phi, bbc_charge_corrected);
-
-        tp1f_bbc_charge_wtube->Fill(tube, bbc_charge_corrected);
-        if ( ring == 0 ) tp1f_bbc0_charge_wtube->Fill(tube, bbc_charge_corrected);
-        if ( ring == 1 ) tp1f_bbc1_charge_wtube->Fill(tube, bbc_charge_corrected);
-        if ( ring == 2 ) tp1f_bbc2_charge_wtube->Fill(tube, bbc_charge_corrected);
-        if ( ring == 3 ) tp1f_bbc3_charge_wtube->Fill(tube, bbc_charge_corrected);
-        if ( ring == 4 ) tp1f_bbc4_charge_wtube->Fill(tube, bbc_charge_corrected);
-
         bbc_qx2 += bbc_charge_corrected * TMath::Cos(2 * phi);
         bbc_qy2 += bbc_charge_corrected * TMath::Sin(2 * phi);
         bbc_qx3 += bbc_charge_corrected * TMath::Cos(3 * phi);
@@ -2236,23 +1136,13 @@ void flatten(int runNumber, int rp_recal_pass)
         bbc_nw_qy4 += bbc_charge * TMath::Sin(4 * phi);
         bbc_nw_qw += bbc_charge;
 
+        if (ring >= 0 && ring < 5)
+          bbcq_ring[ring] += bbc_charge_corrected;
+
         //cout << ipmt << " " << bbc_charge << " " << bbc_nw_qw << endl;
       } // loop over tubes
     } // check on tubes
 
-    // --- do centrality cut here!!!
-
-    if ( centrality < 0 )
-    {
-      if ( verbosity > 1 ) cout << "centrality undefined, skipping event" << endl;
-      // --- revise these numbers as needed
-      // if ( energyflag == 200 && bbc_nw_qw < 60.0 ) continue;
-      // if ( energyflag == 62  && bbc_nw_qw < 40.0 ) continue;
-      // if ( energyflag == 20  && bbc_nw_qw < 25.0 ) continue;
-      // if ( energyflag == 39  && bbc_nw_qw < 30.0 ) continue;
-      ++bad_cent_counter;
-      continue;
-    }
 
     if ( say_event )
     {
@@ -2262,14 +1152,8 @@ void flatten(int runNumber, int rp_recal_pass)
       cout << "centrality = " << centrality << endl;
     }
 
-    bbcs_cos22->Fill(0.0, bbc_qx2);
-    bbcs_sin22->Fill(0.0, bbc_qy2);
-    bbcs_cos32->Fill(0.0, bbc_qx3);
-    bbcs_sin32->Fill(0.0, bbc_qy3);
     float bbc_qq2 = ( (bbc_qx2 * bbc_qx2) + (bbc_qy2 * bbc_qy2) - bbc_qw ) / ( (bbc_qw * bbc_qw) - bbc_qw );
     float bbc_qq3 = ( (bbc_qx3 * bbc_qx3) + (bbc_qy3 * bbc_qy3) - bbc_qw ) / ( (bbc_qw * bbc_qw) - bbc_qw );
-    bbcs_c22->Fill(0.0, bbc_qq2);
-    bbcs_c32->Fill(0.0, bbc_qq3);
 
     //cout << "HELLO HERE I AM" << endl;
 
@@ -2279,6 +1163,9 @@ void flatten(int runNumber, int rp_recal_pass)
     th1d_FVTX_nclus->Fill(d_nFVTX_clus);
     th1d_FVTX_ntrk->Fill(nfvtxt);
     th2d_qBBC_nFVTX->Fill(bbc_nw_qw, d_nFVTX_clus);
+    // fill charge in each ring
+    for (int ir = 0; ir < 5; ir++)
+      tp1f_bbc_fcharge_ring->Fill(ir, bbcq_ring[ir] / bbc_nw_qw);
 
     // --------------
     // --- FVTX stuff
@@ -2324,33 +1211,6 @@ void flatten(int runNumber, int rp_recal_pass)
       fvtxn_qw[ilayer] = 0.0;
     } // loop over layers
 
-    int nclus_south_inner = 0; // good_4_event
-    int nclus_north_inner = 0;
-    int nclus_south_outer = 0;
-    int nclus_north_outer = 0;
-
-    // ---
-    float fvtxs012_qx2 = 0;
-    float fvtxs013_qx2 = 0;
-    float fvtxs023_qx2 = 0;
-    float fvtxs123_qx2 = 0;
-    float fvtxs012_qy2 = 0;
-    float fvtxs013_qy2 = 0;
-    float fvtxs023_qy2 = 0;
-    float fvtxs123_qy2 = 0;
-    float fvtxs012_qw = 0;
-    float fvtxs013_qw = 0;
-    float fvtxs023_qw = 0;
-    float fvtxs123_qw = 0;
-    // ---
-    float fvtxs012_qx3 = 0;
-    float fvtxs013_qx3 = 0;
-    float fvtxs023_qx3 = 0;
-    float fvtxs123_qx3 = 0;
-    float fvtxs012_qy3 = 0;
-    float fvtxs013_qy3 = 0;
-    float fvtxs023_qy3 = 0;
-    float fvtxs123_qy3 = 0;
 
     //if ( ( say_event && verbosity > 0 ) || verbosity > 4 ) cout << "Looping over FVTX cluster" << endl;
     if ( fvtx_clusters )
@@ -2402,210 +1262,46 @@ void flatten(int runNumber, int rp_recal_pass)
 
         float phi = TMath::ATan2(fvtx_y, fvtx_x);
 
-        // ------------------------------------------------
-        // --- determine the weights for south clusters ---
-        float fvtx_weight = 1.0;
-        if ( doweights )
-        {
-          // -----------------------------------------------------------------------------------
-          // if ( !th2d_fvtxs_phi_weight[fvtx_layer+1] )
-          //   {
-          //     cout << "WARNING!!!  Problem with weight histograms in cluster loop..." << endl;
-          //     continue;
-          //   }
-          // int phi_bin = th2d_fvtxs_phi_weight[fvtx_layer+1]->GetYaxis()->FindBin(phi); // COME BACK HERE AND HAVE A LOOK
-          // int zvtx_bin = th2d_fvtxs_phi_weight[fvtx_layer+1]->GetXaxis()->FindBin(ZVTX); // COME BACK HERE AND HAVE A LOOK
-          // fvtx_weight = th2d_fvtxs_phi_weight[fvtx_layer+1]->GetBinContent(zvtx_bin,phi_bin);
-          // -----------------------------------------------------------------------------------
-          if ( !th1d_fvtxs_phi_weight[fvtx_layer + 1] )
-          {
-            cout << "WARNING!!!  Problem with weight histograms in cluster loop..." << endl;
-            continue;
-          }
-          int phi_bin = th1d_fvtxs_phi_weight[fvtx_layer + 1]->FindBin(phi); // COME BACK HERE AND HAVE A LOOK
-          fvtx_weight = th1d_fvtxs_phi_weight[fvtx_layer + 1]->GetBinContent(phi_bin);
-          // ----------------------------------------------------------------------------------
-          // if ( fvtx_layer == 0 ) fvtx_weight = tg_jamie_fvtxs0_zvtx[izvtx_jamie]->Eval(phi);
-          // if ( fvtx_layer == 1 ) fvtx_weight = tg_jamie_fvtxs1_zvtx[izvtx_jamie]->Eval(phi);
-          // if ( fvtx_layer == 2 ) fvtx_weight = tg_jamie_fvtxs2_zvtx[izvtx_jamie]->Eval(phi);
-          // if ( fvtx_layer == 3 ) fvtx_weight = tg_jamie_fvtxs3_zvtx[izvtx_jamie]->Eval(phi);
-          //cout << "info from Jamie histogram is " << fvtx_weight << " (and by the way the jamie vertex bin is " << izvtx_jamie << ")" << endl;
-        }
-        if ( fvtx_weight != fvtx_weight ) fvtx_weight = 0;
-        if ( fvtx_weight < 0.75 ) fvtx_weight = 0;
-        if ( fvtx_weight > 1.5 ) fvtx_weight = 0;
-        // if ( fvtx_weight != fvtx_weight ) fvtx_weight = 1;
-        // if ( fvtx_weight < 0 ) fvtx_weight = 1;
-        // if ( fvtx_weight > 10 ) fvtx_weight = 1;
-
         // --- south side
         if ( d_FVTX_z[iclus] < 0 )
         {
-          fvtxs_qx2[fvtx_layer + 1] += fvtx_weight * TMath::Cos(2 * phi);
-          fvtxs_qy2[fvtx_layer + 1] += fvtx_weight * TMath::Sin(2 * phi);
-          fvtxs_qx3[fvtx_layer + 1] += fvtx_weight * TMath::Cos(3 * phi);
-          fvtxs_qy3[fvtx_layer + 1] += fvtx_weight * TMath::Sin(3 * phi);
+          fvtxs_qx2[fvtx_layer + 1] += TMath::Cos(2 * phi);
+          fvtxs_qy2[fvtx_layer + 1] += TMath::Sin(2 * phi);
+          fvtxs_qx3[fvtx_layer + 1] += TMath::Cos(3 * phi);
+          fvtxs_qy3[fvtx_layer + 1] += TMath::Sin(3 * phi);
+          fvtxs_qx4[fvtx_layer + 1] += TMath::Cos(4 * phi);
+          fvtxs_qy4[fvtx_layer + 1] += TMath::Sin(4 * phi);
 
-          fvtxs_qx2[0] += fvtx_weight * TMath::Cos(2 * phi);
-          fvtxs_qy2[0] += fvtx_weight * TMath::Sin(2 * phi);
-          fvtxs_qx3[0] += fvtx_weight * TMath::Cos(3 * phi);
-          fvtxs_qy3[0] += fvtx_weight * TMath::Sin(3 * phi);
-          fvtxs_qx4[0] += fvtx_weight * TMath::Cos(4 * phi);
-          fvtxs_qy4[0] += fvtx_weight * TMath::Sin(4 * phi);
+          fvtxs_qx2[0] += TMath::Cos(2 * phi);
+          fvtxs_qy2[0] += TMath::Sin(2 * phi);
+          fvtxs_qx3[0] += TMath::Cos(3 * phi);
+          fvtxs_qy3[0] += TMath::Sin(3 * phi);
+          fvtxs_qx4[0] += TMath::Cos(4 * phi);
+          fvtxs_qy4[0] += TMath::Sin(4 * phi);
 
-          fvtxs_qw[fvtx_layer + 1] += fvtx_weight;
-          fvtxs_qw[0] += fvtx_weight;
-
-          bool is_fvtxs012 = ( fvtx_layer == 0 || fvtx_layer == 1 || fvtx_layer == 2 );
-          bool is_fvtxs013 = ( fvtx_layer == 0 || fvtx_layer == 1 || fvtx_layer == 3 );
-          bool is_fvtxs023 = ( fvtx_layer == 0 || fvtx_layer == 2 || fvtx_layer == 3 );
-          bool is_fvtxs123 = ( fvtx_layer == 1 || fvtx_layer == 2 || fvtx_layer == 3 );
-          if ( is_fvtxs012 )
-          {
-            fvtxs012_qx2 += fvtx_weight * TMath::Cos(2 * phi);
-            fvtxs012_qy2 += fvtx_weight * TMath::Sin(2 * phi);
-            fvtxs012_qx3 += fvtx_weight * TMath::Cos(3 * phi);
-            fvtxs012_qy3 += fvtx_weight * TMath::Sin(3 * phi);
-            fvtxs012_qw += fvtx_weight;
-          }
-          if ( is_fvtxs013 )
-          {
-            fvtxs013_qx2 += fvtx_weight * TMath::Cos(2 * phi);
-            fvtxs013_qy2 += fvtx_weight * TMath::Sin(2 * phi);
-            fvtxs013_qx3 += fvtx_weight * TMath::Cos(3 * phi);
-            fvtxs013_qy3 += fvtx_weight * TMath::Sin(3 * phi);
-            fvtxs013_qw += fvtx_weight;
-          }
-          if ( is_fvtxs023 )
-          {
-            fvtxs023_qx2 += fvtx_weight * TMath::Cos(2 * phi);
-            fvtxs023_qy2 += fvtx_weight * TMath::Sin(2 * phi);
-            fvtxs023_qx3 += fvtx_weight * TMath::Cos(3 * phi);
-            fvtxs023_qy3 += fvtx_weight * TMath::Sin(3 * phi);
-            fvtxs023_qw += fvtx_weight;
-          }
-          if ( is_fvtxs123 )
-          {
-            fvtxs123_qx2 += fvtx_weight * TMath::Cos(2 * phi);
-            fvtxs123_qy2 += fvtx_weight * TMath::Sin(2 * phi);
-            fvtxs123_qx3 += fvtx_weight * TMath::Cos(3 * phi);
-            fvtxs123_qy3 += fvtx_weight * TMath::Sin(3 * phi);
-            fvtxs123_qw += fvtx_weight;
-          }
-
-          // ------------------------------------------
-          // --- explicitly excluding weights ---------
-          fvtxs_qx2[fvtx_layer + 6] += TMath::Cos(2 * phi);
-          fvtxs_qy2[fvtx_layer + 6] += TMath::Sin(2 * phi);
-          fvtxs_qx3[fvtx_layer + 6] += TMath::Cos(3 * phi);
-          fvtxs_qy3[fvtx_layer + 6] += TMath::Sin(3 * phi);
-          fvtxs_qx2[5] += TMath::Cos(2 * phi);
-          fvtxs_qy2[5] += TMath::Sin(2 * phi);
-          fvtxs_qx3[5] += TMath::Cos(3 * phi);
-          fvtxs_qy3[5] += TMath::Sin(3 * phi);
-          fvtxs_qx4[5] += TMath::Cos(4 * phi);
-          fvtxs_qy4[5] += TMath::Sin(4 * phi);
-          fvtxs_qw[5] += 1;
-          // -----------------------------------------
-
-          th1d_fvtxs_clus_phi->Fill(phi);
-          if ( fvtx_layer == 0 ) th1d_fvtxs0_clus_phi->Fill(phi);
-          if ( fvtx_layer == 1 ) th1d_fvtxs1_clus_phi->Fill(phi);
-          if ( fvtx_layer == 2 ) th1d_fvtxs2_clus_phi->Fill(phi);
-          if ( fvtx_layer == 3 ) th1d_fvtxs3_clus_phi->Fill(phi);
-          th1d_fvtxs_clus_wphi->Fill(phi, fvtx_weight);
-          if ( fvtx_layer == 0 ) th1d_fvtxs0_clus_wphi->Fill(phi, fvtx_weight);
-          if ( fvtx_layer == 1 ) th1d_fvtxs1_clus_wphi->Fill(phi, fvtx_weight);
-          if ( fvtx_layer == 2 ) th1d_fvtxs2_clus_wphi->Fill(phi, fvtx_weight);
-          if ( fvtx_layer == 3 ) th1d_fvtxs3_clus_wphi->Fill(phi, fvtx_weight);
-
-          // ---
-          th2d_fvtxs_clus_xy->Fill(d_FVTX_x[iclus], d_FVTX_y[iclus]);
-          if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_xy->Fill(d_FVTX_x[iclus], d_FVTX_y[iclus]);
-          if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_xy->Fill(d_FVTX_x[iclus], d_FVTX_y[iclus]);
-          if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_xy->Fill(d_FVTX_x[iclus], d_FVTX_y[iclus]);
-          if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_xy->Fill(d_FVTX_x[iclus], d_FVTX_y[iclus]);
-          th2d_fvtxs_clus_rphi->Fill(FVTX_phi, FVTX_r);
-          if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_rphi->Fill(FVTX_phi, FVTX_r);
-          if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_rphi->Fill(FVTX_phi, FVTX_r);
-          if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_rphi->Fill(FVTX_phi, FVTX_r);
-          if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_rphi->Fill(FVTX_phi, FVTX_r);
-          th2d_fvtxs_clus_rphi_ro->Fill(phi, fvtx_r);
-          if ( fvtx_layer == 0 ) th2d_fvtxs0_clus_rphi_ro->Fill(phi, fvtx_r);
-          if ( fvtx_layer == 1 ) th2d_fvtxs1_clus_rphi_ro->Fill(phi, fvtx_r);
-          if ( fvtx_layer == 2 ) th2d_fvtxs2_clus_rphi_ro->Fill(phi, fvtx_r);
-          if ( fvtx_layer == 3 ) th2d_fvtxs3_clus_rphi_ro->Fill(phi, fvtx_r);
-
+          fvtxs_qw[fvtx_layer + 1] += 1;
+          fvtxs_qw[0] += 1;
         } // check on south
-
-        // ------------------------------------------------
-        // --- determine the weights for north clusters ---
-        // if ( doweights )
-        //   {
-        // if ( !th2d_fvtxn_phi_weight[fvtx_layer+1] )
-        //   {
-        //     cout << "WARNING!!!  Problem with weight histograms in cluster loop..." << endl;
-        //     continue;
-        //   }
-        // int phi_bin = th2d_fvtxn_phi_weight[fvtx_layer+1]->GetYaxis()->FindBin(phi); // COME BACK HERE AND HAVE A LOOK
-        // int zvtx_bin = th2d_fvtxn_phi_weight[fvtx_layer+1]->GetXaxis()->FindBin(ZVTX); // COME BACK HERE AND HAVE A LOOK
-        // fvtx_weight = th2d_fvtxn_phi_weight[fvtx_layer+1]->GetBinContent(zvtx_bin,phi_bin);
-        // ---
-        // if ( !th1d_fvtxn_phi_weight[fvtx_layer+1] )
-        //   {
-        //     cout << "WARNING!!!  Problem with weight histograms in cluster loop..." << endl;
-        //     continue;
-        //   }
-        // int phi_bin = th1d_fvtxn_phi_weight[fvtx_layer+1]->FindBin(phi); // COME BACK HERE AND HAVE A LOOK
-        // fvtx_weight = th1d_fvtxn_phi_weight[fvtx_layer+1]->GetBinContent(phi_bin);
-        //}
-        if ( fvtx_weight != fvtx_weight ) fvtx_weight = 0;
-        if ( fvtx_weight < 0 ) fvtx_weight = 0;
-        if ( fvtx_weight > 10 ) fvtx_weight = 0;
 
         // --- north side
         if ( d_FVTX_z[iclus] > 0 )
         {
-          fvtxn_qx2[fvtx_layer + 1] += fvtx_weight * TMath::Cos(2 * phi);
-          fvtxn_qy2[fvtx_layer + 1] += fvtx_weight * TMath::Sin(2 * phi);
-          fvtxn_qx3[fvtx_layer + 1] += fvtx_weight * TMath::Cos(3 * phi);
-          fvtxn_qy3[fvtx_layer + 1] += fvtx_weight * TMath::Sin(3 * phi);
+          fvtxn_qx2[fvtx_layer + 1] += TMath::Cos(2 * phi);
+          fvtxn_qy2[fvtx_layer + 1] += TMath::Sin(2 * phi);
+          fvtxn_qx3[fvtx_layer + 1] += TMath::Cos(3 * phi);
+          fvtxn_qy3[fvtx_layer + 1] += TMath::Sin(3 * phi);
+          fvtxn_qx4[fvtx_layer + 1] += TMath::Cos(4 * phi);
+          fvtxn_qy4[fvtx_layer + 1] += TMath::Sin(4 * phi);
 
-          fvtxn_qx2[0] += fvtx_weight * TMath::Cos(2 * phi);
-          fvtxn_qy2[0] += fvtx_weight * TMath::Sin(2 * phi);
-          fvtxn_qx3[0] += fvtx_weight * TMath::Cos(3 * phi);
-          fvtxn_qy3[0] += fvtx_weight * TMath::Sin(3 * phi);
-          fvtxn_qx4[0] += fvtx_weight * TMath::Cos(4 * phi);
-          fvtxn_qy4[0] += fvtx_weight * TMath::Sin(4 * phi);
+          fvtxn_qx2[0] += TMath::Cos(2 * phi);
+          fvtxn_qy2[0] += TMath::Sin(2 * phi);
+          fvtxn_qx3[0] += TMath::Cos(3 * phi);
+          fvtxn_qy3[0] += TMath::Sin(3 * phi);
+          fvtxn_qx4[0] += TMath::Cos(4 * phi);
+          fvtxn_qy4[0] += TMath::Sin(4 * phi);
 
-          fvtxn_qw[fvtx_layer + 1] += fvtx_weight;
-          fvtxn_qw[0] += fvtx_weight;
-
-          // ------------------------------------------
-          // --- explicitly excluding weights ---------
-          fvtxn_qx2[fvtx_layer + 6] += TMath::Cos(2 * phi);
-          fvtxn_qy2[fvtx_layer + 6] += TMath::Sin(2 * phi);
-          fvtxn_qx3[fvtx_layer + 6] += TMath::Cos(3 * phi);
-          fvtxn_qy3[fvtx_layer + 6] += TMath::Sin(3 * phi);
-          fvtxn_qx2[5] += TMath::Cos(2 * phi);
-          fvtxn_qy2[5] += TMath::Sin(2 * phi);
-          fvtxn_qx3[5] += TMath::Cos(3 * phi);
-          fvtxn_qy3[5] += TMath::Sin(3 * phi);
-          fvtxn_qx4[5] += TMath::Cos(4 * phi);
-          fvtxn_qy4[5] += TMath::Sin(4 * phi);
-          fvtxn_qw[5] += 1;
-          // -----------------------------------------
-
-          th1d_fvtxn_clus_phi->Fill(phi);
-          if ( fvtx_layer == 0 ) th1d_fvtxn0_clus_phi->Fill(phi);
-          if ( fvtx_layer == 1 ) th1d_fvtxn1_clus_phi->Fill(phi);
-          if ( fvtx_layer == 2 ) th1d_fvtxn2_clus_phi->Fill(phi);
-          if ( fvtx_layer == 3 ) th1d_fvtxn3_clus_phi->Fill(phi);
-          th1d_fvtxn_clus_wphi->Fill(phi, fvtx_weight);
-          if ( fvtx_layer == 0 ) th1d_fvtxn0_clus_wphi->Fill(phi, fvtx_weight);
-          if ( fvtx_layer == 1 ) th1d_fvtxn1_clus_wphi->Fill(phi, fvtx_weight);
-          if ( fvtx_layer == 2 ) th1d_fvtxn2_clus_wphi->Fill(phi, fvtx_weight);
-          if ( fvtx_layer == 3 ) th1d_fvtxn3_clus_wphi->Fill(phi, fvtx_weight);
+          fvtxn_qw[fvtx_layer + 1] += 1;
+          fvtxn_qw[0] += 1;
         } // check on north
 
       } // loop over cluster
@@ -2614,16 +1310,8 @@ void flatten(int runNumber, int rp_recal_pass)
     th1d_FVTXS_nclus->Fill(fvtxs_qw[0]);
     th1d_FVTXN_nclus->Fill(fvtxn_qw[0]);
 
-    fvtxs_cos22->Fill(0.0, fvtxs_qx2[0]);
-    fvtxs_sin22->Fill(0.0, fvtxs_qy2[0]);
-    fvtxs_cos32->Fill(0.0, fvtxs_qx3[0]);
-    fvtxs_sin32->Fill(0.0, fvtxs_qy3[0]);
     float fvtxs_qq2 = ( (fvtxs_qx2[0] * fvtxs_qx2[0]) + (fvtxs_qy2[0] * fvtxs_qy2[0]) - fvtxs_qw[0] ) / ( (fvtxs_qw[0] * fvtxs_qw[0]) - fvtxs_qw[0] );
     float fvtxs_qq3 = ( (fvtxs_qx3[0] * fvtxs_qx3[0]) + (fvtxs_qy3[0] * fvtxs_qy3[0]) - fvtxs_qw[0] ) / ( (fvtxs_qw[0] * fvtxs_qw[0]) - fvtxs_qw[0] );
-    fvtxs_c22->Fill(0.0, fvtxs_qq2);
-    fvtxs_c32->Fill(0.0, fvtxs_qq3);
-
-    bool good_4_event = ( nclus_south_inner > 3 ) && ( nclus_south_outer > 3 ) && ( nclus_north_inner > 3 ) && ( nclus_north_outer > 3 ) ;
 
     // --- the array that has all of the Q vectors
     float sumxy[NHAR][NDET][4];
@@ -2652,161 +1340,6 @@ void flatten(int runNumber, int rp_recal_pass)
     sumxy[1][1][2] = d_Qw[4];
 
 
-    // --- fvtx tracks
-    float fvtxs_tracks_qx2[3]; // both, inner, outer
-    float fvtxs_tracks_qy2[3];
-    float fvtxs_tracks_qx3[3];
-    float fvtxs_tracks_qy3[3];
-    float fvtxs_tracks_qx4[3];
-    float fvtxs_tracks_qy4[3];
-    float fvtxs_tracks_qw[3];
-    float fvtxn_tracks_qx2[3]; // both, inner, outer
-    float fvtxn_tracks_qy2[3];
-    float fvtxn_tracks_qx3[3];
-    float fvtxn_tracks_qy3[3];
-    float fvtxn_tracks_qx4[3];
-    float fvtxn_tracks_qy4[3];
-    float fvtxn_tracks_qw[3];
-
-    for ( int i = 0; i < 3; ++i )
-    {
-      fvtxs_tracks_qx2[i] = 0.0;
-      fvtxs_tracks_qy2[i] = 0.0;
-      fvtxs_tracks_qx3[i] = 0.0;
-      fvtxs_tracks_qy3[i] = 0.0;
-      fvtxs_tracks_qx4[i] = 0.0;
-      fvtxs_tracks_qy4[i] = 0.0;
-      fvtxs_tracks_qw[i] = 0.0;
-      fvtxn_tracks_qx2[i] = 0.0;
-      fvtxn_tracks_qy2[i] = 0.0;
-      fvtxn_tracks_qx3[i] = 0.0;
-      fvtxn_tracks_qy3[i] = 0.0;
-      fvtxn_tracks_qx4[i] = 0.0;
-      fvtxn_tracks_qy4[i] = 0.0;
-      fvtxn_tracks_qw[i] = 0.0;
-    } // loop over layers
-
-    int ntrack_south_inner = 0; // good_4_event
-    int ntrack_north_inner = 0;
-    int ntrack_south_outer = 0;
-    int ntrack_north_outer = 0;
-
-    // --- first fvtx track loop
-    for ( int i = 0; i < nfvtxt; ++i )
-    {
-      // --- rotation now done in trees
-      int nhits = fnhits[i];
-      float phi = fphi[i];
-      float eta = feta[i];
-      float dcax = fdcax[i];
-      float dcay = fdcay[i];
-
-      bool is_south = ( eta < 0 );
-      bool is_south_inner = ( eta > -2 && eta < 0 );
-      bool is_south_outer = ( eta < -2 );
-      bool is_north = ( eta > 0 );
-      bool is_north_inner = ( eta < 2 && eta > 0 );
-      bool is_north_outer = ( eta > 2 );
-
-      float fvtx_weight = 1.0; // need to weight tracks at some point...
-
-      if ( is_south )
-      {
-        fvtxs_tracks_qx2[0] += fvtx_weight * TMath::Cos(2 * phi);
-        fvtxs_tracks_qy2[0] += fvtx_weight * TMath::Sin(2 * phi);
-        fvtxs_tracks_qx3[0] += fvtx_weight * TMath::Cos(3 * phi);
-        fvtxs_tracks_qy3[0] += fvtx_weight * TMath::Sin(3 * phi);
-        fvtxs_tracks_qx4[0] += fvtx_weight * TMath::Cos(4 * phi);
-        fvtxs_tracks_qy4[0] += fvtx_weight * TMath::Sin(4 * phi);
-        fvtxs_tracks_qw[0] += fvtx_weight;
-      }
-      if ( is_south_inner )
-      {
-        fvtxs_tracks_qx2[1] += fvtx_weight * TMath::Cos(2 * phi);
-        fvtxs_tracks_qy2[1] += fvtx_weight * TMath::Sin(2 * phi);
-        fvtxs_tracks_qx3[1] += fvtx_weight * TMath::Cos(3 * phi);
-        fvtxs_tracks_qy3[1] += fvtx_weight * TMath::Sin(3 * phi);
-        fvtxs_tracks_qx4[1] += fvtx_weight * TMath::Cos(4 * phi);
-        fvtxs_tracks_qy4[1] += fvtx_weight * TMath::Sin(4 * phi);
-        fvtxs_tracks_qw[1] += fvtx_weight;
-        ++ntrack_south_inner; // good_4_event
-      }
-      if ( is_south_outer )
-      {
-        fvtxs_tracks_qx2[2] += fvtx_weight * TMath::Cos(2 * phi);
-        fvtxs_tracks_qy2[2] += fvtx_weight * TMath::Sin(2 * phi);
-        fvtxs_tracks_qx3[2] += fvtx_weight * TMath::Cos(3 * phi);
-        fvtxs_tracks_qy3[2] += fvtx_weight * TMath::Sin(3 * phi);
-        fvtxs_tracks_qx4[2] += fvtx_weight * TMath::Cos(4 * phi);
-        fvtxs_tracks_qy4[2] += fvtx_weight * TMath::Sin(4 * phi);
-        fvtxs_tracks_qw[2] += fvtx_weight;
-        ++ntrack_south_outer; // good_4_event
-      }
-      if ( is_north )
-      {
-        fvtxn_tracks_qx2[0] += fvtx_weight * TMath::Cos(2 * phi);
-        fvtxn_tracks_qy2[0] += fvtx_weight * TMath::Sin(2 * phi);
-        fvtxn_tracks_qx3[0] += fvtx_weight * TMath::Cos(3 * phi);
-        fvtxn_tracks_qy3[0] += fvtx_weight * TMath::Sin(3 * phi);
-        fvtxn_tracks_qx4[0] += fvtx_weight * TMath::Cos(4 * phi);
-        fvtxn_tracks_qy4[0] += fvtx_weight * TMath::Sin(4 * phi);
-        fvtxn_tracks_qw[0] += fvtx_weight;
-      }
-      if ( is_north_inner )
-      {
-        fvtxn_tracks_qx2[1] += fvtx_weight * TMath::Cos(2 * phi);
-        fvtxn_tracks_qy2[1] += fvtx_weight * TMath::Sin(2 * phi);
-        fvtxn_tracks_qx3[1] += fvtx_weight * TMath::Cos(3 * phi);
-        fvtxn_tracks_qy3[1] += fvtx_weight * TMath::Sin(3 * phi);
-        fvtxn_tracks_qx4[1] += fvtx_weight * TMath::Cos(4 * phi);
-        fvtxn_tracks_qy4[1] += fvtx_weight * TMath::Sin(4 * phi);
-        fvtxn_tracks_qw[1] += fvtx_weight;
-        ++ntrack_north_inner; // good_4_event
-      }
-      if ( is_north_outer )
-      {
-        fvtxn_tracks_qx2[2] += fvtx_weight * TMath::Cos(2 * phi);
-        fvtxn_tracks_qy2[2] += fvtx_weight * TMath::Sin(2 * phi);
-        fvtxn_tracks_qx3[2] += fvtx_weight * TMath::Cos(3 * phi);
-        fvtxn_tracks_qy3[2] += fvtx_weight * TMath::Sin(3 * phi);
-        fvtxn_tracks_qx4[2] += fvtx_weight * TMath::Cos(4 * phi);
-        fvtxn_tracks_qy4[2] += fvtx_weight * TMath::Sin(4 * phi);
-        fvtxn_tracks_qw[2] += fvtx_weight;
-        ++ntrack_north_outer; // good_4_event
-      }
-
-      int fvtx_layer = -1;
-      if ( fabs(eta) < 2 ) fvtx_layer = 0;
-      if ( fabs(eta) > 2 ) fvtx_layer = 1;
-
-      // --- south side
-      if ( eta < 0 )
-      {
-        th1d_fvtxs_track_phi->Fill(phi);
-        if ( fvtx_layer == 0 ) th1d_fvtxs0_track_phi->Fill(phi);
-        if ( fvtx_layer == 1 ) th1d_fvtxs1_track_phi->Fill(phi);
-        th2d_fvtxs_track_phi->Fill(vtx_z, phi);
-        if ( fvtx_layer == 0 ) th2d_fvtxs0_track_phi->Fill(vtx_z, phi);
-        if ( fvtx_layer == 1 ) th2d_fvtxs1_track_phi->Fill(vtx_z, phi);
-      } // check on south
-
-      // --- north side
-      if ( eta > 0 )
-      {
-        th1d_fvtxn_track_phi->Fill(phi);
-        if ( fvtx_layer == 0 ) th1d_fvtxn0_track_phi->Fill(phi);
-        if ( fvtx_layer == 1 ) th1d_fvtxn1_track_phi->Fill(phi);
-        th2d_fvtxn_track_phi->Fill(vtx_z, phi);
-        if ( fvtx_layer == 0 ) th2d_fvtxn0_track_phi->Fill(vtx_z, phi);
-        if ( fvtx_layer == 1 ) th2d_fvtxn1_track_phi->Fill(vtx_z, phi);
-      } // check on north
-
-    } // end of loop of fvtx tracks
-
-    good_4_event = good_4_event && ( ntrack_south_inner > 0 ) && ( ntrack_south_outer > 0 ) && ( ntrack_north_inner > 0 ) && ( ntrack_north_outer > 0 ) ;
-    int nfvtxt_south = ntrack_south_inner + ntrack_south_outer;
-    int nfvtxt_north = ntrack_north_inner + ntrack_north_outer;
-
     if ( bbc_pmts )
     {
       sumxy[1][bbcs_index][0] = bbc_qx2;
@@ -2831,32 +1364,6 @@ void flatten(int runNumber, int rp_recal_pass)
 
     if ( fvtx_clusters )
     {
-      // ---
-      sumxy[1][fvtxs012_index][0] = fvtxs012_qx2;
-      sumxy[1][fvtxs012_index][1] = fvtxs012_qy2;
-      sumxy[1][fvtxs012_index][2] = fvtxs012_qw;
-      sumxy[1][fvtxs013_index][0] = fvtxs013_qx2;
-      sumxy[1][fvtxs013_index][1] = fvtxs013_qy2;
-      sumxy[1][fvtxs013_index][2] = fvtxs013_qw;
-      sumxy[1][fvtxs023_index][0] = fvtxs023_qx2;
-      sumxy[1][fvtxs023_index][1] = fvtxs023_qy2;
-      sumxy[1][fvtxs023_index][2] = fvtxs023_qw;
-      sumxy[1][fvtxs123_index][0] = fvtxs123_qx2;
-      sumxy[1][fvtxs123_index][1] = fvtxs123_qy2;
-      sumxy[1][fvtxs123_index][2] = fvtxs123_qw;
-      // ---
-      sumxy[2][fvtxs012_index][0] = fvtxs012_qx3;
-      sumxy[2][fvtxs012_index][1] = fvtxs012_qy3;
-      sumxy[2][fvtxs012_index][2] = fvtxs012_qw;
-      sumxy[2][fvtxs013_index][0] = fvtxs013_qx3;
-      sumxy[2][fvtxs013_index][1] = fvtxs013_qy3;
-      sumxy[2][fvtxs013_index][2] = fvtxs013_qw;
-      sumxy[2][fvtxs023_index][0] = fvtxs023_qx3;
-      sumxy[2][fvtxs023_index][1] = fvtxs023_qy3;
-      sumxy[2][fvtxs023_index][2] = fvtxs023_qw;
-      sumxy[2][fvtxs123_index][0] = fvtxs123_qx3;
-      sumxy[2][fvtxs123_index][1] = fvtxs123_qy3;
-      sumxy[2][fvtxs123_index][2] = fvtxs123_qw;
       for ( int i = 0; i < 5; ++i )
       {
         sumxy[1][fvtxs_index + i][0] = fvtxs_qx2[i];
@@ -2877,51 +1384,8 @@ void flatten(int runNumber, int rp_recal_pass)
         sumxy[3][fvtxn_index + i][0] = fvtxn_qx4[i];
         sumxy[3][fvtxn_index + i][1] = fvtxn_qy4[i];
         sumxy[3][fvtxn_index + i][2] = fvtxn_qw[i];
-        // ---
-        sumxy[1][fvtxs_nw_index + i][0] = fvtxs_qx2[i + 5];
-        sumxy[1][fvtxs_nw_index + i][1] = fvtxs_qy2[i + 5];
-        sumxy[1][fvtxs_nw_index + i][2] = fvtxs_qw[i + 5];
-        sumxy[1][fvtxn_nw_index + i][0] = fvtxn_qx2[i + 5];
-        sumxy[1][fvtxn_nw_index + i][1] = fvtxn_qy2[i + 5];
-        sumxy[1][fvtxn_nw_index + i][2] = fvtxn_qw[i + 5];
-        sumxy[2][fvtxs_nw_index + i][0] = fvtxs_qx3[i + 5];
-        sumxy[2][fvtxs_nw_index + i][1] = fvtxs_qy3[i + 5];
-        sumxy[2][fvtxs_nw_index + i][2] = fvtxs_qw[i + 5];
-        sumxy[2][fvtxn_nw_index + i][0] = fvtxn_qx3[i + 5];
-        sumxy[2][fvtxn_nw_index + i][1] = fvtxn_qy3[i + 5];
-        sumxy[2][fvtxn_nw_index + i][2] = fvtxn_qw[i + 5];
-        sumxy[3][fvtxs_nw_index + i][0] = fvtxs_qx4[i + 5];
-        sumxy[3][fvtxs_nw_index + i][1] = fvtxs_qy4[i + 5];
-        sumxy[3][fvtxs_nw_index + i][2] = fvtxs_qw[i + 5];
-        sumxy[3][fvtxn_nw_index + i][0] = fvtxn_qx4[i + 5];
-        sumxy[3][fvtxn_nw_index + i][1] = fvtxn_qy4[i + 5];
-        sumxy[3][fvtxn_nw_index + i][2] = fvtxn_qw[i + 5];
       } // loop over layers
     } // check on clusters
-    if ( fvtx_tracks )
-    {
-      for ( int i = 0; i < 3; ++i )
-      {
-        sumxy[1][fvtxs_tracks_index + i][0] = fvtxs_tracks_qx2[i];
-        sumxy[1][fvtxs_tracks_index + i][1] = fvtxs_tracks_qy2[i];
-        sumxy[1][fvtxs_tracks_index + i][2] = fvtxs_tracks_qw[i];
-        sumxy[1][fvtxn_tracks_index + i][0] = fvtxn_tracks_qx2[i];
-        sumxy[1][fvtxn_tracks_index + i][1] = fvtxn_tracks_qy2[i];
-        sumxy[1][fvtxn_tracks_index + i][2] = fvtxn_tracks_qw[i];
-        sumxy[2][fvtxs_tracks_index + i][0] = fvtxs_tracks_qx3[i];
-        sumxy[2][fvtxs_tracks_index + i][1] = fvtxs_tracks_qy3[i];
-        sumxy[2][fvtxs_tracks_index + i][2] = fvtxs_tracks_qw[i];
-        sumxy[2][fvtxn_tracks_index + i][0] = fvtxn_tracks_qx3[i];
-        sumxy[2][fvtxn_tracks_index + i][1] = fvtxn_tracks_qy3[i];
-        sumxy[2][fvtxn_tracks_index + i][2] = fvtxn_tracks_qw[i];
-        sumxy[3][fvtxs_tracks_index + i][0] = fvtxs_tracks_qx4[i];
-        sumxy[3][fvtxs_tracks_index + i][1] = fvtxs_tracks_qy4[i];
-        sumxy[3][fvtxs_tracks_index + i][2] = fvtxs_tracks_qw[i];
-        sumxy[3][fvtxn_tracks_index + i][0] = fvtxn_tracks_qx4[i];
-        sumxy[3][fvtxn_tracks_index + i][1] = fvtxn_tracks_qy4[i];
-        sumxy[3][fvtxn_tracks_index + i][2] = fvtxn_tracks_qw[i];
-      } // loop over layers
-    } // check on tracks
 
 
     if ( DIAG )
@@ -3051,6 +1515,8 @@ void flatten(int runNumber, int rp_recal_pass)
         } // check on weight
       } // detectors
     } // harmonics
+
+
     // ---
     // --- now going to calculate v2
     // ---
@@ -3069,18 +1535,6 @@ void flatten(int runNumber, int rp_recal_pass)
     float os_bbc_qy4 = bbc_qy4 - os_bbc_qw * mean[icent][izvtx][3][bbcs_index][1];
     float os_bbc_qq2 = calc2_event(os_bbc_qx2, os_bbc_qy2, os_bbc_qw);
     float os_bbc_qq3 = calc2_event(os_bbc_qx3, os_bbc_qy3, os_bbc_qw);
-    os_bbcs_cos22->Fill(0.0, os_bbc_qx2);
-    os_bbcs_sin22->Fill(0.0, os_bbc_qy2);
-    os_bbcs_cos32->Fill(0.0, os_bbc_qx3);
-    os_bbcs_sin32->Fill(0.0, os_bbc_qy3);
-    os_bbcs_c22->Fill(0.0, os_bbc_qq2);
-    os_bbcs_c32->Fill(0.0, os_bbc_qq3);
-    npc1_os_bbcs_c22->Fill(npc1, os_bbc_qq2);
-    npc1_os_bbcs_c32->Fill(npc1, os_bbc_qq3);
-    nfvtxt_os_bbcs_c22->Fill(nfvtxt, os_bbc_qq2);
-    nfvtxc_os_bbcs_c22->Fill(nfvtxc, os_bbc_qq2);
-    nfvtxt_os_bbcs_c32->Fill(nfvtxt, os_bbc_qq3);
-    nfvtxc_os_bbcs_c32->Fill(nfvtxc, os_bbc_qq3);
     float os_bbc_psi2 = atan2(os_bbc_qy2, os_bbc_qx2) / 2.0;
     float os_bbc_psi3 = atan2(os_bbc_qy3, os_bbc_qx3) / 3.0;
     os_bbcs_1dPsi2->Fill(os_bbc_psi2);
@@ -3095,18 +1549,6 @@ void flatten(int runNumber, int rp_recal_pass)
     float os_fvtxs_qy4 = fvtxs_qy4[0] - os_fvtxs_qw * mean[icent][izvtx][3][fvtxs_index][1];
     float os_fvtxs_qq2 = calc2_event(os_fvtxs_qx2, os_fvtxs_qy2, os_fvtxs_qw);
     float os_fvtxs_qq3 = calc2_event(os_fvtxs_qx3, os_fvtxs_qy3, os_fvtxs_qw);
-    os_fvtxs_cos22->Fill(0.0, os_fvtxs_qx2);
-    os_fvtxs_sin22->Fill(0.0, os_fvtxs_qy2);
-    os_fvtxs_cos32->Fill(0.0, os_fvtxs_qx3);
-    os_fvtxs_sin32->Fill(0.0, os_fvtxs_qy3);
-    os_fvtxs_c22->Fill(0.0, os_fvtxs_qq2);
-    os_fvtxs_c32->Fill(0.0, os_fvtxs_qq3);
-    npc1_os_fvtxs_c22->Fill(npc1, os_fvtxs_qq2);
-    npc1_os_fvtxs_c32->Fill(npc1, os_fvtxs_qq3);
-    nfvtxt_os_fvtxs_c22->Fill(nfvtxt_south, os_fvtxs_qq2);
-    nfvtxc_os_fvtxs_c22->Fill(nfvtxc_south, os_fvtxs_qq2);
-    nfvtxt_os_fvtxs_c32->Fill(nfvtxt_south, os_fvtxs_qq3);
-    nfvtxc_os_fvtxs_c32->Fill(nfvtxc_south, os_fvtxs_qq3);
     float os_fvtxs_psi2 = atan2(os_fvtxs_qy2, os_fvtxs_qx2) / 2.0;
     float os_fvtxs_psi3 = atan2(os_fvtxs_qy3, os_fvtxs_qx3) / 3.0;
     os_fvtxs_1dPsi2->Fill(os_fvtxs_psi2);
@@ -3121,243 +1563,27 @@ void flatten(int runNumber, int rp_recal_pass)
     float os_fvtxn_qy4 = fvtxn_qy4[0] - os_fvtxn_qw * mean[icent][izvtx][3][fvtxn_index][1];
     float os_fvtxn_qq2 = calc2_event(os_fvtxn_qx2, os_fvtxn_qy2, os_fvtxn_qw);
     float os_fvtxn_qq3 = calc2_event(os_fvtxn_qx3, os_fvtxn_qy3, os_fvtxn_qw);
-    os_fvtxn_cos22->Fill(0.0, os_fvtxn_qx2);
-    os_fvtxn_sin22->Fill(0.0, os_fvtxn_qy2);
-    os_fvtxn_cos32->Fill(0.0, os_fvtxn_qx3);
-    os_fvtxn_sin32->Fill(0.0, os_fvtxn_qy3);
-    os_fvtxn_c22->Fill(0.0, os_fvtxn_qq2);
-    os_fvtxn_c32->Fill(0.0, os_fvtxn_qq3);
-    npc1_os_fvtxn_c22->Fill(npc1, os_fvtxn_qq2);
-    npc1_os_fvtxn_c32->Fill(npc1, os_fvtxn_qq3);
-    nfvtxt_os_fvtxn_c22->Fill(nfvtxt_north, os_fvtxn_qq2);
-    nfvtxc_os_fvtxn_c22->Fill(nfvtxc_north, os_fvtxn_qq2);
-    nfvtxt_os_fvtxn_c32->Fill(nfvtxt_north, os_fvtxn_qq3);
-    nfvtxc_os_fvtxn_c32->Fill(nfvtxc_north, os_fvtxn_qq3);
     float os_fvtxn_psi2 = atan2(os_fvtxn_qy2, os_fvtxn_qx2) / 2.0;
     float os_fvtxn_psi3 = atan2(os_fvtxn_qy3, os_fvtxn_qx3) / 3.0;
     os_fvtxn_1dPsi2->Fill(os_fvtxn_psi2);
     os_fvtxn_1dPsi3->Fill(os_fvtxn_psi3);
 
-    // --- eta dependent clusters
-
-
-    // --- now fvtx tracks
-
-    float os_fvtxs_tracks_qw = fvtxs_tracks_qw[0];
-    float os_fvtxs_tracks_qx2 = fvtxs_tracks_qx2[0] - os_fvtxs_tracks_qw * mean[icent][izvtx][1][fvtxs_tracks_index][0];
-    float os_fvtxs_tracks_qy2 = fvtxs_tracks_qy2[0] - os_fvtxs_tracks_qw * mean[icent][izvtx][1][fvtxs_tracks_index][1];
-    float os_fvtxs_tracks_qx3 = fvtxs_tracks_qx3[0] - os_fvtxs_tracks_qw * mean[icent][izvtx][2][fvtxs_tracks_index][0];
-    float os_fvtxs_tracks_qy3 = fvtxs_tracks_qy3[0] - os_fvtxs_tracks_qw * mean[icent][izvtx][2][fvtxs_tracks_index][1];
-    float os_fvtxs_tracks_qx4 = fvtxs_tracks_qx4[0] - os_fvtxs_tracks_qw * mean[icent][izvtx][3][fvtxs_tracks_index][0];
-    float os_fvtxs_tracks_qy4 = fvtxs_tracks_qy4[0] - os_fvtxs_tracks_qw * mean[icent][izvtx][3][fvtxs_tracks_index][1];
-    float os_fvtxs_tracks_qq2 = calc2_event(os_fvtxs_tracks_qx2, os_fvtxs_tracks_qy2, os_fvtxs_tracks_qw);
-    float os_fvtxs_tracks_qq3 = calc2_event(os_fvtxs_tracks_qx3, os_fvtxs_tracks_qy3, os_fvtxs_tracks_qw);
-    os_fvtxs_tracks_cos22->Fill(0.0, os_fvtxs_tracks_qx2);
-    os_fvtxs_tracks_sin22->Fill(0.0, os_fvtxs_tracks_qy2);
-    os_fvtxs_tracks_cos32->Fill(0.0, os_fvtxs_tracks_qx3);
-    os_fvtxs_tracks_sin32->Fill(0.0, os_fvtxs_tracks_qy3);
-    os_fvtxs_tracks_c22->Fill(0.0, os_fvtxs_tracks_qq2);
-    os_fvtxs_tracks_c32->Fill(0.0, os_fvtxs_tracks_qq3);
-    npc1_os_fvtxs_tracks_c22->Fill(npc1, os_fvtxs_tracks_qq2);
-    npc1_os_fvtxs_tracks_c32->Fill(npc1, os_fvtxs_tracks_qq3);
-    nfvtxt_os_fvtxs_tracks_c22->Fill(nfvtxt_south, os_fvtxs_tracks_qq2);
-    nfvtxc_os_fvtxs_tracks_c22->Fill(nfvtxc_south, os_fvtxs_tracks_qq2);
-    nfvtxt_os_fvtxs_tracks_c32->Fill(nfvtxt_south, os_fvtxs_tracks_qq3);
-    nfvtxc_os_fvtxs_tracks_c32->Fill(nfvtxc_south, os_fvtxs_tracks_qq3);
-    float os_fvtxs_tracks_psi2 = atan2(os_fvtxs_tracks_qy2, os_fvtxs_tracks_qx2) / 2.0;
-    float os_fvtxs_tracks_psi3 = atan2(os_fvtxs_tracks_qy3, os_fvtxs_tracks_qx3) / 3.0;
-    os_fvtxs_tracks_1dPsi2->Fill(os_fvtxs_tracks_psi2);
-    os_fvtxs_tracks_1dPsi3->Fill(os_fvtxs_tracks_psi3);
-
-    float os_fvtxn_tracks_qw = fvtxn_tracks_qw[0];
-    float os_fvtxn_tracks_qx2 = fvtxn_tracks_qx2[0] - os_fvtxn_tracks_qw * mean[icent][izvtx][1][fvtxn_tracks_index][0];
-    float os_fvtxn_tracks_qy2 = fvtxn_tracks_qy2[0] - os_fvtxn_tracks_qw * mean[icent][izvtx][1][fvtxn_tracks_index][1];
-    float os_fvtxn_tracks_qx3 = fvtxn_tracks_qx3[0] - os_fvtxn_tracks_qw * mean[icent][izvtx][2][fvtxn_tracks_index][0];
-    float os_fvtxn_tracks_qy3 = fvtxn_tracks_qy3[0] - os_fvtxn_tracks_qw * mean[icent][izvtx][2][fvtxn_tracks_index][1];
-    float os_fvtxn_tracks_qx4 = fvtxn_tracks_qx4[0] - os_fvtxn_tracks_qw * mean[icent][izvtx][3][fvtxn_tracks_index][0];
-    float os_fvtxn_tracks_qy4 = fvtxn_tracks_qy4[0] - os_fvtxn_tracks_qw * mean[icent][izvtx][3][fvtxn_tracks_index][1];
-    float os_fvtxn_tracks_qq2 = calc2_event(os_fvtxn_tracks_qx2, os_fvtxn_tracks_qy2, os_fvtxn_tracks_qw);
-    float os_fvtxn_tracks_qq3 = calc2_event(os_fvtxn_tracks_qx3, os_fvtxn_tracks_qy3, os_fvtxn_tracks_qw);
-    os_fvtxn_tracks_cos22->Fill(0.0, os_fvtxn_tracks_qx2);
-    os_fvtxn_tracks_sin22->Fill(0.0, os_fvtxn_tracks_qy2);
-    os_fvtxn_tracks_cos32->Fill(0.0, os_fvtxn_tracks_qx3);
-    os_fvtxn_tracks_sin32->Fill(0.0, os_fvtxn_tracks_qy3);
-    os_fvtxn_tracks_c22->Fill(0.0, os_fvtxn_tracks_qq2);
-    os_fvtxn_tracks_c32->Fill(0.0, os_fvtxn_tracks_qq3);
-    npc1_os_fvtxn_tracks_c22->Fill(npc1, os_fvtxn_tracks_qq2);
-    npc1_os_fvtxn_tracks_c32->Fill(npc1, os_fvtxn_tracks_qq3);
-    nfvtxt_os_fvtxn_tracks_c22->Fill(nfvtxt_north, os_fvtxn_tracks_qq2);
-    nfvtxc_os_fvtxn_tracks_c22->Fill(nfvtxc_north, os_fvtxn_tracks_qq2);
-    nfvtxt_os_fvtxn_tracks_c32->Fill(nfvtxt_north, os_fvtxn_tracks_qq3);
-    nfvtxc_os_fvtxn_tracks_c32->Fill(nfvtxc_north, os_fvtxn_tracks_qq3);
-    float os_fvtxn_tracks_psi2 = atan2(os_fvtxn_tracks_qy2, os_fvtxn_tracks_qx2) / 2.0;
-    float os_fvtxn_tracks_psi3 = atan2(os_fvtxn_tracks_qy3, os_fvtxn_tracks_qx3) / 3.0;
-    os_fvtxn_tracks_1dPsi2->Fill(os_fvtxn_tracks_psi2);
-    os_fvtxn_tracks_1dPsi3->Fill(os_fvtxn_tracks_psi3);
-
-    // --- combined fvtx clusters
-
-    float os_fvtxc_qx2 = os_fvtxs_qx2 + os_fvtxn_qx2;
-    float os_fvtxc_qy2 = os_fvtxs_qy2 + os_fvtxn_qy2;
-    float os_fvtxc_qx3 = os_fvtxs_qx3 + os_fvtxn_qx3;
-    float os_fvtxc_qy3 = os_fvtxs_qy3 + os_fvtxn_qy3;
-    float os_fvtxc_qx4 = os_fvtxs_qx4 + os_fvtxn_qx4;
-    float os_fvtxc_qy4 = os_fvtxs_qy4 + os_fvtxn_qy4;
-    float os_fvtxc_qw = os_fvtxs_qw + os_fvtxn_qw;
-    float os_fvtxc_qq2 = calc2_event(os_fvtxc_qx2, os_fvtxc_qy2, os_fvtxc_qw);
-    float os_fvtxc_qq3 = calc2_event(os_fvtxc_qx3, os_fvtxc_qy3, os_fvtxc_qw);
-    os_fvtxc_c22->Fill(0.0, os_fvtxc_qq2);
-    os_fvtxc_c32->Fill(0.0, os_fvtxc_qq3);
-    nfvtxt_os_fvtxc_c22->Fill(nfvtxt, os_fvtxc_qq2);
-    nfvtxc_os_fvtxc_c22->Fill(nfvtxc, os_fvtxc_qq2);
-    nfvtxt_os_fvtxc_c32->Fill(nfvtxt, os_fvtxc_qq3);
-    nfvtxc_os_fvtxc_c32->Fill(nfvtxc, os_fvtxc_qq3);
-
-    // --- combined fvtx tracks
-
-    float os_fvtxc_tracks_qx2 = os_fvtxs_tracks_qx2 + os_fvtxn_tracks_qx2;
-    float os_fvtxc_tracks_qy2 = os_fvtxs_tracks_qy2 + os_fvtxn_tracks_qy2;
-    float os_fvtxc_tracks_qx3 = os_fvtxs_tracks_qx3 + os_fvtxn_tracks_qx3;
-    float os_fvtxc_tracks_qy3 = os_fvtxs_tracks_qy3 + os_fvtxn_tracks_qy3;
-    float os_fvtxc_tracks_qx4 = os_fvtxs_tracks_qx4 + os_fvtxn_tracks_qx4;
-    float os_fvtxc_tracks_qy4 = os_fvtxs_tracks_qy4 + os_fvtxn_tracks_qy4;
-    float os_fvtxc_tracks_qw = os_fvtxs_tracks_qw + os_fvtxn_tracks_qw;
-    float os_fvtxc_tracks_qq2 = calc2_event(os_fvtxc_tracks_qx2, os_fvtxc_tracks_qy2, os_fvtxc_tracks_qw);
-    float os_fvtxc_tracks_qq3 = calc2_event(os_fvtxc_tracks_qx3, os_fvtxc_tracks_qy3, os_fvtxc_tracks_qw);
-    os_fvtxc_tracks_c22->Fill(0.0, os_fvtxc_tracks_qq2);
-    os_fvtxc_tracks_c32->Fill(0.0, os_fvtxc_tracks_qq3);
-    nfvtxt_os_fvtxc_tracks_c22->Fill(nfvtxt, os_fvtxc_tracks_qq2);
-    nfvtxc_os_fvtxc_tracks_c22->Fill(nfvtxc, os_fvtxc_tracks_qq2);
-    nfvtxt_os_fvtxc_tracks_c32->Fill(nfvtxt, os_fvtxc_tracks_qq3);
-    nfvtxc_os_fvtxc_tracks_c32->Fill(nfvtxc, os_fvtxc_tracks_qq3);
 
     // --- have a look at some different correlations
 
     // --- bbcs-fvtxs
     float os_bbcfvtxs_qq2 = ( (os_bbc_qx2 * os_fvtxs_qx2) + (os_bbc_qy2 * os_fvtxs_qy2) ) / ( os_bbc_qw * os_fvtxs_qw );
     float os_bbcfvtxs_qq3 = ( (os_bbc_qx3 * os_fvtxs_qx3) + (os_bbc_qy3 * os_fvtxs_qy3) ) / ( os_bbc_qw * os_fvtxs_qw );
-    os_bbcsfvtxs_c22->Fill(0.0, os_bbcfvtxs_qq2);
-    os_bbcsfvtxs_c32->Fill(0.0, os_bbcfvtxs_qq3);
-    npc1_os_bbcsfvtxs_c22->Fill(npc1, os_bbcfvtxs_qq2);
-    npc1_os_bbcsfvtxs_c32->Fill(npc1, os_bbcfvtxs_qq3);
-    nfvtxt_os_bbcsfvtxs_c22->Fill(nfvtxt, os_bbcfvtxs_qq2);
-    nfvtxc_os_bbcsfvtxs_c22->Fill(nfvtxc, os_bbcfvtxs_qq2);
-    nfvtxt_os_bbcsfvtxs_c32->Fill(nfvtxt, os_bbcfvtxs_qq3);
-    nfvtxc_os_bbcsfvtxs_c32->Fill(nfvtxc, os_bbcfvtxs_qq3);
     // --- bbcs-fvtxn
     float os_bbcfvtxn_qq2 = ( (os_bbc_qx2 * os_fvtxn_qx2) + (os_bbc_qy2 * os_fvtxn_qy2) ) / ( os_bbc_qw * os_fvtxn_qw );
     float os_bbcfvtxn_qq3 = ( (os_bbc_qx3 * os_fvtxn_qx3) + (os_bbc_qy3 * os_fvtxn_qy3) ) / ( os_bbc_qw * os_fvtxn_qw );
-    os_bbcsfvtxn_c22->Fill(0.0, os_bbcfvtxn_qq2);
-    os_bbcsfvtxn_c32->Fill(0.0, os_bbcfvtxn_qq3);
-    npc1_os_bbcsfvtxn_c22->Fill(npc1, os_bbcfvtxn_qq2);
-    npc1_os_bbcsfvtxn_c32->Fill(npc1, os_bbcfvtxn_qq3);
-    nfvtxt_os_bbcsfvtxn_c22->Fill(nfvtxt, os_bbcfvtxn_qq2);
-    nfvtxc_os_bbcsfvtxn_c22->Fill(nfvtxc, os_bbcfvtxn_qq2);
-    nfvtxt_os_bbcsfvtxn_c32->Fill(nfvtxt, os_bbcfvtxn_qq3);
-    nfvtxc_os_bbcsfvtxn_c32->Fill(nfvtxc, os_bbcfvtxn_qq3);
     // --- fvtxs-fvtxn
     float os_fvtxsfvtxn_qq2 = ( (os_fvtxs_qx2 * os_fvtxn_qx2) + (os_fvtxs_qy2 * os_fvtxn_qy2) ) / ( os_fvtxs_qw * os_fvtxn_qw );
     float os_fvtxsfvtxn_qq3 = ( (os_fvtxs_qx3 * os_fvtxn_qx3) + (os_fvtxs_qy3 * os_fvtxn_qy3) ) / ( os_fvtxs_qw * os_fvtxn_qw );
-    os_fvtxsfvtxn_c22->Fill(0.0, os_fvtxsfvtxn_qq2);
-    os_fvtxsfvtxn_c32->Fill(0.0, os_fvtxsfvtxn_qq3);
-    npc1_os_fvtxsfvtxn_c22->Fill(npc1, os_fvtxsfvtxn_qq2);
-    npc1_os_fvtxsfvtxn_c32->Fill(npc1, os_fvtxsfvtxn_qq3);
-    nfvtxt_os_fvtxsfvtxn_c22->Fill(nfvtxt, os_fvtxsfvtxn_qq2); // see below
-    nfvtxc_os_fvtxsfvtxn_c22->Fill(nfvtxc, os_fvtxsfvtxn_qq2); // see below
-    nfvtxt_os_fvtxsfvtxn_c32->Fill(nfvtxt, os_fvtxsfvtxn_qq3);
-    nfvtxc_os_fvtxsfvtxn_c32->Fill(nfvtxc, os_fvtxsfvtxn_qq3);
     // ---
-
     float os_fvtxsfvtxn_tracks_qq2 = ( (os_fvtxs_tracks_qx2 * os_fvtxn_tracks_qx2) + (os_fvtxs_tracks_qy2 * os_fvtxn_tracks_qy2) ) / ( os_fvtxs_tracks_qw * os_fvtxn_tracks_qw );
     float os_fvtxsfvtxn_tracks_qq3 = ( (os_fvtxs_tracks_qx3 * os_fvtxn_tracks_qx3) + (os_fvtxs_tracks_qy3 * os_fvtxn_tracks_qy3) ) / ( os_fvtxs_tracks_qw * os_fvtxn_tracks_qw );
-    os_fvtxsfvtxn_tracks_c22->Fill(0.0, os_fvtxsfvtxn_tracks_qq2);
-    os_fvtxsfvtxn_tracks_c32->Fill(0.0, os_fvtxsfvtxn_tracks_qq3);
-    npc1_os_fvtxsfvtxn_tracks_c22->Fill(npc1, os_fvtxsfvtxn_tracks_qq2);
-    npc1_os_fvtxsfvtxn_tracks_c32->Fill(npc1, os_fvtxsfvtxn_tracks_qq3);
-    nfvtxt_os_fvtxsfvtxn_tracks_c22->Fill(nfvtxt, os_fvtxsfvtxn_tracks_qq2);
-    nfvtxc_os_fvtxsfvtxn_tracks_c22->Fill(nfvtxc, os_fvtxsfvtxn_tracks_qq2);
-    nfvtxt_os_fvtxsfvtxn_tracks_c32->Fill(nfvtxt, os_fvtxsfvtxn_tracks_qq3);
-    nfvtxc_os_fvtxsfvtxn_tracks_c32->Fill(nfvtxc, os_fvtxsfvtxn_tracks_qq3);
 
-    // --- now have a look at some 4 particle cumulants
-    if ( good_4_event )
-    {
-      float os_bbc_qqqq4 = calc4_event(os_bbc_qx2, os_bbc_qy2, os_bbc_qx4, os_bbc_qy4, os_bbc_qw);
-      float os_fvtxs_qqqq4 = calc4_event(os_fvtxs_qx2, os_fvtxs_qy2, os_fvtxs_qx4, os_fvtxs_qy4, os_fvtxs_qw);
-      float os_fvtxn_qqqq4 = calc4_event(os_fvtxn_qx2, os_fvtxn_qy2, os_fvtxn_qx4, os_fvtxn_qy4, os_fvtxn_qw);
-      float os_fvtxc_qqqq4 = calc4_event(os_fvtxc_qx2, os_fvtxc_qy2, os_fvtxc_qx4, os_fvtxc_qy4, os_fvtxc_qw);
-      os_bbcs_c24->Fill(0.0, os_bbc_qqqq4);
-      os_fvtxs_c24->Fill(0.0, os_fvtxs_qqqq4);
-      os_fvtxn_c24->Fill(0.0, os_fvtxn_qqqq4);
-      os_bbcs_c24_vs_cent->Fill(centrality, os_bbc_qqqq4);
-      os_fvtxs_c24_vs_cent->Fill(centrality, os_fvtxs_qqqq4);
-      os_fvtxn_c24_vs_cent->Fill(centrality, os_fvtxn_qqqq4);
-      os_bbcs_c24_vs_bbcqs->Fill(bbc_qs, os_bbc_qqqq4);
-      os_fvtxs_c24_vs_bbcqs->Fill(bbc_qs, os_fvtxs_qqqq4);
-      os_fvtxn_c24_vs_bbcqs->Fill(bbc_qs, os_fvtxn_qqqq4);
-      os_bbcs_c24_vs_nfvtxs->Fill(d_nFVTXS_clus, os_bbc_qqqq4);
-      os_fvtxs_c24_vs_nfvtxs->Fill(d_nFVTXS_clus, os_fvtxs_qqqq4);
-      os_fvtxn_c24_vs_nfvtxs->Fill(d_nFVTXS_clus, os_fvtxn_qqqq4);
-      // ---
-      //nfvtxt_os_fvtxs_c22->Fill(nfvtxt,os_fvtxs_qq2);
-      //nfvtxc_os_fvtxs_c22->Fill(nfvtxc,os_fvtxs_qq2);
-      //nfvtxt_os_fvtxn_c22->Fill(nfvtxt,os_fvtxn_qq2);
-      //nfvtxc_os_fvtxn_c22->Fill(nfvtxc,os_fvtxn_qq2);
-      nfvtxt_os_fvtxs_c24->Fill(nfvtxt, os_fvtxs_qqqq4);
-      nfvtxc_os_fvtxs_c24->Fill(nfvtxc, os_fvtxs_qqqq4);
-      nfvtxt_os_fvtxn_c24->Fill(nfvtxt, os_fvtxn_qqqq4);
-      nfvtxc_os_fvtxn_c24->Fill(nfvtxc, os_fvtxn_qqqq4);
-      nfvtxt_os_fvtxc_c24->Fill(nfvtxt, os_fvtxc_qqqq4);
-      nfvtxc_os_fvtxc_c24->Fill(nfvtxc, os_fvtxc_qqqq4);
-      //nfvtxt_os_fvtxsfvtxn_c22->Fill(nfvtxt,os_fvtxsfvtxn_qq2);
-      //nfvtxc_os_fvtxsfvtxn_c22->Fill(nfvtxc,os_fvtxsfvtxn_qq2);
-      nfvtxt_os_fvtxsfvtxn_c24a->Fill(nfvtxt, os_fvtxsfvtxn_qq2 * os_fvtxsfvtxn_qq2); // doesn't account for cross terms
-      nfvtxc_os_fvtxsfvtxn_c24a->Fill(nfvtxc, os_fvtxsfvtxn_qq2 * os_fvtxsfvtxn_qq2); // doesn't account for cross terms
-      nfvtxt_os_fvtxsfvtxn_c24b->Fill(nfvtxt, os_fvtxs_qq2 * os_fvtxs_qq2 * os_fvtxn_qq2 * os_fvtxn_qq2); // i think this power counts to v^8
-      nfvtxc_os_fvtxsfvtxn_c24b->Fill(nfvtxc, os_fvtxs_qq2 * os_fvtxs_qq2 * os_fvtxn_qq2 * os_fvtxn_qq2); // i think this power counts to v^8
-      nfvtxt_os_fvtxsfvtxn_c24c->Fill(nfvtxt, os_fvtxsfvtxn_qq2 * os_fvtxs_qq2 * os_fvtxn_qq2); // i think this power counts to v^6
-      nfvtxc_os_fvtxsfvtxn_c24c->Fill(nfvtxc, os_fvtxsfvtxn_qq2 * os_fvtxs_qq2 * os_fvtxn_qq2); // i think this power counts to v^6
-      nfvtxt_os_fvtxsfvtxn_c24d->Fill(nfvtxt, os_fvtxs_qq2 * os_fvtxn_qq2); // i think this is right (but problem with autocorrelations)
-      nfvtxc_os_fvtxsfvtxn_c24d->Fill(nfvtxc, os_fvtxs_qq2 * os_fvtxn_qq2); // i think this is right (but problem with autocorrelations)
-      nfvtxt_os_fvtxsfvtxn_c24->Fill(nfvtxt, os_fvtxs_qq2 * os_fvtxn_qq2); // might as well use this as an anchor
-      nfvtxc_os_fvtxsfvtxn_c24->Fill(nfvtxc, os_fvtxs_qq2 * os_fvtxn_qq2); // might as well use this as an anchor
-
-      float os_fvtxs_tracks_qqqq4 = calc4_event(os_fvtxs_tracks_qx2, os_fvtxs_tracks_qy2, os_fvtxs_tracks_qx4, os_fvtxs_tracks_qy4, os_fvtxs_tracks_qw);
-      float os_fvtxn_tracks_qqqq4 = calc4_event(os_fvtxn_tracks_qx2, os_fvtxn_tracks_qy2, os_fvtxn_tracks_qx4, os_fvtxn_tracks_qy4, os_fvtxn_tracks_qw);
-      float os_fvtxc_tracks_qqqq4 = calc4_event(os_fvtxc_tracks_qx2, os_fvtxc_tracks_qy2, os_fvtxc_tracks_qx4, os_fvtxc_tracks_qy4, os_fvtxc_tracks_qw);
-      nfvtxt_os_fvtxs_tracks_c24->Fill(nfvtxt_south, os_fvtxs_tracks_qqqq4);
-      nfvtxc_os_fvtxs_tracks_c24->Fill(nfvtxc_south, os_fvtxs_tracks_qqqq4);
-      nfvtxt_os_fvtxn_tracks_c24->Fill(nfvtxt_north, os_fvtxn_tracks_qqqq4);
-      nfvtxc_os_fvtxn_tracks_c24->Fill(nfvtxc_north, os_fvtxn_tracks_qqqq4);
-      nfvtxt_os_fvtxc_tracks_c24->Fill(nfvtxt, os_fvtxc_tracks_qqqq4);
-      nfvtxc_os_fvtxc_tracks_c24->Fill(nfvtxc, os_fvtxc_tracks_qqqq4);
-
-      // cout << "tracks cumulant " << os_fvtxs_tracks_qq2 << endl;
-      // cout << "tracks qx " << os_fvtxs_tracks_qx2 << endl;
-      // cout << "tracks qy " << os_fvtxs_tracks_qy2 << endl;
-      // cout << "tracks qw " << os_fvtxs_tracks_qw << endl;
-      // nfvtxt_os_fvtxs_tracks_c22->Fill(nfvtxt,os_fvtxs_tracks_qq2);
-      // nfvtxc_os_fvtxs_tracks_c22->Fill(nfvtxc,os_fvtxs_tracks_qq2);
-      // nfvtxt_os_fvtxn_tracks_c22->Fill(nfvtxt,os_fvtxn_tracks_qq2);
-      // nfvtxc_os_fvtxn_tracks_c22->Fill(nfvtxc,os_fvtxn_tracks_qq2);
-      // nfvtxt_os_fvtxs_tracks_c24->Fill(nfvtxt,os_fvtxs_tracks_qqqq4);
-      // nfvtxc_os_fvtxs_tracks_c24->Fill(nfvtxc,os_fvtxs_tracks_qqqq4);
-      // nfvtxt_os_fvtxn_tracks_c24->Fill(nfvtxt,os_fvtxn_tracks_qqqq4);
-      // nfvtxc_os_fvtxn_tracks_c24->Fill(nfvtxc,os_fvtxn_tracks_qqqq4);
-      //nfvtxt_os_fvtxsfvtxn_tracks_c22->Fill(nfvtxt,os_fvtxsfvtxn_tracks_qq2);
-      //nfvtxc_os_fvtxsfvtxn_tracks_c22->Fill(nfvtxc,os_fvtxsfvtxn_tracks_qq2);
-      nfvtxt_os_fvtxsfvtxn_tracks_c24a->Fill(nfvtxt, os_fvtxsfvtxn_tracks_qq2 * os_fvtxsfvtxn_tracks_qq2); // doesn't account for cross terms
-      nfvtxc_os_fvtxsfvtxn_tracks_c24a->Fill(nfvtxc, os_fvtxsfvtxn_tracks_qq2 * os_fvtxsfvtxn_tracks_qq2); // doesn't account for cross terms
-      nfvtxt_os_fvtxsfvtxn_tracks_c24b->Fill(nfvtxt, os_fvtxs_tracks_qq2 * os_fvtxs_tracks_qq2 * os_fvtxn_tracks_qq2 * os_fvtxn_tracks_qq2); // v^8 ?
-      nfvtxc_os_fvtxsfvtxn_tracks_c24b->Fill(nfvtxc, os_fvtxs_tracks_qq2 * os_fvtxs_tracks_qq2 * os_fvtxn_tracks_qq2 * os_fvtxn_tracks_qq2); // v^8 ?
-      nfvtxt_os_fvtxsfvtxn_tracks_c24c->Fill(nfvtxt, os_fvtxsfvtxn_tracks_qq2 * os_fvtxs_tracks_qq2 * os_fvtxn_tracks_qq2); // v^6 ?
-      nfvtxc_os_fvtxsfvtxn_tracks_c24c->Fill(nfvtxc, os_fvtxsfvtxn_tracks_qq2 * os_fvtxs_tracks_qq2 * os_fvtxn_tracks_qq2); // v^6 ?
-      nfvtxt_os_fvtxsfvtxn_tracks_c24d->Fill(nfvtxt, os_fvtxs_tracks_qq2 * os_fvtxn_tracks_qq2); // i think this is right (and tracks shouldn't have autocorrelation issues)
-      nfvtxc_os_fvtxsfvtxn_tracks_c24d->Fill(nfvtxc, os_fvtxs_tracks_qq2 * os_fvtxn_tracks_qq2); // i think this is right (and tracks shouldn't have autocorrelation issues)
-      nfvtxt_os_fvtxsfvtxn_tracks_c24->Fill(nfvtxt, os_fvtxs_tracks_qq2 * os_fvtxn_tracks_qq2); // use this as an anchor
-      nfvtxc_os_fvtxsfvtxn_tracks_c24->Fill(nfvtxc, os_fvtxs_tracks_qq2 * os_fvtxn_tracks_qq2); // use this as an anchor
-
-    }
 
     // --------------------------------------
     // --- now the standard event plane stuff
@@ -3380,20 +1606,12 @@ void flatten(int runNumber, int rp_recal_pass)
     float fvtx1_south_psi2_docalib;
     float fvtx2_south_psi2_docalib;
     float fvtx3_south_psi2_docalib;
-    float fvtx012_south_psi2_docalib;
-    float fvtx013_south_psi2_docalib;
-    float fvtx023_south_psi2_docalib;
-    float fvtx123_south_psi2_docalib;
 
     float fvtx_south_psi3_docalib;
     float fvtx0_south_psi3_docalib;
     float fvtx1_south_psi3_docalib;
     float fvtx2_south_psi3_docalib;
     float fvtx3_south_psi3_docalib;
-    float fvtx012_south_psi3_docalib;
-    float fvtx013_south_psi3_docalib;
-    float fvtx023_south_psi3_docalib;
-    float fvtx123_south_psi3_docalib;
 
     float fvtx_north_psi2_docalib;
     float fvtx0_north_psi2_docalib;
@@ -3407,55 +1625,10 @@ void flatten(int runNumber, int rp_recal_pass)
     float fvtx2_north_psi3_docalib;
     float fvtx3_north_psi3_docalib;
 
-    float bbc_south_psi2_dcnw;
-    float bbc_south_psi3_dcnw;
-
-    float fvtx_south_psi2_dcnw;
-    float fvtx0_south_psi2_dcnw;
-    float fvtx1_south_psi2_dcnw;
-    float fvtx2_south_psi2_dcnw;
-    float fvtx3_south_psi2_dcnw;
-
-    float fvtx_south_psi3_dcnw;
-    float fvtx0_south_psi3_dcnw;
-    float fvtx1_south_psi3_dcnw;
-    float fvtx2_south_psi3_dcnw;
-    float fvtx3_south_psi3_dcnw;
-
-    float fvtx_north_psi2_dcnw;
-    float fvtx0_north_psi2_dcnw;
-    float fvtx1_north_psi2_dcnw;
-    float fvtx2_north_psi2_dcnw;
-    float fvtx3_north_psi2_dcnw;
-
-    float fvtx_north_psi3_dcnw;
-    float fvtx0_north_psi3_dcnw;
-    float fvtx1_north_psi3_dcnw;
-    float fvtx2_north_psi3_dcnw;
-    float fvtx3_north_psi3_dcnw;
-
-    float fvtx_south_psi2_tracks;
-    float fvtx0_south_psi2_tracks;
-    float fvtx1_south_psi2_tracks;
-
-    float fvtx_south_psi3_tracks;
-    float fvtx0_south_psi3_tracks;
-    float fvtx1_south_psi3_tracks;
-
-    float fvtx_north_psi2_tracks;
-    float fvtx0_north_psi2_tracks;
-    float fvtx1_north_psi2_tracks;
-
-    float fvtx_north_psi3_tracks;
-    float fvtx0_north_psi3_tracks;
-    float fvtx1_north_psi3_tracks;
-
     if ( bbc_pmts )
     {
       bbc_south_psi2_docalib = (sumxy[1][bbcs_index][2] > 0) ? sumxy[1][bbcs_index][3] : -9999.9;
       bbc_south_psi3_docalib = (sumxy[2][bbcs_index][2] > 0) ? sumxy[2][bbcs_index][3] : -9999.9;
-      bbc_south_psi2_dcnw = (sumxy[1][bbcs_nw_index][2] > 0) ? sumxy[1][bbcs_nw_index][3] : -9999.9;
-      bbc_south_psi3_dcnw = (sumxy[2][bbcs_nw_index][2] > 0) ? sumxy[2][bbcs_nw_index][3] : -9999.9;
     }
     if ( fvtx_clusters )
     {
@@ -3465,66 +1638,24 @@ void flatten(int runNumber, int rp_recal_pass)
       fvtx1_south_psi2_docalib = (sumxy[1][fvtxs1_index][2] > 4) ? sumxy[1][fvtxs1_index][3] : -9999.9;
       fvtx2_south_psi2_docalib = (sumxy[1][fvtxs2_index][2] > 4) ? sumxy[1][fvtxs2_index][3] : -9999.9;
       fvtx3_south_psi2_docalib = (sumxy[1][fvtxs3_index][2] > 4) ? sumxy[1][fvtxs3_index][3] : -9999.9;
-      fvtx012_south_psi2_docalib = (sumxy[1][fvtxs012_index][2] > 4) ? sumxy[1][fvtxs012_index][3] : -9999.9;
-      fvtx013_south_psi2_docalib = (sumxy[1][fvtxs013_index][2] > 4) ? sumxy[1][fvtxs013_index][3] : -9999.9;
-      fvtx023_south_psi2_docalib = (sumxy[1][fvtxs023_index][2] > 4) ? sumxy[1][fvtxs023_index][3] : -9999.9;
-      fvtx123_south_psi2_docalib = (sumxy[1][fvtxs123_index][2] > 4) ? sumxy[1][fvtxs123_index][3] : -9999.9;
+
       fvtx_south_psi3_docalib  = (sumxy[2][fvtxs_index][2] > 4)  ? sumxy[2][fvtxs_index][3]  : -9999.9;
       fvtx0_south_psi3_docalib = (sumxy[2][fvtxs0_index][2] > 4) ? sumxy[2][fvtxs0_index][3] : -9999.9;
       fvtx1_south_psi3_docalib = (sumxy[2][fvtxs1_index][2] > 4) ? sumxy[2][fvtxs1_index][3] : -9999.9;
       fvtx2_south_psi3_docalib = (sumxy[2][fvtxs2_index][2] > 4) ? sumxy[2][fvtxs2_index][3] : -9999.9;
       fvtx3_south_psi3_docalib = (sumxy[2][fvtxs3_index][2] > 4) ? sumxy[2][fvtxs3_index][3] : -9999.9;
-      fvtx012_south_psi3_docalib = (sumxy[2][fvtxs012_index][2] > 4) ? sumxy[2][fvtxs012_index][3] : -9999.9;
-      fvtx013_south_psi3_docalib = (sumxy[2][fvtxs013_index][2] > 4) ? sumxy[2][fvtxs013_index][3] : -9999.9;
-      fvtx023_south_psi3_docalib = (sumxy[2][fvtxs023_index][2] > 4) ? sumxy[2][fvtxs023_index][3] : -9999.9;
-      fvtx123_south_psi3_docalib = (sumxy[2][fvtxs123_index][2] > 4) ? sumxy[2][fvtxs123_index][3] : -9999.9;
       // ---
       fvtx_north_psi2_docalib  = (sumxy[1][fvtxn_index][2] > 4)  ? sumxy[1][fvtxn_index][3]  : -9999.9;
       fvtx0_north_psi2_docalib = (sumxy[1][fvtxn0_index][2] > 4) ? sumxy[1][fvtxn0_index][3] : -9999.9;
       fvtx1_north_psi2_docalib = (sumxy[1][fvtxn1_index][2] > 4) ? sumxy[1][fvtxn1_index][3] : -9999.9;
       fvtx2_north_psi2_docalib = (sumxy[1][fvtxn2_index][2] > 4) ? sumxy[1][fvtxn2_index][3] : -9999.9;
       fvtx3_north_psi2_docalib = (sumxy[1][fvtxn3_index][2] > 4) ? sumxy[1][fvtxn3_index][3] : -9999.9;
+
       fvtx_north_psi3_docalib  = (sumxy[2][fvtxn_index][2] > 4)  ? sumxy[2][fvtxn_index][3]  : -9999.9;
       fvtx0_north_psi3_docalib = (sumxy[2][fvtxn0_index][2] > 4) ? sumxy[2][fvtxn0_index][3] : -9999.9;
       fvtx1_north_psi3_docalib = (sumxy[2][fvtxn1_index][2] > 4) ? sumxy[2][fvtxn1_index][3] : -9999.9;
       fvtx2_north_psi3_docalib = (sumxy[2][fvtxn2_index][2] > 4) ? sumxy[2][fvtxn2_index][3] : -9999.9;
       fvtx3_north_psi3_docalib = (sumxy[2][fvtxn3_index][2] > 4) ? sumxy[2][fvtxn3_index][3] : -9999.9;
-      // ---
-      fvtx_south_psi2_dcnw  = (sumxy[1][fvtxs_nw_index][2] > 4)  ? sumxy[1][fvtxs_nw_index][3]  : -9999.9;
-      fvtx0_south_psi2_dcnw = (sumxy[1][fvtxs0_nw_index][2] > 4) ? sumxy[1][fvtxs0_nw_index][3] : -9999.9;
-      fvtx1_south_psi2_dcnw = (sumxy[1][fvtxs1_nw_index][2] > 4) ? sumxy[1][fvtxs1_nw_index][3] : -9999.9;
-      fvtx2_south_psi2_dcnw = (sumxy[1][fvtxs2_nw_index][2] > 4) ? sumxy[1][fvtxs2_nw_index][3] : -9999.9;
-      fvtx3_south_psi2_dcnw = (sumxy[1][fvtxs3_nw_index][2] > 4) ? sumxy[1][fvtxs3_nw_index][3] : -9999.9;
-      fvtx_south_psi3_dcnw  = (sumxy[2][fvtxs_nw_index][2] > 4)  ? sumxy[2][fvtxs_nw_index][3]  : -9999.9;
-      fvtx0_south_psi3_dcnw = (sumxy[2][fvtxs0_nw_index][2] > 4) ? sumxy[2][fvtxs0_nw_index][3] : -9999.9;
-      fvtx1_south_psi3_dcnw = (sumxy[2][fvtxs1_nw_index][2] > 4) ? sumxy[2][fvtxs1_nw_index][3] : -9999.9;
-      fvtx2_south_psi3_dcnw = (sumxy[2][fvtxs2_nw_index][2] > 4) ? sumxy[2][fvtxs2_nw_index][3] : -9999.9;
-      fvtx3_south_psi3_dcnw = (sumxy[2][fvtxs3_nw_index][2] > 4) ? sumxy[2][fvtxs3_nw_index][3] : -9999.9;
-      // ---
-      fvtx_north_psi2_dcnw  = (sumxy[1][fvtxn_nw_index][2] > 4)  ? sumxy[1][fvtxn_nw_index][3]  : -9999.9;
-      fvtx0_north_psi2_dcnw = (sumxy[1][fvtxn0_nw_index][2] > 4) ? sumxy[1][fvtxn0_nw_index][3] : -9999.9;
-      fvtx1_north_psi2_dcnw = (sumxy[1][fvtxn1_nw_index][2] > 4) ? sumxy[1][fvtxn1_nw_index][3] : -9999.9;
-      fvtx2_north_psi2_dcnw = (sumxy[1][fvtxn2_nw_index][2] > 4) ? sumxy[1][fvtxn2_nw_index][3] : -9999.9;
-      fvtx3_north_psi2_dcnw = (sumxy[1][fvtxn3_nw_index][2] > 4) ? sumxy[1][fvtxn3_nw_index][3] : -9999.9;
-      fvtx_north_psi3_dcnw  = (sumxy[2][fvtxn_nw_index][2] > 4)  ? sumxy[2][fvtxn_nw_index][3]  : -9999.9;
-      fvtx0_north_psi3_dcnw = (sumxy[2][fvtxn0_nw_index][2] > 4) ? sumxy[2][fvtxn0_nw_index][3] : -9999.9;
-      fvtx1_north_psi3_dcnw = (sumxy[2][fvtxn1_nw_index][2] > 4) ? sumxy[2][fvtxn1_nw_index][3] : -9999.9;
-      fvtx2_north_psi3_dcnw = (sumxy[2][fvtxn2_nw_index][2] > 4) ? sumxy[2][fvtxn2_nw_index][3] : -9999.9;
-      fvtx3_north_psi3_dcnw = (sumxy[2][fvtxn3_nw_index][2] > 4) ? sumxy[2][fvtxn3_nw_index][3] : -9999.9;
-      // --- tracks don't belong with clusters I guess, but...
-      fvtx_south_psi2_tracks  = (sumxy[1][fvtxs_tracks_index][2] > 4)  ? sumxy[1][fvtxs_tracks_index][3]  : -9999.9;
-      fvtx0_south_psi2_tracks = (sumxy[1][fvtxs0_tracks_index][2] > 4) ? sumxy[1][fvtxs0_tracks_index][3] : -9999.9;
-      fvtx1_south_psi2_tracks = (sumxy[1][fvtxs1_tracks_index][2] > 4) ? sumxy[1][fvtxs1_tracks_index][3] : -9999.9;
-      fvtx_south_psi3_tracks  = (sumxy[2][fvtxs_tracks_index][2] > 4)  ? sumxy[2][fvtxs_tracks_index][3]  : -9999.9;
-      fvtx0_south_psi3_tracks = (sumxy[2][fvtxs0_tracks_index][2] > 4) ? sumxy[2][fvtxs0_tracks_index][3] : -9999.9;
-      fvtx1_south_psi3_tracks = (sumxy[2][fvtxs1_tracks_index][2] > 4) ? sumxy[2][fvtxs1_tracks_index][3] : -9999.9;
-      // ---
-      fvtx_north_psi2_tracks  = (sumxy[1][fvtxn_tracks_index][2] > 4)  ? sumxy[1][fvtxn_tracks_index][3]  : -9999.9;
-      fvtx0_north_psi2_tracks = (sumxy[1][fvtxn0_tracks_index][2] > 4) ? sumxy[1][fvtxn0_tracks_index][3] : -9999.9;
-      fvtx1_north_psi2_tracks = (sumxy[1][fvtxn1_tracks_index][2] > 4) ? sumxy[1][fvtxn1_tracks_index][3] : -9999.9;
-      fvtx_north_psi3_tracks  = (sumxy[2][fvtxn_tracks_index][2] > 4)  ? sumxy[2][fvtxn_tracks_index][3]  : -9999.9;
-      fvtx0_north_psi3_tracks = (sumxy[2][fvtxn0_tracks_index][2] > 4) ? sumxy[2][fvtxn0_tracks_index][3] : -9999.9;
-      fvtx1_north_psi3_tracks = (sumxy[2][fvtxn1_tracks_index][2] > 4) ? sumxy[2][fvtxn1_tracks_index][3] : -9999.9;
     }
 
 
@@ -3546,109 +1677,22 @@ void flatten(int runNumber, int rp_recal_pass)
     // ---
     // --- resolution histograms
     // ---
-    tp1f_reso2_BBC_FVTX_cent[icent]->Fill(0.0, cos(2 * (bbc_south_psi2_docalib - fvtx_south_psi2_docalib)));
 
-    if ( icent == 0 )
-    {
-      // --- BBC and FVTX south
-      tp1f_z_reso2_BBC_FVTX->Fill(ZVTX, cos(2 * (bbc_south_psi2_docalib - fvtx_south_psi2_docalib)));
-      tp1f_z_reso3_BBC_FVTX->Fill(ZVTX, cos(3 * (bbc_south_psi3_docalib - fvtx_south_psi3_docalib)));
-      tp1f_reso2_BBC_FVTX->Fill(0.0, cos(2 * (bbc_south_psi2_docalib - fvtx_south_psi2_docalib)));
-      tp1f_reso3_BBC_FVTX->Fill(0.0, cos(3 * (bbc_south_psi3_docalib - fvtx_south_psi3_docalib)));
-      tp1f_reso2_BBC_FVTX0->Fill(0.0, cos(2 * (bbc_south_psi2_docalib - fvtx0_south_psi2_docalib)));
-      tp1f_reso2_BBC_FVTX1->Fill(0.0, cos(2 * (bbc_south_psi2_docalib - fvtx1_south_psi2_docalib)));
-      tp1f_reso2_BBC_FVTX2->Fill(0.0, cos(2 * (bbc_south_psi2_docalib - fvtx2_south_psi2_docalib)));
-      tp1f_reso2_BBC_FVTX3->Fill(0.0, cos(2 * (bbc_south_psi2_docalib - fvtx3_south_psi2_docalib)));
-      tp1f_reso2_BBC_FVTX012->Fill(0.0, cos(2 * (bbc_south_psi2_docalib - fvtx012_south_psi2_docalib)));
-      tp1f_reso2_BBC_FVTX013->Fill(0.0, cos(2 * (bbc_south_psi2_docalib - fvtx013_south_psi2_docalib)));
-      tp1f_reso2_BBC_FVTX023->Fill(0.0, cos(2 * (bbc_south_psi2_docalib - fvtx023_south_psi2_docalib)));
-      tp1f_reso2_BBC_FVTX123->Fill(0.0, cos(2 * (bbc_south_psi2_docalib - fvtx123_south_psi2_docalib)));
-      tp1f_reso3_BBC_FVTX0->Fill(0.0, cos(3 * (bbc_south_psi3_docalib - fvtx0_south_psi3_docalib)));
-      tp1f_reso3_BBC_FVTX1->Fill(0.0, cos(3 * (bbc_south_psi3_docalib - fvtx1_south_psi3_docalib)));
-      tp1f_reso3_BBC_FVTX2->Fill(0.0, cos(3 * (bbc_south_psi3_docalib - fvtx2_south_psi3_docalib)));
-      tp1f_reso3_BBC_FVTX3->Fill(0.0, cos(3 * (bbc_south_psi3_docalib - fvtx3_south_psi3_docalib)));
-      tp1f_reso3_BBC_FVTX012->Fill(0.0, cos(3 * (bbc_south_psi3_docalib - fvtx012_south_psi3_docalib)));
-      tp1f_reso3_BBC_FVTX013->Fill(0.0, cos(3 * (bbc_south_psi3_docalib - fvtx013_south_psi3_docalib)));
-      tp1f_reso3_BBC_FVTX023->Fill(0.0, cos(3 * (bbc_south_psi3_docalib - fvtx023_south_psi3_docalib)));
-      tp1f_reso3_BBC_FVTX123->Fill(0.0, cos(3 * (bbc_south_psi3_docalib - fvtx123_south_psi3_docalib)));
-      th1d_reso2_BBC_FVTX->Fill(cos(2 * (bbc_south_psi2_docalib - fvtx_south_psi2_docalib)));
-      th1d_reso3_BBC_FVTX->Fill(cos(3 * (bbc_south_psi3_docalib - fvtx_south_psi3_docalib)));
-      th1d_dreso2_BBC_FVTX->Fill(bbc_south_psi2_docalib - fvtx_south_psi2_docalib);
-      th1d_dreso3_BBC_FVTX->Fill(bbc_south_psi3_docalib - fvtx_south_psi3_docalib);
+    // --- BBC and FVTX south
+    tp1f_reso2_BBC_FVTX[icent]->Fill(0.0, cos(2 * (bbc_south_psi2_docalib - fvtx_south_psi2_docalib)));
+    tp1f_reso3_BBC_FVTX[icent]->Fill(0.0, cos(3 * (bbc_south_psi3_docalib - fvtx_south_psi3_docalib)));
 
-      // --- BBC and FVTX north
-      tp1f_reso2_BBC_FVTXN->Fill(0.0, cos(2 * (bbc_south_psi2_docalib - fvtx_north_psi2_docalib)));
-      tp1f_reso3_BBC_FVTXN->Fill(0.0, cos(3 * (bbc_south_psi3_docalib - fvtx_north_psi3_docalib)));
-      th1d_reso2_BBC_FVTXN->Fill(cos(2 * (bbc_south_psi2_docalib - fvtx_north_psi2_docalib)));
-      th1d_reso3_BBC_FVTXN->Fill(cos(3 * (bbc_south_psi3_docalib - fvtx_north_psi3_docalib)));
-      th1d_dreso2_BBC_FVTXN->Fill(bbc_south_psi2_docalib - fvtx_north_psi2_docalib);
-      th1d_dreso3_BBC_FVTXN->Fill(bbc_south_psi3_docalib - fvtx_north_psi3_docalib);
+    // --- BBC and FVTX north
+    tp1f_reso2_BBC_FVTXN[icent]->Fill(0.0, cos(2 * (bbc_south_psi2_docalib - fvtx_north_psi2_docalib)));
+    tp1f_reso3_BBC_FVTXN[icent]->Fill(0.0, cos(3 * (bbc_south_psi3_docalib - fvtx_north_psi3_docalib)));
 
-      // --- FVTX south and north
-      tp1f_reso2_FVTXS_FVTXN->Fill(0.0, cos(2 * (fvtx_south_psi2_docalib - fvtx_north_psi2_docalib)));
-      tp1f_reso3_FVTXS_FVTXN->Fill(0.0, cos(3 * (fvtx_south_psi3_docalib - fvtx_north_psi3_docalib)));
-      th1d_reso2_FVTXS_FVTXN->Fill(cos(2 * (fvtx_south_psi2_docalib - fvtx_north_psi2_docalib)));
-      th1d_reso3_FVTXS_FVTXN->Fill(cos(3 * (fvtx_south_psi3_docalib - fvtx_north_psi3_docalib)));
-      th1d_dreso2_FVTXS_FVTXN->Fill(fvtx_south_psi2_docalib - fvtx_north_psi2_docalib);
-      th1d_dreso3_FVTXS_FVTXN->Fill(fvtx_south_psi3_docalib - fvtx_north_psi3_docalib);
+    // --- FVTX south and north
+    tp1f_reso2_FVTXS_FVTXN[icent]->Fill(0.0, cos(2 * (fvtx_south_psi2_docalib - fvtx_north_psi2_docalib)));
+    tp1f_reso3_FVTXS_FVTXN[icent]->Fill(0.0, cos(3 * (fvtx_south_psi3_docalib - fvtx_north_psi3_docalib)));
 
-      // --- for v4psi2
-      tp1f_reso42_BBC_FVTX->Fill(0.0, cos(4 * (bbc_south_psi2_docalib - fvtx_south_psi2_docalib)));
-      tp1f_reso42_BBC_FVTXN->Fill(0.0, cos(4 * (bbc_south_psi2_docalib - fvtx_north_psi2_docalib)));
-      tp1f_reso42_FVTXS_FVTXN->Fill(0.0, cos(4 * (fvtx_south_psi2_docalib - fvtx_north_psi2_docalib)));
-
-      // --- FVTX clusters and tracks
-      tp1f_reso2_FVTX_FVTX->Fill(0.0, cos(2 * (fvtx_south_psi2_docalib - fvtx_south_psi2_tracks)));
-      tp1f_reso3_FVTX_FVTX->Fill(0.0, cos(3 * (fvtx_south_psi3_docalib - fvtx_south_psi3_tracks)));
-      th1d_reso2_FVTX_FVTX->Fill(cos(2 * (fvtx_south_psi2_docalib - fvtx_south_psi2_tracks)));
-      th1d_reso3_FVTX_FVTX->Fill(cos(3 * (fvtx_south_psi3_docalib - fvtx_south_psi3_tracks)));
-      th1d_dreso2_FVTX_FVTX->Fill(fvtx_south_psi2_docalib - fvtx_south_psi2_tracks);
-      th1d_dreso3_FVTX_FVTX->Fill(fvtx_south_psi3_docalib - fvtx_south_psi3_tracks);
-      // ---
-      // --- resolution histograms
-      // ---
-
-      // --- BBC and FVTX south
-
-      tp1f_os_reso2_BBC_FVTX->Fill(0.0, cos(2 * (os_bbc_psi2 - os_fvtxs_psi2)));
-      tp1f_os_reso3_BBC_FVTX->Fill(0.0, cos(3 * (os_bbc_psi3 - os_fvtxs_psi3)));
-      th1d_os_reso2_BBC_FVTX->Fill(cos(2 * (os_bbc_psi2 - os_fvtxs_psi2)));
-      th1d_os_reso3_BBC_FVTX->Fill(cos(3 * (os_bbc_psi3 - os_fvtxs_psi3)));
-      th1d_os_dreso2_BBC_FVTX->Fill(os_bbc_psi2 - os_fvtxs_psi2);
-      th1d_os_dreso3_BBC_FVTX->Fill(os_bbc_psi3 - os_fvtxs_psi3);
-
-      // --- BBC and FVTX north
-
-      tp1f_os_reso2_BBC_FVTXN->Fill(0.0, cos(2 * (os_bbc_psi2 - os_fvtxn_psi2)));
-      tp1f_os_reso3_BBC_FVTXN->Fill(0.0, cos(3 * (os_bbc_psi3 - os_fvtxn_psi3)));
-      th1d_os_reso2_BBC_FVTXN->Fill(cos(2 * (os_bbc_psi2 - os_fvtxn_psi2)));
-      th1d_os_reso3_BBC_FVTXN->Fill(cos(3 * (os_bbc_psi3 - os_fvtxn_psi3)));
-      th1d_os_dreso2_BBC_FVTXN->Fill(os_bbc_psi2 - os_fvtxn_psi2);
-      th1d_os_dreso3_BBC_FVTXN->Fill(os_bbc_psi3 - os_fvtxn_psi3);
-
-      // --- FVTX south and north
-
-      tp1f_os_reso2_FVTXS_FVTXN->Fill(0.0, cos(2 * (os_fvtxs_psi2 - os_fvtxn_psi2)));
-      tp1f_os_reso3_FVTXS_FVTXN->Fill(0.0, cos(3 * (os_fvtxs_psi3 - os_fvtxn_psi3)));
-      th1d_os_reso2_FVTXS_FVTXN->Fill(cos(2 * (os_fvtxs_psi2 - os_fvtxn_psi2)));
-      th1d_os_reso3_FVTXS_FVTXN->Fill(cos(3 * (os_fvtxs_psi3 - os_fvtxn_psi3)));
-      th1d_os_dreso2_FVTXS_FVTXN->Fill(os_fvtxs_psi2 - os_fvtxn_psi2);
-      th1d_os_dreso3_FVTXS_FVTXN->Fill(os_fvtxs_psi3 - os_fvtxn_psi3);
-
-      // --- for no weight histograms
-      tp1f_nw_reso2_BBC_FVTX->Fill(0.0, cos(2 * (bbc_south_psi2_dcnw - fvtx_south_psi2_dcnw)));
-      tp1f_nw_reso2_BBC_FVTXN->Fill(0.0, cos(2 * (bbc_south_psi2_dcnw - fvtx_north_psi2_dcnw)));
-      tp1f_nw_reso2_FVTXS_FVTXN->Fill(0.0, cos(2 * (fvtx_south_psi2_dcnw - fvtx_north_psi2_dcnw)));
-      tp1f_nw_reso3_BBC_FVTX->Fill(0.0, cos(3 * (bbc_south_psi3_dcnw - fvtx_south_psi3_dcnw)));
-      tp1f_nw_reso3_BBC_FVTXN->Fill(0.0, cos(3 * (bbc_south_psi3_dcnw - fvtx_north_psi3_dcnw)));
-      tp1f_nw_reso3_FVTXS_FVTXN->Fill(0.0, cos(3 * (fvtx_south_psi3_dcnw - fvtx_north_psi3_dcnw)));
-      tp1f_nw_reso42_BBC_FVTX->Fill(0.0, cos(4 * (bbc_south_psi2_dcnw - fvtx_south_psi2_dcnw)));
-      tp1f_nw_reso42_BBC_FVTXN->Fill(0.0, cos(4 * (bbc_south_psi2_dcnw - fvtx_north_psi2_dcnw)));
-      tp1f_nw_reso42_FVTXS_FVTXN->Fill(0.0, cos(4 * (fvtx_south_psi2_dcnw - fvtx_north_psi2_dcnw)));
-    } // check on most central bin
     // ----------------------------------------------------------------------------
 
-    //start of vtx stand alone track loop
+    //start of cnt track loop
     if ( cnt_tracks )
     {
       for (int itrk = 0; itrk < d_ntrk; itrk++)
@@ -3696,281 +1740,8 @@ void flatten(int runNumber, int rp_recal_pass)
         double eta = -log(tan(theta / 2));
         //cout << "pz is " << pz << " and eta is " << eta << endl;
 
-        // ------------------------------------------------------------
-        // --- COME BACK HERE
-        // --- doing the 2pc up front...
-        float ux2 = cos(2 * phi_angle);
-        float uy2 = sin(2 * phi_angle);
-        float ux3 = cos(3 * phi_angle);
-        float uy3 = sin(3 * phi_angle);
-        float ux4 = cos(4 * phi_angle);
-        float uy4 = sin(4 * phi_angle);
 
-        float bbc_uq2 = ( (ux2 * bbc_qx2) + (uy2 * bbc_qy2) ) / ( bbc_qw );
-        float bbc_uq3 = ( (ux3 * bbc_qx3) + (uy3 * bbc_qy3) ) / ( bbc_qw );
-
-        bbcs_cos22_both->Fill(pt_angle, ux2);
-        if ( dcarm == 1 ) bbcs_cos22_west->Fill(pt_angle, ux2);
-        if ( dcarm == 0 ) bbcs_cos22_east->Fill(pt_angle, ux2);
-        bbcs_sin22_both->Fill(pt_angle, uy2);
-        if ( dcarm == 1 ) bbcs_sin22_west->Fill(pt_angle, uy2);
-        if ( dcarm == 0 ) bbcs_sin22_east->Fill(pt_angle, uy2);
-        bbcs_d22_both->Fill(pt_angle, bbc_uq2);
-        if ( dcarm == 1 ) bbcs_d22_west->Fill(pt_angle, bbc_uq2);
-        if ( dcarm == 0 ) bbcs_d22_east->Fill(pt_angle, bbc_uq2);
-
-        bbcs_cos32_both->Fill(pt_angle, ux3);
-        if ( dcarm == 1 ) bbcs_cos32_west->Fill(pt_angle, ux3);
-        if ( dcarm == 0 ) bbcs_cos32_east->Fill(pt_angle, ux3);
-        bbcs_sin32_both->Fill(pt_angle, uy3);
-        if ( dcarm == 1 ) bbcs_sin32_west->Fill(pt_angle, uy3);
-        if ( dcarm == 0 ) bbcs_sin32_east->Fill(pt_angle, uy3);
-        bbcs_d32_both->Fill(pt_angle, bbc_uq3);
-        if ( dcarm == 1 ) bbcs_d32_west->Fill(pt_angle, bbc_uq3);
-        if ( dcarm == 0 ) bbcs_d32_east->Fill(pt_angle, bbc_uq3);
-
-        // ---
-
-        float fvtxs_uq2 = ( (ux2 * fvtxs_qx2[0]) + (uy2 * fvtxs_qy2[0]) ) / ( fvtxs_qw[0] );
-        float fvtxs_uq3 = ( (ux3 * fvtxs_qx3[0]) + (uy3 * fvtxs_qy3[0]) ) / ( fvtxs_qw[0] );
-
-        fvtxs_cos22_both->Fill(pt_angle, ux2);
-        if ( dcarm == 1 ) fvtxs_cos22_west->Fill(pt_angle, ux2);
-        if ( dcarm == 0 ) fvtxs_cos22_east->Fill(pt_angle, ux2);
-        fvtxs_sin22_both->Fill(pt_angle, uy2);
-        if ( dcarm == 1 ) fvtxs_sin22_west->Fill(pt_angle, uy2);
-        if ( dcarm == 0 ) fvtxs_sin22_east->Fill(pt_angle, uy2);
-        fvtxs_d22_both->Fill(pt_angle, fvtxs_uq2);
-        if ( dcarm == 1 ) fvtxs_d22_west->Fill(pt_angle, fvtxs_uq2);
-        if ( dcarm == 0 ) fvtxs_d22_east->Fill(pt_angle, fvtxs_uq2);
-
-        fvtxs_cos32_both->Fill(pt_angle, ux3);
-        if ( dcarm == 1 ) fvtxs_cos32_west->Fill(pt_angle, ux3);
-        if ( dcarm == 0 ) fvtxs_cos32_east->Fill(pt_angle, ux3);
-        fvtxs_sin32_both->Fill(pt_angle, uy3);
-        if ( dcarm == 1 ) fvtxs_sin32_west->Fill(pt_angle, uy3);
-        if ( dcarm == 0 ) fvtxs_sin32_east->Fill(pt_angle, uy3);
-        fvtxs_d32_both->Fill(pt_angle, fvtxs_uq3);
-        if ( dcarm == 1 ) fvtxs_d32_west->Fill(pt_angle, fvtxs_uq3);
-        if ( dcarm == 0 ) fvtxs_d32_east->Fill(pt_angle, fvtxs_uq3);
-
-        // ------------------------------------------------------------
-
-        float os_bbc_uq2 = ( (ux2 * os_bbc_qx2) + (uy2 * os_bbc_qy2) ) / ( os_bbc_qw );
-        float os_bbc_uq3 = ( (ux3 * os_bbc_qx3) + (uy3 * os_bbc_qy3) ) / ( os_bbc_qw );
-
-        os_bbcs_cos22_both->Fill(pt_angle, ux2);
-        if ( dcarm == 1 ) os_bbcs_cos22_west->Fill(pt_angle, ux2);
-        if ( dcarm == 0 ) os_bbcs_cos22_east->Fill(pt_angle, ux2);
-        os_bbcs_sin22_both->Fill(pt_angle, uy2);
-        if ( dcarm == 1 ) os_bbcs_sin22_west->Fill(pt_angle, uy2);
-        if ( dcarm == 0 ) os_bbcs_sin22_east->Fill(pt_angle, uy2);
-        os_bbcs_d22_both->Fill(pt_angle, os_bbc_uq2);
-        if ( dcarm == 1 ) os_bbcs_d22_west->Fill(pt_angle, os_bbc_uq2);
-        if ( dcarm == 0 ) os_bbcs_d22_east->Fill(pt_angle, os_bbc_uq2);
-
-        os_bbcs_cos32_both->Fill(pt_angle, ux3);
-        if ( dcarm == 1 ) os_bbcs_cos32_west->Fill(pt_angle, ux3);
-        if ( dcarm == 0 ) os_bbcs_cos32_east->Fill(pt_angle, ux3);
-        os_bbcs_sin32_both->Fill(pt_angle, uy3);
-        if ( dcarm == 1 ) os_bbcs_sin32_west->Fill(pt_angle, uy3);
-        if ( dcarm == 0 ) os_bbcs_sin32_east->Fill(pt_angle, uy3);
-        os_bbcs_d32_both->Fill(pt_angle, os_bbc_uq3);
-        if ( dcarm == 1 ) os_bbcs_d32_west->Fill(pt_angle, os_bbc_uq3);
-        if ( dcarm == 0 ) os_bbcs_d32_east->Fill(pt_angle, os_bbc_uq3);
-
-        // ---
-
-        float os_fvtxs_uq2 = ( (ux2 * os_fvtxs_qx2) + (uy2 * os_fvtxs_qy2) ) / ( os_fvtxs_qw );
-        float os_fvtxs_uq3 = ( (ux3 * os_fvtxs_qx3) + (uy3 * os_fvtxs_qy3) ) / ( os_fvtxs_qw );
-
-        os_fvtxs_cos22_both->Fill(pt_angle, ux2);
-        if ( dcarm == 1 ) os_fvtxs_cos22_west->Fill(pt_angle, ux2);
-        if ( dcarm == 0 ) os_fvtxs_cos22_east->Fill(pt_angle, ux2);
-        os_fvtxs_sin22_both->Fill(pt_angle, uy2);
-        if ( dcarm == 1 ) os_fvtxs_sin22_west->Fill(pt_angle, uy2);
-        if ( dcarm == 0 ) os_fvtxs_sin22_east->Fill(pt_angle, uy2);
-        os_fvtxs_d22_both->Fill(pt_angle, os_fvtxs_uq2);
-        if ( dcarm == 1 ) os_fvtxs_d22_west->Fill(pt_angle, os_fvtxs_uq2);
-        if ( dcarm == 0 ) os_fvtxs_d22_east->Fill(pt_angle, os_fvtxs_uq2);
-
-        os_fvtxs_cos32_both->Fill(pt_angle, ux3);
-        if ( dcarm == 1 ) os_fvtxs_cos32_west->Fill(pt_angle, ux3);
-        if ( dcarm == 0 ) os_fvtxs_cos32_east->Fill(pt_angle, ux3);
-        os_fvtxs_sin32_both->Fill(pt_angle, uy3);
-        if ( dcarm == 1 ) os_fvtxs_sin32_west->Fill(pt_angle, uy3);
-        if ( dcarm == 0 ) os_fvtxs_sin32_east->Fill(pt_angle, uy3);
-        os_fvtxs_d32_both->Fill(pt_angle, os_fvtxs_uq3);
-        if ( dcarm == 1 ) os_fvtxs_d32_west->Fill(pt_angle, os_fvtxs_uq3);
-        if ( dcarm == 0 ) os_fvtxs_d32_east->Fill(pt_angle, os_fvtxs_uq3);
-
-        // ---
-
-        float os_fvtxn_uq2 = ( (ux2 * os_fvtxn_qx2) + (uy2 * os_fvtxn_qy2) ) / ( os_fvtxn_qw );
-        float os_fvtxn_uq3 = ( (ux3 * os_fvtxn_qx3) + (uy3 * os_fvtxn_qy3) ) / ( os_fvtxn_qw );
-
-        os_fvtxn_cos22_both->Fill(pt_angle, ux2);
-        if ( dcarm == 1 ) os_fvtxn_cos22_west->Fill(pt_angle, ux2);
-        if ( dcarm == 0 ) os_fvtxn_cos22_east->Fill(pt_angle, ux2);
-        os_fvtxn_sin22_both->Fill(pt_angle, uy2);
-        if ( dcarm == 1 ) os_fvtxn_sin22_west->Fill(pt_angle, uy2);
-        if ( dcarm == 0 ) os_fvtxn_sin22_east->Fill(pt_angle, uy2);
-        os_fvtxn_d22_both->Fill(pt_angle, os_fvtxn_uq2);
-        if ( dcarm == 1 ) os_fvtxn_d22_west->Fill(pt_angle, os_fvtxn_uq2);
-        if ( dcarm == 0 ) os_fvtxn_d22_east->Fill(pt_angle, os_fvtxn_uq2);
-
-        os_fvtxn_cos32_both->Fill(pt_angle, ux3);
-        if ( dcarm == 1 ) os_fvtxn_cos32_west->Fill(pt_angle, ux3);
-        if ( dcarm == 0 ) os_fvtxn_cos32_east->Fill(pt_angle, ux3);
-        os_fvtxn_sin32_both->Fill(pt_angle, uy3);
-        if ( dcarm == 1 ) os_fvtxn_sin32_west->Fill(pt_angle, uy3);
-        if ( dcarm == 0 ) os_fvtxn_sin32_east->Fill(pt_angle, uy3);
-        os_fvtxn_d32_both->Fill(pt_angle, os_fvtxn_uq3);
-        if ( dcarm == 1 ) os_fvtxn_d32_west->Fill(pt_angle, os_fvtxn_uq3);
-        if ( dcarm == 0 ) os_fvtxn_d32_east->Fill(pt_angle, os_fvtxn_uq3);
-
-        // ------------------------------------------------------------
-
-        float os_fvtxs_tracks_uq2 = ( (ux2 * os_fvtxs_tracks_qx2) + (uy2 * os_fvtxs_tracks_qy2) ) / ( os_fvtxs_tracks_qw );
-        float os_fvtxs_tracks_uq3 = ( (ux3 * os_fvtxs_tracks_qx3) + (uy3 * os_fvtxs_tracks_qy3) ) / ( os_fvtxs_tracks_qw );
-        float os_fvtxn_tracks_uq2 = ( (ux2 * os_fvtxn_tracks_qx2) + (uy2 * os_fvtxn_tracks_qy2) ) / ( os_fvtxn_tracks_qw );
-        float os_fvtxn_tracks_uq3 = ( (ux3 * os_fvtxn_tracks_qx3) + (uy3 * os_fvtxn_tracks_qy3) ) / ( os_fvtxn_tracks_qw );
-
-        os_fvtxs_tracks_d22_both->Fill(pt_angle, os_fvtxs_tracks_uq2);
-        if ( dcarm == 1 ) os_fvtxs_tracks_d22_west->Fill(pt_angle, os_fvtxs_tracks_uq2);
-        if ( dcarm == 0 ) os_fvtxs_tracks_d22_east->Fill(pt_angle, os_fvtxs_tracks_uq2);
-        os_fvtxn_tracks_d22_both->Fill(pt_angle, os_fvtxn_tracks_uq2);
-        if ( dcarm == 1 ) os_fvtxn_tracks_d22_west->Fill(pt_angle, os_fvtxn_tracks_uq2);
-        if ( dcarm == 0 ) os_fvtxn_tracks_d22_east->Fill(pt_angle, os_fvtxn_tracks_uq2);
-
-        os_fvtxs_tracks_d32_both->Fill(pt_angle, os_fvtxs_tracks_uq3);
-        if ( dcarm == 1 ) os_fvtxs_tracks_d32_west->Fill(pt_angle, os_fvtxs_tracks_uq3);
-        if ( dcarm == 0 ) os_fvtxs_tracks_d32_east->Fill(pt_angle, os_fvtxs_tracks_uq3);
-        os_fvtxn_tracks_d32_both->Fill(pt_angle, os_fvtxn_tracks_uq3);
-        if ( dcarm == 1 ) os_fvtxn_tracks_d32_west->Fill(pt_angle, os_fvtxn_tracks_uq3);
-        if ( dcarm == 0 ) os_fvtxn_tracks_d32_east->Fill(pt_angle, os_fvtxn_tracks_uq3);
-
-        // ------------------------------------------------------------
-
-        npc1_os_cntbbcs_c22->Fill(npc1, os_bbc_uq2);
-        npc1_os_cntfvtxs_c22->Fill(npc1, os_fvtxs_uq2);
-        npc1_os_cntfvtxn_c22->Fill(npc1, os_fvtxn_uq2);
-        npc1_os_cntbbcs_c32->Fill(npc1, os_bbc_uq3);
-        npc1_os_cntfvtxs_c32->Fill(npc1, os_fvtxs_uq3);
-        npc1_os_cntfvtxn_c32->Fill(npc1, os_fvtxn_uq3);
-        nfvtxt_os_cntbbcs_c22->Fill(nfvtxt, os_bbc_uq2);
-        nfvtxc_os_cntbbcs_c22->Fill(nfvtxc, os_bbc_uq2);
-        nfvtxt_os_cntfvtxs_c22->Fill(nfvtxt, os_fvtxs_uq2);
-        nfvtxc_os_cntfvtxs_c22->Fill(nfvtxc, os_fvtxs_uq2);
-        nfvtxt_os_cntfvtxn_c22->Fill(nfvtxt, os_fvtxn_uq2);
-        nfvtxc_os_cntfvtxn_c22->Fill(nfvtxc, os_fvtxn_uq2);
-        nfvtxt_os_cntbbcs_c32->Fill(nfvtxt, os_bbc_uq3);
-        nfvtxc_os_cntbbcs_c32->Fill(nfvtxc, os_bbc_uq3);
-        nfvtxt_os_cntfvtxs_c32->Fill(nfvtxt, os_fvtxs_uq3);
-        nfvtxc_os_cntfvtxs_c32->Fill(nfvtxc, os_fvtxs_uq3);
-        nfvtxt_os_cntfvtxn_c32->Fill(nfvtxt, os_fvtxn_uq3);
-        nfvtxc_os_cntfvtxn_c32->Fill(nfvtxc, os_fvtxn_uq3);
-
-        // ------------------------------------------------------------
-
-        os_bbcs_d22eta_both->Fill(eta, os_bbc_uq2);
-        if ( dcarm == 1 ) os_bbcs_d22eta_west->Fill(eta, os_bbc_uq2);
-        if ( dcarm == 0 ) os_bbcs_d22eta_east->Fill(eta, os_bbc_uq2);
-        os_fvtxs_d22eta_both->Fill(eta, os_fvtxs_uq2);
-        if ( dcarm == 1 ) os_fvtxs_d22eta_west->Fill(eta, os_fvtxs_uq2);
-        if ( dcarm == 0 ) os_fvtxs_d22eta_east->Fill(eta, os_fvtxs_uq2);
-        os_fvtxs_d22eta_both->Fill(eta, os_fvtxn_uq2);
-        if ( dcarm == 1 ) os_fvtxn_d22eta_west->Fill(eta, os_fvtxn_uq2);
-        if ( dcarm == 0 ) os_fvtxn_d22eta_east->Fill(eta, os_fvtxn_uq2);
-
-        os_bbcs_d32eta_both->Fill(eta, os_bbc_uq3);
-        if ( dcarm == 1 ) os_bbcs_d32eta_west->Fill(eta, os_bbc_uq3);
-        if ( dcarm == 0 ) os_bbcs_d32eta_east->Fill(eta, os_bbc_uq3);
-        os_fvtxs_d32eta_both->Fill(eta, os_fvtxs_uq2);
-        if ( dcarm == 1 ) os_fvtxs_d32eta_west->Fill(eta, os_fvtxs_uq3);
-        if ( dcarm == 0 ) os_fvtxs_d32eta_east->Fill(eta, os_fvtxs_uq3);
-        os_fvtxn_d32eta_both->Fill(eta, os_fvtxn_uq2);
-        if ( dcarm == 1 ) os_fvtxn_d32eta_west->Fill(eta, os_fvtxn_uq3);
-        if ( dcarm == 0 ) os_fvtxn_d32eta_east->Fill(eta, os_fvtxn_uq3);
-
-        os_fvtxs_tracks_d22eta_both->Fill(eta, os_fvtxs_tracks_uq2);
-        if ( dcarm == 1 ) os_fvtxs_tracks_d22eta_west->Fill(eta, os_fvtxs_tracks_uq2);
-        if ( dcarm == 0 ) os_fvtxs_tracks_d22eta_east->Fill(eta, os_fvtxs_tracks_uq2);
-        os_fvtxn_tracks_d22eta_both->Fill(eta, os_fvtxn_tracks_uq2);
-        if ( dcarm == 1 ) os_fvtxn_tracks_d22eta_west->Fill(eta, os_fvtxn_tracks_uq2);
-        if ( dcarm == 0 ) os_fvtxn_tracks_d22eta_east->Fill(eta, os_fvtxn_tracks_uq2);
-
-        os_fvtxs_tracks_d32eta_both->Fill(eta, os_fvtxs_tracks_uq3);
-        if ( dcarm == 1 ) os_fvtxs_tracks_d32eta_west->Fill(eta, os_fvtxs_tracks_uq3);
-        if ( dcarm == 0 ) os_fvtxs_tracks_d32eta_east->Fill(eta, os_fvtxs_tracks_uq3);
-        os_fvtxn_tracks_d32eta_both->Fill(eta, os_fvtxn_tracks_uq3);
-        if ( dcarm == 1 ) os_fvtxn_tracks_d32eta_west->Fill(eta, os_fvtxn_tracks_uq3);
-        if ( dcarm == 0 ) os_fvtxn_tracks_d32eta_east->Fill(eta, os_fvtxn_tracks_uq3);
-
-        // ------------------------------------------------------------
-
-        os_bbcs_v2_both->Fill(pt_angle, cos(2.0 * (phi_angle - os_bbc_psi2)));
-        if ( dcarm == 1 ) os_bbcs_v2_west->Fill(pt_angle, cos(2.0 * (phi_angle - os_bbc_psi2)));
-        if ( dcarm == 0 ) os_bbcs_v2_east->Fill(pt_angle, cos(2.0 * (phi_angle - os_bbc_psi2)));
-        os_fvtxs_v2_both->Fill(pt_angle, cos(2.0 * (phi_angle - os_fvtxs_psi2)));
-        if ( dcarm == 1 ) os_fvtxs_v2_west->Fill(pt_angle, cos(2.0 * (phi_angle - os_fvtxs_psi2)));
-        if ( dcarm == 0 ) os_fvtxs_v2_east->Fill(pt_angle, cos(2.0 * (phi_angle - os_fvtxs_psi2)));
-        os_fvtxn_v2_both->Fill(pt_angle, cos(2.0 * (phi_angle - os_fvtxn_psi2)));
-        if ( dcarm == 1 ) os_fvtxn_v2_west->Fill(pt_angle, cos(2.0 * (phi_angle - os_fvtxn_psi2)));
-        if ( dcarm == 0 ) os_fvtxn_v2_east->Fill(pt_angle, cos(2.0 * (phi_angle - os_fvtxn_psi2)));
-
-        os_bbcs_v3_both->Fill(pt_angle, cos(3.0 * (phi_angle - os_bbc_psi3)));
-        if ( dcarm == 1 ) os_bbcs_v3_west->Fill(pt_angle, cos(3.0 * (phi_angle - os_bbc_psi3)));
-        if ( dcarm == 0 ) os_bbcs_v3_east->Fill(pt_angle, cos(3.0 * (phi_angle - os_bbc_psi3)));
-        os_fvtxs_v3_both->Fill(pt_angle, cos(3.0 * (phi_angle - os_fvtxs_psi3)));
-        if ( dcarm == 1 ) os_fvtxs_v3_west->Fill(pt_angle, cos(3.0 * (phi_angle - os_fvtxs_psi3)));
-        if ( dcarm == 0 ) os_fvtxs_v3_east->Fill(pt_angle, cos(3.0 * (phi_angle - os_fvtxs_psi3)));
-        os_fvtxn_v3_both->Fill(pt_angle, cos(3.0 * (phi_angle - os_fvtxn_psi3)));
-        if ( dcarm == 1 ) os_fvtxn_v3_west->Fill(pt_angle, cos(3.0 * (phi_angle - os_fvtxn_psi3)));
-        if ( dcarm == 0 ) os_fvtxn_v3_east->Fill(pt_angle, cos(3.0 * (phi_angle - os_fvtxn_psi3)));
-
-        // ------------------------------------------------------------
-
-        npc1_bbcs_v2->Fill(npc1, cos(2.0 * (phi_angle - os_bbc_psi2)));
-        npc1_fvtxs_v2->Fill(npc1, cos(2.0 * (phi_angle - os_fvtxs_psi2)));
-        npc1_fvtxn_v2->Fill(npc1, cos(2.0 * (phi_angle - os_fvtxn_psi2)));
-        npc1_bbcs_v3->Fill(npc1, cos(3.0 * (phi_angle - os_bbc_psi3)));
-        npc1_fvtxs_v3->Fill(npc1, cos(3.0 * (phi_angle - os_fvtxs_psi3)));
-        npc1_fvtxn_v3->Fill(npc1, cos(3.0 * (phi_angle - os_fvtxn_psi3)));
-        nfvtxt_bbcs_v2->Fill(nfvtxt, cos(2.0 * (phi_angle - os_bbc_psi2)));
-        nfvtxt_fvtxs_v2->Fill(nfvtxt, cos(2.0 * (phi_angle - os_fvtxs_psi2)));
-        nfvtxt_fvtxn_v2->Fill(nfvtxt, cos(2.0 * (phi_angle - os_fvtxn_psi2)));
-        nfvtxt_bbcs_v3->Fill(nfvtxt, cos(3.0 * (phi_angle - os_bbc_psi3)));
-        nfvtxt_fvtxs_v3->Fill(nfvtxt, cos(3.0 * (phi_angle - os_fvtxs_psi3)));
-        nfvtxt_fvtxn_v3->Fill(nfvtxt, cos(3.0 * (phi_angle - os_fvtxn_psi3)));
-        nfvtxc_bbcs_v2->Fill(nfvtxc, cos(2.0 * (phi_angle - os_bbc_psi2)));
-        nfvtxc_fvtxs_v2->Fill(nfvtxc, cos(2.0 * (phi_angle - os_fvtxs_psi2)));
-        nfvtxc_fvtxn_v2->Fill(nfvtxc, cos(2.0 * (phi_angle - os_fvtxn_psi2)));
-        nfvtxc_bbcs_v3->Fill(nfvtxc, cos(3.0 * (phi_angle - os_bbc_psi3)));
-        nfvtxc_fvtxs_v3->Fill(nfvtxc, cos(3.0 * (phi_angle - os_fvtxs_psi3)));
-        nfvtxc_fvtxn_v3->Fill(nfvtxc, cos(3.0 * (phi_angle - os_fvtxn_psi3)));
-
-        // ------------------------------------------------------------
-
-        // --- 4 particle stuff
-
-        // --- POI is in RP because we forcibly add it
-        float bbc_d24_in = calc4_track_flag(ux2, uy2, ux4, uy4, ux2 + os_bbc_qx2, uy2 + os_bbc_qy2, ux4 + os_bbc_qx4, uy4 + os_bbc_qy4, 1 + os_bbc_qw, true);
-        float fvtxs_d24_in = calc4_track_flag(ux2, uy2, ux4, uy4, ux2 + os_fvtxs_qx2, uy2 + os_fvtxs_qy2, ux4 + os_fvtxs_qx4, uy4 + os_fvtxs_qy4, 1 + os_fvtxs_qw, true);
-        float fvtxn_d24_in = calc4_track_flag(ux2, uy2, ux4, uy4, ux2 + os_fvtxn_qx2, uy2 + os_fvtxn_qy2, ux4 + os_fvtxn_qx4, uy4 + os_fvtxn_qy4, 1 + os_fvtxn_qw, true);
-        os_bbcs_d24_in_both->Fill(pt_angle, bbc_d24_in);
-        os_fvtxs_d24_in_both->Fill(pt_angle, fvtxs_d24_in);
-        os_fvtxn_d24_in_both->Fill(pt_angle, fvtxn_d24_in);
-        // --- POI is not in RP, this is the natural situation because the POI and RP are in different detectors
-        float bbc_d24_out = calc4_track_flag(ux2, uy2, ux4, uy4, os_bbc_qx2, os_bbc_qy2, os_bbc_qx4, os_bbc_qy4, os_bbc_qw, false);
-        float fvtxs_d24_out = calc4_track_flag(ux2, uy2, ux4, uy4, os_fvtxs_qx2, os_fvtxs_qy2, os_fvtxs_qx4, os_fvtxs_qy4, os_fvtxs_qw, false);
-        float fvtxn_d24_out = calc4_track_flag(ux2, uy2, ux4, uy4, os_fvtxn_qx2, os_fvtxn_qy2, os_fvtxn_qx4, os_fvtxn_qy4, os_fvtxn_qw, false);
-        os_bbcs_d24_out_both->Fill(pt_angle, bbc_d24_out);
-        os_fvtxs_d24_out_both->Fill(pt_angle, fvtxs_d24_out);
-        os_fvtxn_d24_out_both->Fill(pt_angle, fvtxn_d24_out);
-
-
-        //bbc angle
+        // BBC event plane
         if ( bbc_pmts )
         {
           if (-4.0 < bbc_south_psi2_docalib && bbc_south_psi2_docalib < 4.0)
@@ -3978,774 +1749,131 @@ void flatten(int runNumber, int rp_recal_pass)
             // --- 2nd harmonic
             double bbc_dphi2_docalib = phi_angle - bbc_south_psi2_docalib;
             double cosbbc_dphi2_docalib = TMath::Cos(2 * bbc_dphi2_docalib);
-            bbcs_v2_both_docalib_cent[icent]->Fill(pt_angle, cosbbc_dphi2_docalib);
-            bbcs_v2eta_both_docalib_cent[icent]->Fill(eta, cosbbc_dphi2_docalib);
-            tp1f_reso2_BBC_CNT_cent[icent]->Fill(0.0, cosbbc_dphi2_docalib);
-            if ( icent == 0 )
-            {
-              bbcs_v2_both_docalib->Fill(pt_angle, cosbbc_dphi2_docalib);
-              if ( dcarm == 1 ) bbcs_v2_west_docalib->Fill(pt_angle, cosbbc_dphi2_docalib);
-              if ( dcarm == 0 ) bbcs_v2_east_docalib->Fill(pt_angle, cosbbc_dphi2_docalib);
-              // --- 3rd harmonic
-              double bbc_dphi3_docalib = phi_angle - bbc_south_psi3_docalib;
-              double cosbbc_dphi3_docalib = TMath::Cos(3 * bbc_dphi3_docalib);
-              // -------------------------------------------------------------------------
-              bbcs_v3_both_docalib->Fill(pt_angle, cosbbc_dphi3_docalib);
-              if ( dcarm == 1 ) bbcs_v3_west_docalib->Fill(pt_angle, cosbbc_dphi3_docalib);
-              if ( dcarm == 0 ) bbcs_v3_east_docalib->Fill(pt_angle, cosbbc_dphi3_docalib);
-              // -------------------------------------------------------------------------
-              bbcs_v3_both_cosphi->Fill(pt_angle, cos(3 * phi_angle));
-              if ( dcarm == 1 ) bbcs_v3_west_cosphi->Fill(pt_angle, cos(3 * phi_angle));
-              if ( dcarm == 0 ) bbcs_v3_east_cosphi->Fill(pt_angle, cos(3 * phi_angle));
-              bbcs_v3_both_cospsi3->Fill(pt_angle, cos(3 * bbc_south_psi3_docalib));
-              if ( dcarm == 1 ) bbcs_v3_west_cospsi3->Fill(pt_angle, cos(3 * bbc_south_psi3_docalib));
-              if ( dcarm == 0 ) bbcs_v3_east_cospsi3->Fill(pt_angle, cos(3 * bbc_south_psi3_docalib));
-              // -------------------------------------------------------------------------
-              bbcs_v3_both_sinphi->Fill(pt_angle, sin(3 * phi_angle));
-              if ( dcarm == 1 ) bbcs_v3_west_sinphi->Fill(pt_angle, sin(3 * phi_angle));
-              if ( dcarm == 0 ) bbcs_v3_east_sinphi->Fill(pt_angle, sin(3 * phi_angle));
-              bbcs_v3_both_sinpsi3->Fill(pt_angle, sin(3 * bbc_south_psi3_docalib));
-              if ( dcarm == 1 ) bbcs_v3_west_sinpsi3->Fill(pt_angle, sin(3 * bbc_south_psi3_docalib));
-              if ( dcarm == 0 ) bbcs_v3_east_sinpsi3->Fill(pt_angle, sin(3 * bbc_south_psi3_docalib));
-              // -------------------------------------------------------------------------
-              if ( dcarm == 1 ) bbcs_v3_west_phipsi->Fill(bbc_dphi3_docalib);
-              if ( dcarm == 0 ) bbcs_v3_east_phipsi->Fill(bbc_dphi3_docalib);
-              bbcs_v3_both_phipsi->Fill(bbc_dphi3_docalib);
-              // ---
-              float helper = atan2(sin(3 * bbc_dphi3_docalib), cos(3 * bbc_dphi3_docalib));
-              if ( dcarm == 1 ) bbcs_v3_west_phipsi3->Fill(helper);
-              if ( dcarm == 0 ) bbcs_v3_east_phipsi3->Fill(helper);
-              bbcs_v3_both_phipsi3->Fill(helper);
-              if ( pt_angle > 1.0 && pt_angle < 3.0 )
-              {
-                if ( dcarm == 1 ) bbcs_v3_west_phipsi3_pT13->Fill(helper);
-                if ( dcarm == 0 ) bbcs_v3_east_phipsi3_pT13->Fill(helper);
-                bbcs_v3_both_phipsi3_pT13->Fill(helper);
-              }
-              // -------------------------------------------------------------------------
-              // -------------------------------------------------------------------------
-              if ( dcarm == 1 ) bbcs_v2_west_phipsi->Fill(bbc_dphi2_docalib);
-              if ( dcarm == 0 ) bbcs_v2_east_phipsi->Fill(bbc_dphi2_docalib);
-              bbcs_v2_both_phipsi->Fill(bbc_dphi2_docalib);
-              // ---
-              helper = atan2(sin(2 * bbc_dphi2_docalib), cos(2 * bbc_dphi2_docalib));
-              if ( dcarm == 1 ) bbcs_v2_west_phipsi2->Fill(helper);
-              if ( dcarm == 0 ) bbcs_v2_east_phipsi2->Fill(helper);
-              bbcs_v2_both_phipsi2->Fill(helper);
-              if ( pt_angle > 1.0 && pt_angle < 3.0 )
-              {
-                if ( dcarm == 1 ) bbcs_v2_west_phipsi2_pT13->Fill(helper);
-                if ( dcarm == 0 ) bbcs_v2_east_phipsi2_pT13->Fill(helper);
-                bbcs_v2_both_phipsi2_pT13->Fill(helper);
-              }
-              // -------------------------------------------------------------------------
-              // --- 4th harmonic
-              double fourfour = 4 * phi_angle - 4 * bbc_south_psi2_docalib;
-              double cosfourfour = TMath::Cos(fourfour);
-              bbcs_v4_4Psi2_both_docalib->Fill(pt_angle, cosfourfour);
-              if ( dcarm == 1 ) bbcs_v4_4Psi2_west_docalib->Fill(pt_angle, cosfourfour);
-              if ( dcarm == 0 ) bbcs_v4_4Psi2_east_docalib->Fill(pt_angle, cosfourfour);
-              // --- ep reso
-              if ( pt_angle > 0.4 && pt_angle < 3.0 )
-              {
-                tp1f_z_reso2_BBC_CNT->Fill(ZVTX, cosbbc_dphi2_docalib);
-                tp1f_z_reso3_BBC_CNT->Fill(ZVTX, cosbbc_dphi3_docalib);
-                tp1f_reso2_BBC_CNT->Fill(0.0, cosbbc_dphi2_docalib);
-                tp1f_reso3_BBC_CNT->Fill(0.0, cosbbc_dphi3_docalib);
-                th1d_reso2_BBC_CNT->Fill(cosbbc_dphi2_docalib);
-                th1d_reso3_BBC_CNT->Fill(cosbbc_dphi3_docalib);
-                th1d_dreso2_BBC_CNT->Fill(bbc_dphi2_docalib);
-                th1d_dreso3_BBC_CNT->Fill(bbc_dphi3_docalib);
-                // ---
-                tp1f_reso42_BBC_CNT->Fill(0.0, cosfourfour);
-                // --- ep reso with offset q-vectors
-                tp1f_os_reso2_BBC_CNT->Fill(0.0, cos(2.0 * (phi_angle - os_bbc_psi2)) );
-                tp1f_os_reso3_BBC_CNT->Fill(0.0, cos(3.0 * (phi_angle - os_bbc_psi3)) );
-                th1d_os_reso2_BBC_CNT->Fill( cos(2.0 * (phi_angle - os_bbc_psi2)) );
-                th1d_os_reso3_BBC_CNT->Fill( cos(3.0 * (phi_angle - os_bbc_psi3)) );
-                th1d_os_dreso2_BBC_CNT->Fill( phi_angle - os_bbc_psi2 );
-                th1d_os_dreso3_BBC_CNT->Fill( phi_angle - os_bbc_psi3 );
-              }
-              // ---
-              bbcs_v2eta_both_docalib->Fill(eta, cosbbc_dphi2_docalib);
-              if ( dcarm == 1 ) bbcs_v2eta_west_docalib->Fill(eta, cosbbc_dphi2_docalib);
-              if ( dcarm == 0 ) bbcs_v2eta_east_docalib->Fill(eta, cosbbc_dphi2_docalib);
-              bbcs_v3eta_both_docalib->Fill(eta, cosbbc_dphi3_docalib);
-              if ( dcarm == 1 ) bbcs_v3eta_west_docalib->Fill(eta, cosbbc_dphi3_docalib);
-              if ( dcarm == 0 ) bbcs_v3eta_east_docalib->Fill(eta, cosbbc_dphi3_docalib);
-            } // check on icent == 0 (most central selection and energy dependent)
-          } // check on bbc EP
-          // ---
-          if ( -4.0 < bbc_south_psi2_dcnw && bbc_south_psi2_dcnw < 4.0 && icent == 0 )
-          {
-            // --- 2nd harmonic
-            double bbc_dphi2_dcnw = phi_angle - bbc_south_psi2_dcnw;
-            double cosbbc_dphi2_dcnw = TMath::Cos(2 * bbc_dphi2_dcnw);
-            bbcs_v2_both_dcnw->Fill(pt_angle, cosbbc_dphi2_dcnw);
-            if ( dcarm == 1 ) bbcs_v2_west_dcnw->Fill(pt_angle, cosbbc_dphi2_dcnw);
-            if ( dcarm == 0 ) bbcs_v2_east_dcnw->Fill(pt_angle, cosbbc_dphi2_dcnw);
+
+            bbcs_v2_both_docalib[icent]->Fill(pt_angle, cosbbc_dphi2_docalib);
+            if ( dcarm == 1 ) bbcs_v2_west_docalib[icent]->Fill(pt_angle, cosbbc_dphi2_docalib);
+            if ( dcarm == 0 ) bbcs_v2_east_docalib[icent]->Fill(pt_angle, cosbbc_dphi2_docalib);
+
+            bbcs_v2eta_both_docalib[icent]->Fill(eta, cosbbc_dphi2_docalib);
+            if ( dcarm == 1 ) bbcs_v2eta_west_docalib[icent]->Fill(eta, cosbbc_dphi2_docalib);
+            if ( dcarm == 0 ) bbcs_v2eta_east_docalib[icent]->Fill(eta, cosbbc_dphi2_docalib);
+
+
             // --- 3rd harmonic
-            double bbc_dphi3_dcnw = phi_angle - bbc_south_psi3_dcnw;
-            double cosbbc_dphi3_dcnw = TMath::Cos(3 * bbc_dphi3_dcnw);
-            bbcs_v3_both_dcnw->Fill(pt_angle, cosbbc_dphi3_dcnw);
-            if ( dcarm == 1 ) bbcs_v3_west_dcnw->Fill(pt_angle, cosbbc_dphi3_dcnw);
-            if ( dcarm == 0 ) bbcs_v3_east_dcnw->Fill(pt_angle, cosbbc_dphi3_dcnw);
-            // --- 4th harmonic
-            double fourfour = 4 * phi_angle - 4 * bbc_south_psi2_dcnw;
-            double cosfourfour = TMath::Cos(fourfour);
-            bbcs_v4_4Psi2_both_dcnw->Fill(pt_angle, cosfourfour);
-            if ( dcarm == 1 ) bbcs_v4_4Psi2_west_dcnw->Fill(pt_angle, cosfourfour);
-            if ( dcarm == 0 ) bbcs_v4_4Psi2_east_dcnw->Fill(pt_angle, cosfourfour);
-            // --- ep reso
-            tp1f_nw_reso2_BBC_CNT->Fill(0.0, cosbbc_dphi2_dcnw);
-            tp1f_nw_reso3_BBC_CNT->Fill(0.0, cosbbc_dphi3_dcnw);
-            tp1f_nw_reso42_BBC_CNT->Fill(0.0, cosfourfour);
-          } // check on EP
+            double bbc_dphi3_docalib = phi_angle - bbc_south_psi3_docalib;
+            double cosbbc_dphi3_docalib = TMath::Cos(3 * bbc_dphi3_docalib);
+
+            bbcs_v3_both_docalib[icent]->Fill(pt_angle, cosbbc_dphi3_docalib);
+            if ( dcarm == 1 ) bbcs_v3_west_docalib[icent]->Fill(pt_angle, cosbbc_dphi3_docalib);
+            if ( dcarm == 0 ) bbcs_v3_east_docalib[icent]->Fill(pt_angle, cosbbc_dphi3_docalib);
+
+            bbcs_v3eta_both_docalib[icent]->Fill(eta, cosbbc_dphi3_docalib);
+            if ( dcarm == 1 ) bbcs_v3eta_west_docalib[icent]->Fill(eta, cosbbc_dphi3_docalib);
+            if ( dcarm == 0 ) bbcs_v3eta_east_docalib[icent]->Fill(eta, cosbbc_dphi3_docalib);
+
+
+            // --- resolutions
+            if ( pt_angle > 0.4 && pt_angle < 3.0 )
+            {
+              tp1f_reso2_BBC_CNT[icent]->Fill(0.0, cosbbc_dphi2_docalib);
+              tp1f_reso3_BBC_CNT[icent]->Fill(0.0, cosbbc_dphi3_docalib);
+            }
+          } // check on bbc EP
         } // check on tubes
 
-        if (!fvtx_clusters) continue;
-        //fvtx all layers
-        if ( -4.0 < fvtx_south_psi2_docalib && fvtx_south_psi2_docalib < 4.0 )
+        // FVTX Event Plane
+        if ( fvtx_clusters )
         {
-          // --- 2nd harmonic
-          double fvtx_dphi2_docalib = phi_angle - fvtx_south_psi2_docalib;
-          double cosfvtx_dphi2_docalib = TMath::Cos(2 * fvtx_dphi2_docalib);
-          fvtxs_v2_both_docalib_cent[icent]->Fill(pt_angle, cosfvtx_dphi2_docalib);
-          fvtxs_v2eta_both_docalib_cent[icent]->Fill(eta, cosfvtx_dphi2_docalib);
-          tp1f_reso2_CNT_FVTX_cent[icent]->Fill(0.0, cosfvtx_dphi2_docalib);
-          if ( icent == 0 )
+
+          // south all layers
+          if ( -4.0 < fvtx_south_psi2_docalib && fvtx_south_psi2_docalib < 4.0 )
           {
-            fvtxs_v2_both_docalib->Fill(pt_angle, cosfvtx_dphi2_docalib);
-            if ( dcarm == 1 ) fvtxs_v2_west_docalib->Fill(pt_angle, cosfvtx_dphi2_docalib);
-            if ( dcarm == 0 ) fvtxs_v2_east_docalib->Fill(pt_angle, cosfvtx_dphi2_docalib);
+
+            // --- 2nd harmonic
+            double fvtx_dphi2_docalib = phi_angle - fvtx_south_psi2_docalib;
+            double cosfvtx_dphi2_docalib = TMath::Cos(2 * fvtx_dphi2_docalib);
+
+            fvtxs_v2_both_docalib[icent]->Fill(pt_angle, cosfvtx_dphi2_docalib);
+            if ( dcarm == 1 ) fvtxs_v2_west_docalib[icent]->Fill(pt_angle, cosfvtx_dphi2_docalib);
+            if ( dcarm == 0 ) fvtxs_v2_east_docalib[icent]->Fill(pt_angle, cosfvtx_dphi2_docalib);
+
+            fvtxs_v2eta_both_docalib[icent]->Fill(eta, cosfvtx_dphi2_docalib);
+            if ( dcarm == 1 ) fvtxs_v2eta_west_docalib[icent]->Fill(eta, cosfvtx_dphi2_docalib);
+            if ( dcarm == 0 ) fvtxs_v2eta_east_docalib[icent]->Fill(eta, cosfvtx_dphi2_docalib);
+
+
             // --- 3rd harmonic
             double fvtx_dphi3_docalib = phi_angle - fvtx_south_psi3_docalib;
             double cosfvtx_dphi3_docalib = TMath::Cos(3 * fvtx_dphi3_docalib);
-            fvtxs_v3_both_docalib->Fill(pt_angle, cosfvtx_dphi3_docalib);
-            if ( dcarm == 1 ) fvtxs_v3_west_docalib->Fill(pt_angle, cosfvtx_dphi3_docalib);
-            if ( dcarm == 0 ) fvtxs_v3_east_docalib->Fill(pt_angle, cosfvtx_dphi3_docalib);
-            // -------------------------------------------------------------------------
-            fvtxs_v3_both_cosphi->Fill(pt_angle, cos(3 * phi_angle));
-            if ( dcarm == 1 ) fvtxs_v3_west_cosphi->Fill(pt_angle, cos(3 * phi_angle));
-            if ( dcarm == 0 ) fvtxs_v3_east_cosphi->Fill(pt_angle, cos(3 * phi_angle));
-            fvtxs_v3_both_cospsi3->Fill(pt_angle, cos(3 * fvtx_south_psi3_docalib));
-            if ( dcarm == 1 ) fvtxs_v3_west_cospsi3->Fill(pt_angle, cos(3 * fvtx_south_psi3_docalib));
-            if ( dcarm == 0 ) fvtxs_v3_east_cospsi3->Fill(pt_angle, cos(3 * fvtx_south_psi3_docalib));
-            // -------------------------------------------------------------------------
-            fvtxs_v3_both_sinphi->Fill(pt_angle, sin(3 * phi_angle));
-            if ( dcarm == 1 ) fvtxs_v3_west_sinphi->Fill(pt_angle, sin(3 * phi_angle));
-            if ( dcarm == 0 ) fvtxs_v3_east_sinphi->Fill(pt_angle, sin(3 * phi_angle));
-            fvtxs_v3_both_sinpsi3->Fill(pt_angle, sin(3 * fvtx_south_psi3_docalib));
-            if ( dcarm == 1 ) fvtxs_v3_west_sinpsi3->Fill(pt_angle, sin(3 * fvtx_south_psi3_docalib));
-            if ( dcarm == 0 ) fvtxs_v3_east_sinpsi3->Fill(pt_angle, sin(3 * fvtx_south_psi3_docalib));
-            // -------------------------------------------------------------------------
-            if ( dcarm == 1 ) fvtxs_v3_west_phipsi->Fill(fvtx_dphi3_docalib);
-            if ( dcarm == 0 ) fvtxs_v3_east_phipsi->Fill(fvtx_dphi3_docalib);
-            fvtxs_v3_both_phipsi->Fill(fvtx_dphi3_docalib);
-            // ---
-            float helper = atan2(sin(3 * fvtx_dphi3_docalib), cos(3 * fvtx_dphi3_docalib));
-            if ( dcarm == 1 ) fvtxs_v3_west_phipsi3->Fill(helper);
-            if ( dcarm == 0 ) fvtxs_v3_east_phipsi3->Fill(helper);
-            fvtxs_v3_both_phipsi3->Fill(helper);
-            if ( pt_angle > 1.0 && pt_angle < 3.0 )
-            {
-              if ( dcarm == 1 ) fvtxs_v3_west_phipsi3_pT13->Fill(helper);
-              if ( dcarm == 0 ) fvtxs_v3_east_phipsi3_pT13->Fill(helper);
-              fvtxs_v3_both_phipsi3_pT13->Fill(helper);
-            }
-            // ---
-            helper = atan2(sin(2 * fvtx_dphi2_docalib), cos(2 * fvtx_dphi2_docalib));
-            if ( dcarm == 1 ) fvtxs_v2_west_phipsi2->Fill(helper);
-            if ( dcarm == 0 ) fvtxs_v2_east_phipsi2->Fill(helper);
-            fvtxs_v2_both_phipsi2->Fill(helper);
-            if ( pt_angle > 1.0 && pt_angle < 3.0 )
-            {
-              if ( dcarm == 1 ) fvtxs_v2_west_phipsi2_pT13->Fill(helper);
-              if ( dcarm == 0 ) fvtxs_v2_east_phipsi2_pT13->Fill(helper);
-              fvtxs_v2_both_phipsi2_pT13->Fill(helper);
-            }
-            // ---
-            if ( dcarm == 1 ) fvtxs_v2_west_phipsi->Fill(fvtx_dphi2_docalib);
-            if ( dcarm == 0 ) fvtxs_v2_east_phipsi->Fill(fvtx_dphi2_docalib);
-            fvtxs_v2_both_phipsi->Fill(fvtx_dphi2_docalib);
-            // --- 4th harmonic
-            double fourfour = 4 * phi_angle - 4 * fvtx_south_psi2_docalib;
-            double cosfourfour = TMath::Cos(fourfour);
-            fvtxs_v4_4Psi2_both_docalib->Fill(pt_angle, cosfourfour);
-            if ( dcarm == 1 ) fvtxs_v4_4Psi2_west_docalib->Fill(pt_angle, cosfourfour);
-            if ( dcarm == 0 ) fvtxs_v4_4Psi2_east_docalib->Fill(pt_angle, cosfourfour);
+
+            fvtxs_v3_both_docalib[icent]->Fill(pt_angle, cosfvtx_dphi3_docalib);
+            if ( dcarm == 1 ) fvtxs_v3_west_docalib[icent]->Fill(pt_angle, cosfvtx_dphi3_docalib);
+            if ( dcarm == 0 ) fvtxs_v3_east_docalib[icent]->Fill(pt_angle, cosfvtx_dphi3_docalib);
+
+            fvtxs_v3eta_both_docalib[icent]->Fill(eta, cosfvtx_dphi3_docalib);
+            if ( dcarm == 1 ) fvtxs_v3eta_west_docalib[icent]->Fill(eta, cosfvtx_dphi3_docalib);
+            if ( dcarm == 0 ) fvtxs_v3eta_east_docalib[icent]->Fill(eta, cosfvtx_dphi3_docalib);
+
+
+            // --- ep resolutions
             if ( pt_angle > 0.4 && pt_angle < 3.0 )
             {
-              // --- ep reso
-              tp1f_z_reso2_CNT_FVTX->Fill(ZVTX, cosfvtx_dphi2_docalib);
-              tp1f_z_reso3_CNT_FVTX->Fill(ZVTX, cosfvtx_dphi3_docalib);
-              tp1f_reso2_CNT_FVTX->Fill(0.0, cosfvtx_dphi2_docalib);
-              tp1f_reso3_CNT_FVTX->Fill(0.0, cosfvtx_dphi3_docalib);
-              th1d_reso2_CNT_FVTX->Fill(cosfvtx_dphi2_docalib);
-              th1d_reso3_CNT_FVTX->Fill(cosfvtx_dphi3_docalib);
-              th1d_dreso2_CNT_FVTX->Fill(fvtx_dphi2_docalib);
-              th1d_dreso3_CNT_FVTX->Fill(fvtx_dphi3_docalib);
-              // ---
-              tp1f_reso42_CNT_FVTX->Fill(0.0, cosfourfour);
-              // --- ep reso with offset q-vectors
-              tp1f_os_reso2_CNT_FVTX->Fill(0.0, cos(2.0 * (phi_angle - os_fvtxs_psi2)) );
-              tp1f_os_reso3_CNT_FVTX->Fill(0.0, cos(3.0 * (phi_angle - os_fvtxs_psi3)) );
-              th1d_os_reso2_CNT_FVTX->Fill( cos(2.0 * (phi_angle - os_fvtxs_psi2)) );
-              th1d_os_reso3_CNT_FVTX->Fill( cos(3.0 * (phi_angle - os_fvtxs_psi3)) );
-              th1d_os_dreso2_CNT_FVTX->Fill( phi_angle - os_fvtxs_psi2 );
-              th1d_os_dreso3_CNT_FVTX->Fill( phi_angle - os_fvtxs_psi3 );
+              tp1f_reso2_CNT_FVTX[icent]->Fill(0.0, cosfvtx_dphi2_docalib);
+              tp1f_reso3_CNT_FVTX[icent]->Fill(0.0, cosfvtx_dphi3_docalib);
             }
-            // ---
-            fvtxs_v2eta_both_docalib->Fill(eta, cosfvtx_dphi2_docalib);
-            if ( dcarm == 1 ) fvtxs_v2eta_west_docalib->Fill(eta, cosfvtx_dphi2_docalib);
-            if ( dcarm == 0 ) fvtxs_v2eta_east_docalib->Fill(eta, cosfvtx_dphi2_docalib);
-            fvtxs_v3eta_both_docalib->Fill(eta, cosfvtx_dphi3_docalib);
-            if ( dcarm == 1 ) fvtxs_v3eta_west_docalib->Fill(eta, cosfvtx_dphi3_docalib);
-            if ( dcarm == 0 ) fvtxs_v3eta_east_docalib->Fill(eta, cosfvtx_dphi3_docalib);
-          } // check on most central bin
-        } // check on valid range for event plane
-        // --- now dcnw
-        if ( -4.0 < fvtx_south_psi2_dcnw && fvtx_south_psi2_dcnw < 4.0 && icent == 0 )
-        {
-          // --- 2nd harmonic
-          double fvtx_dphi2_dcnw = phi_angle - fvtx_south_psi2_dcnw;
-          double cosfvtx_dphi2_dcnw = TMath::Cos(2 * fvtx_dphi2_dcnw);
-          fvtxs_v2_both_dcnw->Fill(pt_angle, cosfvtx_dphi2_dcnw);
-          if ( dcarm == 1 ) fvtxs_v2_west_dcnw->Fill(pt_angle, cosfvtx_dphi2_dcnw);
-          if ( dcarm == 0 ) fvtxs_v2_east_dcnw->Fill(pt_angle, cosfvtx_dphi2_dcnw);
-          // --- 3rd harmonic
-          double fvtx_dphi3_dcnw = phi_angle - fvtx_south_psi3_dcnw;
-          double cosfvtx_dphi3_dcnw = TMath::Cos(3 * fvtx_dphi3_dcnw);
-          fvtxs_v3_both_dcnw->Fill(pt_angle, cosfvtx_dphi3_dcnw);
-          if ( dcarm == 1 ) fvtxs_v3_west_dcnw->Fill(pt_angle, cosfvtx_dphi3_dcnw);
-          if ( dcarm == 0 ) fvtxs_v3_east_dcnw->Fill(pt_angle, cosfvtx_dphi3_dcnw);
-          // --- 4th harmonic
-          double fourfour = 4 * phi_angle - 4 * fvtx_south_psi2_dcnw;
-          double cosfourfour = TMath::Cos(fourfour);
-          fvtxs_v4_4Psi2_both_dcnw->Fill(pt_angle, cosfourfour);
-          if ( dcarm == 1 ) fvtxs_v4_4Psi2_west_dcnw->Fill(pt_angle, cosfourfour);
-          if ( dcarm == 0 ) fvtxs_v4_4Psi2_east_dcnw->Fill(pt_angle, cosfourfour);
-          // --- ep reso
-          tp1f_nw_reso2_CNT_FVTX->Fill(0.0, cosfvtx_dphi2_dcnw);
-          tp1f_nw_reso3_CNT_FVTX->Fill(0.0, cosfvtx_dphi3_dcnw);
-          tp1f_nw_reso42_CNT_FVTX->Fill(0.0, cosfourfour);
-        }
 
-        // --- North
+          } // check on ep south all layers
 
-        //fvtx all layers
-        if ( -4.0 < fvtx_north_psi2_docalib && fvtx_north_psi2_docalib < 4.0 && icent == 0 )
-        {
-          // --- 2nd harmonic
-          double fvtx_dphi2_docalib = phi_angle - fvtx_north_psi2_docalib;
-          double cosfvtx_dphi2_docalib = TMath::Cos(2 * fvtx_dphi2_docalib);
-          fvtxn_v2_both_docalib->Fill(pt_angle, cosfvtx_dphi2_docalib);
-          if ( dcarm == 1 ) fvtxn_v2_west_docalib->Fill(pt_angle, cosfvtx_dphi2_docalib);
-          if ( dcarm == 0 ) fvtxn_v2_east_docalib->Fill(pt_angle, cosfvtx_dphi2_docalib);
-          // --- 3rd harmonic
-          double fvtx_dphi3_docalib = phi_angle - fvtx_north_psi3_docalib;
-          double cosfvtx_dphi3_docalib = TMath::Cos(3 * fvtx_dphi3_docalib);
-          fvtxn_v3_both_docalib->Fill(pt_angle, cosfvtx_dphi3_docalib);
-          if ( dcarm == 1 ) fvtxn_v3_west_docalib->Fill(pt_angle, cosfvtx_dphi3_docalib);
-          if ( dcarm == 0 ) fvtxn_v3_east_docalib->Fill(pt_angle, cosfvtx_dphi3_docalib);
-          // --- 4th harmonic
-          double fourfour = 4 * phi_angle - 4 * fvtx_north_psi2_docalib;
-          double cosfourfour = TMath::Cos(fourfour);
-          fvtxn_v4_4Psi2_both_docalib->Fill(pt_angle, cosfourfour);
-          if ( dcarm == 1 ) fvtxn_v4_4Psi2_west_docalib->Fill(pt_angle, cosfourfour);
-          if ( dcarm == 0 ) fvtxn_v4_4Psi2_east_docalib->Fill(pt_angle, cosfourfour);
-          if ( pt_angle > 0.4 && pt_angle < 3.0 )
+
+          // north all layers
+          if ( -4.0 < fvtx_north_psi2_docalib && fvtx_north_psi2_docalib < 4.0 )
           {
-            // --- ep reso
-            tp1f_reso2_CNT_FVTXN->Fill(0.0, cosfvtx_dphi2_docalib);
-            tp1f_reso3_CNT_FVTXN->Fill(0.0, cosfvtx_dphi3_docalib);
-            th1d_reso2_CNT_FVTXN->Fill(cosfvtx_dphi2_docalib);
-            th1d_reso3_CNT_FVTXN->Fill(cosfvtx_dphi3_docalib);
-            th1d_dreso2_CNT_FVTXN->Fill(fvtx_dphi2_docalib);
-            th1d_dreso3_CNT_FVTXN->Fill(fvtx_dphi3_docalib);
-            // ---
-            tp1f_reso42_CNT_FVTXN->Fill(0.0, cosfourfour);
-            // --- ep reso with offset q-vectors
-            tp1f_os_reso2_CNT_FVTXN->Fill(0.0, cos(2.0 * (phi_angle - os_fvtxn_psi2)) );
-            tp1f_os_reso3_CNT_FVTXN->Fill(0.0, cos(3.0 * (phi_angle - os_fvtxn_psi3)) );
-            th1d_os_reso2_CNT_FVTXN->Fill( cos(2.0 * (phi_angle - os_fvtxn_psi2)) );
-            th1d_os_reso3_CNT_FVTXN->Fill( cos(3.0 * (phi_angle - os_fvtxn_psi3)) );
-            th1d_os_dreso2_CNT_FVTXN->Fill( phi_angle - os_fvtxn_psi2 );
-            th1d_os_dreso3_CNT_FVTXN->Fill( phi_angle - os_fvtxn_psi3 );
-          }
-          // ---
-          fvtxn_v2eta_both_docalib->Fill(eta, cosfvtx_dphi2_docalib);
-          if ( dcarm == 1 ) fvtxn_v2eta_west_docalib->Fill(eta, cosfvtx_dphi2_docalib);
-          if ( dcarm == 0 ) fvtxn_v2eta_east_docalib->Fill(eta, cosfvtx_dphi2_docalib);
-          fvtxn_v3eta_both_docalib->Fill(eta, cosfvtx_dphi3_docalib);
-          if ( dcarm == 1 ) fvtxn_v3eta_west_docalib->Fill(eta, cosfvtx_dphi3_docalib);
-          if ( dcarm == 0 ) fvtxn_v3eta_east_docalib->Fill(eta, cosfvtx_dphi3_docalib);
-        }
-        // --- now dcnw
-        if ( -4.0 < fvtx_north_psi2_dcnw && fvtx_north_psi2_dcnw < 4.0 && icent == 0 )
-        {
-          // --- 2nd harmonic
-          double fvtx_dphi2_dcnw = phi_angle - fvtx_north_psi2_dcnw;
-          double cosfvtx_dphi2_dcnw = TMath::Cos(2 * fvtx_dphi2_dcnw);
-          fvtxn_v2_both_dcnw->Fill(pt_angle, cosfvtx_dphi2_dcnw);
-          if ( dcarm == 1 ) fvtxn_v2_west_dcnw->Fill(pt_angle, cosfvtx_dphi2_dcnw);
-          if ( dcarm == 0 ) fvtxn_v2_east_dcnw->Fill(pt_angle, cosfvtx_dphi2_dcnw);
-          // --- 3rd harmonic
-          double fvtx_dphi3_dcnw = phi_angle - fvtx_north_psi3_dcnw;
-          double cosfvtx_dphi3_dcnw = TMath::Cos(3 * fvtx_dphi3_dcnw);
-          fvtxn_v3_both_dcnw->Fill(pt_angle, cosfvtx_dphi3_dcnw);
-          if ( dcarm == 1 ) fvtxn_v3_west_dcnw->Fill(pt_angle, cosfvtx_dphi3_dcnw);
-          if ( dcarm == 0 ) fvtxn_v3_east_dcnw->Fill(pt_angle, cosfvtx_dphi3_dcnw);
-          // --- 4th harmonic
-          double fourfour = 4 * phi_angle - 4 * fvtx_north_psi2_dcnw;
-          double cosfourfour = TMath::Cos(fourfour);
-          fvtxn_v4_4Psi2_both_dcnw->Fill(pt_angle, cosfourfour);
-          if ( dcarm == 1 ) fvtxn_v4_4Psi2_west_dcnw->Fill(pt_angle, cosfourfour);
-          if ( dcarm == 0 ) fvtxn_v4_4Psi2_east_dcnw->Fill(pt_angle, cosfourfour);
-          // --- ep reso
-          tp1f_nw_reso2_CNT_FVTXN->Fill(0.0, cosfvtx_dphi2_dcnw);
-          tp1f_nw_reso3_CNT_FVTXN->Fill(0.0, cosfvtx_dphi3_dcnw);
-          tp1f_nw_reso42_CNT_FVTXN->Fill(0.0, cosfourfour);
-        }
 
-        // --- now fvtx layers
+            // --- 2nd harmonic
+            double fvtxn_dphi2_docalib = phi_angle - fvtx_north_psi2_docalib;
+            double cosfvtxn_dphi2_docalib = TMath::Cos(2 * fvtxn_dphi2_docalib);
 
-        //fvtx layer 0
-        if ( -4.0 < fvtx0_south_psi2_docalib && fvtx0_south_psi2_docalib < 4.0 && icent == 0 )
-        {
-          double fvtx_dphi2_docalib = phi_angle - fvtx0_south_psi2_docalib;
-          double cosfvtx_dphi2_docalib = TMath::Cos(2 * fvtx_dphi2_docalib);
-          if ( dcarm == 1 ) fvtxs0_v2_west_docalib->Fill(pt_angle, cosfvtx_dphi2_docalib);
-          if ( dcarm == 0 ) fvtxs0_v2_east_docalib->Fill(pt_angle, cosfvtx_dphi2_docalib);
-          fvtxs0_v2_both_docalib->Fill(pt_angle, cosfvtx_dphi2_docalib);
-          // ---
-          double fvtx_dphi3_docalib = phi_angle - fvtx0_south_psi3_docalib;
-          double cosfvtx_dphi3_docalib = TMath::Cos(3 * fvtx_dphi3_docalib);
-          if ( dcarm == 1 ) fvtxs0_v3_west_docalib->Fill(pt_angle, cosfvtx_dphi3_docalib);
-          if ( dcarm == 0 ) fvtxs0_v3_east_docalib->Fill(pt_angle, cosfvtx_dphi3_docalib);
-          // ------------------------------------------------------------------------------------
-          fvtxs0_v3_both_cosphi->Fill(pt_angle, cos(3 * phi_angle));
-          if ( dcarm == 1 ) fvtxs0_v3_west_cosphi->Fill(pt_angle, cos(3 * phi_angle));
-          if ( dcarm == 0 ) fvtxs0_v3_east_cosphi->Fill(pt_angle, cos(3 * phi_angle));
-          fvtxs0_v3_both_cospsi3->Fill(pt_angle, cos(3 * fvtx0_south_psi3_docalib));
-          if ( dcarm == 1 ) fvtxs0_v3_west_cospsi3->Fill(pt_angle, cos(3 * fvtx0_south_psi3_docalib));
-          if ( dcarm == 0 ) fvtxs0_v3_east_cospsi3->Fill(pt_angle, cos(3 * fvtx0_south_psi3_docalib));
-          // ------------------------------------------------------------------------------------
-          fvtxs0_v3_both_sinphi->Fill(pt_angle, sin(3 * phi_angle));
-          if ( dcarm == 1 ) fvtxs0_v3_west_sinphi->Fill(pt_angle, sin(3 * phi_angle));
-          if ( dcarm == 0 ) fvtxs0_v3_east_sinphi->Fill(pt_angle, sin(3 * phi_angle));
-          fvtxs0_v3_both_sinpsi3->Fill(pt_angle, sin(3 * fvtx0_south_psi3_docalib));
-          if ( dcarm == 1 ) fvtxs0_v3_west_sinpsi3->Fill(pt_angle, sin(3 * fvtx0_south_psi3_docalib));
-          if ( dcarm == 0 ) fvtxs0_v3_east_sinpsi3->Fill(pt_angle, sin(3 * fvtx0_south_psi3_docalib));
-          // ------------------------------------------------------------------------------------
-          fvtxs0_v3_both_docalib->Fill(pt_angle, cosfvtx_dphi3_docalib);
-          if ( dcarm == 1 ) fvtxs0_v3_west_phipsi->Fill(fvtx_dphi3_docalib);
-          if ( dcarm == 0 ) fvtxs0_v3_east_phipsi->Fill(fvtx_dphi3_docalib);
-          // ---
-          float helper = atan2(sin(3 * fvtx_dphi3_docalib), cos(3 * fvtx_dphi3_docalib));
-          if ( dcarm == 1 ) fvtxs0_v3_west_phipsi3->Fill(helper);
-          if ( dcarm == 0 ) fvtxs0_v3_east_phipsi3->Fill(helper);
-          fvtxs0_v3_both_phipsi3->Fill(helper);
-          if ( pt_angle > 1.0 && pt_angle < 3.0 )
-          {
-            if ( dcarm == 1 ) fvtxs0_v3_west_phipsi3_pT13->Fill(helper);
-            if ( dcarm == 0 ) fvtxs0_v3_east_phipsi3_pT13->Fill(helper);
-            fvtxs0_v3_both_phipsi3_pT13->Fill(helper);
-          }
-          // ---
-          fvtxs0_v3_both_phipsi->Fill(fvtx_dphi3_docalib);
-          if ( dcarm == 1 ) fvtxs0_v2_west_phipsi->Fill(fvtx_dphi2_docalib);
-          if ( dcarm == 0 ) fvtxs0_v2_east_phipsi->Fill(fvtx_dphi2_docalib);
-          fvtxs0_v2_both_phipsi->Fill(fvtx_dphi2_docalib);
-          if ( pt_angle > 0.4 && pt_angle < 3.0 )
-          {
-            tp1f_reso2_CNT_FVTX0->Fill(0.0, cosfvtx_dphi2_docalib);
-            tp1f_reso3_CNT_FVTX0->Fill(0.0, cosfvtx_dphi3_docalib);
-          }
-          // ---
-          helper = atan2(sin(2 * fvtx_dphi2_docalib), cos(2 * fvtx_dphi2_docalib));
-          if ( dcarm == 1 ) fvtxs0_v2_west_phipsi2->Fill(helper);
-          if ( dcarm == 0 ) fvtxs0_v2_east_phipsi2->Fill(helper);
-          fvtxs0_v2_both_phipsi2->Fill(helper);
-          if ( pt_angle > 1.0 && pt_angle < 3.0 )
-          {
-            if ( dcarm == 1 ) fvtxs0_v2_west_phipsi2_pT13->Fill(helper);
-            if ( dcarm == 0 ) fvtxs0_v2_east_phipsi2_pT13->Fill(helper);
-            fvtxs0_v2_both_phipsi2_pT13->Fill(helper);
-          }
-          // ---
-        }
+            fvtxn_v2_both_docalib[icent]->Fill(pt_angle, cosfvtxn_dphi2_docalib);
+            if ( dcarm == 1 ) fvtxn_v2_west_docalib[icent]->Fill(pt_angle, cosfvtxn_dphi2_docalib);
+            if ( dcarm == 0 ) fvtxn_v2_east_docalib[icent]->Fill(pt_angle, cosfvtxn_dphi2_docalib);
 
-        //fvtx layer 1
-        if ( -4.0 < fvtx1_south_psi2_docalib && fvtx1_south_psi2_docalib < 4.0 && icent == 0 )
-        {
-          double fvtx_dphi2_docalib = phi_angle - fvtx1_south_psi2_docalib;
-          double cosfvtx_dphi2_docalib = TMath::Cos(2 * fvtx_dphi2_docalib);
-          if ( dcarm == 1 ) fvtxs1_v2_west_docalib->Fill(pt_angle, cosfvtx_dphi2_docalib);
-          if ( dcarm == 0 ) fvtxs1_v2_east_docalib->Fill(pt_angle, cosfvtx_dphi2_docalib);
-          fvtxs1_v2_both_docalib->Fill(pt_angle, cosfvtx_dphi2_docalib);
-          // ---
-          double fvtx_dphi3_docalib = phi_angle - fvtx1_south_psi3_docalib;
-          double cosfvtx_dphi3_docalib = TMath::Cos(3 * fvtx_dphi3_docalib);
-          if ( dcarm == 1 ) fvtxs1_v3_west_docalib->Fill(pt_angle, cosfvtx_dphi3_docalib);
-          if ( dcarm == 0 ) fvtxs1_v3_east_docalib->Fill(pt_angle, cosfvtx_dphi3_docalib);
-          fvtxs1_v3_both_docalib->Fill(pt_angle, cosfvtx_dphi3_docalib);
-          if ( dcarm == 1 ) fvtxs1_v3_west_phipsi->Fill(fvtx_dphi3_docalib);
-          if ( dcarm == 0 ) fvtxs1_v3_east_phipsi->Fill(fvtx_dphi3_docalib);
-          // ------------------------------------------------------------------------------------
-          fvtxs1_v3_both_cosphi->Fill(pt_angle, cos(3 * phi_angle));
-          if ( dcarm == 1 ) fvtxs1_v3_west_cosphi->Fill(pt_angle, cos(3 * phi_angle));
-          if ( dcarm == 0 ) fvtxs1_v3_east_cosphi->Fill(pt_angle, cos(3 * phi_angle));
-          fvtxs1_v3_both_cospsi3->Fill(pt_angle, cos(3 * fvtx1_south_psi3_docalib));
-          if ( dcarm == 1 ) fvtxs1_v3_west_cospsi3->Fill(pt_angle, cos(3 * fvtx1_south_psi3_docalib));
-          if ( dcarm == 0 ) fvtxs1_v3_east_cospsi3->Fill(pt_angle, cos(3 * fvtx1_south_psi3_docalib));
-          // ------------------------------------------------------------------------------------
-          fvtxs1_v3_both_sinphi->Fill(pt_angle, sin(3 * phi_angle));
-          if ( dcarm == 1 ) fvtxs1_v3_west_sinphi->Fill(pt_angle, sin(3 * phi_angle));
-          if ( dcarm == 0 ) fvtxs1_v3_east_sinphi->Fill(pt_angle, sin(3 * phi_angle));
-          fvtxs1_v3_both_sinpsi3->Fill(pt_angle, sin(3 * fvtx1_south_psi3_docalib));
-          if ( dcarm == 1 ) fvtxs1_v3_west_sinpsi3->Fill(pt_angle, sin(3 * fvtx1_south_psi3_docalib));
-          if ( dcarm == 0 ) fvtxs1_v3_east_sinpsi3->Fill(pt_angle, sin(3 * fvtx1_south_psi3_docalib));
-          // ------------------------------------------------------------------------------------
-          fvtxs1_v3_both_phipsi->Fill(fvtx_dphi3_docalib);
-          if ( dcarm == 1 ) fvtxs1_v2_west_phipsi->Fill(fvtx_dphi2_docalib);
-          if ( dcarm == 0 ) fvtxs1_v2_east_phipsi->Fill(fvtx_dphi2_docalib);
-          // ---
-          float helper = atan2(sin(3 * fvtx_dphi3_docalib), cos(3 * fvtx_dphi3_docalib));
-          if ( dcarm == 1 ) fvtxs1_v3_west_phipsi3->Fill(helper);
-          if ( dcarm == 0 ) fvtxs1_v3_east_phipsi3->Fill(helper);
-          fvtxs1_v3_both_phipsi3->Fill(helper);
-          if ( pt_angle > 1.0 && pt_angle < 3.0 )
-          {
-            if ( dcarm == 1 ) fvtxs1_v3_west_phipsi3_pT13->Fill(helper);
-            if ( dcarm == 0 ) fvtxs1_v3_east_phipsi3_pT13->Fill(helper);
-            fvtxs1_v3_both_phipsi3_pT13->Fill(helper);
-          }
-          // ---
-          fvtxs1_v2_both_phipsi->Fill(fvtx_dphi2_docalib);
-          if ( pt_angle > 0.4 && pt_angle < 3.0 )
-          {
-            tp1f_reso2_CNT_FVTX1->Fill(0.0, cosfvtx_dphi2_docalib);
-            tp1f_reso3_CNT_FVTX1->Fill(0.0, cosfvtx_dphi3_docalib);
-          }
-          // ---
-          helper = atan2(sin(2 * fvtx_dphi2_docalib), cos(2 * fvtx_dphi2_docalib));
-          if ( dcarm == 1 ) fvtxs1_v2_west_phipsi2->Fill(helper);
-          if ( dcarm == 0 ) fvtxs1_v2_east_phipsi2->Fill(helper);
-          fvtxs1_v2_both_phipsi2->Fill(helper);
-          if ( pt_angle > 1.0 && pt_angle < 3.0 )
-          {
-            if ( dcarm == 1 ) fvtxs1_v2_west_phipsi2_pT13->Fill(helper);
-            if ( dcarm == 0 ) fvtxs1_v2_east_phipsi2_pT13->Fill(helper);
-            fvtxs1_v2_both_phipsi2_pT13->Fill(helper);
-          }
-          // ---
-        }
-
-        //fvtx layer 2
-        if ( -4.0 < fvtx2_south_psi2_docalib && fvtx2_south_psi2_docalib < 4.0 && icent == 0 )
-        {
-          double fvtx_dphi2_docalib = phi_angle - fvtx2_south_psi2_docalib;
-          double cosfvtx_dphi2_docalib = TMath::Cos(2 * fvtx_dphi2_docalib);
-          if ( dcarm == 1 ) fvtxs2_v2_west_docalib->Fill(pt_angle, cosfvtx_dphi2_docalib);
-          if ( dcarm == 0 ) fvtxs2_v2_east_docalib->Fill(pt_angle, cosfvtx_dphi2_docalib);
-          fvtxs2_v2_both_docalib->Fill(pt_angle, cosfvtx_dphi2_docalib);
-          // ---
-          double fvtx_dphi3_docalib = phi_angle - fvtx2_south_psi3_docalib;
-          double cosfvtx_dphi3_docalib = TMath::Cos(3 * fvtx_dphi3_docalib);
-          if ( dcarm == 1 ) fvtxs2_v3_west_docalib->Fill(pt_angle, cosfvtx_dphi3_docalib);
-          if ( dcarm == 0 ) fvtxs2_v3_east_docalib->Fill(pt_angle, cosfvtx_dphi3_docalib);
-          fvtxs2_v3_both_docalib->Fill(pt_angle, cosfvtx_dphi3_docalib);
-          // ------------------------------------------------------------------------------------
-          fvtxs2_v3_both_cosphi->Fill(pt_angle, cos(3 * phi_angle));
-          if ( dcarm == 1 ) fvtxs2_v3_west_cosphi->Fill(pt_angle, cos(3 * phi_angle));
-          if ( dcarm == 0 ) fvtxs2_v3_east_cosphi->Fill(pt_angle, cos(3 * phi_angle));
-          fvtxs2_v3_both_cospsi3->Fill(pt_angle, cos(3 * fvtx2_south_psi3_docalib));
-          if ( dcarm == 1 ) fvtxs2_v3_west_cospsi3->Fill(pt_angle, cos(3 * fvtx2_south_psi3_docalib));
-          if ( dcarm == 0 ) fvtxs2_v3_east_cospsi3->Fill(pt_angle, cos(3 * fvtx2_south_psi3_docalib));
-          // ------------------------------------------------------------------------------------
-          fvtxs2_v3_both_sinphi->Fill(pt_angle, sin(3 * phi_angle));
-          if ( dcarm == 1 ) fvtxs2_v3_west_sinphi->Fill(pt_angle, sin(3 * phi_angle));
-          if ( dcarm == 0 ) fvtxs2_v3_east_sinphi->Fill(pt_angle, sin(3 * phi_angle));
-          fvtxs2_v3_both_sinpsi3->Fill(pt_angle, sin(3 * fvtx2_south_psi3_docalib));
-          if ( dcarm == 1 ) fvtxs2_v3_west_sinpsi3->Fill(pt_angle, sin(3 * fvtx2_south_psi3_docalib));
-          if ( dcarm == 0 ) fvtxs2_v3_east_sinpsi3->Fill(pt_angle, sin(3 * fvtx2_south_psi3_docalib));
-          // ------------------------------------------------------------------------------------
-          if ( dcarm == 1 ) fvtxs2_v3_west_phipsi->Fill(fvtx_dphi3_docalib);
-          if ( dcarm == 0 ) fvtxs2_v3_east_phipsi->Fill(fvtx_dphi3_docalib);
-          fvtxs2_v3_both_phipsi->Fill(fvtx_dphi3_docalib);
-          if ( dcarm == 1 ) fvtxs2_v2_west_phipsi->Fill(fvtx_dphi2_docalib);
-          if ( dcarm == 0 ) fvtxs2_v2_east_phipsi->Fill(fvtx_dphi2_docalib);
-          // ---
-          float helper = atan2(sin(3 * fvtx_dphi3_docalib), cos(3 * fvtx_dphi3_docalib));
-          if ( dcarm == 1 ) fvtxs2_v3_west_phipsi3->Fill(helper);
-          if ( dcarm == 0 ) fvtxs2_v3_east_phipsi3->Fill(helper);
-          fvtxs2_v3_both_phipsi3->Fill(helper);
-          if ( pt_angle > 1.0 && pt_angle < 3.0 )
-          {
-            if ( dcarm == 1 ) fvtxs2_v3_west_phipsi3_pT13->Fill(helper);
-            if ( dcarm == 0 ) fvtxs2_v3_east_phipsi3_pT13->Fill(helper);
-            fvtxs2_v3_both_phipsi3_pT13->Fill(helper);
-          }
-          // ---
-          fvtxs2_v2_both_phipsi->Fill(fvtx_dphi2_docalib);
-          if ( pt_angle > 0.4 && pt_angle < 3.0 )
-          {
-            tp1f_reso2_CNT_FVTX2->Fill(0.0, cosfvtx_dphi2_docalib);
-            tp1f_reso3_CNT_FVTX2->Fill(0.0, cosfvtx_dphi3_docalib);
-          }
-          // ---
-          helper = atan2(sin(2 * fvtx_dphi2_docalib), cos(2 * fvtx_dphi2_docalib));
-          if ( dcarm == 1 ) fvtxs2_v2_west_phipsi2->Fill(helper);
-          if ( dcarm == 0 ) fvtxs2_v2_east_phipsi2->Fill(helper);
-          fvtxs2_v2_both_phipsi2->Fill(helper);
-          if ( pt_angle > 1.0 && pt_angle < 3.0 )
-          {
-            if ( dcarm == 1 ) fvtxs2_v2_west_phipsi2_pT13->Fill(helper);
-            if ( dcarm == 0 ) fvtxs2_v2_east_phipsi2_pT13->Fill(helper);
-            fvtxs2_v2_both_phipsi2_pT13->Fill(helper);
-          }
-          // ---
-        }
-
-        //fvtx layer 3
-        if ( -4.0 < fvtx3_south_psi2_docalib && fvtx3_south_psi2_docalib < 4.0 && icent == 0 )
-        {
-          double fvtx_dphi2_docalib = phi_angle - fvtx3_south_psi2_docalib;
-          double cosfvtx_dphi2_docalib = TMath::Cos(2 * fvtx_dphi2_docalib);
-          if ( dcarm == 1 ) fvtxs3_v2_west_docalib->Fill(pt_angle, cosfvtx_dphi2_docalib);
-          if ( dcarm == 0 ) fvtxs3_v2_east_docalib->Fill(pt_angle, cosfvtx_dphi2_docalib);
-          fvtxs3_v2_both_docalib->Fill(pt_angle, cosfvtx_dphi2_docalib);
-          // ---
-          double fvtx_dphi3_docalib = phi_angle - fvtx3_south_psi3_docalib;
-          double cosfvtx_dphi3_docalib = TMath::Cos(3 * fvtx_dphi3_docalib);
-          if ( dcarm == 1 ) fvtxs3_v3_west_docalib->Fill(pt_angle, cosfvtx_dphi3_docalib);
-          if ( dcarm == 0 ) fvtxs3_v3_east_docalib->Fill(pt_angle, cosfvtx_dphi3_docalib);
-          fvtxs3_v3_both_docalib->Fill(pt_angle, cosfvtx_dphi3_docalib);
-          // ------------------------------------------------------------------------------------
-          fvtxs3_v3_both_cosphi->Fill(pt_angle, cos(3 * phi_angle));
-          if ( dcarm == 1 ) fvtxs3_v3_west_cosphi->Fill(pt_angle, cos(3 * phi_angle));
-          if ( dcarm == 0 ) fvtxs3_v3_east_cosphi->Fill(pt_angle, cos(3 * phi_angle));
-          fvtxs3_v3_both_cospsi3->Fill(pt_angle, cos(3 * fvtx3_south_psi3_docalib));
-          if ( dcarm == 1 ) fvtxs3_v3_west_cospsi3->Fill(pt_angle, cos(3 * fvtx3_south_psi3_docalib));
-          if ( dcarm == 0 ) fvtxs3_v3_east_cospsi3->Fill(pt_angle, cos(3 * fvtx3_south_psi3_docalib));
-          // ------------------------------------------------------------------------------------
-          fvtxs3_v3_both_sinphi->Fill(pt_angle, sin(3 * phi_angle));
-          if ( dcarm == 1 ) fvtxs3_v3_west_sinphi->Fill(pt_angle, sin(3 * phi_angle));
-          if ( dcarm == 0 ) fvtxs3_v3_east_sinphi->Fill(pt_angle, sin(3 * phi_angle));
-          fvtxs3_v3_both_sinpsi3->Fill(pt_angle, sin(3 * fvtx3_south_psi3_docalib));
-          if ( dcarm == 1 ) fvtxs3_v3_west_sinpsi3->Fill(pt_angle, sin(3 * fvtx3_south_psi3_docalib));
-          if ( dcarm == 0 ) fvtxs3_v3_east_sinpsi3->Fill(pt_angle, sin(3 * fvtx3_south_psi3_docalib));
-          // ------------------------------------------------------------------------------------
-          if ( dcarm == 1 ) fvtxs3_v3_west_phipsi->Fill(fvtx_dphi3_docalib);
-          if ( dcarm == 0 ) fvtxs3_v3_east_phipsi->Fill(fvtx_dphi3_docalib);
-          fvtxs3_v3_both_phipsi->Fill(fvtx_dphi3_docalib);
-          if ( dcarm == 1 ) fvtxs3_v2_west_phipsi->Fill(fvtx_dphi2_docalib);
-          if ( dcarm == 0 ) fvtxs3_v2_east_phipsi->Fill(fvtx_dphi2_docalib);
-          // ---
-          float helper = atan2(sin(3 * fvtx_dphi3_docalib), cos(3 * fvtx_dphi3_docalib));
-          if ( dcarm == 1 ) fvtxs3_v3_west_phipsi3->Fill(helper);
-          if ( dcarm == 0 ) fvtxs3_v3_east_phipsi3->Fill(helper);
-          fvtxs3_v3_both_phipsi3->Fill(helper);
-          if ( pt_angle > 1.0 && pt_angle < 3.0 )
-          {
-            if ( dcarm == 1 ) fvtxs3_v3_west_phipsi3_pT13->Fill(helper);
-            if ( dcarm == 0 ) fvtxs3_v3_east_phipsi3_pT13->Fill(helper);
-            fvtxs3_v3_both_phipsi3_pT13->Fill(helper);
-          }
-          // ---
-          fvtxs3_v2_both_phipsi->Fill(fvtx_dphi2_docalib);
-          if ( pt_angle > 0.4 && pt_angle < 3.0 )
-          {
-            tp1f_reso2_CNT_FVTX3->Fill(0.0, cosfvtx_dphi2_docalib);
-            tp1f_reso3_CNT_FVTX3->Fill(0.0, cosfvtx_dphi3_docalib);
-          }
-          // ---
-          helper = atan2(sin(2 * fvtx_dphi2_docalib), cos(2 * fvtx_dphi2_docalib));
-          if ( dcarm == 1 ) fvtxs3_v2_west_phipsi2->Fill(helper);
-          if ( dcarm == 0 ) fvtxs3_v2_east_phipsi2->Fill(helper);
-          fvtxs3_v2_both_phipsi2->Fill(helper);
-          if ( pt_angle > 1.0 && pt_angle < 3.0 )
-          {
-            if ( dcarm == 1 ) fvtxs3_v2_west_phipsi2_pT13->Fill(helper);
-            if ( dcarm == 0 ) fvtxs3_v2_east_phipsi2_pT13->Fill(helper);
-            fvtxs3_v2_both_phipsi2_pT13->Fill(helper);
-          }
-          // ---
-        } // check on psi
-
-        //fvtx layer 012
-        if (-4.0 < fvtx012_south_psi2_docalib && fvtx012_south_psi2_docalib < 4.0)
-        {
-          double fvtx_dphi2_docalib = phi_angle - fvtx012_south_psi2_docalib;
-          double cosfvtx_dphi2_docalib = TMath::Cos(2 * fvtx_dphi2_docalib);
-          if ( dcarm == 1 ) fvtxs012_v2_west_docalib->Fill(pt_angle, cosfvtx_dphi2_docalib);
-          if ( dcarm == 0 ) fvtxs012_v2_east_docalib->Fill(pt_angle, cosfvtx_dphi2_docalib);
-          fvtxs012_v2_both_docalib->Fill(pt_angle, cosfvtx_dphi2_docalib);
-          // ---
-          double fvtx_dphi3_docalib = phi_angle - fvtx012_south_psi3_docalib;
-          double cosfvtx_dphi3_docalib = TMath::Cos(3 * fvtx_dphi3_docalib);
-          if ( dcarm == 1 ) fvtxs012_v3_west_docalib->Fill(pt_angle, cosfvtx_dphi3_docalib);
-          if ( dcarm == 0 ) fvtxs012_v3_east_docalib->Fill(pt_angle, cosfvtx_dphi3_docalib);
-          fvtxs012_v3_both_docalib->Fill(pt_angle, cosfvtx_dphi3_docalib);
-          if ( dcarm == 1 ) fvtxs012_v3_west_phipsi->Fill(fvtx_dphi3_docalib);
-          if ( dcarm == 0 ) fvtxs012_v3_east_phipsi->Fill(fvtx_dphi3_docalib);
-          fvtxs012_v3_both_phipsi->Fill(fvtx_dphi3_docalib);
-          if ( dcarm == 1 ) fvtxs012_v2_west_phipsi->Fill(fvtx_dphi2_docalib);
-          if ( dcarm == 0 ) fvtxs012_v2_east_phipsi->Fill(fvtx_dphi2_docalib);
-          fvtxs012_v2_both_phipsi->Fill(fvtx_dphi2_docalib);
-          tp1f_reso2_CNT_FVTX012->Fill(0.0, cosfvtx_dphi2_docalib);
-          tp1f_reso3_CNT_FVTX012->Fill(0.0, cosfvtx_dphi3_docalib);
-        } // check on psi
-
-        //fvtx layer 013
-        if (-4.0 < fvtx013_south_psi2_docalib && fvtx013_south_psi2_docalib < 4.0)
-        {
-          double fvtx_dphi2_docalib = phi_angle - fvtx013_south_psi2_docalib;
-          double cosfvtx_dphi2_docalib = TMath::Cos(2 * fvtx_dphi2_docalib);
-          if ( dcarm == 1 ) fvtxs013_v2_west_docalib->Fill(pt_angle, cosfvtx_dphi2_docalib);
-          if ( dcarm == 0 ) fvtxs013_v2_east_docalib->Fill(pt_angle, cosfvtx_dphi2_docalib);
-          fvtxs013_v2_both_docalib->Fill(pt_angle, cosfvtx_dphi2_docalib);
-          // ---
-          double fvtx_dphi3_docalib = phi_angle - fvtx013_south_psi3_docalib;
-          double cosfvtx_dphi3_docalib = TMath::Cos(3 * fvtx_dphi3_docalib);
-          if ( dcarm == 1 ) fvtxs013_v3_west_docalib->Fill(pt_angle, cosfvtx_dphi3_docalib);
-          if ( dcarm == 0 ) fvtxs013_v3_east_docalib->Fill(pt_angle, cosfvtx_dphi3_docalib);
-          fvtxs013_v3_both_docalib->Fill(pt_angle, cosfvtx_dphi3_docalib);
-          if ( dcarm == 1 ) fvtxs013_v3_west_phipsi->Fill(fvtx_dphi3_docalib);
-          if ( dcarm == 0 ) fvtxs013_v3_east_phipsi->Fill(fvtx_dphi3_docalib);
-          fvtxs013_v3_both_phipsi->Fill(fvtx_dphi3_docalib);
-          if ( dcarm == 1 ) fvtxs013_v2_west_phipsi->Fill(fvtx_dphi2_docalib);
-          if ( dcarm == 0 ) fvtxs013_v2_east_phipsi->Fill(fvtx_dphi2_docalib);
-          fvtxs013_v2_both_phipsi->Fill(fvtx_dphi2_docalib);
-          tp1f_reso2_CNT_FVTX013->Fill(0.0, cosfvtx_dphi2_docalib);
-          tp1f_reso3_CNT_FVTX013->Fill(0.0, cosfvtx_dphi3_docalib);
-        } // check on psi
-
-        //fvtx layer 023
-        if (-4.0 < fvtx023_south_psi2_docalib && fvtx023_south_psi2_docalib < 4.0)
-        {
-          double fvtx_dphi2_docalib = phi_angle - fvtx023_south_psi2_docalib;
-          double cosfvtx_dphi2_docalib = TMath::Cos(2 * fvtx_dphi2_docalib);
-          if ( dcarm == 1 ) fvtxs023_v2_west_docalib->Fill(pt_angle, cosfvtx_dphi2_docalib);
-          if ( dcarm == 0 ) fvtxs023_v2_east_docalib->Fill(pt_angle, cosfvtx_dphi2_docalib);
-          fvtxs023_v2_both_docalib->Fill(pt_angle, cosfvtx_dphi2_docalib);
-          // ---
-          double fvtx_dphi3_docalib = phi_angle - fvtx023_south_psi3_docalib;
-          double cosfvtx_dphi3_docalib = TMath::Cos(3 * fvtx_dphi3_docalib);
-          if ( dcarm == 1 ) fvtxs023_v3_west_docalib->Fill(pt_angle, cosfvtx_dphi3_docalib);
-          if ( dcarm == 0 ) fvtxs023_v3_east_docalib->Fill(pt_angle, cosfvtx_dphi3_docalib);
-          fvtxs023_v3_both_docalib->Fill(pt_angle, cosfvtx_dphi3_docalib);
-          if ( dcarm == 1 ) fvtxs023_v3_west_phipsi->Fill(fvtx_dphi3_docalib);
-          if ( dcarm == 0 ) fvtxs023_v3_east_phipsi->Fill(fvtx_dphi3_docalib);
-          fvtxs023_v3_both_phipsi->Fill(fvtx_dphi3_docalib);
-          if ( dcarm == 1 ) fvtxs023_v2_west_phipsi->Fill(fvtx_dphi2_docalib);
-          if ( dcarm == 0 ) fvtxs023_v2_east_phipsi->Fill(fvtx_dphi2_docalib);
-          fvtxs023_v2_both_phipsi->Fill(fvtx_dphi2_docalib);
-          tp1f_reso2_CNT_FVTX023->Fill(0.0, cosfvtx_dphi2_docalib);
-          tp1f_reso3_CNT_FVTX023->Fill(0.0, cosfvtx_dphi3_docalib);
-        } // check on psi
-
-        //fvtx layer 123
-        if (-4.0 < fvtx123_south_psi2_docalib && fvtx123_south_psi2_docalib < 4.0)
-        {
-          double fvtx_dphi2_docalib = phi_angle - fvtx123_south_psi2_docalib;
-          double cosfvtx_dphi2_docalib = TMath::Cos(2 * fvtx_dphi2_docalib);
-          if ( dcarm == 1 ) fvtxs123_v2_west_docalib->Fill(pt_angle, cosfvtx_dphi2_docalib);
-          if ( dcarm == 0 ) fvtxs123_v2_east_docalib->Fill(pt_angle, cosfvtx_dphi2_docalib);
-          fvtxs123_v2_both_docalib->Fill(pt_angle, cosfvtx_dphi2_docalib);
-          // ---
-          double fvtx_dphi3_docalib = phi_angle - fvtx123_south_psi3_docalib;
-          double cosfvtx_dphi3_docalib = TMath::Cos(3 * fvtx_dphi3_docalib);
-          if ( dcarm == 1 ) fvtxs123_v3_west_docalib->Fill(pt_angle, cosfvtx_dphi3_docalib);
-          if ( dcarm == 0 ) fvtxs123_v3_east_docalib->Fill(pt_angle, cosfvtx_dphi3_docalib);
-          fvtxs123_v3_both_docalib->Fill(pt_angle, cosfvtx_dphi3_docalib);
-          if ( dcarm == 1 ) fvtxs123_v3_west_phipsi->Fill(fvtx_dphi3_docalib);
-          if ( dcarm == 0 ) fvtxs123_v3_east_phipsi->Fill(fvtx_dphi3_docalib);
-          fvtxs123_v3_both_phipsi->Fill(fvtx_dphi3_docalib);
-          if ( dcarm == 1 ) fvtxs123_v2_west_phipsi->Fill(fvtx_dphi2_docalib);
-          if ( dcarm == 0 ) fvtxs123_v2_east_phipsi->Fill(fvtx_dphi2_docalib);
-          fvtxs123_v2_both_phipsi->Fill(fvtx_dphi2_docalib);
-          tp1f_reso2_CNT_FVTX123->Fill(0.0, cosfvtx_dphi2_docalib);
-          tp1f_reso3_CNT_FVTX123->Fill(0.0, cosfvtx_dphi3_docalib);
-        } // check on psi
-
-        // --- now fvtx layers
-
-        //fvtx layer 0
-        if ( -4.0 < fvtx0_south_psi2_dcnw && fvtx0_south_psi2_dcnw < 4.0 && icent == 0 )
-        {
-          double fvtx_dphi2_dcnw = phi_angle - fvtx0_south_psi2_dcnw;
-          double cosfvtx_dphi2_dcnw = TMath::Cos(2 * fvtx_dphi2_dcnw);
-          if ( dcarm == 1 ) fvtxs0_v2_west_dcnw->Fill(pt_angle, cosfvtx_dphi2_dcnw);
-          if ( dcarm == 0 ) fvtxs0_v2_east_dcnw->Fill(pt_angle, cosfvtx_dphi2_dcnw);
-          fvtxs0_v2_both_dcnw->Fill(pt_angle, cosfvtx_dphi2_dcnw);
-        }
-
-        //fvtx layer 1
-        if ( -4.0 < fvtx1_south_psi2_dcnw && fvtx1_south_psi2_dcnw < 4.0 && icent == 0 )
-        {
-          double fvtx_dphi2_dcnw = phi_angle - fvtx1_south_psi2_dcnw;
-          double cosfvtx_dphi2_dcnw = TMath::Cos(2 * fvtx_dphi2_dcnw);
-          if ( dcarm == 1 ) fvtxs1_v2_west_dcnw->Fill(pt_angle, cosfvtx_dphi2_dcnw);
-          if ( dcarm == 0 ) fvtxs1_v2_east_dcnw->Fill(pt_angle, cosfvtx_dphi2_dcnw);
-          fvtxs1_v2_both_dcnw->Fill(pt_angle, cosfvtx_dphi2_dcnw);
-        }
-
-        //fvtx layer 2
-        if ( -4.0 < fvtx2_south_psi2_dcnw && fvtx2_south_psi2_dcnw < 4.0 && icent == 0 )
-        {
-          double fvtx_dphi2_dcnw = phi_angle - fvtx2_south_psi2_dcnw;
-          double cosfvtx_dphi2_dcnw = TMath::Cos(2 * fvtx_dphi2_dcnw);
-          if ( dcarm == 1 ) fvtxs2_v2_west_dcnw->Fill(pt_angle, cosfvtx_dphi2_dcnw);
-          if ( dcarm == 0 ) fvtxs2_v2_east_dcnw->Fill(pt_angle, cosfvtx_dphi2_dcnw);
-          fvtxs2_v2_both_dcnw->Fill(pt_angle, cosfvtx_dphi2_dcnw);
-        }
-
-        //fvtx layer 3
-        if ( -4.0 < fvtx3_south_psi2_dcnw && fvtx3_south_psi2_dcnw < 4.0 && icent == 0 )
-        {
-          double fvtx_dphi2_dcnw = phi_angle - fvtx3_south_psi2_dcnw;
-          double cosfvtx_dphi2_dcnw = TMath::Cos(2 * fvtx_dphi2_dcnw);
-          if ( dcarm == 1 ) fvtxs3_v2_west_dcnw->Fill(pt_angle, cosfvtx_dphi2_dcnw);
-          if ( dcarm == 0 ) fvtxs3_v2_east_dcnw->Fill(pt_angle, cosfvtx_dphi2_dcnw);
-          fvtxs3_v2_both_dcnw->Fill(pt_angle, cosfvtx_dphi2_dcnw);
-        } // check on psi
+            fvtxn_v2eta_both_docalib[icent]->Fill(eta, cosfvtxn_dphi2_docalib);
+            if ( dcarm == 1 ) fvtxn_v2eta_west_docalib[icent]->Fill(eta, cosfvtxn_dphi2_docalib);
+            if ( dcarm == 0 ) fvtxn_v2eta_east_docalib[icent]->Fill(eta, cosfvtxn_dphi2_docalib);
 
 
-        for ( int jtrk = 0; jtrk < d_ntrk; jtrk++ )
-        {
-          if ( itrk == jtrk ) continue; // AUTOCORRELATIONS!!!
-          //nfvtxt_CME_PosPos_fvtxsEP;
-          float px2    = d_px[jtrk];
-          float py2    = d_py[jtrk];
-          //float pz2    = d_pz[jtrk];
+            // --- 3rd harmonic
+            double fvtxn_dphi3_docalib = phi_angle - fvtx_north_psi3_docalib;
+            double cosfvtxn_dphi3_docalib = TMath::Cos(3 * fvtxn_dphi3_docalib);
 
-          // int dcarm=0;
-          // if(px>0) dcarm=1;
-          int arm1 = dcarm;
-          int arm2 = 0;
-          if ( px2 > 0 ) arm2 = 1;
+            fvtxn_v3_both_docalib[icent]->Fill(pt_angle, cosfvtxn_dphi3_docalib);
+            if ( dcarm == 1 ) fvtxn_v3_west_docalib[icent]->Fill(pt_angle, cosfvtxn_dphi3_docalib);
+            if ( dcarm == 0 ) fvtxn_v3_east_docalib[icent]->Fill(pt_angle, cosfvtxn_dphi3_docalib);
 
-          float phi2 = TMath::ATan2(py2, px2);
-          // float pt = sqrt(px*px+py*py);
-          float phi1 = phi0;
+            fvtxn_v3eta_both_docalib[icent]->Fill(eta, cosfvtxn_dphi3_docalib);
+            if ( dcarm == 1 ) fvtxn_v3eta_west_docalib[icent]->Fill(eta, cosfvtxn_dphi3_docalib);
+            if ( dcarm == 0 ) fvtxn_v3eta_east_docalib[icent]->Fill(eta, cosfvtxn_dphi3_docalib);
 
-          int charge1 = charge;
-          int charge2 = d_charge[jtrk];
-          float argument = cos(phi1 + phi2 - 2 * fvtx_south_psi2_docalib);
-          if ( charge1 > 0 && charge2 > 0 ) nfvtxt_CME_PosPos_fvtxsEP->Fill(nfvtxt, argument);
-          if ( charge1 < 0 && charge2 < 0 ) nfvtxt_CME_NegNeg_fvtxsEP->Fill(nfvtxt, argument);
-          if ( charge1 > 0 && charge2 < 0 ) nfvtxt_CME_PosNeg_fvtxsEP->Fill(nfvtxt, argument);
-          if ( charge1 < 0 && charge2 > 0 ) nfvtxt_CME_NegPos_fvtxsEP->Fill(nfvtxt, argument);
-          if ( charge1 > 0 && charge2 > 0 && arm1 == 0 && arm2 == 1 ) nfvtxt_CME_EastPosWestPos_fvtxsEP->Fill(nfvtxt, argument);
-          if ( charge1 < 0 && charge2 < 0 && arm1 == 0 && arm2 == 1 ) nfvtxt_CME_EastNegWestNeg_fvtxsEP->Fill(nfvtxt, argument);
-          if ( charge1 > 0 && charge2 < 0 && arm1 == 0 && arm2 == 1 ) nfvtxt_CME_EastPosWestNeg_fvtxsEP->Fill(nfvtxt, argument);
-          if ( charge1 < 0 && charge2 > 0 && arm1 == 0 && arm2 == 1 ) nfvtxt_CME_EastNegWestPos_fvtxsEP->Fill(nfvtxt, argument);
-        }
 
-      } // loop over tracks
+            // --- ep resolutions
+            if ( pt_angle > 0.4 && pt_angle < 3.0 )
+            {
+              tp1f_reso2_CNT_FVTXN[icent]->Fill(0.0, cosfvtxn_dphi2_docalib);
+              tp1f_reso3_CNT_FVTXN[icent]->Fill(0.0, cosfvtxn_dphi3_docalib);
+            }
 
+          } // check on ep north all layers
+
+        } // check on fvtx clusters
+
+      } // loop over cnt tracks
+
+    } // check on cnt tracks
+
+
+    if ( fvtx_tracks )
+    {
+      // loop over fvtx tracks
       for ( int i = 0; i < nfvtxt; ++i )
       {
         float phi = fphi[i];
@@ -4759,95 +1887,90 @@ void flatten(int runNumber, int rp_recal_pass)
         else if ( eta < 0 ) ns = 1;
         // cout << "eta is " << eta << " and ns is " << ns << " and nn is " << nn << endl;
 
-        bbcs_v2eta_both_docalib_cent[icent]->Fill(eta, cos(2 * (phi - bbc_south_psi2_docalib)) );
-        fvtxs_v2eta_both_docalib_cent[icent]->Fill(eta, cos(2 * (phi - fvtx_south_psi2_docalib)) );
+        bool west = (phi > -pi / 2. && phi < pi / 2.);
 
-        if ( icent == 0 )
+        // BBC event plane
+        if ( bbc_pmts )
         {
-          double cosbbc_dphi2_docalib = cos(2 * (phi - bbc_south_psi2_docalib));
-          bbcs_v2eta_both_docalib->Fill(eta, cosbbc_dphi2_docalib);
-          bbcs_v2eta_west_docalib->Fill(eta, cosbbc_dphi2_docalib);
-          bbcs_v2eta_east_docalib->Fill(eta, cosbbc_dphi2_docalib);
-          double cosbbc_dphi3_docalib = cos(3 * (phi - bbc_south_psi3_docalib));
-          bbcs_v3eta_both_docalib->Fill(eta, cosbbc_dphi3_docalib);
-          bbcs_v3eta_west_docalib->Fill(eta, cosbbc_dphi3_docalib);
-          bbcs_v3eta_east_docalib->Fill(eta, cosbbc_dphi3_docalib);
+          if (-4.0 < bbc_south_psi2_docalib && bbc_south_psi2_docalib < 4.0)
+          {
+            // --- 2nd harmonic
+            double bbc_dphi2_docalib = phi - bbc_south_psi2_docalib;
+            double cosbbc_dphi2_docalib = TMath::Cos(2 * bbc_dphi2_docalib);
 
-          // --- autocorrelations in FVTX south...
-          double cosfvtx_dphi2_docalib = cos(2 * (phi - fvtx_south_psi2_docalib));
-          fvtxs_v2eta_both_docalib->Fill(eta, cosfvtx_dphi2_docalib);
-          fvtxs_v2eta_west_docalib->Fill(eta, cosfvtx_dphi2_docalib);
-          fvtxs_v2eta_east_docalib->Fill(eta, cosfvtx_dphi2_docalib);
-          double cosfvtx_dphi3_docalib = cos(3 * (phi - fvtx_south_psi3_docalib));
-          fvtxs_v3eta_both_docalib->Fill(eta, cosfvtx_dphi3_docalib);
-          fvtxs_v3eta_west_docalib->Fill(eta, cosfvtx_dphi3_docalib);
-          fvtxs_v3eta_east_docalib->Fill(eta, cosfvtx_dphi3_docalib);
+            bbcs_v2eta_both_docalib[icent]->Fill(eta, cosbbc_dphi2_docalib);
+            if ( west ) bbcs_v2eta_west_docalib[icent]->Fill(eta, cosbbc_dphi2_docalib);
+            if ( !west ) bbcs_v2eta_east_docalib[icent]->Fill(eta, cosbbc_dphi2_docalib);
 
-          // --- autocorrelations in FVTX north...
-          cosfvtx_dphi2_docalib = cos(2 * (phi - fvtx_north_psi2_docalib));
-          fvtxn_v2eta_both_docalib->Fill(eta, cosfvtx_dphi2_docalib);
-          fvtxn_v2eta_west_docalib->Fill(eta, cosfvtx_dphi2_docalib);
-          fvtxn_v2eta_east_docalib->Fill(eta, cosfvtx_dphi2_docalib);
-          cosfvtx_dphi3_docalib = cos(3 * (phi - fvtx_north_psi3_docalib));
-          fvtxn_v3eta_both_docalib->Fill(eta, cosfvtx_dphi3_docalib);
-          fvtxn_v3eta_west_docalib->Fill(eta, cosfvtx_dphi3_docalib);
-          fvtxn_v3eta_east_docalib->Fill(eta, cosfvtx_dphi3_docalib);
 
-          // --- now to do scalar products
-          float ux2 = cos(2 * phi);
-          float uy2 = sin(2 * phi);
-          float ux3 = cos(3 * phi);
-          float uy3 = sin(3 * phi);
-          // float ux4 = cos(4*phi);
-          // float uy4 = sin(4*phi);
-          float os_bbc_uq2 = ( (ux2 * os_bbc_qx2) + (uy2 * os_bbc_qy2) ) / ( os_bbc_qw );
-          float os_bbc_uq3 = ( (ux3 * os_bbc_qx3) + (uy3 * os_bbc_qy3) ) / ( os_bbc_qw );
-          float os_fvtxs_uq2 = ( (ux2 * os_fvtxs_qx2) + (uy2 * os_fvtxs_qy2) - ns ) / ( os_fvtxs_qw - ns );
-          float os_fvtxs_uq3 = ( (ux3 * os_fvtxs_qx3) + (uy3 * os_fvtxs_qy3) - ns ) / ( os_fvtxs_qw - ns );
-          float os_fvtxn_uq2 = ( (ux2 * os_fvtxn_qx2) + (uy2 * os_fvtxn_qy2) - nn ) / ( os_fvtxn_qw - nn );
-          float os_fvtxn_uq3 = ( (ux3 * os_fvtxn_qx3) + (uy3 * os_fvtxn_qy3) - nn ) / ( os_fvtxn_qw - nn );
-          float os_fvtxs_tracks_uq2 = ( (ux2 * os_fvtxs_tracks_qx2) + (uy2 * os_fvtxs_tracks_qy2) - ns ) / ( os_fvtxs_tracks_qw - ns );
-          float os_fvtxs_tracks_uq3 = ( (ux3 * os_fvtxs_tracks_qx3) + (uy3 * os_fvtxs_tracks_qy3) - ns ) / ( os_fvtxs_tracks_qw - ns );
-          float os_fvtxn_tracks_uq2 = ( (ux2 * os_fvtxn_tracks_qx2) + (uy2 * os_fvtxn_tracks_qy2) - nn ) / ( os_fvtxn_tracks_qw - nn );
-          float os_fvtxn_tracks_uq3 = ( (ux3 * os_fvtxn_tracks_qx3) + (uy3 * os_fvtxn_tracks_qy3) - nn ) / ( os_fvtxn_tracks_qw - nn );
+            // --- 3rd harmonic
+            double bbc_dphi3_docalib = phi - bbc_south_psi3_docalib;
+            double cosbbc_dphi3_docalib = TMath::Cos(3 * bbc_dphi3_docalib);
 
-          os_bbcs_d22eta_both->Fill(eta, os_bbc_uq2);
-          os_bbcs_d22eta_west->Fill(eta, os_bbc_uq2);
-          os_bbcs_d22eta_east->Fill(eta, os_bbc_uq2);
-          os_fvtxs_d22eta_both->Fill(eta, os_fvtxs_uq2);
-          os_fvtxs_d22eta_west->Fill(eta, os_fvtxs_uq2);
-          os_fvtxs_d22eta_east->Fill(eta, os_fvtxs_uq2);
-          os_fvtxn_d22eta_both->Fill(eta, os_fvtxn_uq2);
-          os_fvtxn_d22eta_west->Fill(eta, os_fvtxn_uq2);
-          os_fvtxn_d22eta_east->Fill(eta, os_fvtxn_uq2);
-          os_fvtxs_tracks_d22eta_both->Fill(eta, os_fvtxs_tracks_uq2);
-          os_fvtxs_tracks_d22eta_west->Fill(eta, os_fvtxs_tracks_uq2);
-          os_fvtxs_tracks_d22eta_east->Fill(eta, os_fvtxs_tracks_uq2);
-          os_fvtxn_tracks_d22eta_both->Fill(eta, os_fvtxn_tracks_uq2);
-          os_fvtxn_tracks_d22eta_west->Fill(eta, os_fvtxn_tracks_uq2);
-          os_fvtxn_tracks_d22eta_east->Fill(eta, os_fvtxn_tracks_uq2);
+            bbcs_v3eta_both_docalib[icent]->Fill(eta, cosbbc_dphi3_docalib);
+            if ( west ) bbcs_v3eta_west_docalib[icent]->Fill(eta, cosbbc_dphi3_docalib);
+            if ( !west ) bbcs_v3eta_east_docalib[icent]->Fill(eta, cosbbc_dphi3_docalib);
 
-          os_bbcs_d32eta_both->Fill(eta, os_bbc_uq3);
-          os_bbcs_d32eta_west->Fill(eta, os_bbc_uq3);
-          os_bbcs_d32eta_east->Fill(eta, os_bbc_uq3);
-          os_fvtxs_d32eta_both->Fill(eta, os_fvtxs_uq3);
-          os_fvtxs_d32eta_west->Fill(eta, os_fvtxs_uq3);
-          os_fvtxs_d32eta_east->Fill(eta, os_fvtxs_uq3);
-          os_fvtxn_d32eta_both->Fill(eta, os_fvtxn_uq3);
-          os_fvtxn_d32eta_west->Fill(eta, os_fvtxn_uq3);
-          os_fvtxn_d32eta_east->Fill(eta, os_fvtxn_uq3);
-          os_fvtxs_tracks_d32eta_both->Fill(eta, os_fvtxs_tracks_uq3);
-          os_fvtxs_tracks_d32eta_west->Fill(eta, os_fvtxs_tracks_uq3);
-          os_fvtxs_tracks_d32eta_east->Fill(eta, os_fvtxs_tracks_uq3);
-          os_fvtxn_tracks_d32eta_both->Fill(eta, os_fvtxn_tracks_uq3);
-          os_fvtxn_tracks_d32eta_west->Fill(eta, os_fvtxn_tracks_uq3);
-          os_fvtxn_tracks_d32eta_east->Fill(eta, os_fvtxn_tracks_uq3);
+          } // check on bbc EP
+        } // check on tubes
 
-        } // check on most central bin
+        // FVTX Event Plane
+        if ( fvtx_clusters )
+        {
+
+          // south all layers
+          if ( -4.0 < fvtx_south_psi2_docalib && fvtx_south_psi2_docalib < 4.0 )
+          {
+
+            // --- 2nd harmonic
+            double fvtx_dphi2_docalib = phi - fvtx_south_psi2_docalib;
+            double cosfvtx_dphi2_docalib = TMath::Cos(2 * fvtx_dphi2_docalib);
+
+            fvtxs_v2eta_both_docalib[icent]->Fill(eta, cosfvtx_dphi2_docalib);
+            if ( west ) fvtxs_v2eta_west_docalib[icent]->Fill(eta, cosfvtx_dphi2_docalib);
+            if ( !west ) fvtxs_v2eta_east_docalib[icent]->Fill(eta, cosfvtx_dphi2_docalib);
+
+
+            // --- 3rd harmonic
+            double fvtx_dphi3_docalib = phi - fvtx_south_psi3_docalib;
+            double cosfvtx_dphi3_docalib = TMath::Cos(3 * fvtx_dphi3_docalib);
+
+            fvtxs_v3eta_both_docalib[icent]->Fill(eta, cosfvtx_dphi3_docalib);
+            if ( west ) fvtxs_v3eta_west_docalib[icent]->Fill(eta, cosfvtx_dphi3_docalib);
+            if ( !west ) fvtxs_v3eta_east_docalib[icent]->Fill(eta, cosfvtx_dphi3_docalib);
+
+          } // check on ep south all layers
+
+
+          // north all layers
+          if ( -4.0 < fvtx_north_psi2_docalib && fvtx_north_psi2_docalib < 4.0 )
+          {
+
+            // --- 2nd harmonic
+            double fvtxn_dphi2_docalib = phi - fvtx_north_psi2_docalib;
+            double cosfvtxn_dphi2_docalib = TMath::Cos(2 * fvtxn_dphi2_docalib);
+
+            fvtxn_v2eta_both_docalib[icent]->Fill(eta, cosfvtxn_dphi2_docalib);
+            if ( west ) fvtxn_v2eta_west_docalib[icent]->Fill(eta, cosfvtxn_dphi2_docalib);
+            if ( !west ) fvtxn_v2eta_east_docalib[icent]->Fill(eta, cosfvtxn_dphi2_docalib);
+
+
+            // --- 3rd harmonic
+            double fvtxn_dphi3_docalib = phi - fvtx_north_psi3_docalib;
+            double cosfvtxn_dphi3_docalib = TMath::Cos(3 * fvtxn_dphi3_docalib);
+
+            fvtxn_v3eta_both_docalib[icent]->Fill(eta, cosfvtxn_dphi3_docalib);
+            if ( west ) fvtxn_v3eta_west_docalib[icent]->Fill(eta, cosfvtxn_dphi3_docalib);
+            if ( !west ) fvtxn_v3eta_east_docalib[icent]->Fill(eta, cosfvtxn_dphi3_docalib);
+
+          } // check on ep north all layers
+
+        } // check on fvtx clusters
+
       } // loop over fvtx tracks
 
+    } // check on fvtx tracks
 
-    } // check on tracks
   }//end of event
 
   cout << "Processed " << event_counter << "/" << all_counter << " events (" << (float)event_counter / (float)all_counter << ")" << endl;
@@ -4902,16 +2025,12 @@ void flatten(int runNumber, int rp_recal_pass)
 
   cout << "Now attempting to close and write data files" << endl;
 
-  // cout << "v2 histogram output file: " << outFile1 << endl;
-  // cout << "EP histogram output file: " << outFile2 << endl;
   cout << "histogram output file: " << outFile1 << endl;
 
   if ( rp_recal_pass == 3 )
   {
     mData1->Write();
-    //mData2->Write();
     mData1->Close();
-    //mData2->Close();
   }
 
   cout << "cleaning up" << endl;
@@ -4920,7 +2039,7 @@ void flatten(int runNumber, int rp_recal_pass)
 
   ntp_event_chain->Delete();
 
-  // ---
+// ---
 
   cout << "now attempting to close weight file" << endl;
 
