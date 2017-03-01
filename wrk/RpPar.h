@@ -35,7 +35,7 @@ static const int NDET = 34; // number of detectors (see below)
 // 31 -- FVTXS clusters 0 1 3
 // 32 -- FVTXS clusters 0 2 3
 // 33 -- FVTXS clusters 1 2 3
-static const int NDETSHORT = 34; // number of detectors (see below)
+static const int NDETSHORT = 3; // number of detectors (see below)
 //  0 -- BBCS Psi2 calculated
 //  1 -- FVTXS Psi2 calculated
 //  2 -- FVTXN Psi2 calculated
