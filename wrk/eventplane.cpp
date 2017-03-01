@@ -215,38 +215,9 @@ void flatten(int runNumber, int rp_recal_pass)
   bool fvtx_tracks   = true;
 
 
-  int bbcs_index      =  2;
-  int fvtxs_index     =  3;
-  // int fvtxs0_index    =  4;
-  // int fvtxs1_index    =  5;
-  // int fvtxs2_index    =  6;
-  // int fvtxs3_index    =  7;
-  int fvtxn_index     =  8;
-  // int fvtxn0_index    =  9;
-  // int fvtxn1_index    = 10;
-  // int fvtxn2_index    = 11;
-  // int fvtxn3_index    = 12;
-  // int fvtxs_nw_index  = 13;
-  // int fvtxs0_nw_index = 14;
-  // int fvtxs1_nw_index = 15;
-  // int fvtxs2_nw_index = 16;
-  // int fvtxs3_nw_index = 17;
-  // int fvtxn_nw_index  = 18;
-  // int fvtxn0_nw_index = 19;
-  // int fvtxn1_nw_index = 20;
-  // int fvtxn2_nw_index = 21;
-  // int fvtxn3_nw_index = 22;
-  // int bbcs_nw_index   = 23;
-  // int fvtxs_tracks_index  = 24; // come back here
-  // int fvtxs0_tracks_index = 25; // inner
-  // int fvtxs1_tracks_index = 26; // outer
-  // int fvtxn_tracks_index  = 27;
-  // int fvtxn0_tracks_index = 28;
-  // int fvtxn1_tracks_index = 29;
-  // int fvtxs012_index  = 30;
-  // int fvtxs013_index  = 31;
-  // int fvtxs023_index  = 32;
-  // int fvtxs123_index  = 33;
+  int bbcs_index      =  0;
+  int fvtxs_index     =  1;
+  int fvtxn_index     =  2;
 
 
   //------------------------------------------------------------//
@@ -271,20 +242,17 @@ void flatten(int runNumber, int rp_recal_pass)
 
   // --- lots of comments needed here
   // --- flattening parameters output to file
-  TH2D     *qx[NMUL][NHAR][NDET]; // Q vector x component, Q vector vs z_vertex bin
-  TH2D     *qy[NMUL][NHAR][NDET]; // Q vector y component, Q vector vs z_vertex bin
-  TProfile *ave[NMUL][NZPS][NHAR][NDET]; // average Psi
-  TProfile *flt[NMUL][NZPS][NHAR][NDET]; // flattening parameters
-  TH2D     *dis[NMUL][NHAR][NDET]; // displacement?  function of z_vertex bin
+  TProfile *ave[NMUL][NZPS][NHAR][NDETSHORT]; // average Psi
+  TProfile *flt[NMUL][NZPS][NHAR][NDETSHORT]; // flattening parameters
 
-  TH2D     *psi_bf[NMUL][NHAR][NDET];
-  TH2D     *psi_mf[NMUL][NHAR][NDET];
-  TH2D     *psi_af[NMUL][NHAR][NDET];
+  TH2D     *psi_bf[NMUL][NHAR][NDETSHORT];
+  TH2D     *psi_mf[NMUL][NHAR][NDETSHORT];
+  TH2D     *psi_af[NMUL][NHAR][NDETSHORT];
 
   // flattening parameters read in from file
-  float    mean[NMUL][NZPS][NHAR][NDET][2]; // mean of qx, qy (? double check)
-  float    widt[NMUL][NZPS][NHAR][NDET][2]; // width of qx, qy (?? double check)
-  float    four[NMUL][NZPS][NHAR][NDET][2][NORD]; // fourier components for flattening
+  float    mean[NMUL][NZPS][NHAR][NDETSHORT][2]; // mean of qx, qy (? double check)
+  float    widt[NMUL][NZPS][NHAR][NDETSHORT][2]; // width of qx, qy (?? double check)
+  float    four[NMUL][NZPS][NHAR][NDETSHORT][2][NORD]; // fourier components for flattening
 
 
 
@@ -326,9 +294,9 @@ void flatten(int runNumber, int rp_recal_pass)
     tp1f_reso3_BBC_CNT[ic]  = new TProfile(Form("tp1f_c%i_reso3_BBC_CNT", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
     tp1f_reso3_BBC_FVTX[ic] = new TProfile(Form("tp1f_c%i_reso3_BBC_FVTX", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
     tp1f_reso3_CNT_FVTX[ic] = new TProfile(Form("tp1f_c%i_reso3_CNT_FVTX", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
-    tp1f_reso3_BBC_FVTXN[ic] = new TProfile(Form("tp1f_c%i_reso2_BBC_FVTXN", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
-    tp1f_reso3_CNT_FVTXN[ic] = new TProfile(Form("tp1f_c%i_reso2_CNT_FVTXN", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
-    tp1f_reso3_FVTXS_FVTXN[ic] = new TProfile(Form("tp1f_c%i_reso2_FVTXS_FVTXN", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+    tp1f_reso3_BBC_FVTXN[ic] = new TProfile(Form("tp1f_c%i_reso3_BBC_FVTXN", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+    tp1f_reso3_CNT_FVTXN[ic] = new TProfile(Form("tp1f_c%i_reso3_CNT_FVTXN", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+    tp1f_reso3_FVTXS_FVTXN[ic] = new TProfile(Form("tp1f_c%i_reso3_FVTXS_FVTXN", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
   } // ic
 
 
@@ -343,7 +311,7 @@ void flatten(int runNumber, int rp_recal_pass)
     {
       for ( int ih = 1; ih < NHAR; ih++ )
       {
-        for ( int id = 0; id < NDET; id++ )
+        for ( int id = 0; id < NDETSHORT; id++ )
         {
           // --- average (of?)
           sprintf(name, "ave_%d_%d_%d_%d", ic, iz, ih, id);
@@ -351,7 +319,7 @@ void flatten(int runNumber, int rp_recal_pass)
           // --- flattening parameter (?)
           sprintf(name, "flt_%d_%d_%d_%d", ic, iz, ih, id);
           flt[ic][iz][ih][id] = new TProfile(name, name, 4 * NORD, -0.5, NORD * 4.0 - 0.5, -1.1, 1.1);
-        } // loop over ndetectors
+        } // loop over NDETSHORTectors
       } // loop over harmonics
     } // loop over z_vertex bins
   } // loop over centrality bins
@@ -361,20 +329,8 @@ void flatten(int runNumber, int rp_recal_pass)
   {
     for ( int ih = 1; ih < NHAR; ih++)
     {
-      for ( int id = 0; id < NDET; id++)
+      for ( int id = 0; id < NDETSHORT; id++)
       {
-        // --- dis (?)
-        sprintf(name, "dis_%d_%d_%d", ic, ih, id);
-        dis[ic][ih][id] = new TH2D(name, name, NZPS * 3, -0.5, NZPS * 3.0 - 0.5, 50, -pi, pi);
-
-        // --- qx (q-vector x component)
-        sprintf(name, "qx_%d_%d_%d", ic, ih, id);
-        qx[ic][ih][id] = new TH2D(name, name, NZPS * 3, -0.5, NZPS * 3.0 - 0.5, 220, -4.1, 4.1);
-
-        // --- qy (q-vector y component)
-        sprintf(name, "qy_%d_%d_%d", ic, ih, id);
-        qy[ic][ih][id] = new TH2D(name, name, NZPS * 3, -0.5, NZPS * 3.0 - 0.5, 220, -4.1, 4.1);
-
         // --- psi_bf (event plane before recentering and flattening)
         sprintf(name, "psi_bf_%d_%d_%d", ic, ih, id);
         psi_bf[ic][ih][id] = new TH2D(name, name, NZPS * 3, -0.5, NZPS * 3.0 - 0.5, 220, -4.1, 4.1);
@@ -399,7 +355,7 @@ void flatten(int runNumber, int rp_recal_pass)
     {
       for ( int ih = 1; ih < NHAR; ih++ )
       {
-        for ( int id = 0; id < NDET; id++ )
+        for ( int id = 0; id < NDETSHORT; id++ )
         {
           for ( int ib = 0; ib < 2; ib++ )
           {
@@ -445,7 +401,7 @@ void flatten(int runNumber, int rp_recal_pass)
       {
         for ( int ih = 1; ih < NHAR; ih++ )
         {
-          for ( int id = 0; id < NDET; id++ )
+          for ( int id = 0; id < NDETSHORT; id++ )
           {
             ifs >> f0 >> f1 >> f2 >> f3;
             if ( f1 <= 0.0 ) f1 = 1.0;
@@ -483,16 +439,6 @@ void flatten(int runNumber, int rp_recal_pass)
   //------------------------------------------------------------//
 
   cout << "Initializing more histograms" << endl;
-
-  // --- nodetree
-
-  TProfile* bbcs_v2_incl_nodetree = new TProfile("bbcs_v2_incl_nodetree", "bbcs_v2_incl_nodetree", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_v2_east_nodetree = new TProfile("bbcs_v2_east_nodetree", "bbcs_v2_east_nodetree", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* bbcs_v2_west_nodetree = new TProfile("bbcs_v2_west_nodetree", "bbcs_v2_west_nodetree", 15, 0.0, 3.0, -1.1, 1.1);
-
-  TProfile* fvtxs_v2_incl_nodetree = new TProfile("fvtxs_v2_incl_nodetree", "fvtxs_v2_incl_nodetree", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_v2_east_nodetree = new TProfile("fvtxs_v2_east_nodetree", "fvtxs_v2_east_nodetree", 15, 0.0, 3.0, -1.1, 1.1);
-  TProfile* fvtxs_v2_west_nodetree = new TProfile("fvtxs_v2_west_nodetree", "fvtxs_v2_west_nodetree", 15, 0.0, 3.0, -1.1, 1.1);
 
   // --- docalib
 
@@ -878,8 +824,10 @@ void flatten(int runNumber, int rp_recal_pass)
     // --- vertex binning
     // ---------------------
     double ZVTX = -9999;
-    if ( runNumber >= 454774 && runNumber <= 456283 ) ZVTX = d_bbcz;
-    if ( runNumber >= 456652 && runNumber <= 458167 ) ZVTX = eventfvtx_z;
+    // if ( runNumber >= 454774 && runNumber <= 456283 ) ZVTX = d_bbcz;
+    // if ( runNumber >= 456652 && runNumber <= 458167 ) ZVTX = eventfvtx_z;
+    if ( energyflag == 200 || energyflag == 62 ) ZVTX = d_bbcz;
+    if ( energyflag == 39 || energyflag == 20 ) ZVTX = eventfvtx_z;
     if ( fabs(ZVTX) > 10.0 )
     {
       if ( verbosity > 1 ) cout << "vertex rejected" << endl;
@@ -1118,20 +1066,13 @@ void flatten(int runNumber, int rp_recal_pass)
 
         // cluster radius cut for lower energies (USE ENERGY FLAG!!)
         double FVTX_r = sqrt(pow(d_FVTX_x[iclus], 2.0) + pow(d_FVTX_y[iclus], 2.0));
-        if ( runNumber >= 456652 && runNumber <= 458167 && FVTX_r < 5.2 ) continue;
+        if ( (energyflag == 20 || energyflag == 39) && FVTX_r < 5.2 ) continue;
         // --------------------------------------
 
 
         // --- south side
         if ( d_FVTX_z[iclus] < 0 )
         {
-          fvtxs_qx2[fvtx_layer + 1] += TMath::Cos(2 * phi);
-          fvtxs_qy2[fvtx_layer + 1] += TMath::Sin(2 * phi);
-          fvtxs_qx3[fvtx_layer + 1] += TMath::Cos(3 * phi);
-          fvtxs_qy3[fvtx_layer + 1] += TMath::Sin(3 * phi);
-          fvtxs_qx4[fvtx_layer + 1] += TMath::Cos(4 * phi);
-          fvtxs_qy4[fvtx_layer + 1] += TMath::Sin(4 * phi);
-
           fvtxs_qx2[0] += TMath::Cos(2 * phi);
           fvtxs_qy2[0] += TMath::Sin(2 * phi);
           fvtxs_qx3[0] += TMath::Cos(3 * phi);
@@ -1139,20 +1080,12 @@ void flatten(int runNumber, int rp_recal_pass)
           fvtxs_qx4[0] += TMath::Cos(4 * phi);
           fvtxs_qy4[0] += TMath::Sin(4 * phi);
 
-          fvtxs_qw[fvtx_layer + 1] += 1;
           fvtxs_qw[0] += 1;
         } // check on south
 
         // --- north side
         if ( d_FVTX_z[iclus] > 0 )
         {
-          fvtxn_qx2[fvtx_layer + 1] += TMath::Cos(2 * phi);
-          fvtxn_qy2[fvtx_layer + 1] += TMath::Sin(2 * phi);
-          fvtxn_qx3[fvtx_layer + 1] += TMath::Cos(3 * phi);
-          fvtxn_qy3[fvtx_layer + 1] += TMath::Sin(3 * phi);
-          fvtxn_qx4[fvtx_layer + 1] += TMath::Cos(4 * phi);
-          fvtxn_qy4[fvtx_layer + 1] += TMath::Sin(4 * phi);
-
           fvtxn_qx2[0] += TMath::Cos(2 * phi);
           fvtxn_qy2[0] += TMath::Sin(2 * phi);
           fvtxn_qx3[0] += TMath::Cos(3 * phi);
@@ -1160,7 +1093,6 @@ void flatten(int runNumber, int rp_recal_pass)
           fvtxn_qx4[0] += TMath::Cos(4 * phi);
           fvtxn_qy4[0] += TMath::Sin(4 * phi);
 
-          fvtxn_qw[fvtx_layer + 1] += 1;
           fvtxn_qw[0] += 1;
         } // check on north
 
@@ -1171,10 +1103,10 @@ void flatten(int runNumber, int rp_recal_pass)
     th1d_FVTXN_nclus->Fill(fvtxn_qw[0]);
 
     // --- the array that has all of the Q vectors
-    float sumxy[NHAR][NDET][4];
+    float sumxy[NHAR][NDETSHORT][4];
     for (int i = 0; i < NHAR; i++)
     {
-      for (int j = 0; j < NDET; j++)
+      for (int j = 0; j < NDETSHORT; j++)
       {
         for (int k = 0; k < 4; k++) //qx qy qw psi
         {
@@ -1182,19 +1114,6 @@ void flatten(int runNumber, int rp_recal_pass)
         } // x,y,w,psi
       } // detectors
     } // harmonics
-
-    //save bbc q vec 2
-    //cout<<"bbc from node tree: "<<d_Qx[5]<<" "<<d_Qy[5]<<" "<<d_Qw[5]<<endl;
-    // --- should add cut for only assign if Qw > 0
-    sumxy[1][0][0] = d_Qx[5];
-    sumxy[1][0][1] = d_Qy[5];
-    sumxy[1][0][2] = d_Qw[5];
-
-    //save fvtx q vec 2
-    // --- should add cut for only assign if Qw > 4 and Qw < 1000 (or some other large number, 1000 is for pAu)
-    sumxy[1][1][0] = d_Qx[4];
-    sumxy[1][1][1] = d_Qy[4];
-    sumxy[1][1][2] = d_Qw[4];
 
 
     if ( bbc_pmts )
@@ -1212,27 +1131,24 @@ void flatten(int runNumber, int rp_recal_pass)
 
     if ( fvtx_clusters )
     {
-      for ( int i = 0; i < 5; ++i )
-      {
-        sumxy[1][fvtxs_index + i][0] = fvtxs_qx2[i];
-        sumxy[1][fvtxs_index + i][1] = fvtxs_qy2[i];
-        sumxy[1][fvtxs_index + i][2] = fvtxs_qw[i];
-        sumxy[1][fvtxn_index + i][0] = fvtxn_qx2[i];
-        sumxy[1][fvtxn_index + i][1] = fvtxn_qy2[i];
-        sumxy[1][fvtxn_index + i][2] = fvtxn_qw[i];
-        sumxy[2][fvtxs_index + i][0] = fvtxs_qx3[i];
-        sumxy[2][fvtxs_index + i][1] = fvtxs_qy3[i];
-        sumxy[2][fvtxs_index + i][2] = fvtxs_qw[i];
-        sumxy[2][fvtxn_index + i][0] = fvtxn_qx3[i];
-        sumxy[2][fvtxn_index + i][1] = fvtxn_qy3[i];
-        sumxy[2][fvtxn_index + i][2] = fvtxn_qw[i];
-        sumxy[3][fvtxs_index + i][0] = fvtxs_qx4[i];
-        sumxy[3][fvtxs_index + i][1] = fvtxs_qy4[i];
-        sumxy[3][fvtxs_index + i][2] = fvtxs_qw[i];
-        sumxy[3][fvtxn_index + i][0] = fvtxn_qx4[i];
-        sumxy[3][fvtxn_index + i][1] = fvtxn_qy4[i];
-        sumxy[3][fvtxn_index + i][2] = fvtxn_qw[i];
-      } // loop over layers
+        sumxy[1][fvtxs_index][0] = fvtxs_qx2[0];
+        sumxy[1][fvtxs_index][1] = fvtxs_qy2[0];
+        sumxy[1][fvtxs_index][2] = fvtxs_qw[0];
+        sumxy[1][fvtxn_index][0] = fvtxn_qx2[0];
+        sumxy[1][fvtxn_index][1] = fvtxn_qy2[0];
+        sumxy[1][fvtxn_index][2] = fvtxn_qw[0];
+        sumxy[2][fvtxs_index][0] = fvtxs_qx3[0];
+        sumxy[2][fvtxs_index][1] = fvtxs_qy3[0];
+        sumxy[2][fvtxs_index][2] = fvtxs_qw[0];
+        sumxy[2][fvtxn_index][0] = fvtxn_qx3[0];
+        sumxy[2][fvtxn_index][1] = fvtxn_qy3[0];
+        sumxy[2][fvtxn_index][2] = fvtxn_qw[0];
+        sumxy[3][fvtxs_index][0] = fvtxs_qx4[0];
+        sumxy[3][fvtxs_index][1] = fvtxs_qy4[0];
+        sumxy[3][fvtxs_index][2] = fvtxs_qw[0];
+        sumxy[3][fvtxn_index][0] = fvtxn_qx4[0];
+        sumxy[3][fvtxn_index][1] = fvtxn_qy4[0];
+        sumxy[3][fvtxn_index][2] = fvtxn_qw[0];
     } // check on clusters
 
 
@@ -1248,7 +1164,7 @@ void flatten(int runNumber, int rp_recal_pass)
 
     for ( int ih = 1; ih < NHAR; ih++ )
     {
-      for (int id = 0; id < NDET; id++ )
+      for (int id = 0; id < NDETSHORT; id++ )
       {
         if (sumxy[ih][id][2] > 0)
         {
@@ -1266,12 +1182,11 @@ void flatten(int runNumber, int rp_recal_pass)
     //int icent = 0;
     for ( int ih = 1; ih < NHAR; ih++ )
     {
-      for ( int id = 0; id < NDET; id++ )
+      for ( int id = 0; id < NDETSHORT; id++ )
       {
         if ( sumxy[ih][id][2] > 0.0 )
         {
           sumxy[ih][id][3] = atan2(sumxy[ih][id][1], sumxy[ih][id][0]) / (ih + 1.0);
-          if (rp_recal_pass > 0) dis[icent][ih][id]->Fill(izvtx, sumxy[ih][id][3] * (ih + 1.0));
         }
         if ( sumxy[ih][id][2] > 0.0 ) // check on weight (x,y,w,psi)
         {
@@ -1283,8 +1198,6 @@ void flatten(int runNumber, int rp_recal_pass)
             {
               ave[icent][izvtx][ih][id]->Fill(ib + 0.0, sumxy[ih][id][ib]);
               if (id == 0 && DIAG) cout << "filled ave: " << ih << " " << id << " " << ib << " with: " << sumxy[ih][id][ib] << endl;
-              if (ib == 0) qx[icent][ih][id]->Fill(izvtx, sumxy[ih][id][0]);
-              if (ib == 1) qy[icent][ih][id]->Fill(izvtx, sumxy[ih][id][1]);
             } // pass > 0
             float sxy = sumxy[ih][id][ib];
             float mxy = mean[icent][izvtx][ih][id][ib]; // for recentering qx and qy (???)
@@ -1296,16 +1209,12 @@ void flatten(int runNumber, int rp_recal_pass)
             {
               ave[icent][izvtx][ih][id]->Fill(ib + 2.0, sumxy[ih][id][ib]); // ib+2 to avoid overlap
               if (id == 0 && DIAG) cout << "filled ave2: " << ih << " " << id << " " << ib << " with: " << sumxy[ih][id][ib] << endl;
-              if (ib == 0) qx[icent][ih][id]->Fill(izvtx + NZPS, sumxy[ih][id][0]);
-              if (ib == 1) qy[icent][ih][id]->Fill(izvtx + NZPS, sumxy[ih][id][1]);
             } // pass > 0
           } // if weight > 0
 
           sumxy[ih][id][3] = atan2(sumxy[ih][id][1], sumxy[ih][id][0]) / (ih + 1.0);
           if ( rp_recal_pass > 0 )
           {
-            // fill histogram with psi calculated with recenter q vectors(??)
-            dis[icent][ih][id]->Fill(izvtx + NZPS, sumxy[ih][id][3] * (ih + 1.0));
             // my own simpler version of the above histogram
             psi_mf[icent][ih][id]->Fill(izvtx, sumxy[ih][id][3]);
           }
@@ -1339,7 +1248,6 @@ void flatten(int runNumber, int rp_recal_pass)
             if (rp_recal_pass > 0) flt[icent][izvtx][ih][id]->Fill(io + NORD * 3.0, ss);
           }
           sumxy[ih][id][3] = psi / (ih + 1.0);
-          if ( rp_recal_pass > 0 ) dis[icent][ih][id]->Fill(izvtx + NZPS * 2.0, sumxy[ih][id][3] * (ih + 1.0));
         } // end if weight > 0
         else
         {
@@ -1354,7 +1262,7 @@ void flatten(int runNumber, int rp_recal_pass)
 
     for ( int ih = 1; ih < NHAR; ih++ )
     {
-      for ( int id = 0; id < NDET; id++ )
+      for ( int id = 0; id < NDETSHORT; id++ )
       {
         if ( sumxy[ih][id][2] > 0 )
         {
@@ -1375,11 +1283,6 @@ void flatten(int runNumber, int rp_recal_pass)
     // --------------------------------------
     // --- now the standard event plane stuff
     // --------------------------------------
-
-    // --- looks like these are already done above
-    float bbc_psi2 = (sumxy[1][0][2] > 0) ? sumxy[1][0][3] : -9999.9;
-    // --- maybe 12 should be a different number (we have 4 above)
-    float fvtx_psi2 = (sumxy[1][1][2] > 12) ? sumxy[1][1][3] : -9999.9;
 
     // ---
     // --- south
@@ -1461,22 +1364,6 @@ void flatten(int runNumber, int rp_recal_pass)
         float pt = sqrt(px * px + py * py);
 
         if ( pt < 0.2 || pt > 5.0 ) continue; // pt cut added 2016-06-30
-
-        float bbc_dphi2 = phi0 - bbc_psi2;
-        if (-4.0 < bbc_psi2 && bbc_psi2 < 4.0 ) // why this weird cut? why not just -pi to pi? // checking against -9999 from above
-        {
-          bbcs_v2_incl_nodetree->Fill(pt, cos(2 * bbc_dphi2));
-          if (dcarm == 0) bbcs_v2_east_nodetree->Fill(pt, cos(2 * bbc_dphi2));
-          else if (dcarm == 1) bbcs_v2_west_nodetree->Fill(pt, cos(2 * bbc_dphi2));
-        }
-
-        float fvtx_dphi2 = phi0 - fvtx_psi2;
-        if (-4.0 < fvtx_psi2 && fvtx_psi2 < 4.0 )
-        {
-          fvtxs_v2_incl_nodetree->Fill(pt, cos(2 * fvtx_dphi2));
-          if (dcarm == 0) fvtxs_v2_east_nodetree->Fill(pt, cos(2 * fvtx_dphi2));
-          else if (dcarm == 1) fvtxs_v2_west_nodetree->Fill(pt, cos(2 * fvtx_dphi2));
-        }
 
         // -------------------------------------------------------
         // --- finished with nodetree part, now doing docalib part
@@ -1743,7 +1630,7 @@ void flatten(int runNumber, int rp_recal_pass)
       {
         for ( int ih = 1; ih < NHAR; ih++ )
         {
-          for ( int id = 0; id < NDET; id++ )
+          for ( int id = 0; id < NDETSHORT; id++ )
           {
             for ( int ib = 0; ib < 2; ib++ )
             {
