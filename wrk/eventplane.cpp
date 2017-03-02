@@ -107,8 +107,8 @@ int main(int argc, char *argv[])
 
   cout << "Now processing with run number " << run << endl;
 
-  flatten(run, 1);
-  flatten(run, 2);
+  // flatten(run, 1);
+  // flatten(run, 2);
   flatten(run, 3);
 
   return 0;
@@ -443,6 +443,14 @@ void flatten(int runNumber, int rp_recal_pass)
   // --- docalib
 
   // vs pT
+  const int NPTBINS = 17;
+  double ptlim[] = {
+    0.0, 0.2, 0.4, 0.6, 0.8,  
+    1.0, 1.2, 1.4, 1.6, 1.8, 
+    2.0, 2.5, 3.0, 3.5, 4.0, 
+    4.5, 5.0
+  };
+
   TProfile* bbcs_v2_east_docalib[NMUL];
   TProfile* bbcs_v2_west_docalib[NMUL];
   TProfile* bbcs_v2_both_docalib[NMUL];
@@ -469,29 +477,29 @@ void flatten(int runNumber, int rp_recal_pass)
 
   for ( int ic = 0; ic < NMUL; ++ic )
   {
-    bbcs_v2_both_docalib[ic] = new TProfile(Form("bbcs_v2_both_docalib_cent%d", ic), "", 25, 0.0, 5.0, -1.1, 1.1);
-    bbcs_v2_east_docalib[ic] = new TProfile(Form("bbcs_v2_east_docalib_cent%d", ic), "", 25, 0.0, 5.0, -1.1, 1.1);
-    bbcs_v2_west_docalib[ic] = new TProfile(Form("bbcs_v2_west_docalib_cent%d", ic), "", 25, 0.0, 5.0, -1.1, 1.1);
+    bbcs_v2_both_docalib[ic] = new TProfile(Form("bbcs_v2_both_docalib_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+    bbcs_v2_east_docalib[ic] = new TProfile(Form("bbcs_v2_east_docalib_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+    bbcs_v2_west_docalib[ic] = new TProfile(Form("bbcs_v2_west_docalib_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
 
-    fvtxs_v2_both_docalib[ic] = new TProfile(Form("fvtxs_v2_both_docalib_cent%d", ic), "", 25, 0.0, 5.0, -1.1, 1.1);
-    fvtxs_v2_east_docalib[ic] = new TProfile(Form("fvtxs_v2_east_docalib_cent%d", ic), "", 25, 0.0, 5.0, -1.1, 1.1);
-    fvtxs_v2_west_docalib[ic] = new TProfile(Form("fvtxs_v2_west_docalib_cent%d", ic), "", 25, 0.0, 5.0, -1.1, 1.1);
+    fvtxs_v2_both_docalib[ic] = new TProfile(Form("fvtxs_v2_both_docalib_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+    fvtxs_v2_east_docalib[ic] = new TProfile(Form("fvtxs_v2_east_docalib_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+    fvtxs_v2_west_docalib[ic] = new TProfile(Form("fvtxs_v2_west_docalib_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
 
-    fvtxn_v2_both_docalib[ic] = new TProfile(Form("fvtxn_v2_both_docalib_cent%d", ic), "", 25, 0.0, 5.0, -1.1, 1.1);
-    fvtxn_v2_east_docalib[ic] = new TProfile(Form("fvtxn_v2_east_docalib_cent%d", ic), "", 25, 0.0, 5.0, -1.1, 1.1);
-    fvtxn_v2_west_docalib[ic] = new TProfile(Form("fvtxn_v2_west_docalib_cent%d", ic), "", 25, 0.0, 5.0, -1.1, 1.1);
+    fvtxn_v2_both_docalib[ic] = new TProfile(Form("fvtxn_v2_both_docalib_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+    fvtxn_v2_east_docalib[ic] = new TProfile(Form("fvtxn_v2_east_docalib_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+    fvtxn_v2_west_docalib[ic] = new TProfile(Form("fvtxn_v2_west_docalib_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
 
-    bbcs_v3_both_docalib[ic] = new TProfile(Form("bbcs_v3_both_docalib_cent%d", ic), "", 25, 0.0, 5.0, -1.1, 1.1);
-    bbcs_v3_east_docalib[ic] = new TProfile(Form("bbcs_v3_east_docalib_cent%d", ic), "", 25, 0.0, 5.0, -1.1, 1.1);
-    bbcs_v3_west_docalib[ic] = new TProfile(Form("bbcs_v3_west_docalib_cent%d", ic), "", 25, 0.0, 5.0, -1.1, 1.1);
+    bbcs_v3_both_docalib[ic] = new TProfile(Form("bbcs_v3_both_docalib_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+    bbcs_v3_east_docalib[ic] = new TProfile(Form("bbcs_v3_east_docalib_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+    bbcs_v3_west_docalib[ic] = new TProfile(Form("bbcs_v3_west_docalib_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
 
-    fvtxs_v3_both_docalib[ic] = new TProfile(Form("fvtxs_v3_both_docalib_cent%d", ic), "", 25, 0.0, 5.0, -1.1, 1.1);
-    fvtxs_v3_east_docalib[ic] = new TProfile(Form("fvtxs_v3_east_docalib_cent%d", ic), "", 25, 0.0, 5.0, -1.1, 1.1);
-    fvtxs_v3_west_docalib[ic] = new TProfile(Form("fvtxs_v3_west_docalib_cent%d", ic), "", 25, 0.0, 5.0, -1.1, 1.1);
+    fvtxs_v3_both_docalib[ic] = new TProfile(Form("fvtxs_v3_both_docalib_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+    fvtxs_v3_east_docalib[ic] = new TProfile(Form("fvtxs_v3_east_docalib_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+    fvtxs_v3_west_docalib[ic] = new TProfile(Form("fvtxs_v3_west_docalib_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
 
-    fvtxn_v3_both_docalib[ic] = new TProfile(Form("fvtxn_v3_both_docalib_cent%d", ic), "", 25, 0.0, 5.0, -1.1, 1.1);
-    fvtxn_v3_east_docalib[ic] = new TProfile(Form("fvtxn_v3_east_docalib_cent%d", ic), "", 25, 0.0, 5.0, -1.1, 1.1);
-    fvtxn_v3_west_docalib[ic] = new TProfile(Form("fvtxn_v3_west_docalib_cent%d", ic), "", 25, 0.0, 5.0, -1.1, 1.1);
+    fvtxn_v3_both_docalib[ic] = new TProfile(Form("fvtxn_v3_both_docalib_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+    fvtxn_v3_east_docalib[ic] = new TProfile(Form("fvtxn_v3_east_docalib_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+    fvtxn_v3_west_docalib[ic] = new TProfile(Form("fvtxn_v3_west_docalib_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
   } // ic
 
 
