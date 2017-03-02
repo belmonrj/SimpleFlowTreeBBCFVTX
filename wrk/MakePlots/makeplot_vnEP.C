@@ -50,6 +50,11 @@ void doenergy(int energy, int harmonic)
   // TFile* file = TFile::Open(Form("input/combined_%d.root",energy));
   TFile* file = TFile::Open(Form("../output/hist_dAu%d.root", energy));
 
+  // --- Histograms for v2 vs centrality at low & high pT
+  TH1D* th1d_vncent_fvtxs_lowpt = new TH1D("th1d_vncent_fvtxs_lowpt", "", NMUL, -0.5, NMUL - 0.5);
+  TH1D* th1d_vncent_fvtxs_highpt = new TH1D("th1d_vncent_fvtxs_highpt", "", NMUL, -0.5, NMUL - 0.5);
+
+
   // --- loop over each centrality bin
   for (int ic = 0; ic < NMUL; ic++)
   {
@@ -107,6 +112,15 @@ void doenergy(int energy, int harmonic)
     hvn_fvtxs_west->Scale(1.0 / reso_FVTXS);
     TProfile* hvn_fvtxs = (TProfile*)file->Get(Form("fvtxs_v%d_both_docalib_cent%d", harmonic, ic));
     hvn_fvtxs->Scale(1.0 / reso_FVTXS);
+
+    float blpt = hvn_fvtxs->FindBin(0.5);
+    th1d_vncent_fvtxs_lowpt->SetBinContent(ic + 1, hvn_fvtxs->GetBinContent(blpt));
+    th1d_vncent_fvtxs_lowpt->SetBinError(ic + 1, hvn_fvtxs->GetBinError(blpt));
+
+    float bhpt = hvn_fvtxs->FindBin(2.5);
+    th1d_vncent_fvtxs_highpt->SetBinContent(ic + 1, hvn_fvtxs->GetBinContent(bhpt));
+    th1d_vncent_fvtxs_highpt->SetBinError(ic + 1, hvn_fvtxs->GetBinError(bhpt));
+
 
     TProfile* hvneta_fvtxs_east = (TProfile*)file->Get(Form("fvtxs_v%deta_east_docalib_cent%d", harmonic, ic));
     hvneta_fvtxs_east->Scale(1.0 / reso_FVTXS);
@@ -193,6 +207,14 @@ void doenergy(int energy, int harmonic)
 
   } // ic
 
+
+  outfile->cd();
+  th1d_vncent_fvtxs_lowpt->SetName(Form("th1d_v%d_cent_lowpt_eventplane_fvtxs_%d", harmonic, energy));
+  th1d_vncent_fvtxs_highpt->SetName(Form("th1d_v%d_cent_highpt_eventplane_fvtxs_%d", harmonic, energy));
+
+  th1d_vncent_fvtxs_lowpt->Write();
+  th1d_vncent_fvtxs_highpt->Write();
+  
   // // ---
 
 
