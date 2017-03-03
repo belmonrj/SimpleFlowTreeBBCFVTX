@@ -148,6 +148,7 @@ void flatten(int runNumber, int rp_recal_pass)
 
   float fracCut = 0.95; // pile up rejection < fracCut (better place??)
 
+  float qxOffset = -0.002; // offset to Qx values
 
   //------------------------------------------------------------//
   //                                                            //
@@ -1263,6 +1264,19 @@ void flatten(int runNumber, int rp_recal_pass)
         } // otherwise set psi to some crazy number
       } // detectors
     } // harmonics
+
+
+
+    // testing Qx offset
+    for ( int ih = 1; ih < NHAR; ih++ )
+    {
+      for ( int id = 0; id < NDETSHORT; id++ )
+      {
+        sumxy[ih][id][0] += qxOffset;
+        sumxy[ih][id][3] = atan2(sumxy[ih][id][1], sumxy[ih][id][0]) / (ih + 1.0);
+      } // id
+    } // ih
+
 
 
 
