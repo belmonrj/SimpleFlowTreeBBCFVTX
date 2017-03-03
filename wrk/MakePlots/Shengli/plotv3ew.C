@@ -1,6 +1,8 @@
 void plotv3ew(){
+  TCanvas* c1 = new TCanvas();
+
   TFile *f = new TFile("combined_200.root");
-  
+
   TH1F *hcosw=bbcs_v3_west_cosphi->Clone();
   TH1F *hcose=bbcs_v3_east_cosphi->Clone();
 
@@ -32,10 +34,10 @@ void plotv3ew(){
 
   TH1F *v3eastbbcnew=static_cast<TH1F *>v3eastbbc->Clone();
   TH1F *v3westbbcnew=static_cast<TH1F *>v3westbbc->Clone();
-  
+
   TH1F *hcoswfvtx=static_cast<TH1F *>hcosw->Clone();
   TH1F *hcosefvtx=static_cast<TH1F *>hcose->Clone();
-  
+
   TH1F *hcoswbbc=static_cast<TH1F *>hcosw->Clone();
   TH1F *hcosebbc=static_cast<TH1F *>hcose->Clone();
   */
@@ -80,18 +82,18 @@ void plotv3ew(){
   }
 
   //for(int i=0; i<15; i++){
-  //  
+  //
   //}
   //v3eastfvtxnew->Add(hcosefvtx,1.0);
   //v3westfvtxnew->Add(hcoswfvtx,1.0);
 
-  
 
- 
+
+
 
   //v3eastbbcnew->Add(hcosebbc,1.0);
   //v3westbbcnew->Add(hcoswbbc,1.0);
-  
+
   float resofvtx=0.050;//0.0388085;
   float resobbc=0.040;//0.0329477;
 
@@ -99,7 +101,7 @@ void plotv3ew(){
   v3eastfvtxnew->Scale(1.0/resofvtx);
   v3westfvtxnew->Scale(1.0/resofvtx);
 
-  
+
   v3allbbc->Scale(1.0/resobbc);
   v3eastbbcnew->Scale(1.0/resobbc);
   v3westbbcnew->Scale(1.0/resobbc);
@@ -132,7 +134,7 @@ void plotv3ew(){
   v3westfvtxnew->SetMarkerSize(1.2);
   v3westfvtxnew->SetMarkerColor(4);
   v3westfvtxnew->Draw("Psame");
-  
+
   cc->cd(2);
   TH1F *h1=new TH1F("h1","BBC", 30, 0, 3.0);
   h1->SetMaximum(0.1);
@@ -169,4 +171,7 @@ void plotv3ew(){
   leg1->AddEntry(v3eastbbcnew,"East","P");
   leg1->AddEntry(v3westbbcnew,"West","P");
   leg1->Draw();
+
+  c1->Print("test_shengli_offset.png");
+
 }
