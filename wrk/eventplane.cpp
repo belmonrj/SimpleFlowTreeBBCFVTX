@@ -443,11 +443,11 @@ void flatten(int runNumber, int rp_recal_pass)
   // --- docalib
 
   // vs pT
-  const int NPTBINS = 17;
-  double ptlim[] = {
-    0.0, 0.2, 0.4, 0.6, 0.8,  
-    1.0, 1.2, 1.4, 1.6, 1.8, 
-    2.0, 2.5, 3.0, 3.5, 4.0, 
+  const int NPTBINS = 16;
+  double ptlim[NPTBINS + 1] = {
+    0.0, 0.2, 0.4, 0.6, 0.8,
+    1.0, 1.2, 1.4, 1.6, 1.8,
+    2.0, 2.5, 3.0, 3.5, 4.0,
     4.5, 5.0
   };
 
@@ -1139,24 +1139,24 @@ void flatten(int runNumber, int rp_recal_pass)
 
     if ( fvtx_clusters )
     {
-        sumxy[1][fvtxs_index][0] = fvtxs_qx2[0];
-        sumxy[1][fvtxs_index][1] = fvtxs_qy2[0];
-        sumxy[1][fvtxs_index][2] = fvtxs_qw[0];
-        sumxy[1][fvtxn_index][0] = fvtxn_qx2[0];
-        sumxy[1][fvtxn_index][1] = fvtxn_qy2[0];
-        sumxy[1][fvtxn_index][2] = fvtxn_qw[0];
-        sumxy[2][fvtxs_index][0] = fvtxs_qx3[0];
-        sumxy[2][fvtxs_index][1] = fvtxs_qy3[0];
-        sumxy[2][fvtxs_index][2] = fvtxs_qw[0];
-        sumxy[2][fvtxn_index][0] = fvtxn_qx3[0];
-        sumxy[2][fvtxn_index][1] = fvtxn_qy3[0];
-        sumxy[2][fvtxn_index][2] = fvtxn_qw[0];
-        sumxy[3][fvtxs_index][0] = fvtxs_qx4[0];
-        sumxy[3][fvtxs_index][1] = fvtxs_qy4[0];
-        sumxy[3][fvtxs_index][2] = fvtxs_qw[0];
-        sumxy[3][fvtxn_index][0] = fvtxn_qx4[0];
-        sumxy[3][fvtxn_index][1] = fvtxn_qy4[0];
-        sumxy[3][fvtxn_index][2] = fvtxn_qw[0];
+      sumxy[1][fvtxs_index][0] = fvtxs_qx2[0];
+      sumxy[1][fvtxs_index][1] = fvtxs_qy2[0];
+      sumxy[1][fvtxs_index][2] = fvtxs_qw[0];
+      sumxy[1][fvtxn_index][0] = fvtxn_qx2[0];
+      sumxy[1][fvtxn_index][1] = fvtxn_qy2[0];
+      sumxy[1][fvtxn_index][2] = fvtxn_qw[0];
+      sumxy[2][fvtxs_index][0] = fvtxs_qx3[0];
+      sumxy[2][fvtxs_index][1] = fvtxs_qy3[0];
+      sumxy[2][fvtxs_index][2] = fvtxs_qw[0];
+      sumxy[2][fvtxn_index][0] = fvtxn_qx3[0];
+      sumxy[2][fvtxn_index][1] = fvtxn_qy3[0];
+      sumxy[2][fvtxn_index][2] = fvtxn_qw[0];
+      sumxy[3][fvtxs_index][0] = fvtxs_qx4[0];
+      sumxy[3][fvtxs_index][1] = fvtxs_qy4[0];
+      sumxy[3][fvtxs_index][2] = fvtxs_qw[0];
+      sumxy[3][fvtxn_index][0] = fvtxn_qx4[0];
+      sumxy[3][fvtxn_index][1] = fvtxn_qy4[0];
+      sumxy[3][fvtxn_index][2] = fvtxn_qw[0];
     } // check on clusters
 
 
