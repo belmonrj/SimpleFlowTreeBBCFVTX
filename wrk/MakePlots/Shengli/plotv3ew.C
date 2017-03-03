@@ -1,5 +1,4 @@
 void plotv3ew(){
-  TCanvas* c1 = new TCanvas();
 
   TFile *f = new TFile("combined_200.root");
 
@@ -13,42 +12,18 @@ void plotv3ew(){
   TH1F *v3allfvtx=fvtxs_v3_both_docalib->Clone();
   TH1F *v3westfvtx=fvtxs_v3_west_docalib->Clone();
   TH1F *v3eastfvtx=fvtxs_v3_east_docalib->Clone();
-  /*
-  uhadronvn_2_4->ProfileX("v3allfvtx");
-  uhadeastvn_2_4->ProfileX("v3eastfvtx");
-  uhadwestvn_2_4->ProfileX("v3westfvtx");
 
-  uhadronvn_2_5->ProfileX("v3allbbc");
-  uhadeastvn_2_5->ProfileX("v3eastbbc");
-  uhadwestvn_2_5->ProfileX("v3westbbc");
-  */
   TH1F *v3eastfvtxnew = new TH1F("v3eastfvtxnew","v3eastfvtxnew",15,0,3.0);
   TH1F *v3westfvtxnew = new TH1F("v3westfvtxnew","v3westfvtxnew",15,0,3.0);
 
   TH1F *v3eastbbcnew = new TH1F("v3eastbbcnew","v3eastbbcnew",15,0,3.0);
   TH1F *v3westbbcnew = new TH1F("v3westbbcnew","v3westbbcnew",15,0,3.0);
 
-  /*
-  TH1F *v3eastfvtxnew=static_cast<TH1F *>v3eastfvtx->Clone();
-  TH1F *v3westfvtxnew=static_cast<TH1F *>v3westfvtx->Clone();
-
-  TH1F *v3eastbbcnew=static_cast<TH1F *>v3eastbbc->Clone();
-  TH1F *v3westbbcnew=static_cast<TH1F *>v3westbbc->Clone();
-
-  TH1F *hcoswfvtx=static_cast<TH1F *>hcosw->Clone();
-  TH1F *hcosefvtx=static_cast<TH1F *>hcose->Clone();
-
-  TH1F *hcoswbbc=static_cast<TH1F *>hcosw->Clone();
-  TH1F *hcosebbc=static_cast<TH1F *>hcose->Clone();
-  */
 
   float qxfvtx=0;
-  //hcosefvtx->Scale(qxfvtx);
-  //hcoswfvtx->Scale(qxfvtx);
 
   float qxbbc=0.002;
-  //hcosebbc->Scale(qxbbc);
-  //hcoswbbc->Scale(qxbbc);
+
   //FVTX
   for(int i=0; i<15; i++){
 
@@ -81,18 +56,6 @@ void plotv3ew(){
     //cout<<cone<<" "<<conw<<endl;
   }
 
-  //for(int i=0; i<15; i++){
-  //
-  //}
-  //v3eastfvtxnew->Add(hcosefvtx,1.0);
-  //v3westfvtxnew->Add(hcoswfvtx,1.0);
-
-
-
-
-
-  //v3eastbbcnew->Add(hcosebbc,1.0);
-  //v3westbbcnew->Add(hcoswbbc,1.0);
 
   float resofvtx=0.050;//0.0388085;
   float resobbc=0.040;//0.0329477;
@@ -106,12 +69,12 @@ void plotv3ew(){
   v3eastbbcnew->Scale(1.0/resobbc);
   v3westbbcnew->Scale(1.0/resobbc);
 
-  cc = new TCanvas("cc","cc",800,400);
-  cc->SetFillColor(10);
-  cc->Divide(2,1);
-  cc->Draw();
+  TCanvas* c1 = new TCanvas("c1","c1",800,400);
+  c1->SetFillColor(10);
+  c1->Divide(2,1);
+  c1->Draw();
 
-  cc->cd(1);
+  c1->cd(1);
   TH1F *h0=new TH1F("h0","FVTX", 30, 0, 3.0);
   h0->SetMaximum(0.1);
   h0->SetMinimum(0.0);
@@ -135,7 +98,7 @@ void plotv3ew(){
   v3westfvtxnew->SetMarkerColor(4);
   v3westfvtxnew->Draw("Psame");
 
-  cc->cd(2);
+  c1->cd(2);
   TH1F *h1=new TH1F("h1","BBC", 30, 0, 3.0);
   h1->SetMaximum(0.1);
   h1->SetMinimum(0.0);
