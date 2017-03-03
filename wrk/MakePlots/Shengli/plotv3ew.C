@@ -136,5 +136,6 @@ void plotv3ew(){
   leg1->Draw();
 
   c1->Print("test_shengli_offset.png");
+  c1->Print("test_shengli_offset.pdf");
 
 }
