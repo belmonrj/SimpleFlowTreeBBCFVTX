@@ -117,7 +117,7 @@ void doenergy(int energy, int harmonic)
     th1d_vncent_fvtxs_lowpt->SetBinContent(ic + 1, hvn_fvtxs->GetBinContent(blpt));
     th1d_vncent_fvtxs_lowpt->SetBinError(ic + 1, hvn_fvtxs->GetBinError(blpt));
 
-    float bhpt = hvn_fvtxs->FindBin(2.5);
+    float bhpt = hvn_fvtxs->FindBin(2.25);
     th1d_vncent_fvtxs_highpt->SetBinContent(ic + 1, hvn_fvtxs->GetBinContent(bhpt));
     th1d_vncent_fvtxs_highpt->SetBinError(ic + 1, hvn_fvtxs->GetBinError(bhpt));
 
