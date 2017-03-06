@@ -107,8 +107,8 @@ int main(int argc, char *argv[])
 
   cout << "Now processing with run number " << run << endl;
 
-  // flatten(run, 1);
-  // flatten(run, 2);
+  flatten(run, 1);
+  flatten(run, 2);
   flatten(run, 3);
 
   return 0;
@@ -1225,6 +1225,7 @@ void flatten(int runNumber, int rp_recal_pass)
           for ( int ib = 0; ib < 2; ib++ )
           {
             sumxy[ih][id][ib] /= sumxy[ih][id][2]; // normalize to the weight
+
             //if(ih==1 && id==0 && ib==0 && sumxy[ih][id][ib]>1) cout<<sumxy[ih][id][ib]<<endl;
             if ( rp_recal_pass > 0 )
             {
@@ -1243,6 +1244,9 @@ void flatten(int runNumber, int rp_recal_pass)
               if (id == 0 && DIAG) cout << "filled ave2: " << ih << " " << id << " " << ib << " with: " << sumxy[ih][id][ib] << endl;
             } // pass > 0
           } // if weight > 0
+
+          //after recentering but before flattening?
+          sumxy[ih][id][0] += qxOffset; // offset qx offset
 
           sumxy[ih][id][3] = atan2(sumxy[ih][id][1], sumxy[ih][id][0]) / (ih + 1.0);
           if ( rp_recal_pass > 0 )
@@ -1290,15 +1294,15 @@ void flatten(int runNumber, int rp_recal_pass)
 
 
 
-    // testing Qx offset
-    for ( int ih = 1; ih < NHAR; ih++ )
-    {
-      for ( int id = 0; id < NDETSHORT; id++ )
-      {
-        sumxy[ih][id][0] += qxOffset;
-        sumxy[ih][id][3] = atan2(sumxy[ih][id][1], sumxy[ih][id][0]) / (ih + 1.0);
-      } // id
-    } // ih
+    // // testing Qx offset
+    // for ( int ih = 1; ih < NHAR; ih++ )
+    // {
+    //   for ( int id = 0; id < NDETSHORT; id++ )
+    //   {
+    //     sumxy[ih][id][0] += qxOffset;
+    //     sumxy[ih][id][3] = atan2(sumxy[ih][id][1], sumxy[ih][id][0]) / (ih + 1.0);
+    //   } // id
+    // } // ih
 
 
 
@@ -1482,13 +1486,13 @@ void flatten(int runNumber, int rp_recal_pass)
             if ( dcarm == 1 ) fvtxs_v2eta_west_docalib[icent]->Fill(eta, cosfvtx_dphi2_docalib);
             if ( dcarm == 0 ) fvtxs_v2eta_east_docalib[icent]->Fill(eta, cosfvtx_dphi2_docalib);
 
-            fvtxs_v2_both_cosphi[icent]->Fill(pt_angle, cos(2*phi_angle));
-            if ( dcarm == 1 ) fvtxs_v2_west_cosphi[icent]->Fill(pt_angle, cos(2*phi_angle));
-            if ( dcarm == 0 ) fvtxs_v2_east_cosphi[icent]->Fill(pt_angle, cos(2*phi_angle));
+            fvtxs_v2_both_cosphi[icent]->Fill(pt_angle, cos(2 * phi_angle));
+            if ( dcarm == 1 ) fvtxs_v2_west_cosphi[icent]->Fill(pt_angle, cos(2 * phi_angle));
+            if ( dcarm == 0 ) fvtxs_v2_east_cosphi[icent]->Fill(pt_angle, cos(2 * phi_angle));
 
-            fvtxs_v2_both_sinphi[icent]->Fill(pt_angle, sin(2*phi_angle));
-            if ( dcarm == 1 ) fvtxs_v2_west_sinphi[icent]->Fill(pt_angle, sin(2*phi_angle));
-            if ( dcarm == 0 ) fvtxs_v2_east_sinphi[icent]->Fill(pt_angle, sin(2*phi_angle));
+            fvtxs_v2_both_sinphi[icent]->Fill(pt_angle, sin(2 * phi_angle));
+            if ( dcarm == 1 ) fvtxs_v2_west_sinphi[icent]->Fill(pt_angle, sin(2 * phi_angle));
+            if ( dcarm == 0 ) fvtxs_v2_east_sinphi[icent]->Fill(pt_angle, sin(2 * phi_angle));
 
             // --- 3rd harmonic
             double fvtx_dphi3_docalib = phi_angle - fvtx_south_psi3_docalib;
