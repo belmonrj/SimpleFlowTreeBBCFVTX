@@ -148,7 +148,7 @@ void flatten(int runNumber, int rp_recal_pass)
 
   float fracCut = 0.95; // pile up rejection < fracCut (better place??)
 
-  float qxOffset = -0.0010; // offset to Qx values
+  float qxOffset = 0.0006; // offset to Qx values
 
   //------------------------------------------------------------//
   //                                                            //
