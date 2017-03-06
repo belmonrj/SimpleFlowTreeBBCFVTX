@@ -148,7 +148,10 @@ void flatten(int runNumber, int rp_recal_pass)
 
   float fracCut = 0.95; // pile up rejection < fracCut (better place??)
 
-  float qxOffset = 0.006; // offset to Qx values
+  float qxOffset = 0.075; // offset to Qx values
+
+  cout << " frac cut: " << fracCut << endl;
+  cout << " Qx offset: " << qxOffset << endl;
 
   //------------------------------------------------------------//
   //                                                            //
@@ -451,6 +454,15 @@ void flatten(int runNumber, int rp_recal_pass)
     2.0, 2.5, 3.0, 3.5, 4.0,
     4.5, 5.0
   };
+  TProfile* fvtxs_v2_west_cosphi[NMUL];
+  TProfile* fvtxs_v2_east_cosphi[NMUL];
+  TProfile* fvtxs_v2_both_cosphi[NMUL];
+
+
+  TProfile* fvtxs_v2_west_sinphi[NMUL];
+  TProfile* fvtxs_v2_east_sinphi[NMUL];
+  TProfile* fvtxs_v2_both_sinphi[NMUL];
+
 
   TProfile* bbcs_v2_east_docalib[NMUL];
   TProfile* bbcs_v2_west_docalib[NMUL];
@@ -478,6 +490,17 @@ void flatten(int runNumber, int rp_recal_pass)
 
   for ( int ic = 0; ic < NMUL; ++ic )
   {
+    //-- cos(phi)
+    fvtxs_v2_west_cosphi[ic] = new TProfile(Form("fvtxs_v2_west_cosphi_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+    fvtxs_v2_east_cosphi[ic] = new TProfile(Form("fvtxs_v2_east_cosphi_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+    fvtxs_v2_both_cosphi[ic] = new TProfile(Form("fvtxs_v2_both_cosphi_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+
+    //-- sin(phi)
+    fvtxs_v2_west_sinphi[ic] = new TProfile(Form("fvtxs_v2_west_sinphi_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+    fvtxs_v2_east_sinphi[ic] = new TProfile(Form("fvtxs_v2_east_sinphi_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+    fvtxs_v2_both_sinphi[ic] = new TProfile(Form("fvtxs_v2_both_sinphi_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+
+    //-- v2
     bbcs_v2_both_docalib[ic] = new TProfile(Form("bbcs_v2_both_docalib_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
     bbcs_v2_east_docalib[ic] = new TProfile(Form("bbcs_v2_east_docalib_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
     bbcs_v2_west_docalib[ic] = new TProfile(Form("bbcs_v2_west_docalib_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
@@ -1459,6 +1482,13 @@ void flatten(int runNumber, int rp_recal_pass)
             if ( dcarm == 1 ) fvtxs_v2eta_west_docalib[icent]->Fill(eta, cosfvtx_dphi2_docalib);
             if ( dcarm == 0 ) fvtxs_v2eta_east_docalib[icent]->Fill(eta, cosfvtx_dphi2_docalib);
 
+            fvtxs_v2_both_cosphi[icent]->Fill(pt_angle, cos(2*phi_angle));
+            if ( dcarm == 1 ) fvtxs_v2_west_cosphi[icent]->Fill(pt_angle, cos(2*phi_angle));
+            if ( dcarm == 0 ) fvtxs_v2_east_cosphi[icent]->Fill(pt_angle, cos(2*phi_angle));
+
+            fvtxs_v2_both_sinphi[icent]->Fill(pt_angle, sin(2*phi_angle));
+            if ( dcarm == 1 ) fvtxs_v2_west_sinphi[icent]->Fill(pt_angle, sin(2*phi_angle));
+            if ( dcarm == 0 ) fvtxs_v2_east_sinphi[icent]->Fill(pt_angle, sin(2*phi_angle));
 
             // --- 3rd harmonic
             double fvtx_dphi3_docalib = phi_angle - fvtx_south_psi3_docalib;
