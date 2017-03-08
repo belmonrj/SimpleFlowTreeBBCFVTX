@@ -149,10 +149,15 @@ void flatten(int runNumber, int rp_recal_pass)
   float fracCut = 0.95; // pile up rejection < fracCut (better place??)
 
   float qxOffset = 0.0; // offset to Qx values
-  float qyOffset = 0.0; // offset to Qx values
+  // float qyOffset = 0.0; // offset to Qx values
+  // centrality dependent Qy offsets
+  float qyOffset[] = {-0.004, -0.008, -0.005, -0.021, -0.039, -0.073}; 
 
   cout << " frac cut: " << fracCut << endl;
   cout << " Qx offset: " << qxOffset << endl;
+  cout << " Qy offset: " << endl;
+  for (int i = 0; i < NMUL; i++)
+    cout << "    " << i << " " << qyOffset[i] << endl;
 
   //------------------------------------------------------------//
   //                                                            //
@@ -1301,7 +1306,7 @@ void flatten(int runNumber, int rp_recal_pass)
       for ( int id = 0; id < NDETSHORT; id++ )
       {
         sumxy[ih][id][0] += qxOffset;
-        sumxy[ih][id][1] += qyOffset;
+        sumxy[ih][id][1] += qyOffset[icent];
         sumxy[ih][id][3] = atan2(sumxy[ih][id][1], sumxy[ih][id][0]) / (ih + 1.0);
       } // id
     } // ih
