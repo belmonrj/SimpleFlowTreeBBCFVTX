@@ -149,9 +149,9 @@ void flatten(int runNumber, int rp_recal_pass)
   float fracCut = 0.95; // pile up rejection < fracCut (better place??)
 
   float qxOffset = 0.0; // offset to Qx values
-  // float qyOffset = 0.0; // offset to Qx values
+  float qyOffset[] = { 0, 0, 0, 0, 0, 0}; // offset Qy values
   // centrality dependent Qy offsets
-  float qyOffset[] = {-0.004, -0.008, -0.005, -0.021, -0.039, -0.073}; 
+  // float qyOffset[] = { -0.004, -0.008, -0.005, -0.021, -0.039, -0.073};
 
   cout << " frac cut: " << fracCut << endl;
   cout << " Qx offset: " << qxOffset << endl;
@@ -1251,9 +1251,6 @@ void flatten(int runNumber, int rp_recal_pass)
             } // pass > 0
           } // if weight > 0
 
-          //after recentering but before flattening?
-          // sumxy[ih][id][0] += qxOffset; // offset qx offset
-
           sumxy[ih][id][3] = atan2(sumxy[ih][id][1], sumxy[ih][id][0]) / (ih + 1.0);
           if ( rp_recal_pass > 0 )
           {
@@ -1300,16 +1297,10 @@ void flatten(int runNumber, int rp_recal_pass)
 
 
 
-    // testing Qx/Qy offset
-    for ( int ih = 1; ih < NHAR; ih++ )
-    {
-      for ( int id = 0; id < NDETSHORT; id++ )
-      {
-        sumxy[ih][id][0] += qxOffset;
-        sumxy[ih][id][1] += qyOffset[icent];
-        sumxy[ih][id][3] = atan2(sumxy[ih][id][1], sumxy[ih][id][0]) / (ih + 1.0);
-      } // id
-    } // ih
+    // testing Qx/Qy offset on FVTXS Psi2
+    sumxy[1][fvtxs_index][0] = cos(sumxy[1][fvtxs_index][3] * 2) + qxOffset;
+    sumxy[1][fvtxs_index][1] = sin(sumxy[1][fvtxs_index][3] * 2) + qyOffset[icent];
+    sumxy[1][fvtxs_index][3] = atan2(sumxy[1][fvtxs_index][1], sumxy[1][fvtxs_index][0]) / (1 + 1.0);
 
 
 
