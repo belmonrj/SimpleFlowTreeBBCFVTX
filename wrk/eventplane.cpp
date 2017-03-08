@@ -149,9 +149,9 @@ void flatten(int runNumber, int rp_recal_pass)
   float fracCut = 0.95; // pile up rejection < fracCut (better place??)
 
   float qxOffset = 0.0; // offset to Qx values
-  float qyOffset[] = { 0, 0, 0, 0, 0, 0}; // offset Qy values
+  // float qyOffset[] = { 0, 0, 0, 0, 0, 0}; // offset Qy values
   // centrality dependent Qy offsets
-  // float qyOffset[] = { -0.004, -0.008, -0.005, -0.021, -0.039, -0.073};
+  float qyOffset[] = { -0.001, -0.005, -0.008, -0.016, -0.029, -0.069};
 
   cout << " frac cut: " << fracCut << endl;
   cout << " Qx offset: " << qxOffset << endl;
