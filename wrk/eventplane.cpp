@@ -151,7 +151,8 @@ void flatten(int runNumber, int rp_recal_pass)
   float qxOffset = 0.0; // offset to Qx values
   // float qyOffset[] = { 0, 0, 0, 0, 0, 0}; // offset Qy values
   // centrality dependent Qy offsets
-  float qyOffset[] = { -0.001, -0.005, -0.008, -0.016, -0.029, -0.069};
+  // float qyOffset[] = { -0.001, -0.005, -0.008, -0.016, -0.029, -0.069}; // 1st iteration
+  float qyOffset[] = { -0.001, -0.007, -0.012, -0.024, -0.044, -0.104}; // 2nd iteration
 
   cout << " frac cut: " << fracCut << endl;
   cout << " Qx offset: " << qxOffset << endl;
