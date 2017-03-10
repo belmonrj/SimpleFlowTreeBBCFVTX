@@ -137,6 +137,23 @@ void flatten(int runNumber, int rp_recal_pass)
   // --- Run16dAu39
   if ( runNumber >= 457634 && runNumber <= 458167 ) energyflag = 39;
 
+  int eidx = -1;
+  if (energyflag == 200)
+    eidx = 0;
+  else if (energyflag == 62)
+    eidx = 1;
+  else if (energyflag == 39)
+    eidx = 2;
+  else if (energyflag == 20)
+    eidx = 3;
+  else
+  {
+    cout << "couldn't find valid energy index"
+         << " runNumber:" << runNumber << " energyflag:" << energyflag << " eidx:" << eidx
+         << endl;
+    return;
+  }
+
   int verbosity = 2;
 
   char calibfile[500];
@@ -153,13 +170,23 @@ void flatten(int runNumber, int rp_recal_pass)
   // centrality dependent Qy offsets
   // float qyOffset[] = { -0.001, -0.005, -0.008, -0.016, -0.029, -0.069}; // 1st iteration
   // float qyOffset[] = { -0.001, -0.007, -0.012, -0.024, -0.044, -0.104}; // 2nd iteration
-  float qyOffset[] = { -0.001, -0.008, -0.014, -0.028, -0.051, -0.121}; // 3rd iteration
+  // float qyOffset[] = { -0.001, -0.008, -0.014, -0.028, -0.051, -0.121}; // 3rd iteration
+  float qyOffset[4][6] =
+  {
+    { -0.000, -0.000, -0.000, -0.016, -0.044, -0.121}, //200 GeV
+
+    { -0.001, -0.008, -0.014, -0.024, -0.055, -0.129}, //62 GeV
+
+    { -0.000, -0.005, -0.014, -0.028, -0.051, -0.104}, //39 GeV
+
+    { -0.001, -0.008, -0.014, -0.028, -0.051, -0.121}, //20 GeV
+  };
 
   cout << " frac cut: " << fracCut << endl;
   cout << " Qx offset: " << qxOffset << endl;
   cout << " Qy offset: " << endl;
   for (int i = 0; i < NMUL; i++)
-    cout << "    " << i << " " << qyOffset[i] << endl;
+    cout << "    " << i << " " << qyOffset[eidx][i] << endl;
 
   //------------------------------------------------------------//
   //                                                            //
@@ -1301,7 +1328,7 @@ void flatten(int runNumber, int rp_recal_pass)
 
     // testing Qx/Qy offset on FVTXS Psi2
     sumxy[1][fvtxs_index][0] = cos(sumxy[1][fvtxs_index][3] * 2) + qxOffset;
-    sumxy[1][fvtxs_index][1] = sin(sumxy[1][fvtxs_index][3] * 2) + qyOffset[icent];
+    sumxy[1][fvtxs_index][1] = sin(sumxy[1][fvtxs_index][3] * 2) + qyOffset[eidx][icent];
     sumxy[1][fvtxs_index][3] = atan2(sumxy[1][fvtxs_index][1], sumxy[1][fvtxs_index][0]) / (1 + 1.0);
 
 
