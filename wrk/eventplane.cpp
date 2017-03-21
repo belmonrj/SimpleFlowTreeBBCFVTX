@@ -1042,7 +1042,10 @@ void flatten(int runNumber, int rp_recal_pass)
     th2d_qBBC_nFVTX->Fill(bbc_nw_qw, d_nFVTX_clus);
     // fill charge in each ring
     for (int ir = 0; ir < 5; ir++)
-      tp1f_bbc_fcharge_ring->Fill(ir, bbcq_ring[ir] / bbc_nw_qw);
+    {
+      if ( bbc_nw_qw > 0 )
+        tp1f_bbc_fcharge_ring->Fill(ir, bbcq_ring[ir] / bbc_nw_qw);
+    }
 
     // --------------
     // --- FVTX stuff
