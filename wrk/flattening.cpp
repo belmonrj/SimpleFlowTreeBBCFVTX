@@ -95,8 +95,8 @@ int main(int argc, char *argv[])
 
   cout << "Now processing with run number " << run << endl;
 
-  flatten(run, 1);
-  flatten(run, 2);
+  // flatten(run, 1);
+  // flatten(run, 2);
   flatten(run, 3);
 
   return 0;
