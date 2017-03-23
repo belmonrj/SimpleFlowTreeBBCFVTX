@@ -6,8 +6,8 @@ void Run_SimpleFlowTreeBBCFVTX(
   // Libraries
   //----------
 
-  gSystem->Load("libUltraLight");
-  gSystem->Load("libCabanaBoy");
+  // gSystem->Load("libUltraLight");
+  // gSystem->Load("libCabanaBoy");
 
   //-- required for Run15pAu200FvtxMBPro107
   // not for Run16dAu
@@ -34,11 +34,11 @@ void Run_SimpleFlowTreeBBCFVTX(
 
   SimpleFlowTreeBBCFVTX *sflow = new SimpleFlowTreeBBCFVTX();
   sflow->set_create_ttree(true);
-  sflow->set_write_bbc(true);
-  sflow->set_write_cnt(true);
-  sflow->set_write_fvtx_clusters(true); // i guess?
+  sflow->set_write_bbc(false);
+  sflow->set_write_cnt(false);
+  sflow->set_write_fvtx_clusters(false);
   sflow->set_write_fvtx(true);
-  sflow->set_use_runlist(false);                     //use the runlist to select for good runs
+  sflow->set_use_runlist(false);
   //sflow->set_runlist_file(string);
   sflow->set_output_filename(outFile);//set the ntuple output file
   sflow->Verbosity(0);
