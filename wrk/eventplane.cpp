@@ -946,6 +946,7 @@ void flatten(int runNumber, int rp_recal_pass)
 
     // --- all numbers from Darren 2016-06-23
     const float x_off = 0.3;
+    const float y_off = 0.02;
     const float beam_angle = 0.001;
     float vtx_z = d_bbcz;
     if ( eventfvtx_z > -999 ) vtx_z = eventfvtx_z;
@@ -1607,7 +1608,7 @@ void flatten(int runNumber, int rp_recal_pass)
         float dcay = fdcay[i];
         float chisq = fchisq[i];
         // if ( fabs(dcax) > 0.5 || fabs(dcay) > 0.5 ) continue;
-        if ( fabs(dcax) > 2.0 || fabs(dcay) > 2.0 ) continue;
+        if ( fabs(dcax - x_off) > 2.0 || fabs(dcay - y_off) > 2.0 ) continue;
         if ( chisq > 5 ) continue;
         int ns = 0;
         int nn = 0;
