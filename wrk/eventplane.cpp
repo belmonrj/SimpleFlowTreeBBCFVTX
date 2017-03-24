@@ -1605,7 +1605,10 @@ void flatten(int runNumber, int rp_recal_pass)
         float eta = feta[i];
         float dcax = fdcax[i];
         float dcay = fdcay[i];
-        if ( fabs(dcax) > 0.5 || fabs(dcay) > 0.5 ) continue;
+        float chisq = fchisq[i];
+        // if ( fabs(dcax) > 0.5 || fabs(dcay) > 0.5 ) continue;
+        if ( fabs(dcax) > 2.0 || fabs(dcay) > 2.0 ) continue;
+        if ( chisq > 5 ) continue;
         int ns = 0;
         int nn = 0;
         if ( eta > 0 ) nn = 1;
