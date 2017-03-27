@@ -471,24 +471,19 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
   trigger_scaled = triggers->get_lvl1_trigscaled();
   trigger_live = triggers->get_lvl1_triglive();
 
-  // // --- these numbers taken from run 16 run control log
-  // unsigned int trigger_FVTXNSBBCScentral = 0x00100000;
-  // unsigned int trigger_FVTXNSBBCS        = 0x00400000;
-  // unsigned int trigger_BBCLL1narrowcent  = 0x00000008;
-  // unsigned int trigger_BBCLL1narrow      = 0x00000010;
-
-  // unsigned int accepted_triggers = 0;
-  // // accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS | trigger_BBCLL1narrowcent | trigger_BBCLL1narrow ;
-  // // --- Run16dAu200
-  // if ( runnumber >= 454774 && runnumber <= 455639 ) accepted_triggers = trigger_BBCLL1narrowcent | trigger_BBCLL1narrow;
-  // // --- Run16dAu62
-  // if ( runnumber >= 455792 && runnumber <= 456283 ) accepted_triggers = trigger_BBCLL1narrowcent | trigger_BBCLL1narrow;
-  // // --- Run16dAu20
-  // if ( runnumber >= 456652 && runnumber <= 457298 ) accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS;
-  // // --- Run16dAu39
-  // if ( runnumber >= 457634 && runnumber <= 458167 ) accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS;
-
-
+  if ( !use_utils )
+    {
+      // --- narrow and narrowcent trigs common across small systems (Run14,15,16)
+      unsigned int trigger_BBCLL1narrowcent  = 0x00000008;
+      unsigned int trigger_BBCLL1narrow      = 0x00000010;
+      unsigned int accepted_triggers = trigger_BBCLL1narrowcent | trigger_BBCLL1narrow ;
+      unsigned int passes_trigger = trigger_scaled & accepted_triggers;
+      if ( passes_trigger == 0 )
+	{
+	  if ( _verbosity > 1 ) cout << "no utilities class, making cut on hard coded trigger selection" << endl;
+	  return EVENT_OK;
+	}
+    }
 
   // --- bbc_z...
   PHPoint vertex1 = vertexes->get_Vertex("BBC");
@@ -510,7 +505,11 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
       zvtx = _utils->get_vrtx(topNode);
       if ( _verbosity > 1 ) cout << "got the vertex from utils" << endl;
     }
-
+  else if ( fabs(zvtx) > 12.0 )
+    {
+      if ( _verbosity > 1 ) cout << "utils class not available, imposing hard coded 12 cm vertex cut" << endl;
+      return EVENT_OK;
+    }
 
   if ( _verbosity > 1 ) cout << "FVTX vertex points: " << FVTX_X << " " << FVTX_Y << " " << FVTX_Z << endl;
 
