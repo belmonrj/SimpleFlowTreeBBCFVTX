@@ -194,7 +194,7 @@ int SimpleFlowTreeBBCFVTX::InitRun(PHCompositeNode *topNode)
   int runnumber = 0;
 
   RunHeader *rh = findNode::getClass<RunHeader>(topNode, "RunHeader");
-  if (!rh)
+  if ( !rh )
   {
     cout << PHWHERE << " ERROR::RunHeader not found" << endl;
     return ABORTEVENT;
@@ -209,7 +209,8 @@ int SimpleFlowTreeBBCFVTX::InitRun(PHCompositeNode *topNode)
 
   rc->set_IntFlag("BBCCALIBVERSION", icalibversion);
 
-  if (m_bbccalib) {
+  if ( m_bbccalib )
+  {
     PHTimeStamp TimeStp = rc->get_TimeStamp();
     int BBCCALIBVERSION = rc->get_IntFlag("BBCCALIBVERSION");
     cout << "SvxRpSumXYReco::InitRun - restored constants are for " << TimeStp << endl;
@@ -332,8 +333,8 @@ int SimpleFlowTreeBBCFVTX::ResetEvent(PHCompositeNode *topNode)
 int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
 {
 
-  if (_verbosity > 1) cout << PHWHERE << "::process_event() - entered on event #" << _ievent << endl;
-  else if ((_ievent) % 10000 == 0) cout << PHWHERE << "::process_event() - event #" << _ievent << endl;
+  if ( _verbosity > 1 ) cout << PHWHERE << "::process_event() - entered on event #" << _ievent << endl;
+  else if ( _ievent % 10000 == 0 ) cout << PHWHERE << "::process_event() - event #" << _ievent << endl;
 
   // advance event counter
   _ievent++;
@@ -349,7 +350,7 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
   int runnumber = 0;
 
   RunHeader *rh = findNode::getClass<RunHeader>(topNode, "RunHeader");
-  if (!rh)
+  if ( !rh )
   {
     cout << PHWHERE << " ERROR::RunHeader not found" << endl;
     return ABORTEVENT;
@@ -359,11 +360,12 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
     runnumber = rh->get_RunNumber();
   }
 
-  if (_use_runlist)
+  if ( _use_runlist )
   {
-    if (is_run_in_list(runnumber) == false)
+    if ( is_run_in_list(runnumber) == false )
     {
-      if (_verbosity > 1) {
+      if ( _verbosity > 1 )
+      {
         cout << endl << "ABORTING RUN, Run number: " << runnumber << " is not in the run list" << endl << endl;
       }
       return ABORTEVENT;
@@ -442,7 +444,7 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
   if ( use_utils )
     {
       if ( _verbosity > 1 ) cout << "using utils to check if event is ok " << endl;
-      if (!_utils->is_event_ok(topNode)) return EVENT_OK;
+      if ( !_utils->is_event_ok(topNode) ) return EVENT_OK;
       if ( _verbosity > 1 ) cout << "event passed utils check " << endl;
     }
 
@@ -479,10 +481,10 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
       unsigned int accepted_triggers = trigger_BBCLL1narrowcent | trigger_BBCLL1narrow ;
       unsigned int passes_trigger = trigger_scaled & accepted_triggers;
       if ( passes_trigger == 0 )
-	{
-	  if ( _verbosity > 1 ) cout << "no utilities class, making cut on hard coded trigger selection" << endl;
-	  return EVENT_OK;
-	}
+        {
+          if ( _verbosity > 1 ) cout << "no utilities class, making cut on hard coded trigger selection" << endl;
+          return EVENT_OK;
+        }
     }
 
   // --- bbc_z...
@@ -742,11 +744,11 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
 
       //-- Only write out good fvtx tracks
       if ( use_utils )
-	{
-	  if ( _verbosity > 2 ) cout << "using utils to check if the track is ok " << endl;
-	  if ( !_utils->is_fvtx_track_ok(fvtx_trk, zvtx) ) continue;
-	  if ( _verbosity > 2 ) cout << "track pass utils " << endl;
-	}
+        {
+          if ( _verbosity > 2 ) cout << "using utils to check if the track is ok " << endl;
+          if ( !_utils->is_fvtx_track_ok(fvtx_trk, zvtx) ) continue;
+          if ( _verbosity > 2 ) cout << "track pass utils " << endl;
+        }
 
       float the = fvtx_trk->get_fvtx_theta();
       float eta = fvtx_trk->get_fvtx_eta();
@@ -764,13 +766,13 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
 
       // rotate based on beamtilt
       if ( use_utils )
-	{
-	  double px = _utils->rotate_x(pxo, pzo);
-	  double py = pyo;
-	  double pz = _utils->rotate_z(pxo, pzo);
-	  phi = TMath::ATan2(py, px);
-	  the = TMath::ACos(pz / TMath::Sqrt(px * px + py * py + pz * pz));
-	}
+        {
+          double px = _utils->rotate_x(pxo, pzo);
+          double py = pyo;
+          double pz = _utils->rotate_z(pxo, pzo);
+          phi = TMath::ATan2(py, px);
+          the = TMath::ACos(pz / TMath::Sqrt(px * px + py * py + pz * pz));
+        }
 
 
 
@@ -873,10 +875,12 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
       // if ( px > 0 ) arm = 1;
 
       // rotate based on beamtilt
-      double px = _utils->rotate_x(pxo, pzo);
-      double py = pyo;
-      double pz = _utils->rotate_z(pxo, pzo);
-
+      if ( use_utils )
+        {
+          double px = _utils->rotate_x(pxo, pzo);
+          double py = pyo;
+          double pz = _utils->rotate_z(pxo, pzo);
+        }
 
       int charge = strk->get_charge();
 
