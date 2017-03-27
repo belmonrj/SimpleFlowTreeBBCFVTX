@@ -817,8 +817,6 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
         cout << "butting up against the boundary of fvtx tracks" << endl;
         break;
       }
-      //short_chi2 = fvtx_trk->get_short_chi2_ndf();
-      //chi2       = fvtx_trk->get_chi2_ndf();
 
       ++ntr;
 
@@ -871,15 +869,14 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
       float pyo = strk->get_py();
       float pzo = strk->get_pz();
 
-      // int arm = 0;
-      // if ( px > 0 ) arm = 1;
-
       // rotate based on beamtilt
+      double px = pxo;
+      double py = pyo;
+      double pz = pzo;
       if ( use_utils )
         {
-          double px = _utils->rotate_x(pxo, pzo);
-          double py = pyo;
-          double pz = _utils->rotate_z(pxo, pzo);
+          px = _utils->rotate_x(pxo, pzo);
+          pz = _utils->rotate_z(pxo, pzo);
         }
 
       int charge = strk->get_charge();
@@ -889,8 +886,6 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
 
       if ( pc3dphi < -9990 || pc3dz < -9990 ) continue;
 
-      // float pc3sdphi = calcsdphi(pc3dphi, arm, charge, mom);
-      // float pc3sdz = calcsdz(pc3dz, arm, charge, mom);
       float pc3sdphi = strk->get_pc3sdphi();
       float pc3sdz = strk->get_pc3sdz();
 
