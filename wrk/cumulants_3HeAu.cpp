@@ -94,14 +94,7 @@ void documulants(int runNumber)
   int energyflag = 0;
   // --- Run14HeAu200
   if ( runNumber >= 415751 && runNumber <= 416892 ) energyflag = 3;
-  // --- Run16dAu200
-  if ( runNumber >= 454774 && runNumber <= 455639 ) energyflag = 200;
-  // --- Run16dAu62
-  if ( runNumber >= 455792 && runNumber <= 456283 ) energyflag = 62;
-  // --- Run16dAu20
-  if ( runNumber >= 456652 && runNumber <= 457298 ) energyflag = 20;
-  // --- Run16dAu39
-  if ( runNumber >= 457634 && runNumber <= 458167 ) energyflag = 39;
+  else { cout << "BAD RUN NUMBER!" << endl; return; }
 
   int verbosity = 0;
 
@@ -498,7 +491,7 @@ void documulants(int runNumber)
   float        eventfvtx_z;
 
   int          npc1;
-  int          d_nFVTX_clus = 0; // initialize incase not in tree..
+  //  int          d_nFVTX_clus = 0; // initialize incase not in tree..
 
   int nfvtxt;
   int fnhits[400];
@@ -588,16 +581,11 @@ void documulants(int runNumber)
       // --- trigger selection
       // ---------------------
 
-      unsigned int trigger_FVTXNSBBCScentral = 0x00100000;
-      unsigned int trigger_FVTXNSBBCS        = 0x00400000;
       unsigned int trigger_BBCLL1narrowcent  = 0x00000008;
       unsigned int trigger_BBCLL1narrow      = 0x00000010;
 
       unsigned int accepted_triggers = 0;
-      if ( energyflag == 200 ) accepted_triggers = trigger_BBCLL1narrowcent  | trigger_BBCLL1narrow;
-      if ( energyflag == 62  ) accepted_triggers = trigger_BBCLL1narrowcent  | trigger_BBCLL1narrow;
-      if ( energyflag == 20  ) accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS;
-      if ( energyflag == 39  ) accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS;
+      if ( energyflag == 3 ) accepted_triggers = trigger_BBCLL1narrowcent  | trigger_BBCLL1narrow;
 
       unsigned int passes_trigger = trigger_scaled & accepted_triggers;
       if ( passes_trigger == 0 )
@@ -607,12 +595,8 @@ void documulants(int runNumber)
         }
 
 
-      double ZVTX = -9999;
-      // --- FIX THIS
-      if ( runNumber >= 454774 && runNumber <= 456283 ) ZVTX = d_bbcz;
-      if ( runNumber >= 456652 && runNumber <= 458167 ) ZVTX = eventfvtx_z;
+      double ZVTX = d_bbcz;
       if ( fabs(ZVTX) > 10.0 )
-      //if ( fabs(ZVTX) > 5.0 )
         {
           if ( verbosity > 1 ) cout << "vertex rejected" << endl;
           continue;
@@ -629,18 +613,6 @@ void documulants(int runNumber)
           continue;
         }
 
-      int toomanyclusters = 9999;
-      if ( energyflag == 200 ) toomanyclusters = 4000;
-      if ( energyflag == 62  ) toomanyclusters = 4000;
-      if ( energyflag == 20  ) toomanyclusters = 300;
-      if ( energyflag == 39  ) toomanyclusters = 500;
-
-      bool is_okaync = ( d_nFVTX_clus < toomanyclusters );
-      if ( !is_okaync )
-        {
-          if ( verbosity > 1 ) cout << "too many clusters" << endl;
-          continue;
-        }
 
 
       //------------------------------------------------------------//
@@ -651,12 +623,12 @@ void documulants(int runNumber)
 
       // FIX THIS
       // --- all numbers from Darren 2016-06-23
-      const float x_off = 0.3;
-      const float beam_angle = 0.001;
+      // const float x_off = 0.3;
+      // const float beam_angle = 0.001;
       float vtx_z = d_bbcz;
       if ( eventfvtx_z > -999 ) vtx_z = eventfvtx_z;
-      float vtx_x = x_off + atan(beam_angle)*vtx_z;
-      float vtx_y = 0.02;
+      // float vtx_x = x_off + atan(beam_angle)*vtx_z;
+      // float vtx_y = 0.02;
 
 
 
@@ -1365,14 +1337,7 @@ void dooffsets(int runNumber)
   int energyflag = 0;
   // --- Run14HeAu200
   if ( runNumber >= 415751 && runNumber <= 416892 ) energyflag = 3;
-  // --- Run16dAu200
-  if ( runNumber >= 454774 && runNumber <= 455639 ) energyflag = 200;
-  // --- Run16dAu62
-  if ( runNumber >= 455792 && runNumber <= 456283 ) energyflag = 62;
-  // --- Run16dAu20
-  if ( runNumber >= 456652 && runNumber <= 457298 ) energyflag = 20;
-  // --- Run16dAu39
-  if ( runNumber >= 457634 && runNumber <= 458167 ) energyflag = 39;
+  else { cout << "BAD RUN NUMBER!" << endl; return; }
 
   int verbosity = 0;
 
@@ -1478,7 +1443,7 @@ void dooffsets(int runNumber)
   float        eventfvtx_z;
 
   int          npc1;
-  int          d_nFVTX_clus = 0;
+  //  int          d_nFVTX_clus = 0;
 
   int nfvtxt;
   float feta[75];
@@ -1555,17 +1520,11 @@ void dooffsets(int runNumber)
       // --- trigger selection
       // ---------------------
 
-      unsigned int trigger_FVTXNSBBCScentral = 0x00100000;
-      unsigned int trigger_FVTXNSBBCS        = 0x00400000;
       unsigned int trigger_BBCLL1narrowcent  = 0x00000008;
       unsigned int trigger_BBCLL1narrow      = 0x00000010;
 
-      // FIX THIS
       unsigned int accepted_triggers = 0;
-      if ( energyflag == 200 ) accepted_triggers = trigger_BBCLL1narrowcent  | trigger_BBCLL1narrow;
-      if ( energyflag == 62  ) accepted_triggers = trigger_BBCLL1narrowcent  | trigger_BBCLL1narrow;
-      if ( energyflag == 20  ) accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS;
-      if ( energyflag == 39  ) accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS;
+      if ( energyflag == 3 ) accepted_triggers = trigger_BBCLL1narrowcent  | trigger_BBCLL1narrow;
 
       unsigned int passes_trigger = trigger_scaled & accepted_triggers;
       if ( passes_trigger == 0 )
@@ -1574,22 +1533,8 @@ void dooffsets(int runNumber)
           continue;
         }
 
-      // if ( centrality > -1 )
-      //   {
-      //     // if ( energyflag == 200 && centrality > 5  ) continue;
-      //     // if ( energyflag == 62  && centrality > 10 ) continue;
-      //     // if ( energyflag == 20  && centrality > 20 ) continue;
-      //     // if ( energyflag == 39  && centrality > 20 ) continue;
-      //     if ( energyflag == 200 && centrality > 5  ) continue;
-      //     if ( energyflag == 62  && centrality > 5  ) continue;
-      //     if ( energyflag == 20  && centrality > 20 ) continue;
-      //     if ( energyflag == 39  && centrality > 10 ) continue;
-      //   }
 
-      //      FIX THIS
-      double ZVTX = -9999;
-      if ( runNumber >= 454774 && runNumber <= 456283 ) ZVTX = d_bbcz;
-      if ( runNumber >= 456652 && runNumber <= 458167 ) ZVTX = eventfvtx_z;
+      double ZVTX = d_bbcz;
       if ( fabs(ZVTX) > 10.0 )
         {
           if ( verbosity > 1 ) cout << "vertex rejected" << endl;
@@ -1607,18 +1552,6 @@ void dooffsets(int runNumber)
           continue;
         }
 
-      int toomanyclusters = 9999;
-      if ( energyflag == 200 ) toomanyclusters = 4000;
-      if ( energyflag == 62  ) toomanyclusters = 4000;
-      if ( energyflag == 20  ) toomanyclusters = 300;
-      if ( energyflag == 39  ) toomanyclusters = 500;
-
-      bool is_okaync = ( d_nFVTX_clus < toomanyclusters );
-      if ( !is_okaync )
-        {
-          if ( verbosity > 1 ) cout << "too many clusters" << endl;
-          continue;
-        }
 
 
 
