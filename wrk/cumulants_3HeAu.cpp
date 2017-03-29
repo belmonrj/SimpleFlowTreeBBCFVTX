@@ -347,12 +347,6 @@ void documulants(int runNumber)
 
   // --- base histograms
 
-  // TProfile* nfvtxt_ac_fvtxs_c22 = new TProfile(Form("nfvtxt_ac_fvtxs_c22"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_ac_fvtxn_c22 = new TProfile(Form("nfvtxt_ac_fvtxn_c22"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_ac_fvtxc_c22 = new TProfile(Form("nfvtxt_ac_fvtxc_c22"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_ac_fvtxs_c24 = new TProfile(Form("nfvtxt_ac_fvtxs_c24"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_ac_fvtxn_c24 = new TProfile(Form("nfvtxt_ac_fvtxn_c24"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_ac_fvtxc_c24 = new TProfile(Form("nfvtxt_ac_fvtxc_c24"),"",80, -0.5, 79.5, -1.1, 1.1);
   TProfile* nfvtxt_ac_fvtxs_tracks_c22 = new TProfile(Form("nfvtxt_ac_fvtxs_tracks_c22"),"",80, -0.5, 79.5, -1.1, 1.1);
   TProfile* nfvtxt_ac_fvtxn_tracks_c22 = new TProfile(Form("nfvtxt_ac_fvtxn_tracks_c22"),"",80, -0.5, 79.5, -1.1, 1.1);
   TProfile* nfvtxt_ac_fvtxc_tracks_c22 = new TProfile(Form("nfvtxt_ac_fvtxc_tracks_c22"),"",80, -0.5, 79.5, -1.1, 1.1);
@@ -365,52 +359,12 @@ void documulants(int runNumber)
   TProfile* nfvtxt_ac_fvtxs_tracks_cov24 = new TProfile(Form("nfvtxt_ac_fvtxs_tracks_cov24"),"",80, -0.5, 79.5, -1.1, 1.1);
   TProfile* nfvtxt_ac_fvtxn_tracks_cov24 = new TProfile(Form("nfvtxt_ac_fvtxn_tracks_cov24"),"",80, -0.5, 79.5, -1.1, 1.1);
   TProfile* nfvtxt_ac_fvtxc_tracks_cov24 = new TProfile(Form("nfvtxt_ac_fvtxc_tracks_cov24"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_ac_fvtxsfvtxn_c22  = new TProfile(Form("nfvtxt_ac_fvtxsfvtxn_c22"), "",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_ac_fvtxsfvtxn_c24  = new TProfile(Form("nfvtxt_ac_fvtxsfvtxn_c24"), "",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_ac_fvtxsfvtxn_c24a = new TProfile(Form("nfvtxt_ac_fvtxsfvtxn_c24a"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_ac_fvtxsfvtxn_c24b = new TProfile(Form("nfvtxt_ac_fvtxsfvtxn_c24b"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_ac_fvtxsfvtxn_c24c = new TProfile(Form("nfvtxt_ac_fvtxsfvtxn_c24c"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_ac_fvtxsfvtxn_c24d = new TProfile(Form("nfvtxt_ac_fvtxsfvtxn_c24d"),"",80, -0.5, 79.5, -1.1, 1.1);
   TProfile* nfvtxt_ac_fvtxsfvtxn_tracks_c22  = new TProfile(Form("nfvtxt_ac_fvtxsfvtxn_tracks_c22"),"",80, -0.5, 79.5, -1.1, 1.1);
   TProfile* nfvtxt_ac_fvtxsfvtxn_tracks_c24  = new TProfile(Form("nfvtxt_ac_fvtxsfvtxn_tracks_c24"),"",80, -0.5, 79.5, -1.1, 1.1);
   TProfile* nfvtxt_ac_fvtxsfvtxn_tracks_c24a = new TProfile(Form("nfvtxt_ac_fvtxsfvtxn_tracks_c24a"),"",80, -0.5, 79.5, -1.1, 1.1);
   TProfile* nfvtxt_ac_fvtxsfvtxn_tracks_c24b = new TProfile(Form("nfvtxt_ac_fvtxsfvtxn_tracks_c24b"),"",80, -0.5, 79.5, -1.1, 1.1);
   TProfile* nfvtxt_ac_fvtxsfvtxn_tracks_c24c = new TProfile(Form("nfvtxt_ac_fvtxsfvtxn_tracks_c24c"),"",80, -0.5, 79.5, -1.1, 1.1);
   TProfile* nfvtxt_ac_fvtxsfvtxn_tracks_c24d = new TProfile(Form("nfvtxt_ac_fvtxsfvtxn_tracks_c24d"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_ac_fvtxs_ce01_c22 = new TProfile(Form("nfvtxt_ac_fvtxs_ce01_c22"),       "",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_ac_fvtxn_ce01_c22 = new TProfile(Form("nfvtxt_ac_fvtxn_ce01_c22"),       "",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_ac_fvtxsfvtxn_ce01_c24  = new TProfile(Form("nfvtxt_ac_fvtxsfvtxn_ce01_c24"), "",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_ac_fvtxsfvtxn_ce01_c24a = new TProfile(Form("nfvtxt_ac_fvtxsfvtxn_ce01_c24a"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_ac_fvtxsfvtxn_ce01_c24b = new TProfile(Form("nfvtxt_ac_fvtxsfvtxn_ce01_c24b"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_ac_fvtxsfvtxn_ce01_c24c = new TProfile(Form("nfvtxt_ac_fvtxsfvtxn_ce01_c24c"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_ac_fvtxsfvtxn_ce01_c24d = new TProfile(Form("nfvtxt_ac_fvtxsfvtxn_ce01_c24d"),"",80, -0.5, 79.5, -1.1, 1.1);
-
-  // --- correction histograms
-
-  // // --- <<cos(n(phi1))>>
-  // TProfile* nfvtxt_ac_fvtxs_cos21 = new TProfile(Form("nfvtxt_ac_fvtxs_cos21"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_ac_fvtxn_cos21 = new TProfile(Form("nfvtxt_ac_fvtxn_cos21"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_ac_fvtxc_cos21 = new TProfile(Form("nfvtxt_ac_fvtxc_cos21"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // // --- <<sin(n(phi1))>>
-  // TProfile* nfvtxt_ac_fvtxs_sin21 = new TProfile(Form("nfvtxt_ac_fvtxs_sin21"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_ac_fvtxn_sin21 = new TProfile(Form("nfvtxt_ac_fvtxn_sin21"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_ac_fvtxc_sin21 = new TProfile(Form("nfvtxt_ac_fvtxc_sin21"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // // --- <<cos(n(phi1+phi2))>>
-  // TProfile* nfvtxt_ac_fvtxs_cossum22 = new TProfile(Form("nfvtxt_ac_fvtxs_cossum22"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_ac_fvtxn_cossum22 = new TProfile(Form("nfvtxt_ac_fvtxn_cossum22"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_ac_fvtxc_cossum22 = new TProfile(Form("nfvtxt_ac_fvtxc_cossum22"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // // --- <<sin(n(phi1+phi2))>>
-  // TProfile* nfvtxt_ac_fvtxs_sinsum22 = new TProfile(Form("nfvtxt_ac_fvtxs_sinsum22"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_ac_fvtxn_sinsum22 = new TProfile(Form("nfvtxt_ac_fvtxn_sinsum22"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_ac_fvtxc_sinsum22 = new TProfile(Form("nfvtxt_ac_fvtxc_sinsum22"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // // --- <<cos(n(phi1-phi2-phi3))>>
-  // TProfile* nfvtxt_ac_fvtxs_cos23 = new TProfile(Form("nfvtxt_ac_fvtxs_cos23"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_ac_fvtxn_cos23 = new TProfile(Form("nfvtxt_ac_fvtxn_cos23"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_ac_fvtxc_cos23 = new TProfile(Form("nfvtxt_ac_fvtxc_cos23"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // // --- <<sin(n(phi1-phi2-phi3))>>
-  // TProfile* nfvtxt_ac_fvtxs_sin23 = new TProfile(Form("nfvtxt_ac_fvtxs_sin23"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_ac_fvtxn_sin23 = new TProfile(Form("nfvtxt_ac_fvtxn_sin23"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_ac_fvtxc_sin23 = new TProfile(Form("nfvtxt_ac_fvtxc_sin23"),"",80, -0.5, 79.5, -1.1, 1.1);
 
   // --- <<cos(n(phi1))>>
   TProfile* nfvtxt_ac_fvtxs_tracks_cos21 = new TProfile(Form("nfvtxt_ac_fvtxs_tracks_cos21"),"",80, -0.5, 79.5, -1.1, 1.1);
@@ -478,12 +432,6 @@ void documulants(int runNumber)
 
   // --- os used to mean offset but now i have to come up with something else
 
-  // TProfile* nfvtxt_zzyzx_fvtxs_c22 = new TProfile(Form("nfvtxt_zzyzx_fvtxs_c22"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_zzyzx_fvtxn_c22 = new TProfile(Form("nfvtxt_zzyzx_fvtxn_c22"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_zzyzx_fvtxc_c22 = new TProfile(Form("nfvtxt_zzyzx_fvtxc_c22"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_zzyzx_fvtxs_c24 = new TProfile(Form("nfvtxt_zzyzx_fvtxs_c24"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_zzyzx_fvtxn_c24 = new TProfile(Form("nfvtxt_zzyzx_fvtxn_c24"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_zzyzx_fvtxc_c24 = new TProfile(Form("nfvtxt_zzyzx_fvtxc_c24"),"",80, -0.5, 79.5, -1.1, 1.1);
   TProfile* nfvtxt_zzyzx_fvtxs_tracks_c22 = new TProfile(Form("nfvtxt_zzyzx_fvtxs_tracks_c22"),"",80, -0.5, 79.5, -1.1, 1.1);
   TProfile* nfvtxt_zzyzx_fvtxn_tracks_c22 = new TProfile(Form("nfvtxt_zzyzx_fvtxn_tracks_c22"),"",80, -0.5, 79.5, -1.1, 1.1);
   TProfile* nfvtxt_zzyzx_fvtxc_tracks_c22 = new TProfile(Form("nfvtxt_zzyzx_fvtxc_tracks_c22"),"",80, -0.5, 79.5, -1.1, 1.1);
@@ -496,52 +444,7 @@ void documulants(int runNumber)
   TProfile* nfvtxt_zzyzx_fvtxs_tracks_cov24 = new TProfile(Form("nfvtxt_zzyzx_fvtxs_tracks_cov24"),"",80, -0.5, 79.5, -1.1, 1.1);
   TProfile* nfvtxt_zzyzx_fvtxn_tracks_cov24 = new TProfile(Form("nfvtxt_zzyzx_fvtxn_tracks_cov24"),"",80, -0.5, 79.5, -1.1, 1.1);
   TProfile* nfvtxt_zzyzx_fvtxc_tracks_cov24 = new TProfile(Form("nfvtxt_zzyzx_fvtxc_tracks_cov24"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_zzyzx_fvtxsfvtxn_c22  = new TProfile(Form("nfvtxt_zzyzx_fvtxsfvtxn_c22"), "",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_zzyzx_fvtxsfvtxn_c24  = new TProfile(Form("nfvtxt_zzyzx_fvtxsfvtxn_c24"), "",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_zzyzx_fvtxsfvtxn_c24a = new TProfile(Form("nfvtxt_zzyzx_fvtxsfvtxn_c24a"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_zzyzx_fvtxsfvtxn_c24b = new TProfile(Form("nfvtxt_zzyzx_fvtxsfvtxn_c24b"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_zzyzx_fvtxsfvtxn_c24c = new TProfile(Form("nfvtxt_zzyzx_fvtxsfvtxn_c24c"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_zzyzx_fvtxsfvtxn_c24d = new TProfile(Form("nfvtxt_zzyzx_fvtxsfvtxn_c24d"),"",80, -0.5, 79.5, -1.1, 1.1);
   TProfile* nfvtxt_zzyzx_fvtxsfvtxn_tracks_c22  = new TProfile(Form("nfvtxt_zzyzx_fvtxsfvtxn_tracks_c22"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_zzyzx_fvtxsfvtxn_tracks_c24  = new TProfile(Form("nfvtxt_zzyzx_fvtxsfvtxn_tracks_c24"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_zzyzx_fvtxsfvtxn_tracks_c24a = new TProfile(Form("nfvtxt_zzyzx_fvtxsfvtxn_tracks_c24a"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_zzyzx_fvtxsfvtxn_tracks_c24b = new TProfile(Form("nfvtxt_zzyzx_fvtxsfvtxn_tracks_c24b"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_zzyzx_fvtxsfvtxn_tracks_c24c = new TProfile(Form("nfvtxt_zzyzx_fvtxsfvtxn_tracks_c24c"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_zzyzx_fvtxsfvtxn_tracks_c24d = new TProfile(Form("nfvtxt_zzyzx_fvtxsfvtxn_tracks_c24d"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_zzyzx_fvtxs_ce01_c22 = new TProfile(Form("nfvtxt_zzyzx_fvtxs_ce01_c22"),       "",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_zzyzx_fvtxn_ce01_c22 = new TProfile(Form("nfvtxt_zzyzx_fvtxn_ce01_c22"),       "",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_zzyzx_fvtxsfvtxn_ce01_c24  = new TProfile(Form("nfvtxt_zzyzx_fvtxsfvtxn_ce01_c24"), "",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_zzyzx_fvtxsfvtxn_ce01_c24a = new TProfile(Form("nfvtxt_zzyzx_fvtxsfvtxn_ce01_c24a"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_zzyzx_fvtxsfvtxn_ce01_c24b = new TProfile(Form("nfvtxt_zzyzx_fvtxsfvtxn_ce01_c24b"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_zzyzx_fvtxsfvtxn_ce01_c24c = new TProfile(Form("nfvtxt_zzyzx_fvtxsfvtxn_ce01_c24c"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_zzyzx_fvtxsfvtxn_ce01_c24d = new TProfile(Form("nfvtxt_zzyzx_fvtxsfvtxn_ce01_c24d"),"",80, -0.5, 79.5, -1.1, 1.1);
-
-  // --- correction histograms
-
-  // // --- <<cos(n(phi1))>>
-  // TProfile* nfvtxt_zzyzx_fvtxs_cos21 = new TProfile(Form("nfvtxt_zzyzx_fvtxs_cos21"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_zzyzx_fvtxn_cos21 = new TProfile(Form("nfvtxt_zzyzx_fvtxn_cos21"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_zzyzx_fvtxc_cos21 = new TProfile(Form("nfvtxt_zzyzx_fvtxc_cos21"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // // --- <<sin(n(phi1))>>
-  // TProfile* nfvtxt_zzyzx_fvtxs_sin21 = new TProfile(Form("nfvtxt_zzyzx_fvtxs_sin21"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_zzyzx_fvtxn_sin21 = new TProfile(Form("nfvtxt_zzyzx_fvtxn_sin21"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_zzyzx_fvtxc_sin21 = new TProfile(Form("nfvtxt_zzyzx_fvtxc_sin21"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // // --- <<cos(n(phi1+phi2))>>
-  // TProfile* nfvtxt_zzyzx_fvtxs_cossum22 = new TProfile(Form("nfvtxt_zzyzx_fvtxs_cossum22"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_zzyzx_fvtxn_cossum22 = new TProfile(Form("nfvtxt_zzyzx_fvtxn_cossum22"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_zzyzx_fvtxc_cossum22 = new TProfile(Form("nfvtxt_zzyzx_fvtxc_cossum22"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // // --- <<sin(n(phi1+phi2))>>
-  // TProfile* nfvtxt_zzyzx_fvtxs_sinsum22 = new TProfile(Form("nfvtxt_zzyzx_fvtxs_sinsum22"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_zzyzx_fvtxn_sinsum22 = new TProfile(Form("nfvtxt_zzyzx_fvtxn_sinsum22"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_zzyzx_fvtxc_sinsum22 = new TProfile(Form("nfvtxt_zzyzx_fvtxc_sinsum22"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // // --- <<cos(n(phi1-phi2-phi3))>>
-  // TProfile* nfvtxt_zzyzx_fvtxs_cos23 = new TProfile(Form("nfvtxt_zzyzx_fvtxs_cos23"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_zzyzx_fvtxn_cos23 = new TProfile(Form("nfvtxt_zzyzx_fvtxn_cos23"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_zzyzx_fvtxc_cos23 = new TProfile(Form("nfvtxt_zzyzx_fvtxc_cos23"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // // --- <<sin(n(phi1-phi2-phi3))>>
-  // TProfile* nfvtxt_zzyzx_fvtxs_sin23 = new TProfile(Form("nfvtxt_zzyzx_fvtxs_sin23"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_zzyzx_fvtxn_sin23 = new TProfile(Form("nfvtxt_zzyzx_fvtxn_sin23"),"",80, -0.5, 79.5, -1.1, 1.1);
-  // TProfile* nfvtxt_zzyzx_fvtxc_sin23 = new TProfile(Form("nfvtxt_zzyzx_fvtxc_sin23"),"",80, -0.5, 79.5, -1.1, 1.1);
 
   // --- <<cos(n(phi1))>>
   TProfile* nfvtxt_zzyzx_fvtxs_tracks_cos21 = new TProfile(Form("nfvtxt_zzyzx_fvtxs_tracks_cos21"),"",80, -0.5, 79.5, -1.1, 1.1);
@@ -585,8 +488,6 @@ void documulants(int runNumber)
   float        event;
   float        d_bbcz;    // bbcz
   float        centrality; // integer but stored as float in PHGlobal etc
-  // float        bbc_qn;
-  // float        bbc_qs;
   unsigned int trigger_scaled;
   unsigned int trigger_live;
   float        bc_x;
@@ -595,23 +496,9 @@ void documulants(int runNumber)
   float        eventfvtx_x;
   float        eventfvtx_y;
   float        eventfvtx_z;
-  // float        d_Qx[9];
-  // float        d_Qy[9];
-  // float        d_Qw[9];
-  // float        d_BBC_charge[64];
 
   int          npc1;
   int          d_nFVTX_clus = 0; // initialize incase not in tree..
-  // int          d_nFVTXN_clus;
-  // int          d_nFVTXS_clus;
-  // float        d_FVTX_x[max_nf];
-  // float        d_FVTX_y[max_nf];
-  // float        d_FVTX_z[max_nf];
-
-  // int          d_ntrk;
-  // float        d_px[max_nh];
-  // float        d_py[max_nh];
-  // float        d_pz[max_nh];
 
   int nfvtxt;
   int fnhits[400];
@@ -625,31 +512,15 @@ void documulants(int runNumber)
   TBranch* b_event;   //!
   TBranch* b_bbc_z;   //!
   TBranch* b_centrality;   //!
-  // TBranch* b_bbc_qn;   //!
-  // TBranch* b_bbc_qs;   //!
   TBranch* b_npc1;   //!
   TBranch* b_trigger_scaled;   //!
   TBranch* b_trigger_live;   //!
-  // TBranch* b_d_Qx;   //!
-  // TBranch* b_d_Qy;   //!
-  // TBranch* b_d_Qw;   //!
   TBranch* b_bc_x;   //!
   TBranch* b_bc_y;   //!
   TBranch* b_vtx_z;   //!
   TBranch* b_fvtx_x;   //!
   TBranch* b_fvtx_y;   //!
   TBranch* b_fvtx_z;   //!
-  // TBranch* b_d_BBC_charge;   //!
-  // TBranch* b_d_nFVTX_clus;   //!
-  // TBranch* b_d_nFVTXN_clus;   //!
-  // TBranch* b_d_nFVTXS_clus;   //!
-  // TBranch* b_d_FVTX_x;   //!
-  // TBranch* b_d_FVTX_y;   //!
-  // TBranch* b_d_FVTX_z;   //!
-  // TBranch* b_ntrk;   //!
-  // TBranch* b_px;   //!
-  // TBranch* b_py;   //!
-  // TBranch* b_pz;   //!
   TBranch* b_nfvtxt;   //!
   TBranch* b_fnhits;   //!
   TBranch* b_fphi;   //!
@@ -657,32 +528,9 @@ void documulants(int runNumber)
   TBranch* b_fchisq;   //!
   TBranch* b_fdcax;   //!
   TBranch* b_fdcay;   //!
-  // TBranch* b_d_ntrk;   //!
-  // TBranch* b_d_cntpx;   //!
-  // TBranch* b_d_cntpy;   //!
-  // TBranch* b_d_cntpz;   //!
-
-  // Error in <TTree::SetBranchStatus>: unknown branch -> bbc_qn
-  // Error in <TTree::SetBranchStatus>: unknown branch -> bbc_qs
-  // Error in <TTree::SetBranchStatus>: unknown branch -> d_BBC_charge
-  // Error in <TTree::SetBranchStatus>: unknown branch -> d_Qx
-  // Error in <TTree::SetBranchStatus>: unknown branch -> d_Qy
-  // Error in <TTree::SetBranchStatus>: unknown branch -> d_Qw
-  // Error in <TTree::SetBranchStatus>: unknown branch -> d_nFVTX_clus
-  // Error in <TTree::SetBranchStatus>: unknown branch -> d_nFVTXN_clus
-  // Error in <TTree::SetBranchStatus>: unknown branch -> d_nFVTXS_clus
-  // Error in <TTree::SetBranchStatus>: unknown branch -> d_FVTX_x
-  // Error in <TTree::SetBranchStatus>: unknown branch -> d_FVTX_y
-  // Error in <TTree::SetBranchStatus>: unknown branch -> d_FVTX_z
-  // Error in <TTree::SetBranchStatus>: unknown branch -> d_ntrk
-  // Error in <TTree::SetBranchStatus>: unknown branch -> d_cntpx
-  // Error in <TTree::SetBranchStatus>: unknown branch -> d_cntpy
-  // Error in <TTree::SetBranchStatus>: unknown branch -> d_cntpz
 
   ntp_event_chain->SetBranchAddress("bbc_z",&d_bbcz,&b_bbc_z);
   ntp_event_chain->SetBranchAddress("centrality",&centrality,&b_centrality);
-  // ntp_event_chain->SetBranchAddress("bbc_qn",&bbc_qn,&b_bbc_qn);
-  // ntp_event_chain->SetBranchAddress("bbc_qs",&bbc_qs,&b_bbc_qs);
   ntp_event_chain->SetBranchAddress("npc1",&npc1,&b_npc1);
   ntp_event_chain->SetBranchAddress("event",&event,&b_event);
   ntp_event_chain->SetBranchAddress("trigger_scaled",&trigger_scaled,&b_trigger_scaled);
@@ -694,23 +542,6 @@ void documulants(int runNumber)
   ntp_event_chain->SetBranchAddress("fvtx_x",&eventfvtx_x,&b_fvtx_x);
   ntp_event_chain->SetBranchAddress("fvtx_y",&eventfvtx_y,&b_fvtx_y);
   ntp_event_chain->SetBranchAddress("fvtx_z",&eventfvtx_z,&b_fvtx_z);
-
-  // ntp_event_chain->SetBranchAddress("d_BBC_charge",d_BBC_charge,&b_d_BBC_charge);
-  // ntp_event_chain->SetBranchAddress("d_Qx",d_Qx,&b_d_Qx);
-  // ntp_event_chain->SetBranchAddress("d_Qy",d_Qy,&b_d_Qy);
-  // ntp_event_chain->SetBranchAddress("d_Qw",d_Qw,&b_d_Qw);
-
-  // ntp_event_chain->SetBranchAddress("d_nFVTX_clus",&d_nFVTX_clus,&b_d_nFVTX_clus);
-  // ntp_event_chain->SetBranchAddress("d_nFVTXN_clus",&d_nFVTXN_clus,&b_d_nFVTXN_clus);
-  // ntp_event_chain->SetBranchAddress("d_nFVTXS_clus",&d_nFVTXS_clus,&b_d_nFVTXS_clus);
-  // ntp_event_chain->SetBranchAddress("d_FVTX_x",d_FVTX_x,&b_d_FVTX_x);
-  // ntp_event_chain->SetBranchAddress("d_FVTX_y",d_FVTX_y,&b_d_FVTX_y);
-  // ntp_event_chain->SetBranchAddress("d_FVTX_z",d_FVTX_z,&b_d_FVTX_z);
-
-  // ntp_event_chain->SetBranchAddress("d_ntrk",&d_ntrk,&b_ntrk);
-  // ntp_event_chain->SetBranchAddress("d_cntpx",d_px,&b_px);
-  // ntp_event_chain->SetBranchAddress("d_cntpy",d_py,&b_py);
-  // ntp_event_chain->SetBranchAddress("d_cntpz",d_pz,&b_pz);
 
   ntp_event_chain->SetBranchAddress("ntracklets",&nfvtxt,&b_nfvtxt);
   ntp_event_chain->SetBranchAddress("fnhits",fnhits,&b_fnhits);
@@ -775,19 +606,9 @@ void documulants(int runNumber)
           continue;
         }
 
-      if ( centrality > -1 )
-        {
-          // if ( energyflag == 200 && centrality > 5  ) continue;
-          // if ( energyflag == 62  && centrality > 10 ) continue;
-          // if ( energyflag == 20  && centrality > 20 ) continue;
-          // if ( energyflag == 39  && centrality > 20 ) continue;
-          if ( energyflag == 200 && centrality > 5  ) continue;
-          if ( energyflag == 62  && centrality > 5  ) continue;
-          if ( energyflag == 20  && centrality > 20 ) continue;
-          if ( energyflag == 39  && centrality > 10 ) continue;
-        }
 
       double ZVTX = -9999;
+      // --- FIX THIS
       if ( runNumber >= 454774 && runNumber <= 456283 ) ZVTX = d_bbcz;
       if ( runNumber >= 456652 && runNumber <= 458167 ) ZVTX = eventfvtx_z;
       if ( fabs(ZVTX) > 10.0 )
@@ -796,13 +617,6 @@ void documulants(int runNumber)
           if ( verbosity > 1 ) cout << "vertex rejected" << endl;
           continue;
         }
-      // --- this cut might be a good idea but it throws out too many events, further study needed
-      // if ( d_bbcz > -999 && eventfvtx_z > -999 && fabs(d_bbcz-eventfvtx_z) > 5 )
-      //   {
-      //     if ( verbosity > 0 ) cout << "bbc and fvtx vertex exist but out of range of each other " << d_bbcz << " " << eventfvtx_z << endl;
-      //     ++bad_vertex_counter;
-      //     continue;
-      //   }
 
       // make sure bin number doesn't exceed number of bins
       int izvtx = NZPS*(ZVTX+10)/20;
@@ -828,11 +642,6 @@ void documulants(int runNumber)
           continue;
         }
 
-      // int nfvtxc = d_nFVTX_clus;
-      // int nfvtxc_south = d_nFVTXN_clus;
-      // int nfvtxc_north = d_nFVTXS_clus;
-
-      // ---------------------------------------------------------------------------------------
 
       //------------------------------------------------------------//
       //                Calculating Event Planes                    //
@@ -840,6 +649,7 @@ void documulants(int runNumber)
 
       if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Calculating event planes" << endl;
 
+      // FIX THIS
       // --- all numbers from Darren 2016-06-23
       const float x_off = 0.3;
       const float beam_angle = 0.001;
@@ -848,69 +658,7 @@ void documulants(int runNumber)
       float vtx_x = x_off + atan(beam_angle)*vtx_z;
       float vtx_y = 0.02;
 
-      // --- radius cut using FVTX coordinates
-      // if ( sqrt(pow(eventfvtx_x-vtx_x,2.0) +  pow(eventfvtx_y-vtx_y,2.0)) >= 0.15 )
-      //   {
-      //     if ( verbosity > 1 ) cout << "rejecting event due to radius cut" << endl;
-      //     continue;
-      //   }
 
-
-      // --------------
-      // --- FVTX stuff
-      // --------------
-
-      float fvtxs_qx2[10];//all layers then 0 1 2 3
-      float fvtxs_qy2[10];
-      float fvtxs_qx3[10];//all layers then 0 1 2 3
-      float fvtxs_qy3[10];
-      float fvtxs_qx4[10];//all layers then 0 1 2 3
-      float fvtxs_qy4[10];
-      float fvtxs_qw[10];
-
-      for(int ilayer = 0; ilayer < 10; ilayer++)
-        {
-          fvtxs_qx2[ilayer] = 0.0;
-          fvtxs_qy2[ilayer] = 0.0;
-          fvtxs_qx3[ilayer] = 0.0;
-          fvtxs_qy3[ilayer] = 0.0;
-          fvtxs_qx4[ilayer] = 0.0;
-          fvtxs_qy4[ilayer] = 0.0;
-          fvtxs_qw[ilayer] = 0.0;
-        } // loop over layers
-
-      // --- now FVTX North
-
-      // float fvtxn_qx2[10];//all layers then 0 1 2 3
-      // float fvtxn_qy2[10];
-      // float fvtxn_qx3[10];//all layers then 0 1 2 3
-      // float fvtxn_qy3[10];
-      // float fvtxn_qx4[10];//all layers then 0 1 2 3
-      // float fvtxn_qy4[10];
-      // float fvtxn_qw[10];
-
-      // for(int ilayer = 0; ilayer < 10; ilayer++)
-      //   {
-      //     fvtxn_qx2[ilayer] = 0.0;
-      //     fvtxn_qy2[ilayer] = 0.0;
-      //     fvtxn_qx3[ilayer] = 0.0;
-      //     fvtxn_qy3[ilayer] = 0.0;
-      //     fvtxn_qx4[ilayer] = 0.0;
-      //     fvtxn_qy4[ilayer] = 0.0;
-      //     fvtxn_qw[ilayer] = 0.0;
-      //   } // loop over layers
-
-      // int nclus_south_inner = 0; // good_4_event
-      // int nclus_north_inner = 0;
-      // int nclus_south_outer = 0;
-      // int nclus_north_outer = 0;
-
-
-
-      //float fvtxs_qq2 = ( (fvtxs_qx2[0]*fvtxs_qx2[0]) + (fvtxs_qy2[0]*fvtxs_qy2[0]) - fvtxs_qw[0] ) / ( (fvtxs_qw[0]*fvtxs_qw[0]) - fvtxs_qw[0] );
-      //float fvtxs_qq3 = ( (fvtxs_qx3[0]*fvtxs_qx3[0]) + (fvtxs_qy3[0]*fvtxs_qy3[0]) - fvtxs_qw[0] ) / ( (fvtxs_qw[0]*fvtxs_qw[0]) - fvtxs_qw[0] );
-
-      //      bool good_4_event = ( nclus_south_inner > 3 ) && ( nclus_south_outer > 3 ) && ( nclus_north_inner > 3 ) && ( nclus_north_outer > 3 ) ;
 
 
 
@@ -999,6 +747,13 @@ void documulants(int runNumber)
       //cout << "tracks that pass " << number_of_tracks_that_pass << endl;
       //cout << "tracks that fail " << number_of_tracks_that_fail << endl;
 
+      if ( nfvtxt > 400 || nfvtxt < 0 )
+        {
+          cout << "so it looks like there's a problem with the number of fvtx tracks" << endl;
+          cout << "it should be less than 400 (and greater than zero) but it's actually " << nfvtxt << endl;
+          cout << "this is really bad, so we're gonna skip this event" << endl;
+          continue;
+        }
       // --- first fvtx track loop
       for ( int i = 0; i < nfvtxt; ++i )
 	{
@@ -1010,6 +765,7 @@ void documulants(int runNumber)
 	  //float dcax = fdcax[i];
 	  //float dcay = fdcay[i];
 
+          // FIX THIS
 	  //if ( nhits < 4 ) continue;
 	  //if ( fabs(dcax) >  1.5 || fabs(dcay) > 1.5 ) continue;
 
@@ -1712,8 +1468,6 @@ void dooffsets(int runNumber)
   float        event;
   float        d_bbcz;    // bbcz
   float        centrality; // integer but stored as float in PHGlobal etc
-  // float        bbc_qn;
-  // float        bbc_qs;
   unsigned int trigger_scaled;
   unsigned int trigger_live;
   float        bc_x;
@@ -1722,23 +1476,9 @@ void dooffsets(int runNumber)
   float        eventfvtx_x;
   float        eventfvtx_y;
   float        eventfvtx_z;
-  // float        d_Qx[9];
-  // float        d_Qy[9];
-  // float        d_Qw[9];
-  // float        d_BBC_charge[64];
 
   int          npc1;
   int          d_nFVTX_clus = 0;
-  // int          d_nFVTXN_clus;
-  // int          d_nFVTXS_clus;
-  // float        d_FVTX_x[max_nf];
-  // float        d_FVTX_y[max_nf];
-  // float        d_FVTX_z[max_nf];
-
-  // int          d_ntrk;
-  // float        d_px[max_nh];
-  // float        d_py[max_nh];
-  // float        d_pz[max_nh];
 
   int nfvtxt;
   float feta[75];
@@ -1751,63 +1491,24 @@ void dooffsets(int runNumber)
   TBranch* b_event;   //!
   TBranch* b_bbc_z;   //!
   TBranch* b_centrality;   //!
-  // TBranch* b_bbc_qn;   //!
-  // TBranch* b_bbc_qs;   //!
   TBranch* b_npc1;   //!
   TBranch* b_trigger_scaled;   //!
   TBranch* b_trigger_live;   //!
-  // TBranch* b_d_Qx;   //!
-  // TBranch* b_d_Qy;   //!
-  // TBranch* b_d_Qw;   //!
   TBranch* b_bc_x;   //!
   TBranch* b_bc_y;   //!
   TBranch* b_vtx_z;   //!
   TBranch* b_fvtx_x;   //!
   TBranch* b_fvtx_y;   //!
   TBranch* b_fvtx_z;   //!
-  // TBranch* b_d_BBC_charge;   //!
-  // TBranch* b_d_nFVTX_clus;   //!
-  // TBranch* b_d_nFVTXN_clus;   //!
-  // TBranch* b_d_nFVTXS_clus;   //!
-  // TBranch* b_d_FVTX_x;   //!
-  // TBranch* b_d_FVTX_y;   //!
-  // TBranch* b_d_FVTX_z;   //!
-  // TBranch* b_ntrk;   //!
-  // TBranch* b_px;   //!
-  // TBranch* b_py;   //!
-  // TBranch* b_pz;   //!
   TBranch* b_nfvtxt;   //!
   TBranch* b_fphi;   //!
   TBranch* b_feta;   //!
   TBranch* b_fchisq;   //!
   TBranch* b_fdcax;   //!
   TBranch* b_fdcay;   //!
-  // TBranch* b_d_ntrk;   //!
-  // TBranch* b_d_cntpx;   //!
-  // TBranch* b_d_cntpy;   //!
-  // TBranch* b_d_cntpz;   //!
-
-  // Error in <TTree::SetBranchStatus>: unknown branch -> bbc_qn
-  // Error in <TTree::SetBranchStatus>: unknown branch -> bbc_qs
-  // Error in <TTree::SetBranchStatus>: unknown branch -> d_BBC_charge
-  // Error in <TTree::SetBranchStatus>: unknown branch -> d_Qx
-  // Error in <TTree::SetBranchStatus>: unknown branch -> d_Qy
-  // Error in <TTree::SetBranchStatus>: unknown branch -> d_Qw
-  // Error in <TTree::SetBranchStatus>: unknown branch -> d_nFVTX_clus
-  // Error in <TTree::SetBranchStatus>: unknown branch -> d_nFVTXN_clus
-  // Error in <TTree::SetBranchStatus>: unknown branch -> d_nFVTXS_clus
-  // Error in <TTree::SetBranchStatus>: unknown branch -> d_FVTX_x
-  // Error in <TTree::SetBranchStatus>: unknown branch -> d_FVTX_y
-  // Error in <TTree::SetBranchStatus>: unknown branch -> d_FVTX_z
-  // Error in <TTree::SetBranchStatus>: unknown branch -> d_ntrk
-  // Error in <TTree::SetBranchStatus>: unknown branch -> d_cntpx
-  // Error in <TTree::SetBranchStatus>: unknown branch -> d_cntpy
-  // Error in <TTree::SetBranchStatus>: unknown branch -> d_cntpz
 
   ntp_event_chain->SetBranchAddress("bbc_z",&d_bbcz,&b_bbc_z);
   ntp_event_chain->SetBranchAddress("centrality",&centrality,&b_centrality);
-  // ntp_event_chain->SetBranchAddress("bbc_qn",&bbc_qn,&b_bbc_qn);
-  // ntp_event_chain->SetBranchAddress("bbc_qs",&bbc_qs,&b_bbc_qs);
   ntp_event_chain->SetBranchAddress("npc1",&npc1,&b_npc1);
   ntp_event_chain->SetBranchAddress("event",&event,&b_event);
   ntp_event_chain->SetBranchAddress("trigger_scaled",&trigger_scaled,&b_trigger_scaled);
@@ -1819,23 +1520,6 @@ void dooffsets(int runNumber)
   ntp_event_chain->SetBranchAddress("fvtx_x",&eventfvtx_x,&b_fvtx_x);
   ntp_event_chain->SetBranchAddress("fvtx_y",&eventfvtx_y,&b_fvtx_y);
   ntp_event_chain->SetBranchAddress("fvtx_z",&eventfvtx_z,&b_fvtx_z);
-
-  // ntp_event_chain->SetBranchAddress("d_BBC_charge",d_BBC_charge,&b_d_BBC_charge);
-  // ntp_event_chain->SetBranchAddress("d_Qx",d_Qx,&b_d_Qx);
-  // ntp_event_chain->SetBranchAddress("d_Qy",d_Qy,&b_d_Qy);
-  // ntp_event_chain->SetBranchAddress("d_Qw",d_Qw,&b_d_Qw);
-
-  // ntp_event_chain->SetBranchAddress("d_nFVTX_clus",&d_nFVTX_clus,&b_d_nFVTX_clus);
-  // ntp_event_chain->SetBranchAddress("d_nFVTXN_clus",&d_nFVTXN_clus,&b_d_nFVTXN_clus);
-  // ntp_event_chain->SetBranchAddress("d_nFVTXS_clus",&d_nFVTXS_clus,&b_d_nFVTXS_clus);
-  // ntp_event_chain->SetBranchAddress("d_FVTX_x",d_FVTX_x,&b_d_FVTX_x);
-  // ntp_event_chain->SetBranchAddress("d_FVTX_y",d_FVTX_y,&b_d_FVTX_y);
-  // ntp_event_chain->SetBranchAddress("d_FVTX_z",d_FVTX_z,&b_d_FVTX_z);
-
-  // ntp_event_chain->SetBranchAddress("d_ntrk",&d_ntrk,&b_ntrk);
-  // ntp_event_chain->SetBranchAddress("d_cntpx",d_px,&b_px);
-  // ntp_event_chain->SetBranchAddress("d_cntpy",d_py,&b_py);
-  // ntp_event_chain->SetBranchAddress("d_cntpz",d_pz,&b_pz);
 
   ntp_event_chain->SetBranchAddress("ntracklets",&nfvtxt,&b_nfvtxt);
   ntp_event_chain->SetBranchAddress("fphi",fphi,&b_fphi);
@@ -1876,6 +1560,7 @@ void dooffsets(int runNumber)
       unsigned int trigger_BBCLL1narrowcent  = 0x00000008;
       unsigned int trigger_BBCLL1narrow      = 0x00000010;
 
+      // FIX THIS
       unsigned int accepted_triggers = 0;
       if ( energyflag == 200 ) accepted_triggers = trigger_BBCLL1narrowcent  | trigger_BBCLL1narrow;
       if ( energyflag == 62  ) accepted_triggers = trigger_BBCLL1narrowcent  | trigger_BBCLL1narrow;
@@ -1889,18 +1574,19 @@ void dooffsets(int runNumber)
           continue;
         }
 
-      if ( centrality > -1 )
-        {
-          // if ( energyflag == 200 && centrality > 5  ) continue;
-          // if ( energyflag == 62  && centrality > 10 ) continue;
-          // if ( energyflag == 20  && centrality > 20 ) continue;
-          // if ( energyflag == 39  && centrality > 20 ) continue;
-          if ( energyflag == 200 && centrality > 5  ) continue;
-          if ( energyflag == 62  && centrality > 5  ) continue;
-          if ( energyflag == 20  && centrality > 20 ) continue;
-          if ( energyflag == 39  && centrality > 10 ) continue;
-        }
+      // if ( centrality > -1 )
+      //   {
+      //     // if ( energyflag == 200 && centrality > 5  ) continue;
+      //     // if ( energyflag == 62  && centrality > 10 ) continue;
+      //     // if ( energyflag == 20  && centrality > 20 ) continue;
+      //     // if ( energyflag == 39  && centrality > 20 ) continue;
+      //     if ( energyflag == 200 && centrality > 5  ) continue;
+      //     if ( energyflag == 62  && centrality > 5  ) continue;
+      //     if ( energyflag == 20  && centrality > 20 ) continue;
+      //     if ( energyflag == 39  && centrality > 10 ) continue;
+      //   }
 
+      //      FIX THIS
       double ZVTX = -9999;
       if ( runNumber >= 454774 && runNumber <= 456283 ) ZVTX = d_bbcz;
       if ( runNumber >= 456652 && runNumber <= 458167 ) ZVTX = eventfvtx_z;
@@ -1909,13 +1595,6 @@ void dooffsets(int runNumber)
           if ( verbosity > 1 ) cout << "vertex rejected" << endl;
           continue;
         }
-      // --- this cut might be a good idea but it throws out too many events, further study needed
-      // if ( d_bbcz > -999 && eventfvtx_z > -999 && fabs(d_bbcz-eventfvtx_z) > 5 )
-      //   {
-      //     if ( verbosity > 0 ) cout << "bbc and fvtx vertex exist but out of range of each other " << d_bbcz << " " << eventfvtx_z << endl;
-      //     ++bad_vertex_counter;
-      //     continue;
-      //   }
 
       // make sure bin number doesn't exceed number of bins
       int izvtx = NZPS*(ZVTX+10)/20;
@@ -1941,15 +1620,11 @@ void dooffsets(int runNumber)
           continue;
         }
 
-      // int nfvtxc = d_nFVTX_clus;
-      // int nfvtxc_south = d_nFVTXN_clus;
-      // int nfvtxc_north = d_nFVTXS_clus;
-
-      // ---------------------------------------------------------------------------------------
 
 
       if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Calculating event planes" << endl;
 
+      // FIX THIS
       // --- all numbers from Darren 2016-06-23
       //const float x_off = 0.3;
       //const float beam_angle = 0.001;
