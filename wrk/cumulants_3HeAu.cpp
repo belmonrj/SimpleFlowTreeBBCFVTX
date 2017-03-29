@@ -615,7 +615,7 @@ void documulants(int runNumber)
       //                Calculating Event Planes                    //
       //------------------------------------------------------------//
 
-      if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Calculating event planes" << endl;
+      if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Calculating Q-vector components" << endl;
 
       // FIX THIS
       // --- all numbers from Darren 2016-06-23
@@ -629,6 +629,8 @@ void documulants(int runNumber)
 
 
 
+
+      if ( verbosity > 2 ) cout << "setting up Q-vector components arrays " << endl;
 
       // --- fvtx tracks
       float fvtxs_tracks_qx2[3]; // both, inner, outer
@@ -649,6 +651,8 @@ void documulants(int runNumber)
       float fvtxn_tracks_qx6[3];
       float fvtxn_tracks_qy6[3];
       float fvtxn_tracks_qw[3];
+
+      if ( verbosity > 2 ) cout << "initializing Q-vector components arrays " << endl;
 
       for ( int i = 0; i < 3; ++i )
         {
@@ -677,6 +681,8 @@ void documulants(int runNumber)
       int ntrack_south_outer = 0;
       int ntrack_north_outer = 0;
 
+      if ( verbosity > 2 ) cout << "setting up special array arrays " << endl;
+
       float special_fvtx_tracks_qx2[8];
       float special_fvtx_tracks_qy2[8];
       float special_fvtx_tracks_qw[8];
@@ -687,8 +693,10 @@ void documulants(int runNumber)
 	  special_fvtx_tracks_qw[i] = 0;
 	}
 
+      if ( verbosity > 2 ) cout << "getting ready to do double track cut " << endl;
+
       bool fvtx_track_passes[nfvtxt];
-      //int number_of_tracks_that_fail = 0;
+      int number_of_tracks_that_fail = 0;
       int number_of_tracks_that_pass = 0;
       for ( int i = 0; i < nfvtxt; ++i )
 	{
@@ -704,16 +712,19 @@ void documulants(int runNumber)
 	      double eta2 = feta[j];
 	      if ( fabs(eta1-eta2) < 0.01 )
 		{
-		  //++number_of_tracks_that_fail; // trying to figure this out
+		  ++number_of_tracks_that_fail; // trying to figure this out
 		  fvtx_track_passes[i] = false;
 		  fvtx_track_passes[j] = false;
 		}
 	    }
 	  if ( fvtx_track_passes[i] == true ) ++number_of_tracks_that_pass;
 	}
-      //cout << "total tracks " << nfvtxt << endl;
-      //cout << "tracks that pass " << number_of_tracks_that_pass << endl;
-      //cout << "tracks that fail " << number_of_tracks_that_fail << endl;
+      if ( verbosity > 2 )
+        {
+          cout << "total tracks " << nfvtxt << endl;
+          cout << "tracks that pass " << number_of_tracks_that_pass << endl;
+          cout << "tracks that fail " << number_of_tracks_that_fail << endl;
+        }
 
       if ( nfvtxt > 400 || nfvtxt < 0 )
         {
@@ -722,6 +733,8 @@ void documulants(int runNumber)
           cout << "this is really bad, so we're gonna skip this event" << endl;
           continue;
         }
+
+      if ( verbosity > 2 ) cout << "now entering track loop " << endl;
       // --- first fvtx track loop
       for ( int i = 0; i < nfvtxt; ++i )
 	{
@@ -834,6 +847,8 @@ void documulants(int runNumber)
 	    }
 	} // fvtx track loop
 
+      if ( verbosity > 2 ) cout << "done with track loop, now moving on to special loop " << endl;
+
       for ( int i = 0; i < 8; ++i )
 	{
 	  for ( int j = 0; j < 8; ++j )
@@ -863,7 +878,7 @@ void documulants(int runNumber)
 	    }
 	}
 
-
+      if ( verbosity > 2 ) cout << "done with special loop, now moving on to Q-vector calculations" << endl;
 
       bool good_4_event = ( ntrack_south_inner > 0 ) && ( ntrack_south_outer > 0 ) && ( ntrack_north_inner > 0 ) && ( ntrack_north_outer > 0 ) ;
       int nfvtxt_south = ntrack_south_inner + ntrack_south_outer;
@@ -980,7 +995,7 @@ void documulants(int runNumber)
       //float os_fvtxsfvtxn_tracks_qq3 = ( (os_fvtxs_tracks_qx3*os_fvtxn_tracks_qx3) + (os_fvtxs_tracks_qy3*os_fvtxn_tracks_qy3) ) / ( os_fvtxs_tracks_qw*os_fvtxn_tracks_qw );
       nfvtxt_ac_fvtxsfvtxn_tracks_c22->Fill(nfvtxt,os_fvtxsfvtxn_tracks_qq2);
 
-
+      if ( verbosity > 2 ) cout << "now working on Q-vector recentering part" << endl;
 
       // ------------------------------------
       // --- now for the q-vector recentering
@@ -1092,6 +1107,8 @@ void documulants(int runNumber)
       nfvtxt_zzyzx_fvtxsfvtxn_tracks_c22->Fill(nfvtxt,zzyzx_fvtxsfvtxn_tracks_qq2);
 
 
+      if ( verbosity > 2 ) cout << "now doing 4- and 6-particle stuff" << endl;
+
       // --- now have a look at some 4 particle cumulants
       if ( good_4_event )
 	{
@@ -1155,7 +1172,7 @@ void documulants(int runNumber)
 	}
 
 
-
+      if ( verbosity > 2 ) cout << "done with this event (event number " << ievt << ")" << endl;
 
 
     } //end of event
