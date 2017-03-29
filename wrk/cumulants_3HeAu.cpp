@@ -1549,7 +1549,7 @@ void dooffsets(int runNumber)
 
 
 
-      if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Calculating event planes" << endl;
+      if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Calculating Q-vectors (for offsets)" << endl;
 
       // FIX THIS
       // --- all numbers from Darren 2016-06-23
@@ -1563,6 +1563,8 @@ void dooffsets(int runNumber)
 
 
 
+
+      if ( verbosity > 2 ) cout << "setting up arrays" << endl;
 
       // --- fvtx tracks
       float fvtxs_tracks_qx2[3]; // both, inner, outer
@@ -1611,7 +1613,7 @@ void dooffsets(int runNumber)
       int ntrack_south_outer = 0;
       int ntrack_north_outer = 0;
 
-
+      if ( verbosity > 2 ) cout << "now entering track loop" << endl;
 
       // --- first fvtx track loop
       for ( int i = 0; i < nfvtxt; ++i )
@@ -1707,6 +1709,8 @@ void dooffsets(int runNumber)
 	    }
 	} // fvtx track loop
 
+      if ( verbosity > 2 ) cout << "now filling histograms (offsets)" << endl;
+
       nfvtxt_tracks_south_qx2->Fill(nfvtxt,fvtxs_tracks_qx2[0]/fvtxs_tracks_qw[0]);
       nfvtxt_tracks_south_qx3->Fill(nfvtxt,fvtxs_tracks_qx3[0]/fvtxs_tracks_qw[0]);
       nfvtxt_tracks_south_qx4->Fill(nfvtxt,fvtxs_tracks_qx4[0]/fvtxs_tracks_qw[0]);
@@ -1760,6 +1764,8 @@ void dooffsets(int runNumber)
       nfvtxt_tracks_north_outer_qy3->Fill(nfvtxt,fvtxn_tracks_qy3[2]/fvtxn_tracks_qw[2]);
       nfvtxt_tracks_north_outer_qy4->Fill(nfvtxt,fvtxn_tracks_qy4[2]/fvtxn_tracks_qw[2]);
       nfvtxt_tracks_north_outer_qy6->Fill(nfvtxt,fvtxn_tracks_qy6[2]/fvtxn_tracks_qw[2]);
+
+      if ( verbosity > 2 ) cout << "done with this event " << ievt << endl;
 
     } // end of event loop
 
