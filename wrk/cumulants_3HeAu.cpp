@@ -96,7 +96,7 @@ void documulants(int runNumber)
   if ( runNumber >= 415751 && runNumber <= 416892 ) energyflag = 3;
   else { cout << "BAD RUN NUMBER!" << endl; return; }
 
-  int verbosity = 0;
+  int verbosity = 9;
 
 
   char filename[500];
@@ -328,7 +328,7 @@ void documulants(int runNumber)
 
   char outFile1[300];
   sprintf(outFile1,"%s%d%s%d%s","output/files_",energyflag,"/cumulants_",runNumber,".root");
-  cout << "histogram output file: " << outFile1 << endl;
+  cout << "histogram output file (main code): " << outFile1 << endl;
   TFile *mData1=TFile::Open(outFile1,"recreate");
   mData1->cd();
 
@@ -571,7 +571,7 @@ void documulants(int runNumber)
 
       bool say_event = ( ievt%1000==0 );
 
-      if ( say_event ) cout << "event number = " << ievt << endl;
+      if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "event number = " << ievt << endl;
 
       if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "getting event level variables" << endl;
       ntp_event_chain->GetEntry(ievt);
@@ -1164,7 +1164,7 @@ void documulants(int runNumber)
 
     } //end of event
 
-  cout << "histogram output file: " << outFile1 << endl;
+  cout << "histogram output file (main code): " << outFile1 << endl;
 
   mData1->Write();
   mData1->Close();
@@ -1339,7 +1339,7 @@ void dooffsets(int runNumber)
   if ( runNumber >= 415751 && runNumber <= 416892 ) energyflag = 3;
   else { cout << "BAD RUN NUMBER!" << endl; return; }
 
-  int verbosity = 0;
+  int verbosity = 9;
 
 
   char filename[500];
@@ -1363,7 +1363,7 @@ void dooffsets(int runNumber)
 
   char outFile1[300];
   sprintf(outFile1,"%s%d%s%d%s","output/files_",energyflag,"/coffsets_",runNumber,".root");
-  cout << "histogram output file: " << outFile1 << endl;
+  cout << "histogram output file (offsets): " << outFile1 << endl;
   TFile *mData1=TFile::Open(outFile1,"recreate");
   mData1->cd();
 
@@ -1510,7 +1510,7 @@ void dooffsets(int runNumber)
 
       bool say_event = ( ievt%1000==0 );
 
-      if ( say_event ) cout << "event number = " << ievt << endl;
+      if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "event number = " << ievt << endl;
 
       if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "getting event level variables" << endl;
       ntp_event_chain->GetEntry(ievt);
@@ -1769,7 +1769,7 @@ void dooffsets(int runNumber)
 
     } // end of event loop
 
-  cout << "histogram output file: " << outFile1 << endl;
+  cout << "histogram output file (offsets): " << outFile1 << endl;
   mData1->Write();
   mData1->Close();
   cout<<"cleaning up"<<endl;
