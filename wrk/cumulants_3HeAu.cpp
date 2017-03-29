@@ -50,7 +50,6 @@ using namespace std;
 bool DIAG = false;
 
 
-int get_fvtx_layer(float);
 void dooffsets(int);
 void documulants(int);
 float calc2_event(float, float, float);
@@ -583,10 +582,7 @@ void documulants(int runNumber)
 
       unsigned int trigger_BBCLL1narrowcent  = 0x00000008;
       unsigned int trigger_BBCLL1narrow      = 0x00000010;
-
-      unsigned int accepted_triggers = 0;
-      if ( energyflag == 3 ) accepted_triggers = trigger_BBCLL1narrowcent  | trigger_BBCLL1narrow;
-
+      unsigned int accepted_triggers = trigger_BBCLL1narrowcent | trigger_BBCLL1narrow;
       unsigned int passes_trigger = trigger_scaled & accepted_triggers;
       if ( passes_trigger == 0 )
         {
@@ -625,8 +621,8 @@ void documulants(int runNumber)
       // --- all numbers from Darren 2016-06-23
       // const float x_off = 0.3;
       // const float beam_angle = 0.001;
-      float vtx_z = d_bbcz;
-      if ( eventfvtx_z > -999 ) vtx_z = eventfvtx_z;
+      // float vtx_z = d_bbcz;
+      // if ( eventfvtx_z > -999 ) vtx_z = eventfvtx_z;
       // float vtx_x = x_off + atan(beam_angle)*vtx_z;
       // float vtx_y = 0.02;
 
@@ -869,7 +865,7 @@ void documulants(int runNumber)
 
 
 
-      bool good_4_event = good_4_event && ( ntrack_south_inner > 0 ) && ( ntrack_south_outer > 0 ) && ( ntrack_north_inner > 0 ) && ( ntrack_north_outer > 0 ) ;
+      bool good_4_event = ( ntrack_south_inner > 0 ) && ( ntrack_south_outer > 0 ) && ( ntrack_north_inner > 0 ) && ( ntrack_north_outer > 0 ) ;
       int nfvtxt_south = ntrack_south_inner + ntrack_south_outer;
       int nfvtxt_north = ntrack_north_inner + ntrack_north_outer;
 
@@ -1189,22 +1185,6 @@ void documulants(int runNumber)
 
 
 
-int get_fvtx_layer(float z)
-{
-  // --- south side
-  if ( z < -18 && z > -24 ) return 0;
-  if ( z < -24 && z > -30 ) return 1;
-  if ( z < -30 && z > -35 ) return 2;
-  if ( z < -35 )            return 3;
-  // --- north side
-  if ( z > 18 && z < 24 ) return 0;
-  if ( z > 24 && z < 30 ) return 1;
-  if ( z > 30 && z < 35 ) return 2;
-  if ( z > 35 )           return 3;
-  // --- invalid numbers...
-  cout<<"get_fvtx_layer::invalid z =  "<<z<<endl;
-  return -1;
-}
 
 
 float calc2_event(float Xn, float Yn, float M)
@@ -1522,10 +1502,7 @@ void dooffsets(int runNumber)
 
       unsigned int trigger_BBCLL1narrowcent  = 0x00000008;
       unsigned int trigger_BBCLL1narrow      = 0x00000010;
-
-      unsigned int accepted_triggers = 0;
-      if ( energyflag == 3 ) accepted_triggers = trigger_BBCLL1narrowcent  | trigger_BBCLL1narrow;
-
+      unsigned int accepted_triggers = trigger_BBCLL1narrowcent | trigger_BBCLL1narrow;
       unsigned int passes_trigger = trigger_scaled & accepted_triggers;
       if ( passes_trigger == 0 )
         {
@@ -1561,8 +1538,8 @@ void dooffsets(int runNumber)
       // --- all numbers from Darren 2016-06-23
       //const float x_off = 0.3;
       //const float beam_angle = 0.001;
-      float vtx_z = d_bbcz;
-      if ( eventfvtx_z > -999 ) vtx_z = eventfvtx_z;
+      // float vtx_z = d_bbcz;
+      // if ( eventfvtx_z > -999 ) vtx_z = eventfvtx_z;
       //float vtx_x = x_off + atan(beam_angle)*vtx_z;
       //float vtx_y = 0.02;
 
