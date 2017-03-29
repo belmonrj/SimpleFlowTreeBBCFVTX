@@ -614,12 +614,12 @@ void documulants(int runNumber)
   // float        d_pz[max_nh];
 
   int nfvtxt;
-  int fnhits[75];
-  float feta[75];
-  float fphi[75];
-  float fchisq[75];
-  float fdcax[75];
-  float fdcay[75];
+  int fnhits[400];
+  float feta[400];
+  float fphi[400];
+  float fchisq[400];
+  float fdcax[400];
+  float fdcay[400];
 
   // List of branches
   TBranch* b_event;   //!
