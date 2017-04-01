@@ -576,7 +576,7 @@ void documulants(int runNumber)
       ntp_event_chain->GetEntry(ievt);
       if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Finished getting tree variables" << endl;
 
-      if ( nfvtxt > 400 || nfvtxt < 0 )
+      if ( nfvtxt > 400 || nfvtxt < 1 )
         {
           cout << "so it looks like there's a problem with the number of fvtx tracks" << endl;
           cout << "it should be less than 400 (and greater than zero) but it's actually " << nfvtxt << endl;
@@ -1513,7 +1513,7 @@ void dooffsets(int runNumber)
       ntp_event_chain->GetEntry(ievt);
       if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Finished getting tree variables" << endl;
 
-      if ( nfvtxt > 400 || nfvtxt < 0 )
+      if ( nfvtxt > 400 || nfvtxt < 1 )
         {
           cout << "so it looks like there's a problem with the number of fvtx tracks" << endl;
           cout << "it should be less than 400 (and greater than zero) but it's actually " << nfvtxt << endl;
