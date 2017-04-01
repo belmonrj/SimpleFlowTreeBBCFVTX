@@ -576,6 +576,14 @@ void documulants(int runNumber)
       ntp_event_chain->GetEntry(ievt);
       if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Finished getting tree variables" << endl;
 
+      if ( nfvtxt > 400 || nfvtxt < 0 )
+        {
+          cout << "so it looks like there's a problem with the number of fvtx tracks" << endl;
+          cout << "it should be less than 400 (and greater than zero) but it's actually " << nfvtxt << endl;
+          cout << "this is really bad, so we're gonna skip this event" << endl;
+          continue;
+        }
+
       // ---------------------
       // --- trigger selection
       // ---------------------
@@ -724,14 +732,6 @@ void documulants(int runNumber)
           cout << "total tracks " << nfvtxt << endl;
           cout << "tracks that pass " << number_of_tracks_that_pass << endl;
           cout << "tracks that fail " << number_of_tracks_that_fail << endl;
-        }
-
-      if ( nfvtxt > 400 || nfvtxt < 0 )
-        {
-          cout << "so it looks like there's a problem with the number of fvtx tracks" << endl;
-          cout << "it should be less than 400 (and greater than zero) but it's actually " << nfvtxt << endl;
-          cout << "this is really bad, so we're gonna skip this event" << endl;
-          continue;
         }
 
       if ( verbosity > 2 ) cout << "now entering track loop " << endl;
@@ -1512,6 +1512,14 @@ void dooffsets(int runNumber)
       if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "getting event level variables" << endl;
       ntp_event_chain->GetEntry(ievt);
       if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Finished getting tree variables" << endl;
+
+      if ( nfvtxt > 400 || nfvtxt < 0 )
+        {
+          cout << "so it looks like there's a problem with the number of fvtx tracks" << endl;
+          cout << "it should be less than 400 (and greater than zero) but it's actually " << nfvtxt << endl;
+          cout << "this is really bad, so we're gonna skip this event" << endl;
+          continue;
+        }
 
       // ---------------------
       // --- trigger selection
