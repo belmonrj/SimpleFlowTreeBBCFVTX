@@ -1,0 +1,415 @@
+Universe        = vanilla
+Notification    = Complete
+Executable      = /phenix/plhf/belmonrj/offline/AnalysisTrain/SimpleFlowTreeBBCFVTX/wrk/cumulants_3HeAu_class.exe
+Requirements    = (CPU_Speed >= 1 && CPU_Experiment == "phenix")
+Rank            = CPU_Speed
+Priority        = +1
+GetEnv          = True
+Initialdir      = /phenix/plhf/belmonrj/offline/AnalysisTrain/SimpleFlowTreeBBCFVTX/wrk
+Error           = /phenix/plhf/belmonrj/offline/AnalysisTrain/SimpleFlowTreeBBCFVTX/wrk/log/cjob3_$(Process).err
+Log             = /phenix/plhf/belmonrj/offline/AnalysisTrain/SimpleFlowTreeBBCFVTX/wrk/log/cjob3_$(Process).log
+Output          = /phenix/plhf/belmonrj/offline/AnalysisTrain/SimpleFlowTreeBBCFVTX/wrk/log/cjob3_$(Process).out
++Experiment     = "phenix"
++Job_Type       = "cas"
+
+
+
+Arguments = 415751
+Queue 1
+
+Arguments = 415752
+Queue 1
+
+Arguments = 415753
+Queue 1
+
+Arguments = 415754
+Queue 1
+
+Arguments = 415755
+Queue 1
+
+Arguments = 415756
+Queue 1
+
+Arguments = 415822
+Queue 1
+
+Arguments = 415823
+Queue 1
+
+Arguments = 415825
+Queue 1
+
+Arguments = 415827
+Queue 1
+
+Arguments = 415828
+Queue 1
+
+Arguments = 415829
+Queue 1
+
+Arguments = 415830
+Queue 1
+
+Arguments = 415831
+Queue 1
+
+Arguments = 415832
+Queue 1
+
+Arguments = 415840
+Queue 1
+
+Arguments = 415896
+Queue 1
+
+Arguments = 415899
+Queue 1
+
+Arguments = 415900
+Queue 1
+
+Arguments = 415901
+Queue 1
+
+Arguments = 415903
+Queue 1
+
+Arguments = 415904
+Queue 1
+
+Arguments = 415906
+Queue 1
+
+Arguments = 415923
+Queue 1
+
+Arguments = 415925
+Queue 1
+
+Arguments = 415926
+Queue 1
+
+Arguments = 415927
+Queue 1
+
+Arguments = 415929
+Queue 1
+
+Arguments = 415930
+Queue 1
+
+Arguments = 415933
+Queue 1
+
+Arguments = 416018
+Queue 1
+
+Arguments = 416019
+Queue 1
+
+Arguments = 416020
+Queue 1
+
+Arguments = 416021
+Queue 1
+
+Arguments = 416027
+Queue 1
+
+Arguments = 416029
+Queue 1
+
+Arguments = 416030
+Queue 1
+
+Arguments = 416033
+Queue 1
+
+Arguments = 416107
+Queue 1
+
+Arguments = 416108
+Queue 1
+
+Arguments = 416109
+Queue 1
+
+Arguments = 416111
+Queue 1
+
+Arguments = 416112
+Queue 1
+
+Arguments = 416115
+Queue 1
+
+Arguments = 416117
+Queue 1
+
+Arguments = 416118
+Queue 1
+
+Arguments = 416120
+Queue 1
+
+Arguments = 416121
+Queue 1
+
+Arguments = 416122
+Queue 1
+
+Arguments = 416124
+Queue 1
+
+Arguments = 416128
+Queue 1
+
+Arguments = 416129
+Queue 1
+
+Arguments = 416130
+Queue 1
+
+Arguments = 416131
+Queue 1
+
+Arguments = 416192
+Queue 1
+
+Arguments = 416194
+Queue 1
+
+Arguments = 416195
+Queue 1
+
+Arguments = 416197
+Queue 1
+
+Arguments = 416198
+Queue 1
+
+Arguments = 416199
+Queue 1
+
+Arguments = 416200
+Queue 1
+
+Arguments = 416201
+Queue 1
+
+Arguments = 416221
+Queue 1
+
+Arguments = 416223
+Queue 1
+
+Arguments = 416224
+Queue 1
+
+Arguments = 416225
+Queue 1
+
+Arguments = 416226
+Queue 1
+
+Arguments = 416227
+Queue 1
+
+Arguments = 416228
+Queue 1
+
+Arguments = 416229
+Queue 1
+
+Arguments = 416230
+Queue 1
+
+Arguments = 416233
+Queue 1
+
+Arguments = 416234
+Queue 1
+
+Arguments = 416236
+Queue 1
+
+Arguments = 416237
+Queue 1
+
+Arguments = 416238
+Queue 1
+
+Arguments = 416361
+Queue 1
+
+Arguments = 416362
+Queue 1
+
+Arguments = 416363
+Queue 1
+
+Arguments = 416365
+Queue 1
+
+Arguments = 416367
+Queue 1
+
+Arguments = 416372
+Queue 1
+
+Arguments = 416374
+Queue 1
+
+Arguments = 416375
+Queue 1
+
+Arguments = 416376
+Queue 1
+
+Arguments = 416380
+Queue 1
+
+Arguments = 416381
+Queue 1
+
+Arguments = 416382
+Queue 1
+
+Arguments = 416429
+Queue 1
+
+Arguments = 416430
+Queue 1
+
+Arguments = 416431
+Queue 1
+
+Arguments = 416432
+Queue 1
+
+Arguments = 416435
+Queue 1
+
+Arguments = 416436
+Queue 1
+
+Arguments = 416437
+Queue 1
+
+Arguments = 416438
+Queue 1
+
+Arguments = 416441
+Queue 1
+
+Arguments = 416540
+Queue 1
+
+Arguments = 416541
+Queue 1
+
+Arguments = 416543
+Queue 1
+
+Arguments = 416544
+Queue 1
+
+Arguments = 416545
+Queue 1
+
+Arguments = 416546
+Queue 1
+
+Arguments = 416547
+Queue 1
+
+Arguments = 416619
+Queue 1
+
+Arguments = 416620
+Queue 1
+
+Arguments = 416621
+Queue 1
+
+Arguments = 416627
+Queue 1
+
+Arguments = 416628
+Queue 1
+
+Arguments = 416629
+Queue 1
+
+Arguments = 416631
+Queue 1
+
+Arguments = 416632
+Queue 1
+
+Arguments = 416688
+Queue 1
+
+Arguments = 416689
+Queue 1
+
+Arguments = 416690
+Queue 1
+
+Arguments = 416691
+Queue 1
+
+Arguments = 416692
+Queue 1
+
+Arguments = 416693
+Queue 1
+
+Arguments = 416694
+Queue 1
+
+Arguments = 416695
+Queue 1
+
+Arguments = 416697
+Queue 1
+
+Arguments = 416739
+Queue 1
+
+Arguments = 416742
+Queue 1
+
+Arguments = 416743
+Queue 1
+
+Arguments = 416744
+Queue 1
+
+Arguments = 416745
+Queue 1
+
+Arguments = 416746
+Queue 1
+
+Arguments = 416810
+Queue 1
+
+Arguments = 416812
+Queue 1
+
+Arguments = 416813
+Queue 1
+
+Arguments = 416888
+Queue 1
+
+Arguments = 416891
+Queue 1
+
+Arguments = 416892
+Queue 1
+
