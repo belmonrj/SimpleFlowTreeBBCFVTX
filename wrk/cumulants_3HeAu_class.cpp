@@ -708,15 +708,17 @@ void documulants(int runNumber)
 	{
 	  // --- rotation now done in trees
 	  //if ( !fvtx_track_passes[i] ) continue;
-	  //int nhits = fnhits[i];
+	  int nhits = ktree->fnhits[i];
 	  float phi = ktree->fphi[i];
 	  float eta = ktree->feta[i];
-	  //float dcax = fdcax[i];
-	  //float dcay = fdcay[i];
+	  float dcax = ktree->fDCA_X[i];
+	  float dcay = ktree->fDCA_Y[i];
 
           // FIX THIS
 	  //if ( nhits < 4 ) continue;
 	  //if ( fabs(dcax) >  1.5 || fabs(dcay) > 1.5 ) continue;
+	  if ( nhits < 3 ) continue;
+	  if ( fabs(dcax) >  2.0 || fabs(dcay) > 2.0 ) continue;
 
 	  //cout << dcax << " " << dcay << " " << nhits << endl;
 
@@ -1411,52 +1413,12 @@ void dooffsets(int runNumber)
   //  int          d_nFVTX_clus = 0;
 
   int nfvtxt;
-  float feta[75];
+  int fnhits[400]; // this was missing...
+  float feta[75]; // possible issue here...
   float fphi[75];
   float fchisq[75];
   float fdcax[75];
   float fdcay[75];
-
-  // List of branches
-  TBranch* b_event;   //!
-  TBranch* b_bbc_z;   //!
-  TBranch* b_centrality;   //!
-  TBranch* b_npc1;   //!
-  TBranch* b_trigger_scaled;   //!
-  TBranch* b_trigger_live;   //!
-  TBranch* b_bc_x;   //!
-  TBranch* b_bc_y;   //!
-  TBranch* b_vtx_z;   //!
-  TBranch* b_fvtx_x;   //!
-  TBranch* b_fvtx_y;   //!
-  TBranch* b_fvtx_z;   //!
-  TBranch* b_nfvtxt;   //!
-  TBranch* b_fphi;   //!
-  TBranch* b_feta;   //!
-  TBranch* b_fchisq;   //!
-  TBranch* b_fdcax;   //!
-  TBranch* b_fdcay;   //!
-
-  ntp_event_chain->SetBranchAddress("bbc_z",&d_bbcz,&b_bbc_z);
-  ntp_event_chain->SetBranchAddress("centrality",&centrality,&b_centrality);
-  ntp_event_chain->SetBranchAddress("npc1",&npc1,&b_npc1);
-  ntp_event_chain->SetBranchAddress("event",&event,&b_event);
-  ntp_event_chain->SetBranchAddress("trigger_scaled",&trigger_scaled,&b_trigger_scaled);
-  ntp_event_chain->SetBranchAddress("trigger_live",&trigger_live,&b_trigger_live);
-  ntp_event_chain->SetBranchAddress("bc_x",&bc_x,&b_bc_x);
-  ntp_event_chain->SetBranchAddress("bc_y",&bc_y,&b_bc_y);
-  ntp_event_chain->SetBranchAddress("vtx_z",&vtx_z,&b_vtx_z);
-
-  ntp_event_chain->SetBranchAddress("fvtx_x",&eventfvtx_x,&b_fvtx_x);
-  ntp_event_chain->SetBranchAddress("fvtx_y",&eventfvtx_y,&b_fvtx_y);
-  ntp_event_chain->SetBranchAddress("fvtx_z",&eventfvtx_z,&b_fvtx_z);
-
-  ntp_event_chain->SetBranchAddress("ntracklets",&nfvtxt,&b_nfvtxt);
-  ntp_event_chain->SetBranchAddress("fphi",fphi,&b_fphi);
-  ntp_event_chain->SetBranchAddress("feta",feta,&b_feta);
-  ntp_event_chain->SetBranchAddress("fchisq",fchisq,&b_fchisq);
-  ntp_event_chain->SetBranchAddress("fDCA_X",fdcax,&b_fdcax);
-  ntp_event_chain->SetBranchAddress("fDCA_Y",fdcay,&b_fdcay);
 
   // ---
   // --- now do event loop
@@ -1515,6 +1477,8 @@ void dooffsets(int runNumber)
           if ( verbosity > 1 ) cout << "vertex rejected" << endl;
           continue;
         }
+
+      eventfvtx_z = ktree->fvtx_z;
 
       // make sure bin number doesn't exceed number of bins
       int izvtx = NZPS*(ZVTX+10)/20;
@@ -1600,8 +1564,19 @@ void dooffsets(int runNumber)
       for ( int i = 0; i < nfvtxt; ++i )
 	{
 	  // --- rotation now done in trees
+	  // --- rotation now done in trees
+	  //if ( !fvtx_track_passes[i] ) continue;
+	  int nhits = ktree->fnhits[i];
 	  float phi = ktree->fphi[i];
 	  float eta = ktree->feta[i];
+	  float dcax = ktree->fDCA_X[i];
+	  float dcay = ktree->fDCA_Y[i];
+
+          // FIX THIS
+	  //if ( nhits < 4 ) continue;
+	  //if ( fabs(dcax) >  1.5 || fabs(dcay) > 1.5 ) continue;
+	  if ( nhits < 3 ) continue;
+	  if ( fabs(dcax) >  2.0 || fabs(dcay) > 2.0 ) continue;
 
 	  bool is_south = ( eta < 0 );
 	  bool is_south_inner = ( eta > -2 && eta < 0 );
