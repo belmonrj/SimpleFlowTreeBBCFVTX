@@ -1443,11 +1443,11 @@ void dooffsets(int runNumber)
   //  int          d_nFVTX_clus = 0;
 
   int nfvtxt;
-  float feta[75];
-  float fphi[75];
-  float fchisq[75];
-  float fdcax[75];
-  float fdcay[75];
+  float feta[400];
+  float fphi[400];
+  float fchisq[400];
+  float fdcax[400];
+  float fdcay[400];
 
   // List of branches
   TBranch* b_event;   //!
