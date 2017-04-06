@@ -1448,6 +1448,7 @@ void dooffsets(int runNumber)
   //  int          d_nFVTX_clus = 0;
 
   int nfvtxt;
+  int fnhits[400];
   float feta[400];
   float fphi[400];
   float fchisq[400];
@@ -1468,6 +1469,7 @@ void dooffsets(int runNumber)
   TBranch* b_fvtx_y;   //!
   TBranch* b_fvtx_z;   //!
   TBranch* b_nfvtxt;   //!
+  TBranch* b_fnhits;   //!
   TBranch* b_fphi;   //!
   TBranch* b_feta;   //!
   TBranch* b_fchisq;   //!
@@ -1489,6 +1491,7 @@ void dooffsets(int runNumber)
   ntp_event_chain->SetBranchAddress("fvtx_z",&eventfvtx_z,&b_fvtx_z);
 
   ntp_event_chain->SetBranchAddress("ntracklets",&nfvtxt,&b_nfvtxt);
+  ntp_event_chain->SetBranchAddress("fnhits",fnhits,&b_fnhits);
   ntp_event_chain->SetBranchAddress("fphi",fphi,&b_fphi);
   ntp_event_chain->SetBranchAddress("feta",feta,&b_feta);
   ntp_event_chain->SetBranchAddress("fchisq",fchisq,&b_fchisq);
