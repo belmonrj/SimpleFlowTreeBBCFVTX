@@ -590,8 +590,8 @@ void documulants(int runNumber)
       // --- trigger selection
       // ---------------------
 
-      unsigned int trigger_BBCLL1narrowcent  = 0x00000008;
-      unsigned int trigger_BBCLL1narrow      = 0x00000010;
+      unsigned int trigger_BBCLL1narrowcent  = 0x00000004 | 0x00000008;
+      unsigned int trigger_BBCLL1narrow      = 0x00000002;
       unsigned int accepted_triggers = trigger_BBCLL1narrowcent | trigger_BBCLL1narrow;
       unsigned int passes_trigger = trigger_scaled & accepted_triggers;
       if ( passes_trigger == 0 )
@@ -744,15 +744,16 @@ void documulants(int runNumber)
 	{
 	  // --- rotation now done in trees
 	  //if ( !fvtx_track_passes[i] ) continue;
-	  //int nhits = fnhits[i];
+	  int nhits = fnhits[i];
 	  float phi = fphi[i];
 	  float eta = feta[i];
-	  //float dcax = fdcax[i];
-	  //float dcay = fdcay[i];
+	  float dcax = fdcax[i];
+	  float dcay = fdcay[i];
 
-          // FIX THIS
 	  //if ( nhits < 4 ) continue;
 	  //if ( fabs(dcax) >  1.5 || fabs(dcay) > 1.5 ) continue;
+	  if ( nhits < 3 ) continue;
+	  if ( fabs(dcax) >  2.0 || fabs(dcay) > 2.0 ) continue;
 
 	  //cout << dcax << " " << dcay << " " << nhits << endl;
 
@@ -1529,8 +1530,8 @@ void dooffsets(int runNumber)
       // --- trigger selection
       // ---------------------
 
-      unsigned int trigger_BBCLL1narrowcent  = 0x00000008;
-      unsigned int trigger_BBCLL1narrow      = 0x00000010;
+      unsigned int trigger_BBCLL1narrowcent  = 0x00000004 | 0x00000008;
+      unsigned int trigger_BBCLL1narrow      = 0x00000002;
       unsigned int accepted_triggers = trigger_BBCLL1narrowcent | trigger_BBCLL1narrow;
       unsigned int passes_trigger = trigger_scaled & accepted_triggers;
       if ( passes_trigger == 0 )
@@ -1631,8 +1632,16 @@ void dooffsets(int runNumber)
       for ( int i = 0; i < nfvtxt; ++i )
 	{
 	  // --- rotation now done in trees
+	  int nhits = fnhits[i];
 	  float phi = fphi[i];
 	  float eta = feta[i];
+	  float dcax = fdcax[i];
+	  float dcay = fdcay[i];
+
+	  //if ( nhits < 4 ) continue;
+	  //if ( fabs(dcax) >  1.5 || fabs(dcay) > 1.5 ) continue;
+	  if ( nhits < 3 ) continue;
+	  if ( fabs(dcax) >  2.0 || fabs(dcay) > 2.0 ) continue;
 
 	  bool is_south = ( eta < 0 );
 	  bool is_south_inner = ( eta > -2 && eta < 0 );
