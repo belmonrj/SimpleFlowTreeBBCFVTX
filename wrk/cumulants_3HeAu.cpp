@@ -95,7 +95,7 @@ void documulants(int runNumber)
   if ( runNumber >= 415751 && runNumber <= 416892 ) energyflag = 3;
   else { cout << "BAD RUN NUMBER!" << endl; return; }
 
-  int verbosity = 9;
+  int verbosity = 0;
 
 
   char filename[500];
@@ -567,7 +567,7 @@ void documulants(int runNumber)
   for ( int ievt = 0; ievt < nentries; ++ievt )
     {
 
-      if ( ievt >= 100000 ) break; // just 100k events for testing, runs a little on the slow side...
+      //if ( ievt >= 100000 ) break; // just 100k events for testing, runs a little on the slow side...
       ++all_counter;
 
       bool say_event = ( ievt%1000==0 );
@@ -1341,7 +1341,7 @@ void dooffsets(int runNumber)
   if ( runNumber >= 415751 && runNumber <= 416892 ) energyflag = 3;
   else { cout << "BAD RUN NUMBER!" << endl; return; }
 
-  int verbosity = 9;
+  int verbosity = 0;
 
 
   char filename[500];
@@ -1510,7 +1510,7 @@ void dooffsets(int runNumber)
   for ( int ievt = 0; ievt < nentries; ++ievt )
     {
 
-      if ( ievt >= 100000 ) break; // just 100k events for testing, runs a little on the slow side...
+      //if ( ievt >= 100000 ) break; // just 100k events for testing, runs a little on the slow side...
       ++all_counter;
 
       bool say_event = ( ievt%1000==0 );
