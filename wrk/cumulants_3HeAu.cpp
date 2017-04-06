@@ -573,7 +573,7 @@ void documulants(int runNumber)
 
       bool say_event = ( ievt%1000==0 );
 
-      if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "event number = " << ievt << endl;
+      if ( say_event || verbosity > 1 ) cout << "event number = " << ievt << endl;
 
       if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "getting event level variables" << endl;
       ntp_event_chain->GetEntry(ievt);
@@ -1517,7 +1517,7 @@ void dooffsets(int runNumber)
 
       bool say_event = ( ievt%1000==0 );
 
-      if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "event number = " << ievt << endl;
+      if ( say_event || verbosity > 1 ) cout << "event number = " << ievt << endl;
 
       if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "getting event level variables" << endl;
       ntp_event_chain->GetEntry(ievt);
