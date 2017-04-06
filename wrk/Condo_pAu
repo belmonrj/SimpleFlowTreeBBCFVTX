@@ -1,0 +1,1258 @@
+Universe        = vanilla
+Notification    = Complete
+Executable      = /phenix/plhf/belmonrj/offline/AnalysisTrain/SimpleFlowTreeBBCFVTX/wrk/cumulants_pAu.exe
+Requirements    = (CPU_Speed >= 1 && CPU_Experiment == "phenix")
+Rank            = CPU_Speed
+Priority        = +1
+GetEnv          = True
+Initialdir      = /phenix/plhf/belmonrj/offline/AnalysisTrain/SimpleFlowTreeBBCFVTX/wrk
+Error           = /phenix/plhf/belmonrj/offline/AnalysisTrain/SimpleFlowTreeBBCFVTX/wrk/log/cjob1_$(Process).err
+Log             = /phenix/plhf/belmonrj/offline/AnalysisTrain/SimpleFlowTreeBBCFVTX/wrk/log/cjob1_$(Process).log
+Output          = /phenix/plhf/belmonrj/offline/AnalysisTrain/SimpleFlowTreeBBCFVTX/wrk/log/cjob1_$(Process).out
++Experiment     = "phenix"
++Job_Type       = "cas"
+
+
+
+Arguments = 432637
+Queue 1
+
+Arguments = 432639
+Queue 1
+
+Arguments = 432640
+Queue 1
+
+Arguments = 432641
+Queue 1
+
+Arguments = 432684
+Queue 1
+
+Arguments = 432691
+Queue 1
+
+Arguments = 432692
+Queue 1
+
+Arguments = 432693
+Queue 1
+
+Arguments = 432694
+Queue 1
+
+Arguments = 432745
+Queue 1
+
+Arguments = 432746
+Queue 1
+
+Arguments = 432747
+Queue 1
+
+Arguments = 432748
+Queue 1
+
+Arguments = 432762
+Queue 1
+
+Arguments = 432766
+Queue 1
+
+Arguments = 432767
+Queue 1
+
+Arguments = 432768
+Queue 1
+
+Arguments = 432780
+Queue 1
+
+Arguments = 432866
+Queue 1
+
+Arguments = 432872
+Queue 1
+
+Arguments = 432873
+Queue 1
+
+Arguments = 432874
+Queue 1
+
+Arguments = 432875
+Queue 1
+
+Arguments = 432881
+Queue 1
+
+Arguments = 432883
+Queue 1
+
+Arguments = 432884
+Queue 1
+
+Arguments = 432885
+Queue 1
+
+Arguments = 432886
+Queue 1
+
+Arguments = 432894
+Queue 1
+
+Arguments = 432895
+Queue 1
+
+Arguments = 432896
+Queue 1
+
+Arguments = 432898
+Queue 1
+
+Arguments = 432899
+Queue 1
+
+Arguments = 432900
+Queue 1
+
+Arguments = 432999
+Queue 1
+
+Arguments = 433000
+Queue 1
+
+Arguments = 433001
+Queue 1
+
+Arguments = 433003
+Queue 1
+
+Arguments = 433004
+Queue 1
+
+Arguments = 433005
+Queue 1
+
+Arguments = 433007
+Queue 1
+
+Arguments = 433009
+Queue 1
+
+Arguments = 433014
+Queue 1
+
+Arguments = 433015
+Queue 1
+
+Arguments = 433017
+Queue 1
+
+Arguments = 433019
+Queue 1
+
+Arguments = 433020
+Queue 1
+
+Arguments = 433028
+Queue 1
+
+Arguments = 433030
+Queue 1
+
+Arguments = 433031
+Queue 1
+
+Arguments = 433032
+Queue 1
+
+Arguments = 433036
+Queue 1
+
+Arguments = 433042
+Queue 1
+
+Arguments = 433043
+Queue 1
+
+Arguments = 433044
+Queue 1
+
+Arguments = 433058
+Queue 1
+
+Arguments = 433059
+Queue 1
+
+Arguments = 433060
+Queue 1
+
+Arguments = 433061
+Queue 1
+
+Arguments = 433063
+Queue 1
+
+Arguments = 433065
+Queue 1
+
+Arguments = 433096
+Queue 1
+
+Arguments = 433097
+Queue 1
+
+Arguments = 433100
+Queue 1
+
+Arguments = 433101
+Queue 1
+
+Arguments = 433102
+Queue 1
+
+Arguments = 433103
+Queue 1
+
+Arguments = 433104
+Queue 1
+
+Arguments = 433105
+Queue 1
+
+Arguments = 433106
+Queue 1
+
+Arguments = 433107
+Queue 1
+
+Arguments = 433110
+Queue 1
+
+Arguments = 433111
+Queue 1
+
+Arguments = 433112
+Queue 1
+
+Arguments = 433113
+Queue 1
+
+Arguments = 433114
+Queue 1
+
+Arguments = 433116
+Queue 1
+
+Arguments = 433171
+Queue 1
+
+Arguments = 433278
+Queue 1
+
+Arguments = 433283
+Queue 1
+
+Arguments = 433284
+Queue 1
+
+Arguments = 433285
+Queue 1
+
+Arguments = 433290
+Queue 1
+
+Arguments = 433396
+Queue 1
+
+Arguments = 433397
+Queue 1
+
+Arguments = 433399
+Queue 1
+
+Arguments = 433400
+Queue 1
+
+Arguments = 433401
+Queue 1
+
+Arguments = 433402
+Queue 1
+
+Arguments = 433433
+Queue 1
+
+Arguments = 433446
+Queue 1
+
+Arguments = 433538
+Queue 1
+
+Arguments = 433543
+Queue 1
+
+Arguments = 433546
+Queue 1
+
+Arguments = 433547
+Queue 1
+
+Arguments = 433548
+Queue 1
+
+Arguments = 433549
+Queue 1
+
+Arguments = 433562
+Queue 1
+
+Arguments = 433564
+Queue 1
+
+Arguments = 433567
+Queue 1
+
+Arguments = 433568
+Queue 1
+
+Arguments = 433570
+Queue 1
+
+Arguments = 433571
+Queue 1
+
+Arguments = 433572
+Queue 1
+
+Arguments = 433573
+Queue 1
+
+Arguments = 433741
+Queue 1
+
+Arguments = 433743
+Queue 1
+
+Arguments = 433744
+Queue 1
+
+Arguments = 433745
+Queue 1
+
+Arguments = 433746
+Queue 1
+
+Arguments = 433754
+Queue 1
+
+Arguments = 433756
+Queue 1
+
+Arguments = 433758
+Queue 1
+
+Arguments = 433759
+Queue 1
+
+Arguments = 433760
+Queue 1
+
+Arguments = 433761
+Queue 1
+
+Arguments = 433915
+Queue 1
+
+Arguments = 433917
+Queue 1
+
+Arguments = 433918
+Queue 1
+
+Arguments = 433921
+Queue 1
+
+Arguments = 433926
+Queue 1
+
+Arguments = 433927
+Queue 1
+
+Arguments = 433928
+Queue 1
+
+Arguments = 433929
+Queue 1
+
+Arguments = 433930
+Queue 1
+
+Arguments = 434021
+Queue 1
+
+Arguments = 434024
+Queue 1
+
+Arguments = 434027
+Queue 1
+
+Arguments = 434028
+Queue 1
+
+Arguments = 434033
+Queue 1
+
+Arguments = 434037
+Queue 1
+
+Arguments = 434040
+Queue 1
+
+Arguments = 434046
+Queue 1
+
+Arguments = 434048
+Queue 1
+
+Arguments = 434049
+Queue 1
+
+Arguments = 434050
+Queue 1
+
+Arguments = 434051
+Queue 1
+
+Arguments = 434052
+Queue 1
+
+Arguments = 434134
+Queue 1
+
+Arguments = 434137
+Queue 1
+
+Arguments = 434138
+Queue 1
+
+Arguments = 434139
+Queue 1
+
+Arguments = 434140
+Queue 1
+
+Arguments = 434147
+Queue 1
+
+Arguments = 434148
+Queue 1
+
+Arguments = 434150
+Queue 1
+
+Arguments = 434151
+Queue 1
+
+Arguments = 434152
+Queue 1
+
+Arguments = 434153
+Queue 1
+
+Arguments = 434154
+Queue 1
+
+Arguments = 434156
+Queue 1
+
+Arguments = 434157
+Queue 1
+
+Arguments = 434160
+Queue 1
+
+Arguments = 434241
+Queue 1
+
+Arguments = 434242
+Queue 1
+
+Arguments = 434243
+Queue 1
+
+Arguments = 434244
+Queue 1
+
+Arguments = 434245
+Queue 1
+
+Arguments = 434246
+Queue 1
+
+Arguments = 434256
+Queue 1
+
+Arguments = 434257
+Queue 1
+
+Arguments = 434258
+Queue 1
+
+Arguments = 434259
+Queue 1
+
+Arguments = 434260
+Queue 1
+
+Arguments = 434261
+Queue 1
+
+Arguments = 434262
+Queue 1
+
+Arguments = 434340
+Queue 1
+
+Arguments = 434341
+Queue 1
+
+Arguments = 434343
+Queue 1
+
+Arguments = 434344
+Queue 1
+
+Arguments = 434345
+Queue 1
+
+Arguments = 434346
+Queue 1
+
+Arguments = 434347
+Queue 1
+
+Arguments = 434351
+Queue 1
+
+Arguments = 434352
+Queue 1
+
+Arguments = 434353
+Queue 1
+
+Arguments = 434354
+Queue 1
+
+Arguments = 434355
+Queue 1
+
+Arguments = 434356
+Queue 1
+
+Arguments = 434357
+Queue 1
+
+Arguments = 434358
+Queue 1
+
+Arguments = 434360
+Queue 1
+
+Arguments = 434362
+Queue 1
+
+Arguments = 434363
+Queue 1
+
+Arguments = 434364
+Queue 1
+
+Arguments = 434459
+Queue 1
+
+Arguments = 434460
+Queue 1
+
+Arguments = 434461
+Queue 1
+
+Arguments = 434462
+Queue 1
+
+Arguments = 434463
+Queue 1
+
+Arguments = 434464
+Queue 1
+
+Arguments = 434467
+Queue 1
+
+Arguments = 434526
+Queue 1
+
+Arguments = 434527
+Queue 1
+
+Arguments = 434528
+Queue 1
+
+Arguments = 434529
+Queue 1
+
+Arguments = 434533
+Queue 1
+
+Arguments = 434534
+Queue 1
+
+Arguments = 434587
+Queue 1
+
+Arguments = 434590
+Queue 1
+
+Arguments = 434591
+Queue 1
+
+Arguments = 434592
+Queue 1
+
+Arguments = 434612
+Queue 1
+
+Arguments = 434613
+Queue 1
+
+Arguments = 434614
+Queue 1
+
+Arguments = 434615
+Queue 1
+
+Arguments = 434644
+Queue 1
+
+Arguments = 434645
+Queue 1
+
+Arguments = 434646
+Queue 1
+
+Arguments = 434647
+Queue 1
+
+Arguments = 434648
+Queue 1
+
+Arguments = 434649
+Queue 1
+
+Arguments = 434650
+Queue 1
+
+Arguments = 434690
+Queue 1
+
+Arguments = 434692
+Queue 1
+
+Arguments = 434693
+Queue 1
+
+Arguments = 434694
+Queue 1
+
+Arguments = 434697
+Queue 1
+
+Arguments = 434698
+Queue 1
+
+Arguments = 434699
+Queue 1
+
+Arguments = 434700
+Queue 1
+
+Arguments = 434701
+Queue 1
+
+Arguments = 434703
+Queue 1
+
+Arguments = 434704
+Queue 1
+
+Arguments = 434705
+Queue 1
+
+Arguments = 434706
+Queue 1
+
+Arguments = 434707
+Queue 1
+
+Arguments = 434708
+Queue 1
+
+Arguments = 434709
+Queue 1
+
+Arguments = 434710
+Queue 1
+
+Arguments = 434711
+Queue 1
+
+Arguments = 434712
+Queue 1
+
+Arguments = 434759
+Queue 1
+
+Arguments = 434760
+Queue 1
+
+Arguments = 434761
+Queue 1
+
+Arguments = 434762
+Queue 1
+
+Arguments = 434765
+Queue 1
+
+Arguments = 434767
+Queue 1
+
+Arguments = 434768
+Queue 1
+
+Arguments = 434769
+Queue 1
+
+Arguments = 434773
+Queue 1
+
+Arguments = 434774
+Queue 1
+
+Arguments = 434775
+Queue 1
+
+Arguments = 434779
+Queue 1
+
+Arguments = 434816
+Queue 1
+
+Arguments = 434821
+Queue 1
+
+Arguments = 434823
+Queue 1
+
+Arguments = 434824
+Queue 1
+
+Arguments = 434903
+Queue 1
+
+Arguments = 434904
+Queue 1
+
+Arguments = 434905
+Queue 1
+
+Arguments = 434909
+Queue 1
+
+Arguments = 434910
+Queue 1
+
+Arguments = 434911
+Queue 1
+
+Arguments = 434912
+Queue 1
+
+Arguments = 434913
+Queue 1
+
+Arguments = 434914
+Queue 1
+
+Arguments = 434923
+Queue 1
+
+Arguments = 434924
+Queue 1
+
+Arguments = 434925
+Queue 1
+
+Arguments = 434926
+Queue 1
+
+Arguments = 434974
+Queue 1
+
+Arguments = 434975
+Queue 1
+
+Arguments = 434976
+Queue 1
+
+Arguments = 434978
+Queue 1
+
+Arguments = 434979
+Queue 1
+
+Arguments = 434980
+Queue 1
+
+Arguments = 434981
+Queue 1
+
+Arguments = 434982
+Queue 1
+
+Arguments = 434983
+Queue 1
+
+Arguments = 434984
+Queue 1
+
+Arguments = 435022
+Queue 1
+
+Arguments = 435023
+Queue 1
+
+Arguments = 435096
+Queue 1
+
+Arguments = 435111
+Queue 1
+
+Arguments = 435112
+Queue 1
+
+Arguments = 435113
+Queue 1
+
+Arguments = 435114
+Queue 1
+
+Arguments = 435115
+Queue 1
+
+Arguments = 435182
+Queue 1
+
+Arguments = 435184
+Queue 1
+
+Arguments = 435185
+Queue 1
+
+Arguments = 435186
+Queue 1
+
+Arguments = 435244
+Queue 1
+
+Arguments = 435245
+Queue 1
+
+Arguments = 435246
+Queue 1
+
+Arguments = 435247
+Queue 1
+
+Arguments = 435254
+Queue 1
+
+Arguments = 435331
+Queue 1
+
+Arguments = 435332
+Queue 1
+
+Arguments = 435335
+Queue 1
+
+Arguments = 435337
+Queue 1
+
+Arguments = 435361
+Queue 1
+
+Arguments = 435368
+Queue 1
+
+Arguments = 435370
+Queue 1
+
+Arguments = 435371
+Queue 1
+
+Arguments = 435372
+Queue 1
+
+Arguments = 435444
+Queue 1
+
+Arguments = 435487
+Queue 1
+
+Arguments = 435490
+Queue 1
+
+Arguments = 435492
+Queue 1
+
+Arguments = 435493
+Queue 1
+
+Arguments = 435494
+Queue 1
+
+Arguments = 435495
+Queue 1
+
+Arguments = 435525
+Queue 1
+
+Arguments = 435526
+Queue 1
+
+Arguments = 435527
+Queue 1
+
+Arguments = 435528
+Queue 1
+
+Arguments = 435529
+Queue 1
+
+Arguments = 435530
+Queue 1
+
+Arguments = 435600
+Queue 1
+
+Arguments = 435601
+Queue 1
+
+Arguments = 435602
+Queue 1
+
+Arguments = 435603
+Queue 1
+
+Arguments = 435604
+Queue 1
+
+Arguments = 435606
+Queue 1
+
+Arguments = 435608
+Queue 1
+
+Arguments = 435609
+Queue 1
+
+Arguments = 435716
+Queue 1
+
+Arguments = 435717
+Queue 1
+
+Arguments = 435719
+Queue 1
+
+Arguments = 435720
+Queue 1
+
+Arguments = 435721
+Queue 1
+
+Arguments = 435723
+Queue 1
+
+Arguments = 435724
+Queue 1
+
+Arguments = 435725
+Queue 1
+
+Arguments = 435731
+Queue 1
+
+Arguments = 435732
+Queue 1
+
+Arguments = 435735
+Queue 1
+
+Arguments = 435736
+Queue 1
+
+Arguments = 435737
+Queue 1
+
+Arguments = 435817
+Queue 1
+
+Arguments = 435818
+Queue 1
+
+Arguments = 435819
+Queue 1
+
+Arguments = 435826
+Queue 1
+
+Arguments = 435828
+Queue 1
+
+Arguments = 435832
+Queue 1
+
+Arguments = 435836
+Queue 1
+
+Arguments = 435838
+Queue 1
+
+Arguments = 435839
+Queue 1
+
+Arguments = 435840
+Queue 1
+
+Arguments = 435841
+Queue 1
+
+Arguments = 435931
+Queue 1
+
+Arguments = 435933
+Queue 1
+
+Arguments = 435934
+Queue 1
+
+Arguments = 435935
+Queue 1
+
+Arguments = 435936
+Queue 1
+
+Arguments = 435938
+Queue 1
+
+Arguments = 435939
+Queue 1
+
+Arguments = 436010
+Queue 1
+
+Arguments = 436013
+Queue 1
+
+Arguments = 436016
+Queue 1
+
+Arguments = 436017
+Queue 1
+
+Arguments = 436018
+Queue 1
+
+Arguments = 436019
+Queue 1
+
+Arguments = 436020
+Queue 1
+
+Arguments = 436106
+Queue 1
+
+Arguments = 436107
+Queue 1
+
+Arguments = 436108
+Queue 1
+
+Arguments = 436109
+Queue 1
+
+Arguments = 436196
+Queue 1
+
+Arguments = 436199
+Queue 1
+
+Arguments = 436200
+Queue 1
+
+Arguments = 436202
+Queue 1
+
+Arguments = 436203
+Queue 1
+
+Arguments = 436204
+Queue 1
+
+Arguments = 436206
+Queue 1
+
+Arguments = 436210
+Queue 1
+
+Arguments = 436230
+Queue 1
+
+Arguments = 436231
+Queue 1
+
+Arguments = 436233
+Queue 1
+
+Arguments = 436234
+Queue 1
+
+Arguments = 436236
+Queue 1
+
+Arguments = 436323
+Queue 1
+
+Arguments = 436340
+Queue 1
+
+Arguments = 436342
+Queue 1
+
+Arguments = 436343
+Queue 1
+
+Arguments = 436344
+Queue 1
+
+Arguments = 436345
+Queue 1
+
+Arguments = 436389
+Queue 1
+
+Arguments = 436390
+Queue 1
+
+Arguments = 436391
+Queue 1
+
+Arguments = 436392
+Queue 1
+
+Arguments = 436393
+Queue 1
+
+Arguments = 436394
+Queue 1
+
+Arguments = 436395
+Queue 1
+
+Arguments = 436396
+Queue 1
+
+Arguments = 436398
+Queue 1
+
+Arguments = 436400
+Queue 1
+
+Arguments = 436401
+Queue 1
+
+Arguments = 436402
+Queue 1
+
+Arguments = 436403
+Queue 1
+
+Arguments = 436474
+Queue 1
+
+Arguments = 436475
+Queue 1
+
+Arguments = 436476
+Queue 1
+
+Arguments = 436477
+Queue 1
+
+Arguments = 436478
+Queue 1
+
+Arguments = 436479
+Queue 1
+
+Arguments = 436537
+Queue 1
+
+Arguments = 436538
+Queue 1
+
+Arguments = 436539
+Queue 1
+
+Arguments = 436540
+Queue 1
+
+Arguments = 436541
+Queue 1
+
+Arguments = 436548
+Queue 1
+
+Arguments = 436549
+Queue 1
+
+Arguments = 436598
+Queue 1
+
+Arguments = 436599
+Queue 1
+
+Arguments = 436601
+Queue 1
+
+Arguments = 436602
+Queue 1
+
+Arguments = 436643
+Queue 1
+
+Arguments = 436644
+Queue 1
+
+Arguments = 436645
+Queue 1
+
+Arguments = 436646
+Queue 1
+
+Arguments = 436647
+Queue 1
+
