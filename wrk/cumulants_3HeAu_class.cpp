@@ -343,6 +343,8 @@ void documulants(int runNumber)
 
   // --- base histograms
 
+  TH1D* th1d_nfvtxt = new TH1D("th1d_nfvtxt","",500,-0.5,499.5);
+
   TProfile* nfvtxt_ac_fvtxs_tracks_c22 = new TProfile(Form("nfvtxt_ac_fvtxs_tracks_c22"),"",400, -0.5, 399.5, -1.1, 1.1);
   TProfile* nfvtxt_ac_fvtxn_tracks_c22 = new TProfile(Form("nfvtxt_ac_fvtxn_tracks_c22"),"",400, -0.5, 399.5, -1.1, 1.1);
   TProfile* nfvtxt_ac_fvtxc_tracks_c22 = new TProfile(Form("nfvtxt_ac_fvtxc_tracks_c22"),"",400, -0.5, 399.5, -1.1, 1.1);
@@ -563,6 +565,8 @@ void documulants(int runNumber)
           if ( verbosity > 1 ) cout << "trigger rejected" << endl;
           continue;
         }
+      bool isMB = trigger_scaled & trigger_BBCLL1narrow;
+      if ( isMB ) th1d_nfvtxt->Fill(nfvtxt);
 
       d_bbcz = ktree->bbc_z;
       double ZVTX = d_bbcz;
