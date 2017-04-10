@@ -164,7 +164,7 @@ void flatten(int runNumber, int rp_recal_pass)
   char filename[500];
 
   float fracCut = 0.95; // pile up rejection < fracCut (better place??)
-  // float fracCut = 0.98; // pile up rejection < fracCut (better place??)
+  // float fracCut = 0.92; // pile up rejection < fracCut (better place??)
   // float fracCut = 0.0; // pile up rejection < fracCut (better place??)
 
   float qxOffset = 0.0; // offset to Qx values
@@ -173,6 +173,9 @@ void flatten(int runNumber, int rp_recal_pass)
   // float qyOffset[] = { -0.001, -0.005, -0.008, -0.016, -0.029, -0.069}; // 1st iteration
   // float qyOffset[] = { -0.001, -0.007, -0.012, -0.024, -0.044, -0.104}; // 2nd iteration
   // float qyOffset[] = { -0.001, -0.008, -0.014, -0.028, -0.051, -0.121}; // 3rd iteration
+  // float qyOffset[4][6] = {{0}, {0}, {0}, {0}};
+  //---
+  // full values (4th iteration)
   // float qyOffset[4][6] =
   // {
   //   { -0.000, -0.000, -0.000, -0.016, -0.044, -0.121}, //200 GeV
@@ -183,7 +186,33 @@ void flatten(int runNumber, int rp_recal_pass)
 
   //   { -0.001, -0.008, -0.014, -0.028, -0.051, -0.121}, //20 GeV
   // };
-  float qyOffset[4][6] = {{0}, {0}, {0}, {0}};
+  //---
+  //---
+  // Systematic check (x1.20)
+  float qyOffset[4][6] =
+  {
+    { -0.000, -0.000, -0.000, -0.019, -0.053, -0.145}, //200 GeV
+
+    { -0.001, -0.010, -0.017, -0.029, -0.066, -0.155}, //62 GeV
+
+    { -0.000, -0.006, -0.017, -0.034, -0.061, -0.125}, //39 GeV
+
+    { -0.001, -0.010, -0.017, -0.034, -0.061, -0.145}, //20 GeV
+  };
+  //---
+  //---
+  // Systematic check (x0.80)
+  // float qyOffset[4][6] =
+  // {
+  //   { -0.000, -0.000, -0.000, -0.013, -0.035, -0.097}, //200 GeV
+
+  //   { -0.001, -0.006, -0.011, -0.019, -0.044, -0.103}, //62 GeV
+
+  //   { -0.000, -0.004, -0.011, -0.022, -0.041, -0.083}, //39 GeV
+
+  //   { -0.001, -0.006, -0.011, -0.022, -0.041, -0.097}, //20 GeV
+  // };
+  //---
 
   cout << " frac cut: " << fracCut << endl;
   cout << " Qx offset: " << qxOffset << endl;
