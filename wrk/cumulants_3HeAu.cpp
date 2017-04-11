@@ -742,6 +742,7 @@ void documulants(int runNumber)
 
       if ( verbosity > 2 ) cout << "now entering track loop " << endl;
       // --- first fvtx track loop
+      int nfvtxt_accepted = 0;
       for ( int i = 0; i < nfvtxt; ++i )
 	{
 	  // --- rotation now done in trees
@@ -756,6 +757,12 @@ void documulants(int runNumber)
 	  //if ( fabs(dcax) >  1.5 || fabs(dcay) > 1.5 ) continue;
 	  if ( nhits < 3 ) continue;
 	  if ( fabs(dcax) >  2.0 || fabs(dcay) > 2.0 ) continue;
+          if ( eta == 0 )
+            {
+              cout << "eta = 0!!! Kalman filter bug!!! very bad!!!" << eta << " " << phi << " " << dcax << " " << dcay << endl;
+              continue;
+            }
+          ++nfvtxt_accepted;
 
 	  //cout << dcax << " " << dcay << " " << nhits << endl;
 
@@ -853,6 +860,7 @@ void documulants(int runNumber)
 	      ++ntrack_north_outer; // good_4_event
 	    }
 	} // fvtx track loop
+      cout << "total number of fvtx tracks  = " << nfvtxt << ", accepted number of fvtx tracks = " << nfvtxt_accepted << endl;
 
       if ( verbosity > 2 ) cout << "done with track loop, now moving on to special loop " << endl;
 
@@ -1634,6 +1642,7 @@ void dooffsets(int runNumber)
       if ( verbosity > 2 ) cout << "now entering track loop" << endl;
 
       // --- first fvtx track loop
+      int nfvtxt_accepted = 0;
       for ( int i = 0; i < nfvtxt; ++i )
 	{
 	  // --- rotation now done in trees
@@ -1643,10 +1652,17 @@ void dooffsets(int runNumber)
 	  float dcax = fdcax[i];
 	  float dcay = fdcay[i];
 
+
 	  //if ( nhits < 4 ) continue;
 	  //if ( fabs(dcax) >  1.5 || fabs(dcay) > 1.5 ) continue;
 	  if ( nhits < 3 ) continue;
 	  if ( fabs(dcax) >  2.0 || fabs(dcay) > 2.0 ) continue;
+          if ( eta == 0 )
+            {
+              cout << "eta = 0!!! Kalman filter bug!!! very bad!!!" << eta << " " << phi << " " << dcax << " " << dcay << endl;
+              continue;
+            }
+          ++nfvtxt_accepted;
 
 	  bool is_south = ( eta < 0 );
 	  bool is_south_inner = ( eta > -2 && eta < 0 );
@@ -1734,6 +1750,8 @@ void dooffsets(int runNumber)
 	      ++ntrack_north_outer; // good_4_event
 	    }
 	} // fvtx track loop
+      cout << "total number of fvtx tracks  = " << nfvtxt << ", accepted number of fvtx tracks = " << nfvtxt_accepted << endl;
+
 
       if ( verbosity > 2 ) cout << "now filling histograms (offsets)" << endl;
 
