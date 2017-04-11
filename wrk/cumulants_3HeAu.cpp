@@ -491,6 +491,7 @@ void documulants(int runNumber)
   float        eventfvtx_x;
   float        eventfvtx_y;
   float        eventfvtx_z;
+  float frac;
 
   int          npc1;
   //  int          d_nFVTX_clus = 0; // initialize incase not in tree..
@@ -516,6 +517,7 @@ void documulants(int runNumber)
   TBranch* b_fvtx_x;   //!
   TBranch* b_fvtx_y;   //!
   TBranch* b_fvtx_z;   //!
+  TBranch* b_frac;   //!
   TBranch* b_nfvtxt;   //!
   TBranch* b_fnhits;   //!
   TBranch* b_fphi;   //!
@@ -537,6 +539,8 @@ void documulants(int runNumber)
   ntp_event_chain->SetBranchAddress("fvtx_x",&eventfvtx_x,&b_fvtx_x);
   ntp_event_chain->SetBranchAddress("fvtx_y",&eventfvtx_y,&b_fvtx_y);
   ntp_event_chain->SetBranchAddress("fvtx_z",&eventfvtx_z,&b_fvtx_z);
+
+  ntp_event_chain->SetBranchAddress("frac",&frac,&b_frac);
 
   ntp_event_chain->SetBranchAddress("ntracklets",&nfvtxt,&b_nfvtxt);
   ntp_event_chain->SetBranchAddress("fnhits",fnhits,&b_fnhits);
@@ -604,6 +608,12 @@ void documulants(int runNumber)
       // if ( isMB ) th1d_nfvtxtMB->Fill(nfvtxt);
       // bool isCENT = trigger_scaled & trigger_BBCLL1narrowcent;
       // if ( isCENT ) th1d_nfvtxtCENT->Fill(nfvtxt);
+
+      if ( frac < 0.95 )
+        {
+          if ( verbosity > 1 ) cout << "failing frac cut!" << endl;
+          continue;
+        }
 
       double ZVTX = d_bbcz;
       if ( fabs(ZVTX) > 10.0 )
@@ -1459,6 +1469,7 @@ void dooffsets(int runNumber)
   float        eventfvtx_x;
   float        eventfvtx_y;
   float        eventfvtx_z;
+  float frac;
 
   int          npc1;
   //  int          d_nFVTX_clus = 0;
@@ -1484,6 +1495,7 @@ void dooffsets(int runNumber)
   TBranch* b_fvtx_x;   //!
   TBranch* b_fvtx_y;   //!
   TBranch* b_fvtx_z;   //!
+  TBranch* b_frac;   //!
   TBranch* b_nfvtxt;   //!
   TBranch* b_fnhits;   //!
   TBranch* b_fphi;   //!
@@ -1505,6 +1517,8 @@ void dooffsets(int runNumber)
   ntp_event_chain->SetBranchAddress("fvtx_x",&eventfvtx_x,&b_fvtx_x);
   ntp_event_chain->SetBranchAddress("fvtx_y",&eventfvtx_y,&b_fvtx_y);
   ntp_event_chain->SetBranchAddress("fvtx_z",&eventfvtx_z,&b_fvtx_z);
+
+  ntp_event_chain->SetBranchAddress("frac",&frac,&b_frac);
 
   ntp_event_chain->SetBranchAddress("ntracklets",&nfvtxt,&b_nfvtxt);
   ntp_event_chain->SetBranchAddress("fnhits",fnhits,&b_fnhits);
@@ -1559,6 +1573,11 @@ void dooffsets(int runNumber)
           continue;
         }
 
+      if ( frac < 0.95 )
+        {
+          if ( verbosity > 1 ) cout << "failing frac cut!" << endl;
+          continue;
+        }
 
       double ZVTX = d_bbcz;
       if ( fabs(ZVTX) > 10.0 )
