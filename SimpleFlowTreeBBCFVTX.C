@@ -475,10 +475,10 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
 
   if ( !use_utils )
     {
-      // --- narrow and narrowcent trigs common across small systems (Run14,15,16)
-      unsigned int trigger_BBCLL1narrowcent  = 0x00000008;
-      unsigned int trigger_BBCLL1narrow      = 0x00000010;
-      unsigned int accepted_triggers = trigger_BBCLL1narrowcent | trigger_BBCLL1narrow ;
+      // --- narrow and narrowcent trigs for Run14HeAu...
+      unsigned int trigger_BBCLL1narrowcent  = 0x00000004 | 0x00000008;
+      unsigned int trigger_BBCLL1narrow      = 0x00000002;
+      unsigned int accepted_triggers = trigger_BBCLL1narrowcent | trigger_BBCLL1narrow;
       unsigned int passes_trigger = trigger_scaled & accepted_triggers;
       if ( passes_trigger == 0 )
         {
