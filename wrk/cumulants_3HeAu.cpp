@@ -581,9 +581,9 @@ void documulants(int runNumber)
 
       if ( nfvtxt > 400 || nfvtxt < 1 )
         {
-          cout << "so it looks like there's a problem with the number of fvtx tracks" << endl;
-          cout << "it should be less than 400 (and greater than zero) but it's actually " << nfvtxt << endl;
-          cout << "this is really bad, so we're gonna skip this event" << endl;
+          // cout << "so it looks like there's a problem with the number of fvtx tracks" << endl;
+          // cout << "it should be less than 400 (and greater than zero) but it's actually " << nfvtxt << endl;
+          // cout << "this is really bad, so we're gonna skip this event" << endl;
           continue;
         }
 
@@ -1525,9 +1525,9 @@ void dooffsets(int runNumber)
 
       if ( nfvtxt > 400 || nfvtxt < 1 )
         {
-          cout << "so it looks like there's a problem with the number of fvtx tracks" << endl;
-          cout << "it should be less than 400 (and greater than zero) but it's actually " << nfvtxt << endl;
-          cout << "this is really bad, so we're gonna skip this event" << endl;
+          // cout << "so it looks like there's a problem with the number of fvtx tracks" << endl;
+          // cout << "it should be less than 400 (and greater than zero) but it's actually " << nfvtxt << endl;
+          // cout << "this is really bad, so we're gonna skip this event" << endl;
           continue;
         }
 
