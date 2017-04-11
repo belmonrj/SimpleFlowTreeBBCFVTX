@@ -16,7 +16,7 @@ void check_track()
   histo_pAu->SetLineColor(kBlue);
   //histo_3HeAu->GetYaxis()->SetTitle("Number of events");
   histo_3HeAu->GetXaxis()->SetTitle("N_{tracks}^{FVTX}");
-  histo_3HeAu->GetXaxis()->SetRangeUser(0.0,200.0);
+  histo_3HeAu->GetXaxis()->SetRangeUser(0.0,300.0);
   histo_3HeAu->Scale(1.0/histo_3HeAu->GetMaximum());
   histo_dAu->Scale(1.0/histo_dAu->GetMaximum());
   histo_pAu->Scale(1.0/histo_pAu->GetMaximum());
@@ -32,5 +32,51 @@ void check_track()
 
   c1->SetLogy();
   c1->Print("track_check.png");
+
+  // ------------------------------------------
+
+  file_3HeAu->Close();
+  file_3HeAu = TFile::Open("cumulants_3HeAu.root");
+
+  TH1D* histo_3HeAuM = (TH1D*) file_3HeAu->Get("th1d_nfvtxtMB");
+  TH1D* histo_3HeAuC = (TH1D*) file_3HeAu->Get("th1d_nfvtxtCENT");
+
+  histo_3HeAuM->SetLineColor(kBlack);
+  histo_3HeAuC->SetLineColor(kRed);
+  histo_3HeAuM->GetYaxis()->SetTitle("Number of events");
+  histo_3HeAuM->GetXaxis()->SetTitle("N_{tracks}^{FVTX}");
+  histo_3HeAuM->GetXaxis()->SetRangeUser(0.0,300.0);
+  histo_3HeAuM->Draw();
+  histo_3HeAuC->Draw("same");
+
+  TLegend* leg = new TLegend(0.68,0.68,0.88,0.88);
+  leg->AddEntry(histo_3HeAuM,"^{3}He+Au MB","l");
+  leg->AddEntry(histo_3HeAuC,"^{3}He+Au Central","l");
+  leg->Draw();
+
+  c1->SetLogy();
+  c1->Print("track_check_trigger_3HeAu.png");
+
+  file_pAu->Close();
+  file_pAu = TFile::Open("cumulants_pAu.root");
+
+  TH1D* histo_pAuM = (TH1D*) file_pAu->Get("th1d_nfvtxtMB");
+  TH1D* histo_pAuC = (TH1D*) file_pAu->Get("th1d_nfvtxtCENT");
+
+  histo_pAuM->SetLineColor(kBlack);
+  histo_pAuC->SetLineColor(kRed);
+  histo_pAuM->GetYaxis()->SetTitle("Number of events");
+  histo_pAuM->GetXaxis()->SetTitle("N_{tracks}^{FVTX}");
+  histo_pAuM->GetXaxis()->SetRangeUser(0.0,100.0);
+  histo_pAuM->Draw();
+  histo_pAuC->Draw("same");
+
+  TLegend* leg = new TLegend(0.68,0.68,0.88,0.88);
+  leg->AddEntry(histo_pAuM,"p+Au MB","l");
+  leg->AddEntry(histo_pAuC,"p+Au Central","l");
+  leg->Draw();
+
+  c1->SetLogy();
+  c1->Print("track_check_trigger_pAu.png");
 
 }
