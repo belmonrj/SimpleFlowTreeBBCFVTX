@@ -163,8 +163,8 @@ void flatten(int runNumber, int rp_recal_pass)
 
   char filename[500];
 
-  float fracCut = 0.95; // pile up rejection < fracCut (better place??)
-  // float fracCut = 0.92; // pile up rejection < fracCut (better place??)
+  // float fracCut = 0.95; // pile up rejection < fracCut (better place??)
+  float fracCut = 0.92; // pile up rejection < fracCut (better place??)
   // float fracCut = 0.0; // pile up rejection < fracCut (better place??)
 
   float qxOffset = 0.0; // offset to Qx values
@@ -176,16 +176,16 @@ void flatten(int runNumber, int rp_recal_pass)
   // float qyOffset[4][6] = {{0}, {0}, {0}, {0}};
   //---
   // full values (4th iteration)
-  // float qyOffset[4][6] =
-  // {
-  //   { -0.000, -0.000, -0.000, -0.016, -0.044, -0.121}, //200 GeV
+  float qyOffset[4][6] =
+  {
+    { -0.000, -0.000, -0.000, -0.016, -0.044, -0.121}, //200 GeV
 
-  //   { -0.001, -0.008, -0.014, -0.024, -0.055, -0.129}, //62 GeV
+    { -0.001, -0.008, -0.014, -0.024, -0.055, -0.129}, //62 GeV
 
-  //   { -0.000, -0.005, -0.014, -0.028, -0.051, -0.104}, //39 GeV
+    { -0.000, -0.005, -0.014, -0.028, -0.051, -0.104}, //39 GeV
 
-  //   { -0.001, -0.008, -0.014, -0.028, -0.051, -0.121}, //20 GeV
-  // };
+    { -0.001, -0.008, -0.014, -0.028, -0.051, -0.121}, //20 GeV
+  };
   //---
   //---
   // Systematic check (x1.20)
@@ -202,16 +202,16 @@ void flatten(int runNumber, int rp_recal_pass)
   //---
   //---
   // Systematic check (x0.80)
-  float qyOffset[4][6] =
-  {
-    { -0.000, -0.000, -0.000, -0.013, -0.035, -0.097}, //200 GeV
+  // float qyOffset[4][6] =
+  // {
+  //   { -0.000, -0.000, -0.000, -0.013, -0.035, -0.097}, //200 GeV
 
-    { -0.001, -0.006, -0.011, -0.019, -0.044, -0.103}, //62 GeV
+  //   { -0.001, -0.006, -0.011, -0.019, -0.044, -0.103}, //62 GeV
 
-    { -0.000, -0.004, -0.011, -0.022, -0.041, -0.083}, //39 GeV
+  //   { -0.000, -0.004, -0.011, -0.022, -0.041, -0.083}, //39 GeV
 
-    { -0.001, -0.006, -0.011, -0.022, -0.041, -0.097}, //20 GeV
-  };
+  //   { -0.001, -0.006, -0.011, -0.022, -0.041, -0.097}, //20 GeV
+  // };
   //---
 
   cout << " frac cut: " << fracCut << endl;
