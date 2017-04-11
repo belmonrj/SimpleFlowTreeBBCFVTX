@@ -8,7 +8,7 @@ void check_track()
   TFile* file_pAu = TFile::Open("cumulants_pAu.root");
 
   TH1D* histo_3HeAu = (TH1D*) file_3HeAu->Get("th1d_nfvtxtMB");
-  TH1D* histo_dAu = (TH1D*) file_dAu->Get("th1d_nfvtxt"); // need to fix this...
+  TH1D* histo_dAu = (TH1D*) file_dAu->Get("th1d_nfvtxtMB");
   TH1D* histo_pAu = (TH1D*) file_pAu->Get("th1d_nfvtxtMB");
 
   histo_3HeAu->SetLineColor(kBlack);
@@ -32,6 +32,7 @@ void check_track()
 
   c1->SetLogy();
   c1->Print("track_check.png");
+  c1->Print("track_check.pdf");
 
   // ------------------------------------------
 
@@ -49,13 +50,41 @@ void check_track()
   histo_3HeAuM->Draw();
   histo_3HeAuC->Draw("same");
 
-  TLegend* leg = new TLegend(0.68,0.68,0.88,0.88);
+  TLegend* leg = new TLegend(0.58,0.78,0.88,0.88);
   leg->AddEntry(histo_3HeAuM,"^{3}He+Au MB","l");
   leg->AddEntry(histo_3HeAuC,"^{3}He+Au Central","l");
   leg->Draw();
 
   c1->SetLogy();
   c1->Print("track_check_trigger_3HeAu.png");
+  c1->Print("track_check_trigger_3HeAu.pdf");
+
+  // ------------------------------------------
+
+  file_dAu->Close();
+  file_dAu = TFile::Open("cumulants_dAu.root");
+
+  TH1D* histo_dAuM = (TH1D*) file_dAu->Get("th1d_nfvtxtMB");
+  TH1D* histo_dAuC = (TH1D*) file_dAu->Get("th1d_nfvtxtCENT");
+
+  histo_dAuM->SetLineColor(kBlack);
+  histo_dAuC->SetLineColor(kRed);
+  histo_dAuM->GetYaxis()->SetTitle("Number of events");
+  histo_dAuM->GetXaxis()->SetTitle("N_{tracks}^{FVTX}");
+  histo_dAuM->GetXaxis()->SetRangeUser(0.0,100.0);
+  histo_dAuM->Draw();
+  histo_dAuC->Draw("same");
+
+  TLegend* leg = new TLegend(0.58,0.78,0.88,0.88);
+  leg->AddEntry(histo_dAuM,"d+Au MB","l");
+  leg->AddEntry(histo_dAuC,"d+Au Central","l");
+  leg->Draw();
+
+  c1->SetLogy();
+  c1->Print("track_check_trigger_dAu.png");
+  c1->Print("track_check_trigger_dAu.pdf");
+
+  // ------------------------------------------
 
   file_pAu->Close();
   file_pAu = TFile::Open("cumulants_pAu.root");
@@ -71,12 +100,13 @@ void check_track()
   histo_pAuM->Draw();
   histo_pAuC->Draw("same");
 
-  TLegend* leg = new TLegend(0.68,0.68,0.88,0.88);
+  TLegend* leg = new TLegend(0.58,0.78,0.88,0.88);
   leg->AddEntry(histo_pAuM,"p+Au MB","l");
   leg->AddEntry(histo_pAuC,"p+Au Central","l");
   leg->Draw();
 
   c1->SetLogy();
   c1->Print("track_check_trigger_pAu.png");
+  c1->Print("track_check_trigger_pAu.pdf");
 
 }
