@@ -752,7 +752,9 @@ void documulants(int runNumber)
 	  float eta = feta[i];
 	  float dcax = fdcax[i];
 	  float dcay = fdcay[i];
+          float chi2 = fchisq[i];
 
+          if ( chi2 > 5 ) continue;
 	  //if ( nhits < 4 ) continue;
 	  //if ( fabs(dcax) >  1.5 || fabs(dcay) > 1.5 ) continue;
 	  if ( nhits < 3 ) continue;
@@ -1655,8 +1657,9 @@ void dooffsets(int runNumber)
 	  float eta = feta[i];
 	  float dcax = fdcax[i];
 	  float dcay = fdcay[i];
+          float chi2 = fchisq[i];
 
-
+          if ( chi2 > 5 ) continue;
 	  //if ( nhits < 4 ) continue;
 	  //if ( fabs(dcax) >  1.5 || fabs(dcay) > 1.5 ) continue;
 	  if ( nhits < 3 ) continue;
