@@ -12,14 +12,19 @@ void check_track()
   TH1D* histo_pAu = (TH1D*) file_pAu->Get("th1d_nfvtxtMB");
 
   histo_3HeAu->SetLineColor(kBlack);
-  histo_3HeAu->GetYaxis()->SetTitle("Number of events");
-  histo_3HeAu->GetXaxis()->SetTitle("N_{tracks}^{FVTX}");
-  histo_3HeAu->Draw();
   histo_dAu->SetLineColor(kRed);
-  histo_dAu->Draw();
   histo_pAu->SetLineColor(kBlue);
-  histo_pAu->Draw();
+  //histo_3HeAu->GetYaxis()->SetTitle("Number of events");
+  histo_3HeAu->GetXaxis()->SetTitle("N_{tracks}^{FVTX}");
+  histo_3HeAu->GetXaxis()->SetRangeUser(0.0,200.0);
+  histo_3HeAu->Scale(1.0/histo_3HeAu->GetMaximum());
+  histo_dAu->Scale(1.0/histo_dAu->GetMaximum());
+  histo_pAu->Scale(1.0/histo_pAu->GetMaximum());
+  histo_3HeAu->Draw();
+  histo_dAu->Draw("same");
+  histo_pAu->Draw("same");
 
+  c1->SetLogy();
   c1->Print("track_check.png");
 
 }
