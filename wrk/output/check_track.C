@@ -24,6 +24,12 @@ void check_track()
   histo_dAu->Draw("same");
   histo_pAu->Draw("same");
 
+  TLegend* leg = new TLegend(0.68,0.68,0.88,0.88);
+  leg->AddEntry(histo_3HeAu,"^{3}He+Au","l");
+  leg->AddEntry(histo_dAu,"d+Au","l");
+  leg->AddEntry(histo_pAu,"p+Au","l");
+  leg->Draw();
+
   c1->SetLogy();
   c1->Print("track_check.png");
 
