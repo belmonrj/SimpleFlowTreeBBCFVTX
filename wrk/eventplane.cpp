@@ -164,7 +164,7 @@ void flatten(int runNumber, int rp_recal_pass)
   char filename[500];
 
   // float fracCut = 0.95; // pile up rejection < fracCut (better place??)
-  float fracCut = 0.92; // pile up rejection < fracCut (better place??)
+  float fracCut = 0.98; // pile up rejection < fracCut (better place??)
   // float fracCut = 0.0; // pile up rejection < fracCut (better place??)
 
   float qxOffset = 0.0; // offset to Qx values
