@@ -163,9 +163,10 @@ void flatten(int runNumber, int rp_recal_pass)
 
   char filename[500];
 
-  // float fracCut = 0.95; // pile up rejection < fracCut (better place??)
-  float fracCut = 0.98; // pile up rejection < fracCut (better place??)
-  // float fracCut = 0.0; // pile up rejection < fracCut (better place??)
+  float fracCut = 0.95; // pile up rejection < fracCut (better place??)
+  // float fracCut = 0.98; // pile up rejection < fracCut (better place??)
+
+  bool tight_trkcuts = true; // flag for tight cnt & fvtx track cuts (true=tight)
 
   float qxOffset = 0.0; // offset to Qx values
   // float qyOffset[] = { 0, 0, 0, 0, 0, 0}; // offset Qy values
@@ -215,6 +216,7 @@ void flatten(int runNumber, int rp_recal_pass)
   //---
 
   cout << " frac cut: " << fracCut << endl;
+  cout << " tight_trkcuts: " << tight_trkcuts << endl;
   cout << " Qx offset: " << qxOffset << endl;
   cout << " Qy offset: " << endl;
   for (int i = 0; i < NMUL; i++)
@@ -1465,9 +1467,10 @@ void flatten(int runNumber, int rp_recal_pass)
         float py    = d_py[itrk];
         float pz    = d_pz[itrk];
         // float charge    = d_charge[itrk];
-        // float pc3sdz    = d_pc3sdz[itrk];
-        // float pc3sdphi  = d_pc3sdphi[itrk];
-        // if ( fabs(pc3sdz) > 2.0 || fabs(pc3sdphi) > 2.0 ) continue;
+        float pc3sdz    = d_pc3sdz[itrk];
+        float pc3sdphi  = d_pc3sdphi[itrk];
+        if ( tight_trkcuts )
+          if ( fabs(pc3sdz) > 2.0 || fabs(pc3sdphi) > 2.0 ) continue;
 
         int dcarm = 0;
         if (px > 0) dcarm = 1;
@@ -1636,8 +1639,10 @@ void flatten(int runNumber, int rp_recal_pass)
         float dcax = fdcax[i];
         float dcay = fdcay[i];
         float chisq = fchisq[i];
-        // if ( fabs(dcax) > 0.5 || fabs(dcay) > 0.5 ) continue;
+
         if ( fabs(dcax - x_off) > 2.0 || fabs(dcay - y_off) > 2.0 ) continue;
+        if ( tight_trkcuts )
+          if ( fabs(dcax - x_off) > 0.5 || fabs(dcay - y_off) > 0.5 ) continue;
         if ( chisq > 5 ) continue;
         int ns = 0;
         int nn = 0;
