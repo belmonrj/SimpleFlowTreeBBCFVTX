@@ -345,6 +345,9 @@ void documulants(int runNumber)
 
   // --- base histograms
 
+  TH1D* th1d_nfvtxtMB = new TH1D("th1d_nfvtxtMB","",500,-0.5,499.5);
+  TH1D* th1d_nfvtxtCENT = new TH1D("th1d_nfvtxtCENT","",500,-0.5,499.5);
+
   TProfile* nfvtxt_ac_fvtxs_c22 = new TProfile(Form("nfvtxt_ac_fvtxs_c22"),"",80, -0.5, 79.5, -1.1, 1.1);
   TProfile* nfvtxt_ac_fvtxn_c22 = new TProfile(Form("nfvtxt_ac_fvtxn_c22"),"",80, -0.5, 79.5, -1.1, 1.1);
   TProfile* nfvtxt_ac_fvtxc_c22 = new TProfile(Form("nfvtxt_ac_fvtxc_c22"),"",80, -0.5, 79.5, -1.1, 1.1);
@@ -754,6 +757,10 @@ void documulants(int runNumber)
           if ( verbosity > 1 ) cout << "trigger rejected" << endl;
 	  //          continue;
         }
+      bool isMB = trigger_scaled & trigger_BBCLL1narrow;
+      if ( isMB ) th1d_nfvtxtMB->Fill(nfvtxt);
+      bool isCENT = trigger_scaled & trigger_BBCLL1narrowcent;
+      if ( isCENT ) th1d_nfvtxtCENT->Fill(nfvtxt);
 
       if ( centrality > -1 )
         {

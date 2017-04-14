@@ -26,7 +26,8 @@
 //static const int N_FVTX_CLUSTER_MAX = 750; // maximum number of fvtx clusters, may need to be changed for larger systems
 static const int N_FVTX_CLUSTER_MAX = 4000; // what's the largest possible number?
 static const int N_CTRK_MAX = 75; // max number of PHCentralTracks
-static const int N_FTRK_MAX = 200; // max number of FVTX tracks
+//static const int N_FTRK_MAX = 200; // max number of FVTX tracks
+static const int N_FTRK_MAX = 400; // increased for HeAu
 
 class Fun4AllHistoManager;
 class BbcCalib;
@@ -105,6 +106,7 @@ class SimpleFlowTreeBBCFVTX: public SubsysReco
   BbcCalib *m_bbccalib;
   BbcGeo   *m_bbcgeo;
 
+  bool use_utils;
   dAuBES_utils* _utils;            ///< Utilities class
   DoubleInteractionUtil *d_diutil; ///< double interaction utility class;
 

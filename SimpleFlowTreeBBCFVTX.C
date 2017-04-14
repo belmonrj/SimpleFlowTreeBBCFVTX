@@ -80,6 +80,7 @@ SimpleFlowTreeBBCFVTX::SimpleFlowTreeBBCFVTX():
   _use_runlist(false),
   _runlist_filename(""),
   _ntp_event(NULL),
+  use_utils(false),
   _utils(NULL),
   tmp_evt(0)
 {
@@ -124,9 +125,9 @@ int SimpleFlowTreeBBCFVTX::Init(PHCompositeNode *topNode)
     _ntp_event -> Branch("npc1", &npc1, "npc1/I");
     _ntp_event -> Branch("trigger_scaled", &trigger_scaled, "trigger_scaled/i");
     _ntp_event -> Branch("trigger_live", &trigger_live, "trigger_live/i");
-    _ntp_event -> Branch("d_Qx", &d_Qx, "d_Qx[9]/F");
-    _ntp_event -> Branch("d_Qy", &d_Qy, "d_Qy[9]/F");
-    _ntp_event -> Branch("d_Qw", &d_Qw, "d_Qw[9]/F");
+    // _ntp_event -> Branch("d_Qx", &d_Qx, "d_Qx[9]/F");
+    // _ntp_event -> Branch("d_Qy", &d_Qy, "d_Qy[9]/F");
+    // _ntp_event -> Branch("d_Qw", &d_Qw, "d_Qw[9]/F");
     _ntp_event -> Branch("bc_x", &bc_x, "bc_x/F");
     _ntp_event -> Branch("bc_y", &bc_y, "bc_y/F");
     _ntp_event -> Branch("vtx_z", &vtx_z, "vtx_z/F");
@@ -193,7 +194,7 @@ int SimpleFlowTreeBBCFVTX::InitRun(PHCompositeNode *topNode)
   int runnumber = 0;
 
   RunHeader *rh = findNode::getClass<RunHeader>(topNode, "RunHeader");
-  if (!rh)
+  if ( !rh )
   {
     cout << PHWHERE << " ERROR::RunHeader not found" << endl;
     return ABORTEVENT;
@@ -208,7 +209,8 @@ int SimpleFlowTreeBBCFVTX::InitRun(PHCompositeNode *topNode)
 
   rc->set_IntFlag("BBCCALIBVERSION", icalibversion);
 
-  if (m_bbccalib) {
+  if ( m_bbccalib )
+  {
     PHTimeStamp TimeStp = rc->get_TimeStamp();
     int BBCCALIBVERSION = rc->get_IntFlag("BBCCALIBVERSION");
     cout << "SvxRpSumXYReco::InitRun - restored constants are for " << TimeStp << endl;
@@ -220,6 +222,19 @@ int SimpleFlowTreeBBCFVTX::InitRun(PHCompositeNode *topNode)
   // This is done in init run so that the collision system can be
   // determined from the run number
   TString _collsys = "Run16dAu200"; // default to 200 GeV
+  use_utils = true;
+  // --- Run14AuAu200
+  if ( runnumber >= 405839 && runnumber <= 414988 )
+    {
+      _collsys = "Run14AuAu200";
+      use_utils = false;
+    }
+  // --- Run14HeAu200
+  if ( runnumber >= 415370 && runnumber <= 416893 )
+    {
+      _collsys = "Run14HeAu200";
+      use_utils = false;
+    }
   // --- Run15pAu200
   if ( runnumber >= 432637 && runnumber <= 436647 )
     _collsys = "Run15pAu200";
@@ -240,7 +255,12 @@ int SimpleFlowTreeBBCFVTX::InitRun(PHCompositeNode *topNode)
     _collsys = "Run16dAu39";
 
   // --- delete this pointer in EndRun
-  _utils = new dAuBES_utils(_collsys, true);
+  if ( use_utils )
+    {
+      cout << "initializing uitls..." << _utils << endl;
+      _utils = new dAuBES_utils(_collsys, true);
+      cout << "done initializing utils? " << _utils << endl;
+    }
   // _utils->is_sim(_is_sim);
 
   d_diutil->setBbcCalib(topNode);
@@ -313,8 +333,8 @@ int SimpleFlowTreeBBCFVTX::ResetEvent(PHCompositeNode *topNode)
 int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
 {
 
-  if (_verbosity > 1) cout << PHWHERE << "::process_event() - entered on event #" << _ievent << endl;
-  else if ((_ievent) % 10000 == 0) cout << PHWHERE << "::process_event() - event #" << _ievent << endl;
+  if ( _verbosity > 1 ) cout << PHWHERE << "::process_event() - entered on event #" << _ievent << endl;
+  else if ( _ievent % 10000 == 0 ) cout << PHWHERE << "::process_event() - event #" << _ievent << endl;
 
   // advance event counter
   _ievent++;
@@ -330,7 +350,7 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
   int runnumber = 0;
 
   RunHeader *rh = findNode::getClass<RunHeader>(topNode, "RunHeader");
-  if (!rh)
+  if ( !rh )
   {
     cout << PHWHERE << " ERROR::RunHeader not found" << endl;
     return ABORTEVENT;
@@ -340,11 +360,12 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
     runnumber = rh->get_RunNumber();
   }
 
-  if (_use_runlist)
+  if ( _use_runlist )
   {
-    if (is_run_in_list(runnumber) == false)
+    if ( is_run_in_list(runnumber) == false )
     {
-      if (_verbosity > 1) {
+      if ( _verbosity > 1 )
+      {
         cout << endl << "ABORTING RUN, Run number: " << runnumber << " is not in the run list" << endl << endl;
       }
       return ABORTEVENT;
@@ -420,8 +441,12 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
   //
   //---------------------------------------------------------//
 
-  if (!_utils->is_event_ok(topNode))
-    return EVENT_OK;
+  if ( use_utils )
+    {
+      if ( _verbosity > 1 ) cout << "using utils to check if event is ok " << endl;
+      if ( !_utils->is_event_ok(topNode) ) return EVENT_OK;
+      if ( _verbosity > 1 ) cout << "event passed utils check " << endl;
+    }
 
 
 
@@ -448,24 +473,19 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
   trigger_scaled = triggers->get_lvl1_trigscaled();
   trigger_live = triggers->get_lvl1_triglive();
 
-  // // --- these numbers taken from run 16 run control log
-  // unsigned int trigger_FVTXNSBBCScentral = 0x00100000;
-  // unsigned int trigger_FVTXNSBBCS        = 0x00400000;
-  // unsigned int trigger_BBCLL1narrowcent  = 0x00000008;
-  // unsigned int trigger_BBCLL1narrow      = 0x00000010;
-
-  // unsigned int accepted_triggers = 0;
-  // // accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS | trigger_BBCLL1narrowcent | trigger_BBCLL1narrow ;
-  // // --- Run16dAu200
-  // if ( runnumber >= 454774 && runnumber <= 455639 ) accepted_triggers = trigger_BBCLL1narrowcent | trigger_BBCLL1narrow;
-  // // --- Run16dAu62
-  // if ( runnumber >= 455792 && runnumber <= 456283 ) accepted_triggers = trigger_BBCLL1narrowcent | trigger_BBCLL1narrow;
-  // // --- Run16dAu20
-  // if ( runnumber >= 456652 && runnumber <= 457298 ) accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS;
-  // // --- Run16dAu39
-  // if ( runnumber >= 457634 && runnumber <= 458167 ) accepted_triggers = trigger_FVTXNSBBCScentral | trigger_FVTXNSBBCS;
-
-
+  if ( !use_utils )
+    {
+      // --- narrow and narrowcent trigs for Run14HeAu...
+      unsigned int trigger_BBCLL1narrowcent  = 0x00000004 | 0x00000008;
+      unsigned int trigger_BBCLL1narrow      = 0x00000002;
+      unsigned int accepted_triggers = trigger_BBCLL1narrowcent | trigger_BBCLL1narrow;
+      unsigned int passes_trigger = trigger_scaled & accepted_triggers;
+      if ( passes_trigger == 0 )
+        {
+          if ( _verbosity > 1 ) cout << "no utilities class, making cut on hard coded trigger selection" << endl;
+          return EVENT_OK;
+        }
+    }
 
   // --- bbc_z...
   PHPoint vertex1 = vertexes->get_Vertex("BBC");
@@ -480,14 +500,29 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
 
   // cout << endl;
   // cout << "--- starting vertex checking ---" << endl;
-  float zvtx = _utils->get_vrtx(topNode);
-
+  float zvtx = bbc_z;
+  if ( use_utils )
+    {
+      if ( _verbosity > 1 ) cout << "using utils to get vertex " << endl;
+      zvtx = _utils->get_vrtx(topNode);
+      if ( _verbosity > 1 ) cout << "got the vertex from utils" << endl;
+    }
+  else if ( fabs(zvtx) > 12.0 )
+    {
+      if ( _verbosity > 1 ) cout << "utils class not available, imposing hard coded 12 cm vertex cut" << endl;
+      return EVENT_OK;
+    }
 
   if ( _verbosity > 1 ) cout << "FVTX vertex points: " << FVTX_X << " " << FVTX_Y << " " << FVTX_Z << endl;
 
 
   // double interaction variable
-  frac = d_diutil->calcFrac(topNode);
+  if ( _verbosity > 1 ) cout << "address of double interaction utility " << d_diutil << endl;
+  if ( d_diutil )
+    {
+      frac = d_diutil->calcFrac(topNode);
+    }
+  if ( _verbosity > 1 ) cout << "frac is " << frac << endl;
 
   //int ibbcz_bin = (bbc_z+30.0)/10;//for fvtx eta cuts
 
@@ -583,10 +618,12 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
   //
   //---------------------------------------------------------//
 
+  if ( _verbosity > 1 ) cout << "checking whether to get tube information" << endl;
   if (_write_bbc)
   {
     if (bbcraw)
     {
+      if ( _verbosity > 1 ) cout << "now getting tube information" << endl;
       for ( int ipmt = 0; ipmt < 128; ++ipmt )
       {
 
@@ -642,7 +679,8 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
   int nfvtx_raw_clus = 0;
   int nfvtxn_raw_clus = 0;
   int nfvtxs_raw_clus = 0;
-  if ( fvtx_coord_map )
+  if ( _verbosity > 1 ) cout << "checking on whether to do fvtx clusters" << endl;
+  if ( fvtx_coord_map && _write_fvtx_clusters )
   {
     TFvtxCompactCoordMap::iterator _iter( fvtx_coord_map->range() );
     while ( TFvtxCompactCoordMap::const_pointer fvtx_ptr = _iter.next() )
@@ -695,6 +733,7 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
   //int ntr = -1;
   int ntr = 0;
 
+  if ( _verbosity > 1 ) cout << "checking on whether to do fvtx tracks" << endl;
   if ( trkfvtx_map && _write_fvtx )
   {
     TFvtxCompactTrkMap::const_iterator trk_iter = trkfvtx_map->range();
@@ -704,8 +743,12 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
       TFvtxCompactTrk* fvtx_trk = trk_ptr->get();
 
       //-- Only write out good fvtx tracks
-      if ( !_utils->is_fvtx_track_ok(fvtx_trk, zvtx) )
-        continue;
+      if ( use_utils )
+        {
+          if ( _verbosity > 2 ) cout << "using utils to check if the track is ok " << endl;
+          if ( !_utils->is_fvtx_track_ok(fvtx_trk, zvtx) ) continue;
+          if ( _verbosity > 2 ) cout << "track pass utils " << endl;
+        }
 
       float the = fvtx_trk->get_fvtx_theta();
       float eta = fvtx_trk->get_fvtx_eta();
@@ -722,11 +765,15 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
       double pzo = 1.0 * TMath::Cos(the);
 
       // rotate based on beamtilt
-      double px = _utils->rotate_x(pxo, pzo);
-      double py = pyo;
-      double pz = _utils->rotate_z(pxo, pzo);
-      phi = TMath::ATan2(py, px);
-      the = TMath::ACos(pz / TMath::Sqrt(px * px + py * py + pz * pz));
+      if ( use_utils )
+        {
+          double px = _utils->rotate_x(pxo, pzo);
+          double py = pyo;
+          double pz = _utils->rotate_z(pxo, pzo);
+          phi = TMath::ATan2(py, px);
+          the = TMath::ACos(pz / TMath::Sqrt(px * px + py * py + pz * pz));
+        }
+
 
 
       float vertex_z = bbc_z;
@@ -770,8 +817,6 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
         cout << "butting up against the boundary of fvtx tracks" << endl;
         break;
       }
-      //short_chi2 = fvtx_trk->get_short_chi2_ndf();
-      //chi2       = fvtx_trk->get_chi2_ndf();
 
       ++ntr;
 
@@ -793,7 +838,8 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
 
   d_ntrk = 0;
   PHCentralTrack *ctrk = findNode::getClass<PHCentralTrack>(topNode, "PHCentralTrack");
-  if ( ctrk )
+  if ( _verbosity > 1 ) cout << "checking on whether to do cnt tracks" << endl;
+  if ( ctrk && _write_cnt )
   {
     int ntrk = ctrk->get_npart();
     if ( ntrk > N_CTRK_MAX )
@@ -823,14 +869,15 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
       float pyo = strk->get_py();
       float pzo = strk->get_pz();
 
-      // int arm = 0;
-      // if ( px > 0 ) arm = 1;
-
       // rotate based on beamtilt
-      double px = _utils->rotate_x(pxo, pzo);
+      double px = pxo;
       double py = pyo;
-      double pz = _utils->rotate_z(pxo, pzo);
-
+      double pz = pzo;
+      if ( use_utils )
+        {
+          px = _utils->rotate_x(pxo, pzo);
+          pz = _utils->rotate_z(pxo, pzo);
+        }
 
       int charge = strk->get_charge();
 
@@ -839,8 +886,6 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
 
       if ( pc3dphi < -9990 || pc3dz < -9990 ) continue;
 
-      // float pc3sdphi = calcsdphi(pc3dphi, arm, charge, mom);
-      // float pc3sdz = calcsdz(pc3dz, arm, charge, mom);
       float pc3sdphi = strk->get_pc3sdphi();
       float pc3sdz = strk->get_pc3sdz();
 
@@ -891,8 +936,8 @@ int SimpleFlowTreeBBCFVTX::End(PHCompositeNode *topNode)
 
   _output_file->cd();
 
-  if (_create_ttree)
-    _ntp_event->Write();
+  // if (_create_ttree)
+  //   _ntp_event->Write();
 
   _output_file->Close();
   delete _output_file;
