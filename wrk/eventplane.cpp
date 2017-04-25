@@ -163,9 +163,10 @@ void flatten(int runNumber, int rp_recal_pass)
 
   char filename[500];
 
-  // float fracCut = 0.95; // pile up rejection < fracCut (better place??)
+  float fracCut = 0.95; // pile up rejection < fracCut (better place??)
   // float fracCut = 0.98; // pile up rejection < fracCut (better place??)
-  float fracCut = 0.0; // pile up rejection < fracCut (better place??)
+
+  bool tight_trkcuts = false; // flag for tight cnt & fvtx track cuts (true=tight)
 
   float qxOffset = 0.0; // offset to Qx values
   // float qyOffset[] = { 0, 0, 0, 0, 0, 0}; // offset Qy values
@@ -173,6 +174,9 @@ void flatten(int runNumber, int rp_recal_pass)
   // float qyOffset[] = { -0.001, -0.005, -0.008, -0.016, -0.029, -0.069}; // 1st iteration
   // float qyOffset[] = { -0.001, -0.007, -0.012, -0.024, -0.044, -0.104}; // 2nd iteration
   // float qyOffset[] = { -0.001, -0.008, -0.014, -0.028, -0.051, -0.121}; // 3rd iteration
+  // float qyOffset[4][6] = {{0}, {0}, {0}, {0}};
+  //---
+  // full values (4th iteration)
   // float qyOffset[4][6] =
   // {
   //   { -0.000, -0.000, -0.000, -0.016, -0.044, -0.121}, //200 GeV
@@ -183,9 +187,36 @@ void flatten(int runNumber, int rp_recal_pass)
 
   //   { -0.001, -0.008, -0.014, -0.028, -0.051, -0.121}, //20 GeV
   // };
-  float qyOffset[4][6] = {{0}, {0}, {0}, {0}};
+  //---
+  //---
+  // Systematic check (x1.50)
+  //---
+  float qyOffset[4][6] =
+  {
+    { -0.000, -0.000, -0.000, -0.024, -0.066, -0.181}, //200 GeV
+
+    { -0.002, -0.012, -0.021, -0.036, -0.082, -0.194}, //62 GeV
+
+    { -0.000, -0.008, -0.021, -0.042, -0.076, -0.154}, //39 GeV
+
+    { -0.002, -0.012, -0.021, -0.042, -0.076, -0.181}, //20 GeV
+  };
+  //---
+  // Systematic check (x0.50)
+  // float qyOffset[4][6] =
+  // {
+  //   { -0.000, -0.000, -0.000, -0.007, -0.018, -0.048}, //200 GeV
+
+  //   { -0.000, -0.003, -0.006, -0.009, -0.022, -0.051}, //62 GeV
+
+  //   { -0.000, -0.002, -0.006, -0.011, -0.020, -0.042}, //39 GeV
+
+  //   { -0.000, -0.003, -0.006, -0.011, -0.020, -0.048}, //20 GeV
+  // };
+  //---
 
   cout << " frac cut: " << fracCut << endl;
+  cout << " tight_trkcuts: " << tight_trkcuts << endl;
   cout << " Qx offset: " << qxOffset << endl;
   cout << " Qy offset: " << endl;
   for (int i = 0; i < NMUL; i++)
@@ -946,6 +977,7 @@ void flatten(int runNumber, int rp_recal_pass)
 
     // --- all numbers from Darren 2016-06-23
     const float x_off = 0.3;
+    const float y_off = 0.02;
     const float beam_angle = 0.001;
     float vtx_z = d_bbcz;
     if ( eventfvtx_z > -999 ) vtx_z = eventfvtx_z;
@@ -1435,9 +1467,10 @@ void flatten(int runNumber, int rp_recal_pass)
         float py    = d_py[itrk];
         float pz    = d_pz[itrk];
         // float charge    = d_charge[itrk];
-        // float pc3sdz    = d_pc3sdz[itrk];
-        // float pc3sdphi  = d_pc3sdphi[itrk];
-        // if ( fabs(pc3sdz) > 2.0 || fabs(pc3sdphi) > 2.0 ) continue;
+        float pc3sdz    = d_pc3sdz[itrk];
+        float pc3sdphi  = d_pc3sdphi[itrk];
+        if ( tight_trkcuts )
+          if ( fabs(pc3sdz) > 2.0 || fabs(pc3sdphi) > 2.0 ) continue;
 
         int dcarm = 0;
         if (px > 0) dcarm = 1;
@@ -1605,7 +1638,12 @@ void flatten(int runNumber, int rp_recal_pass)
         float eta = feta[i];
         float dcax = fdcax[i];
         float dcay = fdcay[i];
-        if ( fabs(dcax) > 0.5 || fabs(dcay) > 0.5 ) continue;
+        float chisq = fchisq[i];
+
+        if ( fabs(dcax - x_off) > 2.0 || fabs(dcay - y_off) > 2.0 ) continue;
+        if ( tight_trkcuts )
+          if ( fabs(dcax - x_off) > 0.5 || fabs(dcay - y_off) > 0.5 ) continue;
+        if ( chisq > 5 ) continue;
         int ns = 0;
         int nn = 0;
         if ( eta > 0 ) nn = 1;
