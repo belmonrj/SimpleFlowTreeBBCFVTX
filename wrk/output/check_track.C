@@ -69,11 +69,11 @@ void check_track()
 
   histo_dAuM->SetLineColor(kBlack);
   histo_dAuC->SetLineColor(kRed);
-  histo_dAuM->GetYaxis()->SetTitle("Number of events");
-  histo_dAuM->GetXaxis()->SetTitle("N_{tracks}^{FVTX}");
-  histo_dAuM->GetXaxis()->SetRangeUser(0.0,100.0);
-  histo_dAuM->Draw();
-  histo_dAuC->Draw("same");
+  histo_dAuC->GetYaxis()->SetTitle("Number of events");
+  histo_dAuC->GetXaxis()->SetTitle("N_{tracks}^{FVTX}");
+  histo_dAuC->GetXaxis()->SetRangeUser(0.0,100.0);
+  histo_dAuC->Draw();
+  histo_dAuM->Draw("same");
 
   TLegend* leg = new TLegend(0.58,0.78,0.88,0.88);
   leg->AddEntry(histo_dAuM,"d+Au MB","l");
