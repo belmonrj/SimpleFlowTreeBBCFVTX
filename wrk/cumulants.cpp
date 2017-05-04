@@ -890,12 +890,15 @@ void documulants(int runNumber)
           fvtxn_qw[ilayer] = 0.0;
         } // loop over layers
 
-      int nclus_south_inner = 0; // good_4_event
+      int nclus_south_inner = 0;
       int nclus_north_inner = 0;
       int nclus_south_outer = 0;
       int nclus_north_outer = 0;
 
       if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Looping over FVTX cluster" << endl;
+      bool do_clusters = false;
+      if ( do_clusters )
+      {
       for(int iclus = 0; iclus < d_nFVTX_clus; iclus++)
 	{
 	  float fvtx_x      = d_FVTX_x[iclus] - vtx_x;
@@ -982,7 +985,7 @@ void documulants(int runNumber)
 		  fvtxs_qx4[6] += fvtx_weight * TMath::Cos(4*phi);
 		  fvtxs_qy4[6] += fvtx_weight * TMath::Sin(4*phi);
 		  fvtxs_qw[6] += fvtx_weight;
-		  ++nclus_south_inner; // good_4_event
+		  ++nclus_south_inner;
 		}
 	      // --- outer eta clusters
 	      if ( fvtx_eta > -3.5 && fvtx_eta < -2.0 )
@@ -994,7 +997,7 @@ void documulants(int runNumber)
 		  fvtxs_qx4[7] += fvtx_weight * TMath::Cos(4*phi);
 		  fvtxs_qy4[7] += fvtx_weight * TMath::Sin(4*phi);
 		  fvtxs_qw[7] += fvtx_weight;
-		  ++nclus_south_outer; // good_4_event
+		  ++nclus_south_outer;
 		}
 
 	      // ------------------------------------------
@@ -1065,7 +1068,7 @@ void documulants(int runNumber)
 		  fvtxn_qx4[6] += fvtx_weight * TMath::Cos(4*phi);
 		  fvtxn_qy4[6] += fvtx_weight * TMath::Sin(4*phi);
 		  fvtxn_qw[6] += fvtx_weight;
-		  ++nclus_north_inner; // good_4_event
+		  ++nclus_north_inner;
 		}
 	      // --- outer eta clusters
 	      if ( fvtx_eta > 2.0 && fvtx_eta < 3.5 )
@@ -1077,18 +1080,16 @@ void documulants(int runNumber)
 		  fvtxn_qx4[7] += fvtx_weight * TMath::Cos(4*phi);
 		  fvtxn_qy4[7] += fvtx_weight * TMath::Sin(4*phi);
 		  fvtxn_qw[7] += fvtx_weight;
-		  ++nclus_north_outer; // good_4_event
+		  ++nclus_north_outer;
 		}
 
 	    } // check on north
 
 	} // loop over cluster
-
+      } // end if do_clusters
 
       //float fvtxs_qq2 = ( (fvtxs_qx2[0]*fvtxs_qx2[0]) + (fvtxs_qy2[0]*fvtxs_qy2[0]) - fvtxs_qw[0] ) / ( (fvtxs_qw[0]*fvtxs_qw[0]) - fvtxs_qw[0] );
       //float fvtxs_qq3 = ( (fvtxs_qx3[0]*fvtxs_qx3[0]) + (fvtxs_qy3[0]*fvtxs_qy3[0]) - fvtxs_qw[0] ) / ( (fvtxs_qw[0]*fvtxs_qw[0]) - fvtxs_qw[0] );
-
-      bool good_4_event = ( nclus_south_inner > 3 ) && ( nclus_south_outer > 3 ) && ( nclus_north_inner > 3 ) && ( nclus_north_outer > 3 ) ;
 
 
 
@@ -1134,7 +1135,7 @@ void documulants(int runNumber)
           fvtxn_tracks_qw[i] = 0.0;
         } // loop over layers
 
-      int ntrack_south_inner = 0; // good_4_event
+      int ntrack_south_inner = 0;
       int ntrack_north_inner = 0;
       int ntrack_south_outer = 0;
       int ntrack_north_outer = 0;
@@ -1239,7 +1240,7 @@ void documulants(int runNumber)
 	      fvtxs_tracks_qx4[1] += fvtx_weight * TMath::Cos(4*phi);
 	      fvtxs_tracks_qy4[1] += fvtx_weight * TMath::Sin(4*phi);
 	      fvtxs_tracks_qw[1] += fvtx_weight;
-	      ++ntrack_south_inner; // good_4_event
+	      ++ntrack_south_inner;
 	    }
 	  if ( is_south_outer )
 	    {
@@ -1250,7 +1251,7 @@ void documulants(int runNumber)
 	      fvtxs_tracks_qx4[2] += fvtx_weight * TMath::Cos(4*phi);
 	      fvtxs_tracks_qy4[2] += fvtx_weight * TMath::Sin(4*phi);
 	      fvtxs_tracks_qw[2] += fvtx_weight;
-	      ++ntrack_south_outer; // good_4_event
+	      ++ntrack_south_outer;
 	    }
 	  if ( is_north )
 	    {
@@ -1273,7 +1274,7 @@ void documulants(int runNumber)
 	      fvtxn_tracks_qx4[1] += fvtx_weight * TMath::Cos(4*phi);
 	      fvtxn_tracks_qy4[1] += fvtx_weight * TMath::Sin(4*phi);
 	      fvtxn_tracks_qw[1] += fvtx_weight;
-	      ++ntrack_north_inner; // good_4_event
+	      ++ntrack_north_inner;
 	    }
 	  if ( is_north_outer )
 	    {
@@ -1284,7 +1285,7 @@ void documulants(int runNumber)
 	      fvtxn_tracks_qx4[2] += fvtx_weight * TMath::Cos(4*phi);
 	      fvtxn_tracks_qy4[2] += fvtx_weight * TMath::Sin(4*phi);
 	      fvtxn_tracks_qw[2] += fvtx_weight;
-	      ++ntrack_north_outer; // good_4_event
+	      ++ntrack_north_outer;
 	    }
 	} // fvtx track loop
 
@@ -1319,10 +1320,11 @@ void documulants(int runNumber)
 
 
 
-      good_4_event = good_4_event && ( ntrack_south_inner > 0 ) && ( ntrack_south_outer > 0 ) && ( ntrack_north_inner > 0 ) && ( ntrack_north_outer > 0 ) ;
+      //bool good_4_event = ( ntrack_south_inner > 0 ) && ( ntrack_south_outer > 0 ) && ( ntrack_north_inner > 0 ) && ( ntrack_north_outer > 0 ) ;
       int nfvtxt_south = ntrack_south_inner + ntrack_south_outer;
       int nfvtxt_north = ntrack_north_inner + ntrack_north_outer;
-
+      int nfvtxt_counter = nfvtxt_south + nfvtxt_north;
+      bool good_4_event = nfvtxt_counter > 4;
 
       float ac_fvtxs_qw = fvtxs_qw[0];
       float ac_fvtxs_qx2 = fvtxs_qx2[0];
@@ -2353,7 +2355,7 @@ void dooffsets(int runNumber)
 	      fvtxs_tracks_qx6[1] += fvtx_weight * TMath::Cos(6*phi);
 	      fvtxs_tracks_qy6[1] += fvtx_weight * TMath::Sin(6*phi);
 	      fvtxs_tracks_qw[1] += fvtx_weight;
-	      ++ntrack_south_inner; // good_4_event
+	      ++ntrack_south_inner;
 	    }
 	  if ( is_south_outer )
 	    {
@@ -2366,7 +2368,7 @@ void dooffsets(int runNumber)
 	      fvtxs_tracks_qx6[2] += fvtx_weight * TMath::Cos(6*phi);
 	      fvtxs_tracks_qy6[2] += fvtx_weight * TMath::Sin(6*phi);
 	      fvtxs_tracks_qw[2] += fvtx_weight;
-	      ++ntrack_south_outer; // good_4_event
+	      ++ntrack_south_outer;
 	    }
 	  if ( is_north )
 	    {
@@ -2391,7 +2393,7 @@ void dooffsets(int runNumber)
 	      fvtxn_tracks_qx6[1] += fvtx_weight * TMath::Cos(6*phi);
 	      fvtxn_tracks_qy6[1] += fvtx_weight * TMath::Sin(6*phi);
 	      fvtxn_tracks_qw[1] += fvtx_weight;
-	      ++ntrack_north_inner; // good_4_event
+	      ++ntrack_north_inner;
 	    }
 	  if ( is_north_outer )
 	    {
@@ -2404,7 +2406,7 @@ void dooffsets(int runNumber)
 	      fvtxn_tracks_qx6[2] += fvtx_weight * TMath::Cos(6*phi);
 	      fvtxn_tracks_qy6[2] += fvtx_weight * TMath::Sin(6*phi);
 	      fvtxn_tracks_qw[2] += fvtx_weight;
-	      ++ntrack_north_outer; // good_4_event
+	      ++ntrack_north_outer;
 	    }
 	} // fvtx track loop
 
