@@ -169,41 +169,34 @@ void flatten(int runNumber, int rp_recal_pass)
   bool tight_trkcuts = false; // flag for tight cnt & fvtx track cuts (true=tight)
 
   float qxOffset = 0.0; // offset to Qx values
-  // float qyOffset[] = { 0, 0, 0, 0, 0, 0}; // offset Qy values
-  // centrality dependent Qy offsets
-  // float qyOffset[] = { -0.001, -0.005, -0.008, -0.016, -0.029, -0.069}; // 1st iteration
-  // float qyOffset[] = { -0.001, -0.007, -0.012, -0.024, -0.044, -0.104}; // 2nd iteration
-  // float qyOffset[] = { -0.001, -0.008, -0.014, -0.028, -0.051, -0.121}; // 3rd iteration
-  // float qyOffset[4][6] = {{0}, {0}, {0}, {0}};
   //---
   // full values (4th iteration)
-  // float qyOffset[4][6] =
-  // {
-  //   { -0.000, -0.000, -0.000, -0.016, -0.044, -0.121}, //200 GeV
-
-  //   { -0.001, -0.008, -0.014, -0.024, -0.055, -0.129}, //62 GeV
-
-  //   { -0.000, -0.005, -0.014, -0.028, -0.051, -0.104}, //39 GeV
-
-  //   { -0.001, -0.008, -0.014, -0.028, -0.051, -0.121}, //20 GeV
-  // };
+  float qy2_offset_fvtxs[4][6] =
+  {
+    { -0.000, -0.000, -0.000, -0.016, -0.044, -0.121}, //200 GeV
+    { -0.001, -0.008, -0.014, -0.024, -0.055, -0.129}, //62 GeV
+    { -0.000, -0.005, -0.014, -0.028, -0.051, 0.0}, //39 GeV
+    { -0.001, -0.008, -0.014, -0.028, 0.0, 0.0}, //20 GeV
+    // { -0.000, -0.005, -0.014, -0.028, -0.051, -0.104}, //39 GeV
+    // { -0.001, -0.008, -0.014, -0.028, -0.051, -0.121}, //20 GeV
+  };
   //---
   //---
   // Systematic check (x1.50)
   //---
-  float qyOffset[4][6] =
-  {
-    { -0.000, -0.000, -0.000, -0.024, -0.066, -0.181}, //200 GeV
+  // float qy2_offset_fvtxs[4][6] =
+  // {
+  //   { -0.000, -0.000, -0.000, -0.024, -0.066, -0.181}, //200 GeV
 
-    { -0.002, -0.012, -0.021, -0.036, -0.082, -0.194}, //62 GeV
+  //   { -0.002, -0.012, -0.021, -0.036, -0.082, -0.194}, //62 GeV
 
-    { -0.000, -0.008, -0.021, -0.042, -0.076, -0.154}, //39 GeV
+  //   { -0.000, -0.008, -0.021, -0.042, -0.076, -0.154}, //39 GeV
 
-    { -0.002, -0.012, -0.021, -0.042, -0.076, -0.181}, //20 GeV
-  };
+  //   { -0.002, -0.012, -0.021, -0.042, -0.076, -0.181}, //20 GeV
+  // };
   //---
   // Systematic check (x0.50)
-  // float qyOffset[4][6] =
+  // float qy2_offset_fvtxs[4][6] =
   // {
   //   { -0.000, -0.000, -0.000, -0.007, -0.018, -0.048}, //200 GeV
 
@@ -215,12 +208,36 @@ void flatten(int runNumber, int rp_recal_pass)
   // };
   //---
 
+
+  //---
+  // 2nd order Qy offset for BBCS
+  float qy2_offset_bbcs[4][6] =
+  {
+    { -0.0020, -0.0096, -0.0020, -0.0011, -0.0082, -0.0019}, //200 GeV
+    { -0.0004, -0.0011, -0.0024, -0.0041, -0.0010, -0.0005}, //62 GeV
+    { -0.0035, -0.0038, -0.0014, -0.0011, -0.0032, -0.0000}, //39 GeV
+    { -0.0004, -0.0103, -0.0005, -0.0451, -0.0000, -0.0000}, //20 GeV
+  };
+  //---
+
+
+  // //--
+  // // 3rd order Qx offset for FVTXS
+  // float qx3_offset_fvtxs[4][6] =
+  // {
+
+  // };
+  // //--
+
   cout << " frac cut: " << fracCut << endl;
   cout << " tight_trkcuts: " << tight_trkcuts << endl;
   cout << " Qx offset: " << qxOffset << endl;
-  cout << " Qy offset: " << endl;
+  cout << " Qy2 offset fvtxs: " << endl;
   for (int i = 0; i < NMUL; i++)
-    cout << "    " << i << " " << qyOffset[eidx][i] << endl;
+    cout << "    " << i << " " << qy2_offset_fvtxs[eidx][i] << endl;
+  cout << " Qy2 offset bbcs: " << endl;
+  for (int i = 0; i < NMUL; i++)
+    cout << "    " << i << " " << qy2_offset_bbcs[eidx][i] << endl;
 
   //------------------------------------------------------------//
   //                                                            //
@@ -523,14 +540,21 @@ void flatten(int runNumber, int rp_recal_pass)
     2.0, 2.5, 3.0, 3.5, 4.0,
     4.5, 5.0
   };
-  TProfile* fvtxs_v2_west_cosphi[NMUL];
-  TProfile* fvtxs_v2_east_cosphi[NMUL];
-  TProfile* fvtxs_v2_both_cosphi[NMUL];
+  TProfile* cnt_west_cos2phi[NMUL];
+  TProfile* cnt_east_cos2phi[NMUL];
+  TProfile* cnt_both_cos2phi[NMUL];
 
+  TProfile* cnt_west_sin2phi[NMUL];
+  TProfile* cnt_east_sin2phi[NMUL];
+  TProfile* cnt_both_sin2phi[NMUL];
 
-  TProfile* fvtxs_v2_west_sinphi[NMUL];
-  TProfile* fvtxs_v2_east_sinphi[NMUL];
-  TProfile* fvtxs_v2_both_sinphi[NMUL];
+  TProfile* cnt_west_cos3phi[NMUL];
+  TProfile* cnt_east_cos3phi[NMUL];
+  TProfile* cnt_both_cos3phi[NMUL];
+
+  TProfile* cnt_west_sin3phi[NMUL];
+  TProfile* cnt_east_sin3phi[NMUL];
+  TProfile* cnt_both_sin3phi[NMUL];
 
 
   TProfile* bbcs_v2_east_docalib[NMUL];
@@ -559,15 +583,25 @@ void flatten(int runNumber, int rp_recal_pass)
 
   for ( int ic = 0; ic < NMUL; ++ic )
   {
-    //-- cos(phi)
-    fvtxs_v2_west_cosphi[ic] = new TProfile(Form("fvtxs_v2_west_cosphi_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
-    fvtxs_v2_east_cosphi[ic] = new TProfile(Form("fvtxs_v2_east_cosphi_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
-    fvtxs_v2_both_cosphi[ic] = new TProfile(Form("fvtxs_v2_both_cosphi_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+    //-- cos(2phi)
+    cnt_west_cos2phi[ic] = new TProfile(Form("cnt_west_cos2phi_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+    cnt_east_cos2phi[ic] = new TProfile(Form("cnt_east_cos2phi_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+    cnt_both_cos2phi[ic] = new TProfile(Form("cnt_both_cos2phi_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
 
-    //-- sin(phi)
-    fvtxs_v2_west_sinphi[ic] = new TProfile(Form("fvtxs_v2_west_sinphi_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
-    fvtxs_v2_east_sinphi[ic] = new TProfile(Form("fvtxs_v2_east_sinphi_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
-    fvtxs_v2_both_sinphi[ic] = new TProfile(Form("fvtxs_v2_both_sinphi_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+    //-- sin(2phi)
+    cnt_west_sin2phi[ic] = new TProfile(Form("cnt_west_sin2phi_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+    cnt_east_sin2phi[ic] = new TProfile(Form("cnt_east_sin2phi_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+    cnt_both_sin2phi[ic] = new TProfile(Form("cnt_both_sin2phi_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+
+    //-- cos(3phi)
+    cnt_west_cos3phi[ic] = new TProfile(Form("cnt_west_cos3phi_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+    cnt_east_cos3phi[ic] = new TProfile(Form("cnt_east_cos3phi_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+    cnt_both_cos3phi[ic] = new TProfile(Form("cnt_both_cos3phi_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+
+    //-- sin(3phi)
+    cnt_west_sin3phi[ic] = new TProfile(Form("cnt_west_sin3phi_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+    cnt_east_sin3phi[ic] = new TProfile(Form("cnt_east_sin3phi_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+    cnt_both_sin3phi[ic] = new TProfile(Form("cnt_both_sin3phi_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
 
     //-- v2
     bbcs_v2_both_docalib[ic] = new TProfile(Form("bbcs_v2_both_docalib_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
@@ -1366,7 +1400,7 @@ void flatten(int runNumber, int rp_recal_pass)
 
     // testing Qx/Qy offset on FVTXS Psi2
     sumxy[1][fvtxs_index][0] = cos(sumxy[1][fvtxs_index][3] * 2) + qxOffset;
-    sumxy[1][fvtxs_index][1] = sin(sumxy[1][fvtxs_index][3] * 2) + qyOffset[eidx][icent];
+    sumxy[1][fvtxs_index][1] = sin(sumxy[1][fvtxs_index][3] * 2) + qy2_offset_fvtxs[eidx][icent];
     sumxy[1][fvtxs_index][3] = atan2(sumxy[1][fvtxs_index][1], sumxy[1][fvtxs_index][0]) / (1 + 1.0);
 
 
@@ -1492,6 +1526,23 @@ void flatten(int runNumber, int rp_recal_pass)
         //cout << "pz is " << pz << " and eta is " << eta << endl;
 
 
+        cnt_both_cos2phi[icent]->Fill(pt_angle, cos(2 * phi_angle));
+        if ( dcarm == 1 ) cnt_west_cos2phi[icent]->Fill(pt_angle, cos(2 * phi_angle));
+        if ( dcarm == 0 ) cnt_east_cos2phi[icent]->Fill(pt_angle, cos(2 * phi_angle));
+
+        cnt_both_sin2phi[icent]->Fill(pt_angle, sin(2 * phi_angle));
+        if ( dcarm == 1 ) cnt_west_sin2phi[icent]->Fill(pt_angle, sin(2 * phi_angle));
+        if ( dcarm == 0 ) cnt_east_sin2phi[icent]->Fill(pt_angle, sin(2 * phi_angle));
+
+        cnt_both_cos3phi[icent]->Fill(pt_angle, cos(3 * phi_angle));
+        if ( dcarm == 1 ) cnt_west_cos3phi[icent]->Fill(pt_angle, cos(3 * phi_angle));
+        if ( dcarm == 0 ) cnt_east_cos3phi[icent]->Fill(pt_angle, cos(3 * phi_angle));
+
+        cnt_both_sin3phi[icent]->Fill(pt_angle, sin(3 * phi_angle));
+        if ( dcarm == 1 ) cnt_west_sin3phi[icent]->Fill(pt_angle, sin(3 * phi_angle));
+        if ( dcarm == 0 ) cnt_east_sin3phi[icent]->Fill(pt_angle, sin(3 * phi_angle));
+
+
         // BBC event plane
         if ( bbc_pmts )
         {
@@ -1551,14 +1602,6 @@ void flatten(int runNumber, int rp_recal_pass)
             fvtxs_v2eta_both_docalib[icent]->Fill(eta, cosfvtx_dphi2_docalib);
             if ( dcarm == 1 ) fvtxs_v2eta_west_docalib[icent]->Fill(eta, cosfvtx_dphi2_docalib);
             if ( dcarm == 0 ) fvtxs_v2eta_east_docalib[icent]->Fill(eta, cosfvtx_dphi2_docalib);
-
-            fvtxs_v2_both_cosphi[icent]->Fill(pt_angle, cos(2 * phi_angle));
-            if ( dcarm == 1 ) fvtxs_v2_west_cosphi[icent]->Fill(pt_angle, cos(2 * phi_angle));
-            if ( dcarm == 0 ) fvtxs_v2_east_cosphi[icent]->Fill(pt_angle, cos(2 * phi_angle));
-
-            fvtxs_v2_both_sinphi[icent]->Fill(pt_angle, sin(2 * phi_angle));
-            if ( dcarm == 1 ) fvtxs_v2_west_sinphi[icent]->Fill(pt_angle, sin(2 * phi_angle));
-            if ( dcarm == 0 ) fvtxs_v2_east_sinphi[icent]->Fill(pt_angle, sin(2 * phi_angle));
 
             // --- 3rd harmonic
             double fvtx_dphi3_docalib = phi_angle - fvtx_south_psi3_docalib;
