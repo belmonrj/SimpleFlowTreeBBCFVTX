@@ -221,13 +221,27 @@ void flatten(int runNumber, int rp_recal_pass)
   //---
 
 
-  // //--
-  // // 3rd order Qx offset for FVTXS
-  // float qx3_offset_fvtxs[4][6] =
-  // {
+  //--
+  // 3rd order Qx offset for FVTXS
+  float qx3_offset_fvtxs[4][6] =
+  {
+    { 0.0008, -0.0251,  0.0062,  0.0141,  0.0354,  0.1053}, // 200 GeV
+    { 0.0040,  0.0067,  0.0098,  0.0236,  0.0449,  0.0934}, // 62 GeV
+    { 0.0074,  0.0059,  0.0181,  0.0213,  0.0232,  0.0000}, // 39 GeV
+    { 0.0018,  0.0252,  0.0240, -0.0623,  0.0000,  0.0000}, // 20 GeV
+  };
+  //--
 
-  // };
-  // //--
+  //--
+  // 3rd order Qx offset for BBCS
+  float qx3_offset_bbcs[4][6] = 
+  {
+    { 0.0029,  0.0095,  0.0033,  0.0077, -0.0006, 0.0049}, // 200 GeV
+    {-0.0006,  0.0004, -0.0002, -0.0019, -0.0042, 0.0015}, // 62 GeV
+    { 0.0018,  0.0028, -0.0039, -0.0018,  0.0026, 0.0000}, // 39 GeV
+    {-0.0008,  0.0124, -0.0028, -0.0875,  0.0000, 0.0000}, // 20 GeV
+  };
+  //--
 
   cout << " frac cut: " << fracCut << endl;
   cout << " tight_trkcuts: " << tight_trkcuts << endl;
@@ -238,6 +252,9 @@ void flatten(int runNumber, int rp_recal_pass)
   cout << " Qy2 offset bbcs: " << endl;
   for (int i = 0; i < NMUL; i++)
     cout << "    " << i << " " << qy2_offset_bbcs[eidx][i] << endl;
+  cout << " Qx3 offset fvtxs: " << endl;
+  for (int i = 0; i < NMUL; i++)
+    cout << "    " << i << " " << qx3_offset_fvtxs[eidx][i] << endl;
 
   //------------------------------------------------------------//
   //                                                            //
@@ -1403,7 +1420,17 @@ void flatten(int runNumber, int rp_recal_pass)
     sumxy[1][fvtxs_index][1] = sin(sumxy[1][fvtxs_index][3] * 2) + qy2_offset_fvtxs[eidx][icent];
     sumxy[1][fvtxs_index][3] = atan2(sumxy[1][fvtxs_index][1], sumxy[1][fvtxs_index][0]) / (1 + 1.0);
 
+    // Qy offset on BBCS Psi2
+    sumxy[1][bbcs_index][1] = sin(sumxy[1][bbcs_index][3] * 2) + qy2_offset_bbcs[eidx][icent];
+    sumxy[1][bbcs_index][3] = atan2(sumxy[1][bbcs_index][1], sumxy[1][bbcs_index][0]) / (1 + 1.0);
 
+    // Qx offset on FVTXS Psi3
+    sumxy[2][fvtxs_index][0] = cos(sumxy[2][fvtxs_index][3] * 3) + qx3_offset_fvtxs[eidx][icent];
+    sumxy[2][fvtxs_index][3] = atan2(sumxy[2][fvtxs_index][1], sumxy[2][fvtxs_index][0]) / (2 + 1.0);
+
+    // Qx offset on BBCS Psi3
+    sumxy[2][bbcs_index][0] = cos(sumxy[2][bbcs_index][3] * 3) + qx3_offset_bbcs[eidx][icent];
+    sumxy[2][bbcs_index][3] = atan2(sumxy[2][bbcs_index][1], sumxy[2][bbcs_index][0]) / (2 + 1.0);
 
 
     if ( DIAG ) cout << "bbc_rp2: " << sumxy[1][0][3] << endl;
