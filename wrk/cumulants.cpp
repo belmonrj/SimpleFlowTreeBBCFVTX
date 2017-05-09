@@ -20,6 +20,7 @@
 #include "TStyle.h"
 #include "TCanvas.h"
 #include "TProfile.h"
+#include "TProfile2D.h"
 #include "TVector2.h"
 #include "TTree.h"
 #include "TNtuple.h"
@@ -221,59 +222,59 @@ void documulants(int runNumber)
   TFile *mData2=TFile::Open(outFile2);
   mData2->cd();
 
-  TProfile* nfvtxt_tracks_south_qx2 = (TProfile*)mData2->Get("nfvtxt_tracks_south_qx2");
-  TProfile* nfvtxt_tracks_south_qx3 = (TProfile*)mData2->Get("nfvtxt_tracks_south_qx3");
-  TProfile* nfvtxt_tracks_south_qx4 = (TProfile*)mData2->Get("nfvtxt_tracks_south_qx4");
-  TProfile* nfvtxt_tracks_south_qx6 = (TProfile*)mData2->Get("nfvtxt_tracks_south_qx6");
-  TProfile* nfvtxt_tracks_south_qy2 = (TProfile*)mData2->Get("nfvtxt_tracks_south_qy2");
-  TProfile* nfvtxt_tracks_south_qy3 = (TProfile*)mData2->Get("nfvtxt_tracks_south_qy3");
-  TProfile* nfvtxt_tracks_south_qy4 = (TProfile*)mData2->Get("nfvtxt_tracks_south_qy4");
-  TProfile* nfvtxt_tracks_south_qy6 = (TProfile*)mData2->Get("nfvtxt_tracks_south_qy6");
+  TProfile2D* nfvtxt_tracks_south_qx2 = (TProfile2D*)mData2->Get("nfvtxt_tracks_south_qx2");
+  TProfile2D* nfvtxt_tracks_south_qx3 = (TProfile2D*)mData2->Get("nfvtxt_tracks_south_qx3");
+  TProfile2D* nfvtxt_tracks_south_qx4 = (TProfile2D*)mData2->Get("nfvtxt_tracks_south_qx4");
+  TProfile2D* nfvtxt_tracks_south_qx6 = (TProfile2D*)mData2->Get("nfvtxt_tracks_south_qx6");
+  TProfile2D* nfvtxt_tracks_south_qy2 = (TProfile2D*)mData2->Get("nfvtxt_tracks_south_qy2");
+  TProfile2D* nfvtxt_tracks_south_qy3 = (TProfile2D*)mData2->Get("nfvtxt_tracks_south_qy3");
+  TProfile2D* nfvtxt_tracks_south_qy4 = (TProfile2D*)mData2->Get("nfvtxt_tracks_south_qy4");
+  TProfile2D* nfvtxt_tracks_south_qy6 = (TProfile2D*)mData2->Get("nfvtxt_tracks_south_qy6");
 
-  TProfile* nfvtxt_tracks_south_inner_qx2 = (TProfile*)mData2->Get("nfvtxt_tracks_south_inner_qx2");
-  TProfile* nfvtxt_tracks_south_inner_qx3 = (TProfile*)mData2->Get("nfvtxt_tracks_south_inner_qx3");
-  TProfile* nfvtxt_tracks_south_inner_qx4 = (TProfile*)mData2->Get("nfvtxt_tracks_south_inner_qx4");
-  TProfile* nfvtxt_tracks_south_inner_qx6 = (TProfile*)mData2->Get("nfvtxt_tracks_south_inner_qx6");
-  TProfile* nfvtxt_tracks_south_inner_qy2 = (TProfile*)mData2->Get("nfvtxt_tracks_south_inner_qy2");
-  TProfile* nfvtxt_tracks_south_inner_qy3 = (TProfile*)mData2->Get("nfvtxt_tracks_south_inner_qy3");
-  TProfile* nfvtxt_tracks_south_inner_qy4 = (TProfile*)mData2->Get("nfvtxt_tracks_south_inner_qy4");
-  TProfile* nfvtxt_tracks_south_inner_qy6 = (TProfile*)mData2->Get("nfvtxt_tracks_south_inner_qy6");
+  TProfile2D* nfvtxt_tracks_south_inner_qx2 = (TProfile2D*)mData2->Get("nfvtxt_tracks_south_inner_qx2");
+  TProfile2D* nfvtxt_tracks_south_inner_qx3 = (TProfile2D*)mData2->Get("nfvtxt_tracks_south_inner_qx3");
+  TProfile2D* nfvtxt_tracks_south_inner_qx4 = (TProfile2D*)mData2->Get("nfvtxt_tracks_south_inner_qx4");
+  TProfile2D* nfvtxt_tracks_south_inner_qx6 = (TProfile2D*)mData2->Get("nfvtxt_tracks_south_inner_qx6");
+  TProfile2D* nfvtxt_tracks_south_inner_qy2 = (TProfile2D*)mData2->Get("nfvtxt_tracks_south_inner_qy2");
+  TProfile2D* nfvtxt_tracks_south_inner_qy3 = (TProfile2D*)mData2->Get("nfvtxt_tracks_south_inner_qy3");
+  TProfile2D* nfvtxt_tracks_south_inner_qy4 = (TProfile2D*)mData2->Get("nfvtxt_tracks_south_inner_qy4");
+  TProfile2D* nfvtxt_tracks_south_inner_qy6 = (TProfile2D*)mData2->Get("nfvtxt_tracks_south_inner_qy6");
 
-  TProfile* nfvtxt_tracks_south_outer_qx2 = (TProfile*)mData2->Get("nfvtxt_tracks_south_outer_qx2");
-  TProfile* nfvtxt_tracks_south_outer_qx3 = (TProfile*)mData2->Get("nfvtxt_tracks_south_outer_qx3");
-  TProfile* nfvtxt_tracks_south_outer_qx4 = (TProfile*)mData2->Get("nfvtxt_tracks_south_outer_qx4");
-  TProfile* nfvtxt_tracks_south_outer_qx6 = (TProfile*)mData2->Get("nfvtxt_tracks_south_outer_qx6");
-  TProfile* nfvtxt_tracks_south_outer_qy2 = (TProfile*)mData2->Get("nfvtxt_tracks_south_outer_qy2");
-  TProfile* nfvtxt_tracks_south_outer_qy3 = (TProfile*)mData2->Get("nfvtxt_tracks_south_outer_qy3");
-  TProfile* nfvtxt_tracks_south_outer_qy4 = (TProfile*)mData2->Get("nfvtxt_tracks_south_outer_qy4");
-  TProfile* nfvtxt_tracks_south_outer_qy6 = (TProfile*)mData2->Get("nfvtxt_tracks_south_outer_qy6");
+  TProfile2D* nfvtxt_tracks_south_outer_qx2 = (TProfile2D*)mData2->Get("nfvtxt_tracks_south_outer_qx2");
+  TProfile2D* nfvtxt_tracks_south_outer_qx3 = (TProfile2D*)mData2->Get("nfvtxt_tracks_south_outer_qx3");
+  TProfile2D* nfvtxt_tracks_south_outer_qx4 = (TProfile2D*)mData2->Get("nfvtxt_tracks_south_outer_qx4");
+  TProfile2D* nfvtxt_tracks_south_outer_qx6 = (TProfile2D*)mData2->Get("nfvtxt_tracks_south_outer_qx6");
+  TProfile2D* nfvtxt_tracks_south_outer_qy2 = (TProfile2D*)mData2->Get("nfvtxt_tracks_south_outer_qy2");
+  TProfile2D* nfvtxt_tracks_south_outer_qy3 = (TProfile2D*)mData2->Get("nfvtxt_tracks_south_outer_qy3");
+  TProfile2D* nfvtxt_tracks_south_outer_qy4 = (TProfile2D*)mData2->Get("nfvtxt_tracks_south_outer_qy4");
+  TProfile2D* nfvtxt_tracks_south_outer_qy6 = (TProfile2D*)mData2->Get("nfvtxt_tracks_south_outer_qy6");
 
-  TProfile* nfvtxt_tracks_north_qx2 = (TProfile*)mData2->Get("nfvtxt_tracks_north_qx2");
-  TProfile* nfvtxt_tracks_north_qx3 = (TProfile*)mData2->Get("nfvtxt_tracks_north_qx3");
-  TProfile* nfvtxt_tracks_north_qx4 = (TProfile*)mData2->Get("nfvtxt_tracks_north_qx4");
-  TProfile* nfvtxt_tracks_north_qx6 = (TProfile*)mData2->Get("nfvtxt_tracks_north_qx6");
-  TProfile* nfvtxt_tracks_north_qy2 = (TProfile*)mData2->Get("nfvtxt_tracks_north_qy2");
-  TProfile* nfvtxt_tracks_north_qy3 = (TProfile*)mData2->Get("nfvtxt_tracks_north_qy3");
-  TProfile* nfvtxt_tracks_north_qy4 = (TProfile*)mData2->Get("nfvtxt_tracks_north_qy4");
-  TProfile* nfvtxt_tracks_north_qy6 = (TProfile*)mData2->Get("nfvtxt_tracks_north_qy6");
+  TProfile2D* nfvtxt_tracks_north_qx2 = (TProfile2D*)mData2->Get("nfvtxt_tracks_north_qx2");
+  TProfile2D* nfvtxt_tracks_north_qx3 = (TProfile2D*)mData2->Get("nfvtxt_tracks_north_qx3");
+  TProfile2D* nfvtxt_tracks_north_qx4 = (TProfile2D*)mData2->Get("nfvtxt_tracks_north_qx4");
+  TProfile2D* nfvtxt_tracks_north_qx6 = (TProfile2D*)mData2->Get("nfvtxt_tracks_north_qx6");
+  TProfile2D* nfvtxt_tracks_north_qy2 = (TProfile2D*)mData2->Get("nfvtxt_tracks_north_qy2");
+  TProfile2D* nfvtxt_tracks_north_qy3 = (TProfile2D*)mData2->Get("nfvtxt_tracks_north_qy3");
+  TProfile2D* nfvtxt_tracks_north_qy4 = (TProfile2D*)mData2->Get("nfvtxt_tracks_north_qy4");
+  TProfile2D* nfvtxt_tracks_north_qy6 = (TProfile2D*)mData2->Get("nfvtxt_tracks_north_qy6");
 
-  TProfile* nfvtxt_tracks_north_inner_qx2 = (TProfile*)mData2->Get("nfvtxt_tracks_north_inner_qx2");
-  TProfile* nfvtxt_tracks_north_inner_qx3 = (TProfile*)mData2->Get("nfvtxt_tracks_north_inner_qx3");
-  TProfile* nfvtxt_tracks_north_inner_qx4 = (TProfile*)mData2->Get("nfvtxt_tracks_north_inner_qx4");
-  TProfile* nfvtxt_tracks_north_inner_qx6 = (TProfile*)mData2->Get("nfvtxt_tracks_north_inner_qx6");
-  TProfile* nfvtxt_tracks_north_inner_qy2 = (TProfile*)mData2->Get("nfvtxt_tracks_north_inner_qy2");
-  TProfile* nfvtxt_tracks_north_inner_qy3 = (TProfile*)mData2->Get("nfvtxt_tracks_north_inner_qy3");
-  TProfile* nfvtxt_tracks_north_inner_qy4 = (TProfile*)mData2->Get("nfvtxt_tracks_north_inner_qy4");
-  TProfile* nfvtxt_tracks_north_inner_qy6 = (TProfile*)mData2->Get("nfvtxt_tracks_north_inner_qy6");
+  TProfile2D* nfvtxt_tracks_north_inner_qx2 = (TProfile2D*)mData2->Get("nfvtxt_tracks_north_inner_qx2");
+  TProfile2D* nfvtxt_tracks_north_inner_qx3 = (TProfile2D*)mData2->Get("nfvtxt_tracks_north_inner_qx3");
+  TProfile2D* nfvtxt_tracks_north_inner_qx4 = (TProfile2D*)mData2->Get("nfvtxt_tracks_north_inner_qx4");
+  TProfile2D* nfvtxt_tracks_north_inner_qx6 = (TProfile2D*)mData2->Get("nfvtxt_tracks_north_inner_qx6");
+  TProfile2D* nfvtxt_tracks_north_inner_qy2 = (TProfile2D*)mData2->Get("nfvtxt_tracks_north_inner_qy2");
+  TProfile2D* nfvtxt_tracks_north_inner_qy3 = (TProfile2D*)mData2->Get("nfvtxt_tracks_north_inner_qy3");
+  TProfile2D* nfvtxt_tracks_north_inner_qy4 = (TProfile2D*)mData2->Get("nfvtxt_tracks_north_inner_qy4");
+  TProfile2D* nfvtxt_tracks_north_inner_qy6 = (TProfile2D*)mData2->Get("nfvtxt_tracks_north_inner_qy6");
 
-  TProfile* nfvtxt_tracks_north_outer_qx2 = (TProfile*)mData2->Get("nfvtxt_tracks_north_outer_qx2");
-  TProfile* nfvtxt_tracks_north_outer_qx3 = (TProfile*)mData2->Get("nfvtxt_tracks_north_outer_qx3");
-  TProfile* nfvtxt_tracks_north_outer_qx4 = (TProfile*)mData2->Get("nfvtxt_tracks_north_outer_qx4");
-  TProfile* nfvtxt_tracks_north_outer_qx6 = (TProfile*)mData2->Get("nfvtxt_tracks_north_outer_qx6");
-  TProfile* nfvtxt_tracks_north_outer_qy2 = (TProfile*)mData2->Get("nfvtxt_tracks_north_outer_qy2");
-  TProfile* nfvtxt_tracks_north_outer_qy3 = (TProfile*)mData2->Get("nfvtxt_tracks_north_outer_qy3");
-  TProfile* nfvtxt_tracks_north_outer_qy4 = (TProfile*)mData2->Get("nfvtxt_tracks_north_outer_qy4");
-  TProfile* nfvtxt_tracks_north_outer_qy6 = (TProfile*)mData2->Get("nfvtxt_tracks_north_outer_qy6");
+  TProfile2D* nfvtxt_tracks_north_outer_qx2 = (TProfile2D*)mData2->Get("nfvtxt_tracks_north_outer_qx2");
+  TProfile2D* nfvtxt_tracks_north_outer_qx3 = (TProfile2D*)mData2->Get("nfvtxt_tracks_north_outer_qx3");
+  TProfile2D* nfvtxt_tracks_north_outer_qx4 = (TProfile2D*)mData2->Get("nfvtxt_tracks_north_outer_qx4");
+  TProfile2D* nfvtxt_tracks_north_outer_qx6 = (TProfile2D*)mData2->Get("nfvtxt_tracks_north_outer_qx6");
+  TProfile2D* nfvtxt_tracks_north_outer_qy2 = (TProfile2D*)mData2->Get("nfvtxt_tracks_north_outer_qy2");
+  TProfile2D* nfvtxt_tracks_north_outer_qy3 = (TProfile2D*)mData2->Get("nfvtxt_tracks_north_outer_qy3");
+  TProfile2D* nfvtxt_tracks_north_outer_qy4 = (TProfile2D*)mData2->Get("nfvtxt_tracks_north_outer_qy4");
+  TProfile2D* nfvtxt_tracks_north_outer_qy6 = (TProfile2D*)mData2->Get("nfvtxt_tracks_north_outer_qy6");
 
   if ( !nfvtxt_tracks_south_qx2 ) cout << "Problem finding histogram nfvtxt_tracks_south_qx2 " << endl;
   if ( !nfvtxt_tracks_south_qx3 ) cout << "Problem finding histogram nfvtxt_tracks_south_qx3 " << endl;
@@ -1550,23 +1551,24 @@ void documulants(int runNumber)
       // ------------------------------------
 
       // --- need to get bin number based on nfvtxt, then get bincontent to set the offset
-      int binn = nfvtxt_tracks_south_qx2->GetXaxis()->FindBin(nfvtxt);
-      double offset_tracks_south_qx2 = nfvtxt_tracks_south_qx2->GetBinContent(binn);
-      //double offset_tracks_south_qx3 = nfvtxt_tracks_south_qx3->GetBinContent(binn);
-      double offset_tracks_south_qx4 = nfvtxt_tracks_south_qx4->GetBinContent(binn);
-      double offset_tracks_south_qx6 = nfvtxt_tracks_south_qx6->GetBinContent(binn);
-      double offset_tracks_south_qy2 = nfvtxt_tracks_south_qy2->GetBinContent(binn);
-      //double offset_tracks_south_qy3 = nfvtxt_tracks_south_qy3->GetBinContent(binn);
-      double offset_tracks_south_qy4 = nfvtxt_tracks_south_qy4->GetBinContent(binn);
-      double offset_tracks_south_qy6 = nfvtxt_tracks_south_qy6->GetBinContent(binn);
-      double offset_tracks_north_qx2 = nfvtxt_tracks_north_qx2->GetBinContent(binn);
-      //double offset_tracks_north_qx3 = nfvtxt_tracks_north_qx3->GetBinContent(binn);
-      double offset_tracks_north_qx4 = nfvtxt_tracks_north_qx4->GetBinContent(binn);
-      double offset_tracks_north_qx6 = nfvtxt_tracks_north_qx6->GetBinContent(binn);
-      double offset_tracks_north_qy2 = nfvtxt_tracks_north_qy2->GetBinContent(binn);
-      //double offset_tracks_north_qy3 = nfvtxt_tracks_north_qy3->GetBinContent(binn);
-      double offset_tracks_north_qy4 = nfvtxt_tracks_north_qy4->GetBinContent(binn);
-      double offset_tracks_north_qy6 = nfvtxt_tracks_north_qy6->GetBinContent(binn);
+      int binx = nfvtxt_tracks_south_qx2->GetXaxis()->FindBin(nfvtxt);
+      int biny = nfvtxt_tracks_south_qx2->GetYaxis()->FindBin(ZVTX);
+      double offset_tracks_south_qx2 = nfvtxt_tracks_south_qx2->GetBinContent(binx,biny);
+      //double offset_tracks_south_qx3 = nfvtxt_tracks_south_qx3->GetBinContent(binx,biny);
+      double offset_tracks_south_qx4 = nfvtxt_tracks_south_qx4->GetBinContent(binx,biny);
+      double offset_tracks_south_qx6 = nfvtxt_tracks_south_qx6->GetBinContent(binx,biny);
+      double offset_tracks_south_qy2 = nfvtxt_tracks_south_qy2->GetBinContent(binx,biny);
+      //double offset_tracks_south_qy3 = nfvtxt_tracks_south_qy3->GetBinContent(binx,biny);
+      double offset_tracks_south_qy4 = nfvtxt_tracks_south_qy4->GetBinContent(binx,biny);
+      double offset_tracks_south_qy6 = nfvtxt_tracks_south_qy6->GetBinContent(binx,biny);
+      double offset_tracks_north_qx2 = nfvtxt_tracks_north_qx2->GetBinContent(binx,biny);
+      //double offset_tracks_north_qx3 = nfvtxt_tracks_north_qx3->GetBinContent(binx,biny);
+      double offset_tracks_north_qx4 = nfvtxt_tracks_north_qx4->GetBinContent(binx,biny);
+      double offset_tracks_north_qx6 = nfvtxt_tracks_north_qx6->GetBinContent(binx,biny);
+      double offset_tracks_north_qy2 = nfvtxt_tracks_north_qy2->GetBinContent(binx,biny);
+      //double offset_tracks_north_qy3 = nfvtxt_tracks_north_qy3->GetBinContent(binx,biny);
+      double offset_tracks_north_qy4 = nfvtxt_tracks_north_qy4->GetBinContent(binx,biny);
+      double offset_tracks_north_qy6 = nfvtxt_tracks_north_qy6->GetBinContent(binx,biny);
 
       // if ( say_event ) cout << "bin number is " << binn << " and number of fvtx tracks is " << nfvtxt << endl;
       // if ( say_event ) cout << "qx2 south offset is " << offset_tracks_south_qx2 << endl;
@@ -1972,59 +1974,59 @@ void dooffsets(int runNumber)
   // --- make histograms
   // ---
 
-  TProfile* nfvtxt_tracks_south_qx2 = new TProfile("nfvtxt_tracks_south_qx2","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_south_qx3 = new TProfile("nfvtxt_tracks_south_qx3","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_south_qx4 = new TProfile("nfvtxt_tracks_south_qx4","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_south_qx6 = new TProfile("nfvtxt_tracks_south_qx6","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_south_qy2 = new TProfile("nfvtxt_tracks_south_qy2","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_south_qy3 = new TProfile("nfvtxt_tracks_south_qy3","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_south_qy4 = new TProfile("nfvtxt_tracks_south_qy4","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_south_qy6 = new TProfile("nfvtxt_tracks_south_qy6","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_south_qx2 = new TProfile2D("nfvtxt_tracks_south_qx2","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_south_qx3 = new TProfile2D("nfvtxt_tracks_south_qx3","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_south_qx4 = new TProfile2D("nfvtxt_tracks_south_qx4","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_south_qx6 = new TProfile2D("nfvtxt_tracks_south_qx6","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_south_qy2 = new TProfile2D("nfvtxt_tracks_south_qy2","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_south_qy3 = new TProfile2D("nfvtxt_tracks_south_qy3","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_south_qy4 = new TProfile2D("nfvtxt_tracks_south_qy4","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_south_qy6 = new TProfile2D("nfvtxt_tracks_south_qy6","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
 
-  TProfile* nfvtxt_tracks_south_inner_qx2 = new TProfile("nfvtxt_tracks_south_inner_qx2","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_south_inner_qx3 = new TProfile("nfvtxt_tracks_south_inner_qx3","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_south_inner_qx4 = new TProfile("nfvtxt_tracks_south_inner_qx4","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_south_inner_qx6 = new TProfile("nfvtxt_tracks_south_inner_qx6","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_south_inner_qy2 = new TProfile("nfvtxt_tracks_south_inner_qy2","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_south_inner_qy3 = new TProfile("nfvtxt_tracks_south_inner_qy3","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_south_inner_qy4 = new TProfile("nfvtxt_tracks_south_inner_qy4","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_south_inner_qy6 = new TProfile("nfvtxt_tracks_south_inner_qy6","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_south_inner_qx2 = new TProfile2D("nfvtxt_tracks_south_inner_qx2","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_south_inner_qx3 = new TProfile2D("nfvtxt_tracks_south_inner_qx3","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_south_inner_qx4 = new TProfile2D("nfvtxt_tracks_south_inner_qx4","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_south_inner_qx6 = new TProfile2D("nfvtxt_tracks_south_inner_qx6","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_south_inner_qy2 = new TProfile2D("nfvtxt_tracks_south_inner_qy2","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_south_inner_qy3 = new TProfile2D("nfvtxt_tracks_south_inner_qy3","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_south_inner_qy4 = new TProfile2D("nfvtxt_tracks_south_inner_qy4","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_south_inner_qy6 = new TProfile2D("nfvtxt_tracks_south_inner_qy6","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
 
-  TProfile* nfvtxt_tracks_south_outer_qx2 = new TProfile("nfvtxt_tracks_south_outer_qx2","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_south_outer_qx3 = new TProfile("nfvtxt_tracks_south_outer_qx3","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_south_outer_qx4 = new TProfile("nfvtxt_tracks_south_outer_qx4","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_south_outer_qx6 = new TProfile("nfvtxt_tracks_south_outer_qx6","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_south_outer_qy2 = new TProfile("nfvtxt_tracks_south_outer_qy2","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_south_outer_qy3 = new TProfile("nfvtxt_tracks_south_outer_qy3","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_south_outer_qy4 = new TProfile("nfvtxt_tracks_south_outer_qy4","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_south_outer_qy6 = new TProfile("nfvtxt_tracks_south_outer_qy6","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_south_outer_qx2 = new TProfile2D("nfvtxt_tracks_south_outer_qx2","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_south_outer_qx3 = new TProfile2D("nfvtxt_tracks_south_outer_qx3","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_south_outer_qx4 = new TProfile2D("nfvtxt_tracks_south_outer_qx4","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_south_outer_qx6 = new TProfile2D("nfvtxt_tracks_south_outer_qx6","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_south_outer_qy2 = new TProfile2D("nfvtxt_tracks_south_outer_qy2","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_south_outer_qy3 = new TProfile2D("nfvtxt_tracks_south_outer_qy3","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_south_outer_qy4 = new TProfile2D("nfvtxt_tracks_south_outer_qy4","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_south_outer_qy6 = new TProfile2D("nfvtxt_tracks_south_outer_qy6","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
 
-  TProfile* nfvtxt_tracks_north_qx2 = new TProfile("nfvtxt_tracks_north_qx2","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_north_qx3 = new TProfile("nfvtxt_tracks_north_qx3","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_north_qx4 = new TProfile("nfvtxt_tracks_north_qx4","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_north_qx6 = new TProfile("nfvtxt_tracks_north_qx6","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_north_qy2 = new TProfile("nfvtxt_tracks_north_qy2","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_north_qy3 = new TProfile("nfvtxt_tracks_north_qy3","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_north_qy4 = new TProfile("nfvtxt_tracks_north_qy4","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_north_qy6 = new TProfile("nfvtxt_tracks_north_qy6","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_north_qx2 = new TProfile2D("nfvtxt_tracks_north_qx2","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_north_qx3 = new TProfile2D("nfvtxt_tracks_north_qx3","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_north_qx4 = new TProfile2D("nfvtxt_tracks_north_qx4","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_north_qx6 = new TProfile2D("nfvtxt_tracks_north_qx6","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_north_qy2 = new TProfile2D("nfvtxt_tracks_north_qy2","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_north_qy3 = new TProfile2D("nfvtxt_tracks_north_qy3","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_north_qy4 = new TProfile2D("nfvtxt_tracks_north_qy4","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_north_qy6 = new TProfile2D("nfvtxt_tracks_north_qy6","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
 
-  TProfile* nfvtxt_tracks_north_inner_qx2 = new TProfile("nfvtxt_tracks_north_inner_qx2","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_north_inner_qx3 = new TProfile("nfvtxt_tracks_north_inner_qx3","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_north_inner_qx4 = new TProfile("nfvtxt_tracks_north_inner_qx4","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_north_inner_qx6 = new TProfile("nfvtxt_tracks_north_inner_qx6","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_north_inner_qy2 = new TProfile("nfvtxt_tracks_north_inner_qy2","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_north_inner_qy3 = new TProfile("nfvtxt_tracks_north_inner_qy3","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_north_inner_qy4 = new TProfile("nfvtxt_tracks_north_inner_qy4","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_north_inner_qy6 = new TProfile("nfvtxt_tracks_north_inner_qy6","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_north_inner_qx2 = new TProfile2D("nfvtxt_tracks_north_inner_qx2","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_north_inner_qx3 = new TProfile2D("nfvtxt_tracks_north_inner_qx3","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_north_inner_qx4 = new TProfile2D("nfvtxt_tracks_north_inner_qx4","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_north_inner_qx6 = new TProfile2D("nfvtxt_tracks_north_inner_qx6","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_north_inner_qy2 = new TProfile2D("nfvtxt_tracks_north_inner_qy2","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_north_inner_qy3 = new TProfile2D("nfvtxt_tracks_north_inner_qy3","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_north_inner_qy4 = new TProfile2D("nfvtxt_tracks_north_inner_qy4","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_north_inner_qy6 = new TProfile2D("nfvtxt_tracks_north_inner_qy6","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
 
-  TProfile* nfvtxt_tracks_north_outer_qx2 = new TProfile("nfvtxt_tracks_north_outer_qx2","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_north_outer_qx3 = new TProfile("nfvtxt_tracks_north_outer_qx3","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_north_outer_qx4 = new TProfile("nfvtxt_tracks_north_outer_qx4","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_north_outer_qx6 = new TProfile("nfvtxt_tracks_north_outer_qx6","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_north_outer_qy2 = new TProfile("nfvtxt_tracks_north_outer_qy2","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_north_outer_qy3 = new TProfile("nfvtxt_tracks_north_outer_qy3","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_north_outer_qy4 = new TProfile("nfvtxt_tracks_north_outer_qy4","",80,-0.5,79.5,-1.1,1.1,"");
-  TProfile* nfvtxt_tracks_north_outer_qy6 = new TProfile("nfvtxt_tracks_north_outer_qy6","",80,-0.5,79.5,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_north_outer_qx2 = new TProfile2D("nfvtxt_tracks_north_outer_qx2","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_north_outer_qx3 = new TProfile2D("nfvtxt_tracks_north_outer_qx3","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_north_outer_qx4 = new TProfile2D("nfvtxt_tracks_north_outer_qx4","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_north_outer_qx6 = new TProfile2D("nfvtxt_tracks_north_outer_qx6","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_north_outer_qy2 = new TProfile2D("nfvtxt_tracks_north_outer_qy2","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_north_outer_qy3 = new TProfile2D("nfvtxt_tracks_north_outer_qy3","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_north_outer_qy4 = new TProfile2D("nfvtxt_tracks_north_outer_qy4","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
+  TProfile2D* nfvtxt_tracks_north_outer_qy6 = new TProfile2D("nfvtxt_tracks_north_outer_qy6","",80,-0.5,79.5,22,-11.0,11.0,-1.1,1.1,"");
 
   // ---
   // --- now get the tree ready
@@ -2410,59 +2412,59 @@ void dooffsets(int runNumber)
 	    }
 	} // fvtx track loop
 
-      nfvtxt_tracks_south_qx2->Fill(nfvtxt,fvtxs_tracks_qx2[0]/fvtxs_tracks_qw[0]);
-      nfvtxt_tracks_south_qx3->Fill(nfvtxt,fvtxs_tracks_qx3[0]/fvtxs_tracks_qw[0]);
-      nfvtxt_tracks_south_qx4->Fill(nfvtxt,fvtxs_tracks_qx4[0]/fvtxs_tracks_qw[0]);
-      nfvtxt_tracks_south_qx6->Fill(nfvtxt,fvtxs_tracks_qx6[0]/fvtxs_tracks_qw[0]);
-      nfvtxt_tracks_south_qy2->Fill(nfvtxt,fvtxs_tracks_qy2[0]/fvtxs_tracks_qw[0]);
-      nfvtxt_tracks_south_qy3->Fill(nfvtxt,fvtxs_tracks_qy3[0]/fvtxs_tracks_qw[0]);
-      nfvtxt_tracks_south_qy4->Fill(nfvtxt,fvtxs_tracks_qy4[0]/fvtxs_tracks_qw[0]);
-      nfvtxt_tracks_south_qy6->Fill(nfvtxt,fvtxs_tracks_qy6[0]/fvtxs_tracks_qw[0]);
+      nfvtxt_tracks_south_qx2->Fill(nfvtxt,ZVTX,fvtxs_tracks_qx2[0]/fvtxs_tracks_qw[0]);
+      nfvtxt_tracks_south_qx3->Fill(nfvtxt,ZVTX,fvtxs_tracks_qx3[0]/fvtxs_tracks_qw[0]);
+      nfvtxt_tracks_south_qx4->Fill(nfvtxt,ZVTX,fvtxs_tracks_qx4[0]/fvtxs_tracks_qw[0]);
+      nfvtxt_tracks_south_qx6->Fill(nfvtxt,ZVTX,fvtxs_tracks_qx6[0]/fvtxs_tracks_qw[0]);
+      nfvtxt_tracks_south_qy2->Fill(nfvtxt,ZVTX,fvtxs_tracks_qy2[0]/fvtxs_tracks_qw[0]);
+      nfvtxt_tracks_south_qy3->Fill(nfvtxt,ZVTX,fvtxs_tracks_qy3[0]/fvtxs_tracks_qw[0]);
+      nfvtxt_tracks_south_qy4->Fill(nfvtxt,ZVTX,fvtxs_tracks_qy4[0]/fvtxs_tracks_qw[0]);
+      nfvtxt_tracks_south_qy6->Fill(nfvtxt,ZVTX,fvtxs_tracks_qy6[0]/fvtxs_tracks_qw[0]);
 
-      nfvtxt_tracks_south_inner_qx2->Fill(nfvtxt,fvtxs_tracks_qx2[1]/fvtxs_tracks_qw[1]);
-      nfvtxt_tracks_south_inner_qx3->Fill(nfvtxt,fvtxs_tracks_qx3[1]/fvtxs_tracks_qw[1]);
-      nfvtxt_tracks_south_inner_qx4->Fill(nfvtxt,fvtxs_tracks_qx4[1]/fvtxs_tracks_qw[1]);
-      nfvtxt_tracks_south_inner_qx6->Fill(nfvtxt,fvtxs_tracks_qx6[1]/fvtxs_tracks_qw[1]);
-      nfvtxt_tracks_south_inner_qy2->Fill(nfvtxt,fvtxs_tracks_qy2[1]/fvtxs_tracks_qw[1]);
-      nfvtxt_tracks_south_inner_qy3->Fill(nfvtxt,fvtxs_tracks_qy3[1]/fvtxs_tracks_qw[1]);
-      nfvtxt_tracks_south_inner_qy4->Fill(nfvtxt,fvtxs_tracks_qy4[1]/fvtxs_tracks_qw[1]);
-      nfvtxt_tracks_south_inner_qy6->Fill(nfvtxt,fvtxs_tracks_qy6[1]/fvtxs_tracks_qw[1]);
+      nfvtxt_tracks_south_inner_qx2->Fill(nfvtxt,ZVTX,fvtxs_tracks_qx2[1]/fvtxs_tracks_qw[1]);
+      nfvtxt_tracks_south_inner_qx3->Fill(nfvtxt,ZVTX,fvtxs_tracks_qx3[1]/fvtxs_tracks_qw[1]);
+      nfvtxt_tracks_south_inner_qx4->Fill(nfvtxt,ZVTX,fvtxs_tracks_qx4[1]/fvtxs_tracks_qw[1]);
+      nfvtxt_tracks_south_inner_qx6->Fill(nfvtxt,ZVTX,fvtxs_tracks_qx6[1]/fvtxs_tracks_qw[1]);
+      nfvtxt_tracks_south_inner_qy2->Fill(nfvtxt,ZVTX,fvtxs_tracks_qy2[1]/fvtxs_tracks_qw[1]);
+      nfvtxt_tracks_south_inner_qy3->Fill(nfvtxt,ZVTX,fvtxs_tracks_qy3[1]/fvtxs_tracks_qw[1]);
+      nfvtxt_tracks_south_inner_qy4->Fill(nfvtxt,ZVTX,fvtxs_tracks_qy4[1]/fvtxs_tracks_qw[1]);
+      nfvtxt_tracks_south_inner_qy6->Fill(nfvtxt,ZVTX,fvtxs_tracks_qy6[1]/fvtxs_tracks_qw[1]);
 
-      nfvtxt_tracks_south_outer_qx2->Fill(nfvtxt,fvtxs_tracks_qx2[2]/fvtxs_tracks_qw[2]);
-      nfvtxt_tracks_south_outer_qx3->Fill(nfvtxt,fvtxs_tracks_qx3[2]/fvtxs_tracks_qw[2]);
-      nfvtxt_tracks_south_outer_qx4->Fill(nfvtxt,fvtxs_tracks_qx4[2]/fvtxs_tracks_qw[2]);
-      nfvtxt_tracks_south_outer_qx6->Fill(nfvtxt,fvtxs_tracks_qx6[2]/fvtxs_tracks_qw[2]);
-      nfvtxt_tracks_south_outer_qy2->Fill(nfvtxt,fvtxs_tracks_qy2[2]/fvtxs_tracks_qw[2]);
-      nfvtxt_tracks_south_outer_qy3->Fill(nfvtxt,fvtxs_tracks_qy3[2]/fvtxs_tracks_qw[2]);
-      nfvtxt_tracks_south_outer_qy4->Fill(nfvtxt,fvtxs_tracks_qy4[2]/fvtxs_tracks_qw[2]);
-      nfvtxt_tracks_south_outer_qy6->Fill(nfvtxt,fvtxs_tracks_qy6[2]/fvtxs_tracks_qw[2]);
+      nfvtxt_tracks_south_outer_qx2->Fill(nfvtxt,ZVTX,fvtxs_tracks_qx2[2]/fvtxs_tracks_qw[2]);
+      nfvtxt_tracks_south_outer_qx3->Fill(nfvtxt,ZVTX,fvtxs_tracks_qx3[2]/fvtxs_tracks_qw[2]);
+      nfvtxt_tracks_south_outer_qx4->Fill(nfvtxt,ZVTX,fvtxs_tracks_qx4[2]/fvtxs_tracks_qw[2]);
+      nfvtxt_tracks_south_outer_qx6->Fill(nfvtxt,ZVTX,fvtxs_tracks_qx6[2]/fvtxs_tracks_qw[2]);
+      nfvtxt_tracks_south_outer_qy2->Fill(nfvtxt,ZVTX,fvtxs_tracks_qy2[2]/fvtxs_tracks_qw[2]);
+      nfvtxt_tracks_south_outer_qy3->Fill(nfvtxt,ZVTX,fvtxs_tracks_qy3[2]/fvtxs_tracks_qw[2]);
+      nfvtxt_tracks_south_outer_qy4->Fill(nfvtxt,ZVTX,fvtxs_tracks_qy4[2]/fvtxs_tracks_qw[2]);
+      nfvtxt_tracks_south_outer_qy6->Fill(nfvtxt,ZVTX,fvtxs_tracks_qy6[2]/fvtxs_tracks_qw[2]);
 
-      nfvtxt_tracks_north_qx2->Fill(nfvtxt,fvtxn_tracks_qx2[0]/fvtxn_tracks_qw[0]);
-      nfvtxt_tracks_north_qx3->Fill(nfvtxt,fvtxn_tracks_qx3[0]/fvtxn_tracks_qw[0]);
-      nfvtxt_tracks_north_qx4->Fill(nfvtxt,fvtxn_tracks_qx4[0]/fvtxn_tracks_qw[0]);
-      nfvtxt_tracks_north_qx6->Fill(nfvtxt,fvtxn_tracks_qx6[0]/fvtxn_tracks_qw[0]);
-      nfvtxt_tracks_north_qy2->Fill(nfvtxt,fvtxn_tracks_qy2[0]/fvtxn_tracks_qw[0]);
-      nfvtxt_tracks_north_qy3->Fill(nfvtxt,fvtxn_tracks_qy3[0]/fvtxn_tracks_qw[0]);
-      nfvtxt_tracks_north_qy4->Fill(nfvtxt,fvtxn_tracks_qy4[0]/fvtxn_tracks_qw[0]);
-      nfvtxt_tracks_north_qy6->Fill(nfvtxt,fvtxn_tracks_qy6[0]/fvtxn_tracks_qw[0]);
+      nfvtxt_tracks_north_qx2->Fill(nfvtxt,ZVTX,fvtxn_tracks_qx2[0]/fvtxn_tracks_qw[0]);
+      nfvtxt_tracks_north_qx3->Fill(nfvtxt,ZVTX,fvtxn_tracks_qx3[0]/fvtxn_tracks_qw[0]);
+      nfvtxt_tracks_north_qx4->Fill(nfvtxt,ZVTX,fvtxn_tracks_qx4[0]/fvtxn_tracks_qw[0]);
+      nfvtxt_tracks_north_qx6->Fill(nfvtxt,ZVTX,fvtxn_tracks_qx6[0]/fvtxn_tracks_qw[0]);
+      nfvtxt_tracks_north_qy2->Fill(nfvtxt,ZVTX,fvtxn_tracks_qy2[0]/fvtxn_tracks_qw[0]);
+      nfvtxt_tracks_north_qy3->Fill(nfvtxt,ZVTX,fvtxn_tracks_qy3[0]/fvtxn_tracks_qw[0]);
+      nfvtxt_tracks_north_qy4->Fill(nfvtxt,ZVTX,fvtxn_tracks_qy4[0]/fvtxn_tracks_qw[0]);
+      nfvtxt_tracks_north_qy6->Fill(nfvtxt,ZVTX,fvtxn_tracks_qy6[0]/fvtxn_tracks_qw[0]);
 
-      nfvtxt_tracks_north_inner_qx2->Fill(nfvtxt,fvtxn_tracks_qx2[1]/fvtxn_tracks_qw[1]);
-      nfvtxt_tracks_north_inner_qx3->Fill(nfvtxt,fvtxn_tracks_qx3[1]/fvtxn_tracks_qw[1]);
-      nfvtxt_tracks_north_inner_qx4->Fill(nfvtxt,fvtxn_tracks_qx4[1]/fvtxn_tracks_qw[1]);
-      nfvtxt_tracks_north_inner_qx6->Fill(nfvtxt,fvtxn_tracks_qx6[1]/fvtxn_tracks_qw[1]);
-      nfvtxt_tracks_north_inner_qy2->Fill(nfvtxt,fvtxn_tracks_qy2[1]/fvtxn_tracks_qw[1]);
-      nfvtxt_tracks_north_inner_qy3->Fill(nfvtxt,fvtxn_tracks_qy3[1]/fvtxn_tracks_qw[1]);
-      nfvtxt_tracks_north_inner_qy4->Fill(nfvtxt,fvtxn_tracks_qy4[1]/fvtxn_tracks_qw[1]);
-      nfvtxt_tracks_north_inner_qy6->Fill(nfvtxt,fvtxn_tracks_qy6[1]/fvtxn_tracks_qw[1]);
+      nfvtxt_tracks_north_inner_qx2->Fill(nfvtxt,ZVTX,fvtxn_tracks_qx2[1]/fvtxn_tracks_qw[1]);
+      nfvtxt_tracks_north_inner_qx3->Fill(nfvtxt,ZVTX,fvtxn_tracks_qx3[1]/fvtxn_tracks_qw[1]);
+      nfvtxt_tracks_north_inner_qx4->Fill(nfvtxt,ZVTX,fvtxn_tracks_qx4[1]/fvtxn_tracks_qw[1]);
+      nfvtxt_tracks_north_inner_qx6->Fill(nfvtxt,ZVTX,fvtxn_tracks_qx6[1]/fvtxn_tracks_qw[1]);
+      nfvtxt_tracks_north_inner_qy2->Fill(nfvtxt,ZVTX,fvtxn_tracks_qy2[1]/fvtxn_tracks_qw[1]);
+      nfvtxt_tracks_north_inner_qy3->Fill(nfvtxt,ZVTX,fvtxn_tracks_qy3[1]/fvtxn_tracks_qw[1]);
+      nfvtxt_tracks_north_inner_qy4->Fill(nfvtxt,ZVTX,fvtxn_tracks_qy4[1]/fvtxn_tracks_qw[1]);
+      nfvtxt_tracks_north_inner_qy6->Fill(nfvtxt,ZVTX,fvtxn_tracks_qy6[1]/fvtxn_tracks_qw[1]);
 
-      nfvtxt_tracks_north_outer_qx2->Fill(nfvtxt,fvtxn_tracks_qx2[2]/fvtxn_tracks_qw[2]);
-      nfvtxt_tracks_north_outer_qx3->Fill(nfvtxt,fvtxn_tracks_qx3[2]/fvtxn_tracks_qw[2]);
-      nfvtxt_tracks_north_outer_qx4->Fill(nfvtxt,fvtxn_tracks_qx4[2]/fvtxn_tracks_qw[2]);
-      nfvtxt_tracks_north_outer_qx6->Fill(nfvtxt,fvtxn_tracks_qx6[2]/fvtxn_tracks_qw[2]);
-      nfvtxt_tracks_north_outer_qy2->Fill(nfvtxt,fvtxn_tracks_qy2[2]/fvtxn_tracks_qw[2]);
-      nfvtxt_tracks_north_outer_qy3->Fill(nfvtxt,fvtxn_tracks_qy3[2]/fvtxn_tracks_qw[2]);
-      nfvtxt_tracks_north_outer_qy4->Fill(nfvtxt,fvtxn_tracks_qy4[2]/fvtxn_tracks_qw[2]);
-      nfvtxt_tracks_north_outer_qy6->Fill(nfvtxt,fvtxn_tracks_qy6[2]/fvtxn_tracks_qw[2]);
+      nfvtxt_tracks_north_outer_qx2->Fill(nfvtxt,ZVTX,fvtxn_tracks_qx2[2]/fvtxn_tracks_qw[2]);
+      nfvtxt_tracks_north_outer_qx3->Fill(nfvtxt,ZVTX,fvtxn_tracks_qx3[2]/fvtxn_tracks_qw[2]);
+      nfvtxt_tracks_north_outer_qx4->Fill(nfvtxt,ZVTX,fvtxn_tracks_qx4[2]/fvtxn_tracks_qw[2]);
+      nfvtxt_tracks_north_outer_qx6->Fill(nfvtxt,ZVTX,fvtxn_tracks_qx6[2]/fvtxn_tracks_qw[2]);
+      nfvtxt_tracks_north_outer_qy2->Fill(nfvtxt,ZVTX,fvtxn_tracks_qy2[2]/fvtxn_tracks_qw[2]);
+      nfvtxt_tracks_north_outer_qy3->Fill(nfvtxt,ZVTX,fvtxn_tracks_qy3[2]/fvtxn_tracks_qw[2]);
+      nfvtxt_tracks_north_outer_qy4->Fill(nfvtxt,ZVTX,fvtxn_tracks_qy4[2]/fvtxn_tracks_qw[2]);
+      nfvtxt_tracks_north_outer_qy6->Fill(nfvtxt,ZVTX,fvtxn_tracks_qy6[2]/fvtxn_tracks_qw[2]);
 
     } // end of event loop
 
