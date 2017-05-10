@@ -1424,21 +1424,28 @@ void flatten(int runNumber, int rp_recal_pass)
 
 
 
-    // testing Qx/Qy offset on FVTXS Psi2
+    //
+    // Add Q vector offsets.
+    // Note, need to recalculate Qx and Qy to propagate flattening
+    //
+    // Qx/Qy offset on FVTXS Psi2
     sumxy[1][fvtxs_index][0] = cos(sumxy[1][fvtxs_index][3] * 2) + qxOffset;
     sumxy[1][fvtxs_index][1] = sin(sumxy[1][fvtxs_index][3] * 2) + qy2_offset_fvtxs[eidx][icent];
     sumxy[1][fvtxs_index][3] = atan2(sumxy[1][fvtxs_index][1], sumxy[1][fvtxs_index][0]) / (1 + 1.0);
 
     // Qy offset on BBCS Psi2
+    sumxy[1][bbcs_index][0] = cos(sumxy[1][bbcs_index][3] * 2);
     sumxy[1][bbcs_index][1] = sin(sumxy[1][bbcs_index][3] * 2) + qy2_offset_bbcs[eidx][icent];
     sumxy[1][bbcs_index][3] = atan2(sumxy[1][bbcs_index][1], sumxy[1][bbcs_index][0]) / (1 + 1.0);
 
     // Qx offset on FVTXS Psi3
     sumxy[2][fvtxs_index][0] = cos(sumxy[2][fvtxs_index][3] * 3) + qx3_offset_fvtxs[eidx][icent];
+    sumxy[2][fvtxs_index][1] = sin(sumxy[2][fvtxs_index][3] * 2);
     sumxy[2][fvtxs_index][3] = atan2(sumxy[2][fvtxs_index][1], sumxy[2][fvtxs_index][0]) / (2 + 1.0);
 
     // Qx offset on BBCS Psi3
     sumxy[2][bbcs_index][0] = cos(sumxy[2][bbcs_index][3] * 3) + qx3_offset_bbcs[eidx][icent];
+    sumxy[2][bbcs_index][1] = sin(sumxy[2][bbcs_index][3] * 3);
     sumxy[2][bbcs_index][3] = atan2(sumxy[2][bbcs_index][1], sumxy[2][bbcs_index][0]) / (2 + 1.0);
 
 
