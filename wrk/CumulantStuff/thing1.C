@@ -19,7 +19,10 @@ void dothething(int& name)
   double ymin = 0.0;
   double ymax = 50.0;
 
-  TFile* file1 = TFile::Open(Form("../output/Cumulants_20170502-1159_gittagu_aea49a4_BeforeRecentChanges/cumulants_%d.root",name));
+  // this version of "base" is rather different, working on pinning it down...
+  //TFile* file1 = TFile::Open(Form("../output/Cumulants_20170502-1159_gittagu_aea49a4_BeforeRecentChanges/cumulants_%d.root",name));
+  // this version of "base" agrees with the other three
+  TFile* file1 = TFile::Open(Form("../output/Cumulants_20170511-0046_gittagu_d52d914_BeforeRecentChanges/cumulants_%d.root",name));
   TFile* file2 = TFile::Open(Form("../output/Cumulants_20170510-1238_gittagu_b917033_FloatToDoubleAnd2dRecentering/cumulants_%d.root",name));
   TFile* file3 = TFile::Open(Form("../output/Cumulants_20170510-1509_gittagu_75765b7_FloatToDoubleOnly/cumulants_%d.root",name));
   TFile* file4 = TFile::Open(Form("../output/Cumulants_20170510-2143_gittagm_9fefb05_2dRecenteringOnly/cumulants_%d.root",name));
