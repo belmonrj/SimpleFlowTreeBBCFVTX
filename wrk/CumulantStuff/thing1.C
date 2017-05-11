@@ -118,6 +118,53 @@ void dothething(int name, int which1, int which2, int which3, int which4)
   c1->Print(Form("ComparisonFigs/FourWayComparison_os_c22_%d_%d%d%d%d.png",name,which1,which2,which3,which4));
   c1->Print(Form("ComparisonFigs/FourWayComparison_os_c22_%d_%d%d%d%d.pdf",name,which1,which2,which3,which4));
 
+  // --- c2G
+
+  TProfile* h1_os_c2G = (TProfile*)file1->Get("nfvtxt_os_fvtxsfvtxn_tracks_c22");
+  TProfile* h2_os_c2G = (TProfile*)file2->Get("nfvtxt_os_fvtxsfvtxn_tracks_c22");
+  TProfile* h3_os_c2G = (TProfile*)file3->Get("nfvtxt_os_fvtxsfvtxn_tracks_c22");
+  TProfile* h4_os_c2G = (TProfile*)file4->Get("nfvtxt_os_fvtxsfvtxn_tracks_c22");
+
+  xmin = 0.0;
+  xmax = 50.0;
+  ymin = -1e-3;
+  ymax = 2e-2;
+  TH2D* hd_os_c2G = new TH2D("hd_os_c2G","",1,xmin,xmax,1,ymin,ymax);
+  hd_os_c2G->GetXaxis()->SetTitle("N_{tracks}^{FVTX}");
+  hd_os_c2G->GetYaxis()->SetTitle("<<2>>");
+  hd_os_c2G->GetXaxis()->SetTitleOffset(1.1);
+  hd_os_c2G->GetYaxis()->SetTitleOffset(1.4);
+  hd_os_c2G->GetXaxis()->SetTitleSize(0.055);
+  hd_os_c2G->GetYaxis()->SetTitleSize(0.055);
+  hd_os_c2G->GetXaxis()->SetLabelSize(0.055);
+  hd_os_c2G->GetYaxis()->SetLabelSize(0.055);
+  hd_os_c2G->Draw();
+  h1_os_c2G->SetLineColor(kBlack);
+  h2_os_c2G->SetLineColor(kRed);
+  h3_os_c2G->SetLineColor(kBlue);
+  h4_os_c2G->SetLineColor(kGreen+2);
+  h1_os_c2G->SetMarkerColor(kBlack);
+  h2_os_c2G->SetMarkerColor(kRed);
+  h3_os_c2G->SetMarkerColor(kBlue);
+  h4_os_c2G->SetMarkerColor(kGreen+2);
+  h1_os_c2G->SetMarkerStyle(kOpenSquare);
+  h2_os_c2G->SetMarkerStyle(kOpenCircle);
+  h3_os_c2G->SetMarkerStyle(kOpenDiamond);
+  h4_os_c2G->SetMarkerStyle(kOpenCross);
+  h1_os_c2G->Draw("same ex0p");
+  h2_os_c2G->Draw("same ex0p");
+  h3_os_c2G->Draw("same ex0p");
+  h4_os_c2G->Draw("same ex0p");
+  TLegend* leg_os_c2G = new TLegend(0.58,0.68,0.88,0.88);
+  leg_os_c2G->AddEntry(h1_os_c2G,leghead1,"p");
+  leg_os_c2G->AddEntry(h2_os_c2G,leghead2,"p");
+  leg_os_c2G->AddEntry(h3_os_c2G,leghead3,"p");
+  leg_os_c2G->AddEntry(h4_os_c2G,leghead4,"p");
+  leg_os_c2G->SetTextSize(0.055);
+  leg_os_c2G->Draw();
+  c1->Print(Form("ComparisonFigs/FourWayComparison_os_c2G_%d_%d%d%d%d.png",name,which1,which2,which3,which4));
+  c1->Print(Form("ComparisonFigs/FourWayComparison_os_c2G_%d_%d%d%d%d.pdf",name,which1,which2,which3,which4));
+
   // --- c24
 
   TProfile* h1_os_c24 = (TProfile*)file1->Get("nfvtxt_os_fvtxc_tracks_c24");
@@ -260,6 +307,53 @@ void dothething(int name, int which1, int which2, int which3, int which4)
   leg_ac_c22->Draw();
   c1->Print(Form("ComparisonFigs/FourWayComparison_ac_c22_%d_%d%d%d%d.png",name,which1,which2,which3,which4));
   c1->Print(Form("ComparisonFigs/FourWayComparison_ac_c22_%d_%d%d%d%d.pdf",name,which1,which2,which3,which4));
+
+  // --- c2G
+
+  TProfile* h1_ac_c2G = (TProfile*)file1->Get("nfvtxt_ac_fvtxsfvtxn_tracks_c22");
+  TProfile* h2_ac_c2G = (TProfile*)file2->Get("nfvtxt_ac_fvtxsfvtxn_tracks_c22");
+  TProfile* h3_ac_c2G = (TProfile*)file3->Get("nfvtxt_ac_fvtxsfvtxn_tracks_c22");
+  TProfile* h4_ac_c2G = (TProfile*)file4->Get("nfvtxt_ac_fvtxsfvtxn_tracks_c22");
+
+  xmin = 0.0;
+  xmax = 50.0;
+  ymin = -1e-3;
+  ymax = 2e-2;
+  TH2D* hd_ac_c2G = new TH2D("hd_ac_c2G","",1,xmin,xmax,1,ymin,ymax);
+  hd_ac_c2G->GetXaxis()->SetTitle("N_{tracks}^{FVTX}");
+  hd_ac_c2G->GetYaxis()->SetTitle("<<2>>");
+  hd_ac_c2G->GetXaxis()->SetTitleOffset(1.1);
+  hd_ac_c2G->GetYaxis()->SetTitleOffset(1.4);
+  hd_ac_c2G->GetXaxis()->SetTitleSize(0.055);
+  hd_ac_c2G->GetYaxis()->SetTitleSize(0.055);
+  hd_ac_c2G->GetXaxis()->SetLabelSize(0.055);
+  hd_ac_c2G->GetYaxis()->SetLabelSize(0.055);
+  hd_ac_c2G->Draw();
+  h1_ac_c2G->SetLineColor(kBlack);
+  h2_ac_c2G->SetLineColor(kRed);
+  h3_ac_c2G->SetLineColor(kBlue);
+  h4_ac_c2G->SetLineColor(kGreen+2);
+  h1_ac_c2G->SetMarkerColor(kBlack);
+  h2_ac_c2G->SetMarkerColor(kRed);
+  h3_ac_c2G->SetMarkerColor(kBlue);
+  h4_ac_c2G->SetMarkerColor(kGreen+2);
+  h1_ac_c2G->SetMarkerStyle(kOpenSquare);
+  h2_ac_c2G->SetMarkerStyle(kOpenCircle);
+  h3_ac_c2G->SetMarkerStyle(kOpenDiamond);
+  h4_ac_c2G->SetMarkerStyle(kOpenCross);
+  h1_ac_c2G->Draw("same ex0p");
+  h2_ac_c2G->Draw("same ex0p");
+  h3_ac_c2G->Draw("same ex0p");
+  h4_ac_c2G->Draw("same ex0p");
+  TLegend* leg_ac_c2G = new TLegend(0.58,0.68,0.88,0.88);
+  leg_ac_c2G->AddEntry(h1_ac_c2G,leghead1,"p");
+  leg_ac_c2G->AddEntry(h2_ac_c2G,leghead2,"p");
+  leg_ac_c2G->AddEntry(h3_ac_c2G,leghead3,"p");
+  leg_ac_c2G->AddEntry(h4_ac_c2G,leghead4,"p");
+  leg_ac_c2G->SetTextSize(0.055);
+  leg_ac_c2G->Draw();
+  c1->Print(Form("ComparisonFigs/FourWayComparison_ac_c2G_%d_%d%d%d%d.png",name,which1,which2,which3,which4));
+  c1->Print(Form("ComparisonFigs/FourWayComparison_ac_c2G_%d_%d%d%d%d.pdf",name,which1,which2,which3,which4));
 
   // --- c24
 
