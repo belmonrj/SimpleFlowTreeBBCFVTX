@@ -16,7 +16,8 @@ void thing1()
   hash_description[0][4] = "d52d914";  hash_description[1][4] = "Baseline"; // most recent baseline, agrees with modified ones
   hash_description[0][5] = "ce076aa";  hash_description[1][5] = "Baseline"; // earlier baseline, different from others, same as aea49a4
 
-  dothething(200,0,1,4,5);
+  dothething(200,1,0,4,5);
+  dothething(200,4,3,2,1);
 
 }
 
@@ -114,8 +115,8 @@ void dothething(int name, int which1, int which2, int which3, int which4)
   leg_os_c22->AddEntry(h4_os_c22,leghead4,"p");
   leg_os_c22->SetTextSize(0.055);
   leg_os_c22->Draw();
-  c1->Print(Form("ComparisonFigs/FourWayComparison_os_c22_%d.png",name));
-  c1->Print(Form("ComparisonFigs/FourWayComparison_os_c22_%d.pdf",name));
+  c1->Print(Form("ComparisonFigs/FourWayComparison_os_c22_%d_%d%d%d%d.png",name,which1,which2,which3,which4));
+  c1->Print(Form("ComparisonFigs/FourWayComparison_os_c22_%d_%d%d%d%d.pdf",name,which1,which2,which3,which4));
 
   // --- c24
 
@@ -162,8 +163,8 @@ void dothething(int name, int which1, int which2, int which3, int which4)
   leg_os_c24->SetTextSize(0.055);
   leg_os_c24->SetFillStyle(0);
   leg_os_c24->Draw();
-  c1->Print(Form("ComparisonFigs/FourWayComparison_os_c24_%d.png",name));
-  c1->Print(Form("ComparisonFigs/FourWayComparison_os_c24_%d.pdf",name));
+  c1->Print(Form("ComparisonFigs/FourWayComparison_os_c24_%d_%d%d%d%d.png",name,which1,which2,which3,which4));
+  c1->Print(Form("ComparisonFigs/FourWayComparison_os_c24_%d_%d%d%d%d.pdf",name,which1,which2,which3,which4));
 
   // --- c26
 
@@ -210,8 +211,8 @@ void dothething(int name, int which1, int which2, int which3, int which4)
   leg_os_c26->SetTextSize(0.055);
   leg_os_c26->SetFillStyle(0);
   leg_os_c26->Draw();
-  c1->Print(Form("ComparisonFigs/FourWayComparison_os_c26_%d.png",name));
-  c1->Print(Form("ComparisonFigs/FourWayComparison_os_c26_%d.pdf",name));
+  c1->Print(Form("ComparisonFigs/FourWayComparison_os_c26_%d_%d%d%d%d.png",name,which1,which2,which3,which4));
+  c1->Print(Form("ComparisonFigs/FourWayComparison_os_c26_%d_%d%d%d%d.pdf",name,which1,which2,which3,which4));
 
   // --- c22
 
@@ -257,8 +258,8 @@ void dothething(int name, int which1, int which2, int which3, int which4)
   leg_ac_c22->AddEntry(h4_ac_c22,leghead4,"p");
   leg_ac_c22->SetTextSize(0.055);
   leg_ac_c22->Draw();
-  c1->Print(Form("ComparisonFigs/FourWayComparison_ac_c22_%d.png",name));
-  c1->Print(Form("ComparisonFigs/FourWayComparison_ac_c22_%d.pdf",name));
+  c1->Print(Form("ComparisonFigs/FourWayComparison_ac_c22_%d_%d%d%d%d.png",name,which1,which2,which3,which4));
+  c1->Print(Form("ComparisonFigs/FourWayComparison_ac_c22_%d_%d%d%d%d.pdf",name,which1,which2,which3,which4));
 
   // --- c24
 
@@ -305,8 +306,8 @@ void dothething(int name, int which1, int which2, int which3, int which4)
   leg_ac_c24->SetTextSize(0.055);
   leg_ac_c24->SetFillStyle(0);
   leg_ac_c24->Draw();
-  c1->Print(Form("ComparisonFigs/FourWayComparison_ac_c24_%d.png",name));
-  c1->Print(Form("ComparisonFigs/FourWayComparison_ac_c24_%d.pdf",name));
+  c1->Print(Form("ComparisonFigs/FourWayComparison_ac_c24_%d_%d%d%d%d.png",name,which1,which2,which3,which4));
+  c1->Print(Form("ComparisonFigs/FourWayComparison_ac_c24_%d_%d%d%d%d.pdf",name,which1,which2,which3,which4));
 
   // --- c26
 
@@ -353,7 +354,7 @@ void dothething(int name, int which1, int which2, int which3, int which4)
   leg_ac_c26->SetTextSize(0.055);
   leg_ac_c26->SetFillStyle(0);
   leg_ac_c26->Draw();
-  c1->Print(Form("ComparisonFigs/FourWayComparison_ac_c26_%d.png",name));
-  c1->Print(Form("ComparisonFigs/FourWayComparison_ac_c26_%d.pdf",name));
+  c1->Print(Form("ComparisonFigs/FourWayComparison_ac_c26_%d_%d%d%d%d.png",name,which1,which2,which3,which4));
+  c1->Print(Form("ComparisonFigs/FourWayComparison_ac_c26_%d_%d%d%d%d.pdf",name,which1,which2,which3,which4));
 
 }
