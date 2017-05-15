@@ -191,9 +191,9 @@ void flatten(int runNumber, int rp_recal_pass)
   // };
   float qy2_offset_fvtxs[4][6] =
   {
-    { -0.0026,  0.0099,  0.0020, -0.0130, -0.0393, -0.1074}, //200 GeV
-    { -0.0017, -0.0092, -0.0158, -0.0305, -0.0548, -0.1291}, //62 GeV
-    { -0.0028, -0.0057, -0.0205, -0.0374, -0.0419, 0.0}, //39 GeV
+    { -0.0026, -0.0000, -0.0000, -0.0130, -0.0407, -0.1108}, //200 GeV
+    { -0.0017, -0.0072, -0.0126, -0.0244, -0.0566, -0.1332}, //62 GeV
+    { -0.0028, -0.0045, -0.0164, -0.0333, -0.0433, 0.0}, //39 GeV
     { -0.0154, -0.0139, -0.0110, -0.0497, 0.0, 0.0}, //20 GeV
   };
   //---
@@ -229,9 +229,9 @@ void flatten(int runNumber, int rp_recal_pass)
   // 2nd order Qy offset for BBCS
   float qy2_offset_bbcs[4][6] =
   {
-    { -0.0037, -0.0180, -0.0036, -0.0020, -0.0152, -0.0026}, //200 GeV
-    { -0.0007, -0.0019, -0.0045, -0.0076, +0.0016, -0.0009}, //62 GeV
-    { -0.0065, -0.0071, +0.0023, -0.0019, -0.0060, -0.0000}, //39 GeV
+    { -0.0037, -0.0096, -0.0000, -0.0000, -0.0082, -0.0000}, //200 GeV
+    { -0.0020, -0.0020, -0.0036, -0.0041, +0.0010, -0.0009}, //62 GeV
+    { -0.0052, -0.0038, +0.0014, -0.0019, -0.0060, -0.0000}, //39 GeV
     { +0.0005, -0.0181, +0.0002, -0.0451, -0.0000, -0.0000}, //20 GeV
   };
   //---
@@ -241,10 +241,10 @@ void flatten(int runNumber, int rp_recal_pass)
   // 3rd order Qx offset for FVTXS
   float qx3_offset_fvtxs[4][6] =
   {
-    {-0.1585, -0.1458, -0.1458, -0.1293, -0.1027, -0.0314}, // 200 GeV
-    {-0.1499, -0.1400, -0.1403, -0.1227, -0.0925, -0.0311}, // 62 GeV
-    {-0.1506, -0.1458, -0.1266, -0.1266, -0.1098,  0.0000}, // 39 GeV
-    {-0.1561, -0.1260, -0.1474, -0.0335,  0.0000,  0.0000}, // 20 GeV
+    {-0.1605, -0.1458, -0.1458, -0.1293, -0.1027, -0.0314}, // 200 GeV
+    {-0.1528, -0.1400, -0.1403, -0.1227, -0.0925, -0.0311}, // 62 GeV
+    {-0.1536, -0.1458, -0.1266, -0.1266, -0.1098,  0.0000}, // 39 GeV
+    {-0.1591, -0.1260, -0.1474, -0.0335,  0.0000,  0.0000}, // 20 GeV
   };
   //--
 
@@ -666,6 +666,22 @@ void flatten(int runNumber, int rp_recal_pass)
 
 
   // vs eta
+  TProfile* cos2phi_eta_east[NMUL];
+  TProfile* cos2phi_eta_west[NMUL];
+  TProfile* cos2phi_eta_both[NMUL];
+
+  TProfile* sin2phi_eta_east[NMUL];
+  TProfile* sin2phi_eta_west[NMUL];
+  TProfile* sin2phi_eta_both[NMUL];
+
+  TProfile* cos3phi_eta_east[NMUL];
+  TProfile* cos3phi_eta_west[NMUL];
+  TProfile* cos3phi_eta_both[NMUL];
+
+  TProfile* sin3phi_eta_east[NMUL];
+  TProfile* sin3phi_eta_west[NMUL];
+  TProfile* sin3phi_eta_both[NMUL];
+
   TProfile* bbcs_v2eta_east_docalib[NMUL];
   TProfile* bbcs_v2eta_west_docalib[NMUL];
   TProfile* bbcs_v2eta_both_docalib[NMUL];
@@ -692,6 +708,25 @@ void flatten(int runNumber, int rp_recal_pass)
 
   for ( int ic = 0; ic < NMUL; ++ic )
   {
+    // <cos(2*phi)> or <sin(2*phi)>
+    cos2phi_eta_east[ic] = new TProfile(Form("cos2phi_eta_east_cent%d", ic), "", 32, -3.2, 3.2, -1.1, 1.1);
+    cos2phi_eta_west[ic] = new TProfile(Form("cos2phi_eta_west_cent%d", ic), "", 32, -3.2, 3.2, -1.1, 1.1);
+    cos2phi_eta_both[ic] = new TProfile(Form("cos2phi_eta_both_cent%d", ic), "", 32, -3.2, 3.2, -1.1, 1.1);
+
+    sin2phi_eta_east[ic] = new TProfile(Form("sin2phi_eta_east_cent%d", ic), "", 32, -3.2, 3.2, -1.1, 1.1);
+    sin2phi_eta_west[ic] = new TProfile(Form("sin2phi_eta_west_cent%d", ic), "", 32, -3.2, 3.2, -1.1, 1.1);
+    sin2phi_eta_both[ic] = new TProfile(Form("sin2phi_eta_both_cent%d", ic), "", 32, -3.2, 3.2, -1.1, 1.1);
+
+    // <cos(3*phi)> or <sin(3*phi)>
+    cos3phi_eta_east[ic] = new TProfile(Form("cos3phi_eta_east_cent%d", ic), "", 32, -3.2, 3.2, -1.1, 1.1);
+    cos3phi_eta_west[ic] = new TProfile(Form("cos3phi_eta_west_cent%d", ic), "", 32, -3.2, 3.2, -1.1, 1.1);
+    cos3phi_eta_both[ic] = new TProfile(Form("cos3phi_eta_both_cent%d", ic), "", 32, -3.2, 3.2, -1.1, 1.1);
+
+    sin3phi_eta_east[ic] = new TProfile(Form("sin3phi_eta_east_cent%d", ic), "", 32, -3.2, 3.2, -1.1, 1.1);
+    sin3phi_eta_west[ic] = new TProfile(Form("sin3phi_eta_west_cent%d", ic), "", 32, -3.2, 3.2, -1.1, 1.1);
+    sin3phi_eta_both[ic] = new TProfile(Form("sin3phi_eta_both_cent%d", ic), "", 32, -3.2, 3.2, -1.1, 1.1);
+
+    // v2 vs eta
     bbcs_v2eta_both_docalib[ic] = new TProfile(Form("bbcs_v2eta_both_docalib_cent%d", ic), "", 32, -3.2, 3.2, -1.1, 1.1);
     bbcs_v2eta_east_docalib[ic] = new TProfile(Form("bbcs_v2eta_east_docalib_cent%d", ic), "", 32, -3.2, 3.2, -1.1, 1.1);
     bbcs_v2eta_west_docalib[ic] = new TProfile(Form("bbcs_v2eta_west_docalib_cent%d", ic), "", 32, -3.2, 3.2, -1.1, 1.1);
@@ -704,6 +739,7 @@ void flatten(int runNumber, int rp_recal_pass)
     fvtxn_v2eta_east_docalib[ic] = new TProfile(Form("fvtxn_v2eta_east_docalib_cent%d", ic), "", 32, -3.2, 3.2, -1.1, 1.1);
     fvtxn_v2eta_west_docalib[ic] = new TProfile(Form("fvtxn_v2eta_west_docalib_cent%d", ic), "", 32, -3.2, 3.2, -1.1, 1.1);
 
+    // v3 vs eta
     bbcs_v3eta_both_docalib[ic] = new TProfile(Form("bbcs_v3eta_both_docalib_cent%d", ic), "", 32, -3.2, 3.2, -1.1, 1.1);
     bbcs_v3eta_east_docalib[ic] = new TProfile(Form("bbcs_v3eta_east_docalib_cent%d", ic), "", 32, -3.2, 3.2, -1.1, 1.1);
     bbcs_v3eta_west_docalib[ic] = new TProfile(Form("bbcs_v3eta_west_docalib_cent%d", ic), "", 32, -3.2, 3.2, -1.1, 1.1);
@@ -1595,6 +1631,24 @@ void flatten(int runNumber, int rp_recal_pass)
         if ( dcarm == 0 ) cnt_east_sin3phi[icent]->Fill(pt_angle, sin(3 * phi_angle));
 
 
+        cos2phi_eta_both[icent]->Fill(eta, cos(2 * phi_angle));
+        if ( dcarm == 1 ) cos2phi_eta_west[icent]->Fill(eta, cos(2 * phi_angle));
+        if ( dcarm == 0 ) cos2phi_eta_east[icent]->Fill(eta, cos(2 * phi_angle));
+
+        sin2phi_eta_both[icent]->Fill(eta, sin(2 * phi_angle));
+        if ( dcarm == 1 ) sin2phi_eta_west[icent]->Fill(eta, sin(2 * phi_angle));
+        if ( dcarm == 0 ) sin2phi_eta_east[icent]->Fill(eta, sin(2 * phi_angle));
+
+        cos3phi_eta_both[icent]->Fill(eta, cos(3 * phi_angle));
+        if ( dcarm == 1 ) cos3phi_eta_west[icent]->Fill(eta, cos(3 * phi_angle));
+        if ( dcarm == 0 ) cos3phi_eta_east[icent]->Fill(eta, cos(3 * phi_angle));
+
+        sin3phi_eta_both[icent]->Fill(eta, sin(3 * phi_angle));
+        if ( dcarm == 1 ) sin3phi_eta_west[icent]->Fill(eta, sin(3 * phi_angle));
+        if ( dcarm == 0 ) sin3phi_eta_east[icent]->Fill(eta, sin(3 * phi_angle));
+
+
+
         // BBC event plane
         if ( bbc_pmts )
         {
@@ -1746,6 +1800,25 @@ void flatten(int runNumber, int rp_recal_pass)
         // cout << "eta is " << eta << " and ns is " << ns << " and nn is " << nn << endl;
 
         bool west = (phi > -pi / 2. && phi < pi / 2.);
+
+
+        cos2phi_eta_both[icent]->Fill(eta, cos(2 * phi));
+        if ( west ) cos2phi_eta_west[icent]->Fill(eta, cos(2 * phi));
+        if ( !west ) cos2phi_eta_east[icent]->Fill(eta, cos(2 * phi));
+
+        sin2phi_eta_both[icent]->Fill(eta, sin(2 * phi));
+        if ( west ) sin2phi_eta_west[icent]->Fill(eta, sin(2 * phi));
+        if ( !west ) sin2phi_eta_east[icent]->Fill(eta, sin(2 * phi));
+
+        cos3phi_eta_both[icent]->Fill(eta, cos(3 * phi));
+        if ( west ) cos3phi_eta_west[icent]->Fill(eta, cos(3 * phi));
+        if ( !west ) cos3phi_eta_east[icent]->Fill(eta, cos(3 * phi));
+
+        sin3phi_eta_both[icent]->Fill(eta, sin(3 * phi));
+        if ( west ) sin3phi_eta_west[icent]->Fill(eta, sin(3 * phi));
+        if ( !west ) sin3phi_eta_east[icent]->Fill(eta, sin(3 * phi));
+
+
 
         // BBC event plane
         if ( bbc_pmts )
