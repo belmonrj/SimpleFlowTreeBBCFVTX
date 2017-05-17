@@ -1334,7 +1334,7 @@ void documulants(int runNumber)
 
 
 
-      good_4_event &= ( ntrack_south_inner > 0 ) && ( ntrack_south_outer > 0 ) && ( ntrack_north_inner > 0 ) && ( ntrack_north_outer > 0 ) ;
+      good_4_event = good_4_event && ( ntrack_south_inner > 0 ) && ( ntrack_south_outer > 0 ) && ( ntrack_north_inner > 0 ) && ( ntrack_north_outer > 0 ) ;
       int nfvtxt_south = ntrack_south_inner + ntrack_south_outer;
       int nfvtxt_north = ntrack_north_inner + ntrack_north_outer;
       int nfvtxt_counter = nfvtxt_south + nfvtxt_north;
