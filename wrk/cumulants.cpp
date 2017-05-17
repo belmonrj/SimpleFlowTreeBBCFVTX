@@ -1103,6 +1103,7 @@ void documulants(int runNumber)
 
       //double fvtxs_qq2 = ( (fvtxs_qx2[0]*fvtxs_qx2[0]) + (fvtxs_qy2[0]*fvtxs_qy2[0]) - fvtxs_qw[0] ) / ( (fvtxs_qw[0]*fvtxs_qw[0]) - fvtxs_qw[0] );
       //double fvtxs_qq3 = ( (fvtxs_qx3[0]*fvtxs_qx3[0]) + (fvtxs_qy3[0]*fvtxs_qy3[0]) - fvtxs_qw[0] ) / ( (fvtxs_qw[0]*fvtxs_qw[0]) - fvtxs_qw[0] );
+      bool good_4_event = ( nclus_south_inner > 3 ) && ( nclus_south_outer > 3 ) && ( nclus_north_inner > 3 ) && ( nclus_north_outer > 3 ) ;
 
 
 
@@ -1333,11 +1334,11 @@ void documulants(int runNumber)
 
 
 
-      //bool good_4_event = ( ntrack_south_inner > 0 ) && ( ntrack_south_outer > 0 ) && ( ntrack_north_inner > 0 ) && ( ntrack_north_outer > 0 ) ;
+      good_4_event &= ( ntrack_south_inner > 0 ) && ( ntrack_south_outer > 0 ) && ( ntrack_north_inner > 0 ) && ( ntrack_north_outer > 0 ) ;
       int nfvtxt_south = ntrack_south_inner + ntrack_south_outer;
       int nfvtxt_north = ntrack_north_inner + ntrack_north_outer;
       int nfvtxt_counter = nfvtxt_south + nfvtxt_north;
-      bool good_4_event = nfvtxt_counter > 4;
+      //bool good_4_event = nfvtxt_counter > 4;
 
       double ac_fvtxs_qw = fvtxs_qw[0];
       double ac_fvtxs_qx2 = fvtxs_qx2[0];
