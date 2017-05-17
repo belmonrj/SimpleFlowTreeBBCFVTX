@@ -909,7 +909,7 @@ void documulants(int runNumber)
       int nclus_north_outer = 0;
 
       if ( ( say_event && verbosity > 0 ) || verbosity > 1 ) cout << "Looping over FVTX cluster" << endl;
-      bool do_clusters = false;
+      bool do_clusters = true;
       if ( do_clusters )
       {
       for(int iclus = 0; iclus < d_nFVTX_clus; iclus++)
