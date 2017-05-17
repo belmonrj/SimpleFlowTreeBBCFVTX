@@ -17,9 +17,12 @@ void thing1()
   hash_description[0][5] = "ce076aa";  hash_description[1][5] = "Baseline"; // earlier baseline, different from others, same as aea49a4
 
   gROOT->ProcessLine(".L dothething_components.C");
-
   dothething_components(200,1,0,4,5);
   dothething_components(200,4,3,2,1);
+
+  gROOT->ProcessLine(".L dothething_cumulants.C");
+  dothething_cumulants(200,1,0,4,5);
+  dothething_cumulants(200,4,3,2,1);
 
 }
 
