@@ -337,6 +337,11 @@ void flatten(int runNumber, int rp_recal_pass)
   TH1D* th1d_FVTXS_nclus = new TH1D("th1d_FVTXS_nclus", "", 200, -0.5, 1999.5);
   TH1D* th1d_FVTXN_nclus = new TH1D("th1d_FVTXN_nclus", "", 200, -0.5, 1999.5);
 
+  TH1D* th1d_cent_MBonly = new TH1D("th1d_cent_MBonly", "", 100, -0.5, 99.5);
+  TH1D* th1d_cent_CNonly = new TH1D("th1d_cent_CNonly", "", 100, -0.5, 99.5);
+  TH1D* th1d_cent_CNetMB = new TH1D("th1d_cent_CNetMB", "", 100, -0.5, 99.5);
+
+
   TProfile* tp1f_bbc_fcharge_ring = new TProfile("tp1f_bbc_fcharge_ring", ";BBC ring; charge/total", 5, -0.5, 4.5);
 
 
@@ -867,6 +872,17 @@ void flatten(int runNumber, int rp_recal_pass)
       continue;
     }
 
+    bool isMB = false;
+    if ( energyflag == 200 ) isMB = trigger_scaled & trigger_BBCLL1narrow;
+    if ( energyflag == 62  ) isMB = trigger_scaled & trigger_BBCLL1narrow;
+    if ( energyflag == 20  ) isMB = trigger_scaled & trigger_FVTXNSBBCS;
+    if ( energyflag == 39  ) isMB = trigger_scaled & trigger_FVTXNSBBCS;
+    bool isCN = false;
+    if ( energyflag == 200 ) isCN = trigger_scaled & trigger_BBCLL1narrowcent;
+    if ( energyflag == 62  ) isCN = trigger_scaled & trigger_BBCLL1narrowcent;
+    if ( energyflag == 20  ) isCN = trigger_scaled & trigger_FVTXNSBBCScentral;
+    if ( energyflag == 39  ) isCN = trigger_scaled & trigger_FVTXNSBBCScentral;
+
     // ---------------------
     // --- centrality
     // ---------------------
@@ -1064,6 +1080,13 @@ void flatten(int runNumber, int rp_recal_pass)
       //cout << "bbc charge direct sum = " << bbc_qs << "+" << bbc_qn << "=" << bbc_qs+bbc_qn << endl;
       cout << "centrality = " << centrality << endl;
     }
+
+    // if ( isCN || isMB  ) th1d_cent_CNetMB->Fill(centrality);
+    // if ( isCN && !isMB ) th1d_cent_CNonly->Fill(centrality);
+    // if ( isMB && !isCN ) th1d_cent_MBonly->Fill(centrality);
+    th1d_cent_CNetMB->Fill(centrality);
+    if ( isCN ) th1d_cent_CNonly->Fill(centrality);
+    if ( isMB ) th1d_cent_MBonly->Fill(centrality);
 
     //cout << "HELLO HERE I AM" << endl;
 
