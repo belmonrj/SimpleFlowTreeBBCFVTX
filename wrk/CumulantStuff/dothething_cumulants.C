@@ -131,8 +131,6 @@ void dothething_cumulants(int name, int which1, int which2, int which3, int whic
   double ymin = 0.0;
   double ymax = 50.0;
 
-  xmin = 0.0;
-  xmax = 50.0;
   ymin = -1e-4;
   ymax = 1e-4;
   TH2D* hd_os_c24 = new TH2D("hd_os_c24","",1,xmin,xmax,1,ymin,ymax);
@@ -180,7 +178,7 @@ void dothething_cumulants(int name, int which1, int which2, int which3, int whic
   ymax = 6e-6;
   TH2D* hd_os_c26 = new TH2D("hd_os_c26","",1,xmin,xmax,1,ymin,ymax);
   hd_os_c26->GetXaxis()->SetTitle("N_{tracks}^{FVTX}");
-  hd_os_c26->GetYaxis()->SetTitle("c_{2}{4}");
+  hd_os_c26->GetYaxis()->SetTitle("c_{2}{6}");
   hd_os_c26->GetXaxis()->SetTitleOffset(1.1);
   hd_os_c26->GetYaxis()->SetTitleOffset(1.4);
   hd_os_c26->GetXaxis()->SetTitleSize(0.055);
@@ -219,4 +217,97 @@ void dothething_cumulants(int name, int which1, int which2, int which3, int whic
   c1->Print(Form("ComparisonFigs/FourWayComparison_os_cumulant_c26_%d_%d%d%d%d.pdf",name,which1,which2,which3,which4));
 
 
+  ymin = -1e-2;
+  ymax = 1e-1;
+  TH1D* c1h1_os_v24 = get_v24(c1h1_os_c24,th1d_h1_os_c22,th1d_h1_os_c24);
+  TH1D* c1h2_os_v24 = get_v24(c1h2_os_c24,th1d_h2_os_c22,th1d_h2_os_c24);
+  TH1D* c1h3_os_v24 = get_v24(c1h3_os_c24,th1d_h3_os_c22,th1d_h3_os_c24);
+  TH1D* c1h4_os_v24 = get_v24(c1h4_os_c24,th1d_h4_os_c22,th1d_h4_os_c24);
+  TH2D* hd_os_v24 = new TH2D("hd_os_v24","",1,xmin,xmax,1,ymin,ymax);
+  hd_os_v24->GetXaxis()->SetTitle("N_{tracks}^{FVTX}");
+  hd_os_v24->GetYaxis()->SetTitle("v_{2}{4}");
+  hd_os_v24->GetXaxis()->SetTitleOffset(1.1);
+  hd_os_v24->GetYaxis()->SetTitleOffset(1.4);
+  hd_os_v24->GetXaxis()->SetTitleSize(0.055);
+  hd_os_v24->GetYaxis()->SetTitleSize(0.055);
+  hd_os_v24->GetXaxis()->SetLabelSize(0.055);
+  hd_os_v24->GetYaxis()->SetLabelSize(0.055);
+  hd_os_v24->Draw();
+  c1h1_os_v24->SetLineColor(kBlack);
+  c1h2_os_v24->SetLineColor(kRed);
+  c1h3_os_v24->SetLineColor(kBlue);
+  c1h4_os_v24->SetLineColor(kGreen+2);
+  c1h1_os_v24->SetMarkerColor(kBlack);
+  c1h2_os_v24->SetMarkerColor(kRed);
+  c1h3_os_v24->SetMarkerColor(kBlue);
+  c1h4_os_v24->SetMarkerColor(kGreen+2);
+  c1h1_os_v24->SetMarkerStyle(kOpenSquare);
+  c1h2_os_v24->SetMarkerStyle(kOpenCircle);
+  c1h3_os_v24->SetMarkerStyle(kOpenDiamond);
+  c1h4_os_v24->SetMarkerStyle(kOpenCross);
+  c1h1_os_v24->Draw("same ex0p");
+  c1h2_os_v24->Draw("same ex0p");
+  c1h3_os_v24->Draw("same ex0p");
+  c1h4_os_v24->Draw("same ex0p");
+  TLine* line_v24 = new TLine(xmin,0,xmax,0);
+  line_v24->SetLineStyle(2);
+  line_v24->SetLineWidth(2);
+  line_v24->Draw();
+  TLegend* leg_os_v24 = new TLegend(0.58,0.68,0.88,0.88);
+  leg_os_v24->AddEntry(c1h1_os_v24,leghead1,"p");
+  leg_os_v24->AddEntry(c1h2_os_v24,leghead2,"p");
+  leg_os_v24->AddEntry(c1h3_os_v24,leghead3,"p");
+  leg_os_v24->AddEntry(c1h4_os_v24,leghead4,"p");
+  leg_os_v24->SetTextSize(0.055);
+  leg_os_v24->Draw();
+  c1->Print(Form("ComparisonFigs/FourWayComparison_os_cumulant_v24_%d_%d%d%d%d.png",name,which1,which2,which3,which4));
+  c1->Print(Form("ComparisonFigs/FourWayComparison_os_cumulant_v24_%d_%d%d%d%d.pdf",name,which1,which2,which3,which4));
+
+}
+
+TH1D* get_v24(TH1D* hc24, TH1D* htwo, TH1D* hfour)
+{
+  TH1D* hv24 = (TH1D*)hc24->Clone();
+  int nbins = hv24->GetNbinsX();
+  for ( int i = 0; i < nbins; ++i )
+    {
+      double two = htwo->GetBinContent(i+1);
+      double four = hfour->GetBinContent(i+1);
+      double etwo = htwo->GetBinError(i+1);
+      double efour = hfour->GetBinError(i+1);
+      double cov24 = 0;
+      double c24 = hc24->GetBinContent(i+1);
+      double v24 = -9999;
+      double ev24 = 99999;
+      if ( c24 < 0 )
+        {
+          v24 = sqrt(sqrt(-c24));
+          ev24 = (1.0/pow(-c24,0.75))*sqrt((two*two*etwo*etwo)+(0.0625*efour*efour)-(0.5*two*cov24));
+        }
+      hv24->SetBinContent(i+1,v24);
+      hv24->SetBinError(i+1,ev24);
+    }
+  return hv24;
+}
+
+TH1D* get_v24(TH1D* hc24)
+{
+  TH1D* hv24 = (TH1D*)hc24->Clone();
+  int nbins = hv24->GetNbinsX();
+  for ( int i = 0; i < nbins; ++i )
+    {
+      double cov24 = 0;
+      double c24 = hc24->GetBinContent(i+1);
+      double ec24 = hc24->GetBinError(i+1);
+      double v24 = -9999;
+      double ev24 = 99999;
+      if ( c24 < 0 )
+        {
+          v24 = sqrt(sqrt(-c24));
+          ev24 = v24*(ec24/c24);
+        }
+      hv24->SetBinContent(i+1,v24);
+      hv24->SetBinError(i+1,ev24);
+    }
+  return hv24;
 }
