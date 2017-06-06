@@ -106,9 +106,22 @@ void dothething_cumulants(int name, int which1, int which2, int which3, int whic
   // --- make the cumulants
   // <<4>> - 2<<2>>^2
   c1h1_os_c22->Multiply(c1h1_os_c22); c1h1_os_c22->Scale(2.0); c1h1_os_c24->Add(c1h1_os_c22,-1.0);
-
-
-
+  c1h2_os_c22->Multiply(c1h2_os_c22); c1h2_os_c22->Scale(2.0); c1h2_os_c24->Add(c1h2_os_c22,-1.0);
+  c1h3_os_c22->Multiply(c1h3_os_c22); c1h3_os_c22->Scale(2.0); c1h3_os_c24->Add(c1h3_os_c22,-1.0);
+  c1h4_os_c22->Multiply(c1h4_os_c22); c1h4_os_c22->Scale(2.0); c1h4_os_c24->Add(c1h4_os_c22,-1.0);
+  // <<6>> - 9<<4>><<2>> + 12<<2>>^3
+  c2h1_os_c22->Multiply(th1d_h1_os_c22); c2h1_os_c22->Multiply(th1d_h1_os_c22); c1h1_os_c22->Scale(12.0);
+  c2h1_os_c24->Multiply(th1d_h1_os_c24); c2h1_os_c24->Scale(9.0);
+  c2h1_os_c26->Add(c2h1_os_c24,-1.0); c2h1_os_c26->Add(c2h1_os_c22,-1.0);
+  c2h2_os_c22->Multiply(th1d_h2_os_c22); c2h2_os_c22->Multiply(th1d_h2_os_c22); c1h2_os_c22->Scale(12.0);
+  c2h2_os_c24->Multiply(th1d_h2_os_c24); c2h2_os_c24->Scale(9.0);
+  c2h2_os_c26->Add(c2h2_os_c24,-1.0); c2h2_os_c26->Add(c2h2_os_c22,-1.0);
+  c2h3_os_c22->Multiply(th1d_h3_os_c22); c2h3_os_c22->Multiply(th1d_h3_os_c22); c1h3_os_c22->Scale(12.0);
+  c2h3_os_c24->Multiply(th1d_h3_os_c24); c2h3_os_c24->Scale(9.0);
+  c2h3_os_c26->Add(c2h3_os_c24,-1.0); c2h3_os_c26->Add(c2h3_os_c22,-1.0);
+  c2h4_os_c22->Multiply(th1d_h4_os_c22); c2h4_os_c22->Multiply(th1d_h4_os_c22); c1h4_os_c22->Scale(12.0);
+  c2h4_os_c24->Multiply(th1d_h4_os_c24); c2h4_os_c24->Scale(9.0);
+  c2h4_os_c26->Add(c2h4_os_c24,-1.0); c2h4_os_c26->Add(c2h4_os_c22,-1.0);
 
   TCanvas* c1 = new TCanvas();
   c1->SetMargin(0.15,0.05,0.13,0.08); // LRBT
@@ -117,6 +130,93 @@ void dothething_cumulants(int name, int which1, int which2, int which3, int whic
   double xmax = 50.0;
   double ymin = 0.0;
   double ymax = 50.0;
+
+  xmin = 0.0;
+  xmax = 50.0;
+  ymin = -1e-4;
+  ymax = 1e-4;
+  TH2D* hd_os_c24 = new TH2D("hd_os_c24","",1,xmin,xmax,1,ymin,ymax);
+  hd_os_c24->GetXaxis()->SetTitle("N_{tracks}^{FVTX}");
+  hd_os_c24->GetYaxis()->SetTitle("c_{2}{4}");
+  hd_os_c24->GetXaxis()->SetTitleOffset(1.1);
+  hd_os_c24->GetYaxis()->SetTitleOffset(1.4);
+  hd_os_c24->GetXaxis()->SetTitleSize(0.055);
+  hd_os_c24->GetYaxis()->SetTitleSize(0.055);
+  hd_os_c24->GetXaxis()->SetLabelSize(0.055);
+  hd_os_c24->GetYaxis()->SetLabelSize(0.055);
+  hd_os_c24->Draw();
+  c1h1_os_c24->SetLineColor(kBlack);
+  c1h2_os_c24->SetLineColor(kRed);
+  c1h3_os_c24->SetLineColor(kBlue);
+  c1h4_os_c24->SetLineColor(kGreen+2);
+  c1h1_os_c24->SetMarkerColor(kBlack);
+  c1h2_os_c24->SetMarkerColor(kRed);
+  c1h3_os_c24->SetMarkerColor(kBlue);
+  c1h4_os_c24->SetMarkerColor(kGreen+2);
+  c1h1_os_c24->SetMarkerStyle(kOpenSquare);
+  c1h2_os_c24->SetMarkerStyle(kOpenCircle);
+  c1h3_os_c24->SetMarkerStyle(kOpenDiamond);
+  c1h4_os_c24->SetMarkerStyle(kOpenCross);
+  c1h1_os_c24->Draw("same ex0p");
+  c1h2_os_c24->Draw("same ex0p");
+  c1h3_os_c24->Draw("same ex0p");
+  c1h4_os_c24->Draw("same ex0p");
+  TLine* line_c24 = new TLine(xmin,0,xmax,0);
+  line_c24->SetLineStyle(2);
+  line_c24->SetLineWidth(2);
+  line_c24->Draw();
+  TLegend* leg_os_c24 = new TLegend(0.58,0.68,0.88,0.88);
+  leg_os_c24->AddEntry(c1h1_os_c24,leghead1,"p");
+  leg_os_c24->AddEntry(c1h2_os_c24,leghead2,"p");
+  leg_os_c24->AddEntry(c1h3_os_c24,leghead3,"p");
+  leg_os_c24->AddEntry(c1h4_os_c24,leghead4,"p");
+  leg_os_c24->SetTextSize(0.055);
+  leg_os_c24->Draw();
+  c1->Print(Form("ComparisonFigs/FourWayComparison_os_cumulant_c24_%d_%d%d%d%d.png",name,which1,which2,which3,which4));
+  c1->Print(Form("ComparisonFigs/FourWayComparison_os_cumulant_c24_%d_%d%d%d%d.pdf",name,which1,which2,which3,which4));
+
+
+  ymin = -2e-6;
+  ymax = 6e-6;
+  TH2D* hd_os_c26 = new TH2D("hd_os_c26","",1,xmin,xmax,1,ymin,ymax);
+  hd_os_c26->GetXaxis()->SetTitle("N_{tracks}^{FVTX}");
+  hd_os_c26->GetYaxis()->SetTitle("c_{2}{4}");
+  hd_os_c26->GetXaxis()->SetTitleOffset(1.1);
+  hd_os_c26->GetYaxis()->SetTitleOffset(1.4);
+  hd_os_c26->GetXaxis()->SetTitleSize(0.055);
+  hd_os_c26->GetYaxis()->SetTitleSize(0.055);
+  hd_os_c26->GetXaxis()->SetLabelSize(0.055);
+  hd_os_c26->GetYaxis()->SetLabelSize(0.055);
+  hd_os_c26->Draw();
+  c2h1_os_c26->SetLineColor(kBlack);
+  c2h2_os_c26->SetLineColor(kRed);
+  c2h3_os_c26->SetLineColor(kBlue);
+  c2h4_os_c26->SetLineColor(kGreen+2);
+  c2h1_os_c26->SetMarkerColor(kBlack);
+  c2h2_os_c26->SetMarkerColor(kRed);
+  c2h3_os_c26->SetMarkerColor(kBlue);
+  c2h4_os_c26->SetMarkerColor(kGreen+2);
+  c2h1_os_c26->SetMarkerStyle(kOpenSquare);
+  c2h2_os_c26->SetMarkerStyle(kOpenCircle);
+  c2h3_os_c26->SetMarkerStyle(kOpenDiamond);
+  c2h4_os_c26->SetMarkerStyle(kOpenCross);
+  c2h1_os_c26->Draw("same ex0p");
+  c2h2_os_c26->Draw("same ex0p");
+  c2h3_os_c26->Draw("same ex0p");
+  c2h4_os_c26->Draw("same ex0p");
+  TLine* line_c26 = new TLine(xmin,0,xmax,0);
+  line_c26->SetLineStyle(2);
+  line_c26->SetLineWidth(2);
+  line_c26->Draw();
+  TLegend* leg_os_c26 = new TLegend(0.58,0.68,0.88,0.88);
+  leg_os_c26->AddEntry(c2h1_os_c26,leghead1,"p");
+  leg_os_c26->AddEntry(c2h2_os_c26,leghead2,"p");
+  leg_os_c26->AddEntry(c2h3_os_c26,leghead3,"p");
+  leg_os_c26->AddEntry(c2h4_os_c26,leghead4,"p");
+  leg_os_c26->SetTextSize(0.055);
+  leg_os_c26->Draw();
+  c1->Print(Form("ComparisonFigs/FourWayComparison_os_cumulant_c26_%d_%d%d%d%d.png",name,which1,which2,which3,which4));
+  c1->Print(Form("ComparisonFigs/FourWayComparison_os_cumulant_c26_%d_%d%d%d%d.pdf",name,which1,which2,which3,which4));
 
 
 }
