@@ -360,7 +360,6 @@ TH1D* get_v26(TH1D* hc26, TH1D* htwo, TH1D* hfour, TH1D* hsix)
                  (4.5*two*two*efour*efour) +
                  (1.0/18.0)*esix*six
                  );
-          cout << i << " " << c26 << " " << v26 << endl;
         }
       hv26->SetBinContent(i+1,v26);
       hv26->SetBinError(i+1,ev26);
