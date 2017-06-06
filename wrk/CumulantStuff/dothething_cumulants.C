@@ -263,6 +263,52 @@ void dothething_cumulants(int name, int which1, int which2, int which3, int whic
   c1->Print(Form("ComparisonFigs/FourWayComparison_os_cumulant_v24_%d_%d%d%d%d.png",name,which1,which2,which3,which4));
   c1->Print(Form("ComparisonFigs/FourWayComparison_os_cumulant_v24_%d_%d%d%d%d.pdf",name,which1,which2,which3,which4));
 
+  ymin = -1e-2;
+  ymax = 1e-1;
+  TH1D* c2h1_os_v26 = get_v26(c2h1_os_c26,th1d_h1_os_c22,th1d_h1_os_c24,th1d_h1_os_c26);
+  TH1D* c2h2_os_v26 = get_v26(c2h2_os_c26,th1d_h2_os_c22,th1d_h2_os_c24,th1d_h2_os_c26);
+  TH1D* c2h3_os_v26 = get_v26(c2h3_os_c26,th1d_h3_os_c22,th1d_h3_os_c24,th1d_h3_os_c26);
+  TH1D* c2h4_os_v26 = get_v26(c2h4_os_c26,th1d_h4_os_c22,th1d_h4_os_c24,th1d_h4_os_c26);
+  TH2D* hd_os_v26 = new TH2D("hd_os_v26","",1,xmin,xmax,1,ymin,ymax);
+  hd_os_v26->GetXaxis()->SetTitle("N_{tracks}^{FVTX}");
+  hd_os_v26->GetYaxis()->SetTitle("v_{2}{4}");
+  hd_os_v26->GetXaxis()->SetTitleOffset(1.1);
+  hd_os_v26->GetYaxis()->SetTitleOffset(1.4);
+  hd_os_v26->GetXaxis()->SetTitleSize(0.055);
+  hd_os_v26->GetYaxis()->SetTitleSize(0.055);
+  hd_os_v26->GetXaxis()->SetLabelSize(0.055);
+  hd_os_v26->GetYaxis()->SetLabelSize(0.055);
+  hd_os_v26->Draw();
+  c2h1_os_v26->SetLineColor(kBlack);
+  c2h2_os_v26->SetLineColor(kRed);
+  c2h3_os_v26->SetLineColor(kBlue);
+  c2h4_os_v26->SetLineColor(kGreen+2);
+  c2h1_os_v26->SetMarkerColor(kBlack);
+  c2h2_os_v26->SetMarkerColor(kRed);
+  c2h3_os_v26->SetMarkerColor(kBlue);
+  c2h4_os_v26->SetMarkerColor(kGreen+2);
+  c2h1_os_v26->SetMarkerStyle(kOpenSquare);
+  c2h2_os_v26->SetMarkerStyle(kOpenCircle);
+  c2h3_os_v26->SetMarkerStyle(kOpenDiamond);
+  c2h4_os_v26->SetMarkerStyle(kOpenCross);
+  c2h1_os_v26->Draw("same ex0p");
+  c2h2_os_v26->Draw("same ex0p");
+  c2h3_os_v26->Draw("same ex0p");
+  c2h4_os_v26->Draw("same ex0p");
+  TLine* line_v26 = new TLine(xmin,0,xmax,0);
+  line_v26->SetLineStyle(2);
+  line_v26->SetLineWidth(2);
+  line_v26->Draw();
+  TLegend* leg_os_v26 = new TLegend(0.58,0.68,0.88,0.88);
+  leg_os_v26->AddEntry(c2h1_os_v26,leghead1,"p");
+  leg_os_v26->AddEntry(c2h2_os_v26,leghead2,"p");
+  leg_os_v26->AddEntry(c2h3_os_v26,leghead3,"p");
+  leg_os_v26->AddEntry(c2h4_os_v26,leghead4,"p");
+  leg_os_v26->SetTextSize(0.055);
+  leg_os_v26->Draw();
+  c1->Print(Form("ComparisonFigs/FourWayComparison_os_cumulant_v26_%d_%d%d%d%d.png",name,which1,which2,which3,which4));
+  c1->Print(Form("ComparisonFigs/FourWayComparison_os_cumulant_v26_%d_%d%d%d%d.pdf",name,which1,which2,which3,which4));
+
 }
 
 TH1D* get_v24(TH1D* hc24, TH1D* htwo, TH1D* hfour)
@@ -290,24 +336,34 @@ TH1D* get_v24(TH1D* hc24, TH1D* htwo, TH1D* hfour)
   return hv24;
 }
 
-TH1D* get_v24(TH1D* hc24)
+TH1D* get_v26(TH1D* hc26, TH1D* htwo, TH1D* hfour, TH1D* hsix)
 {
-  TH1D* hv24 = (TH1D*)hc24->Clone();
-  int nbins = hv24->GetNbinsX();
+  TH1D* hv26 = (TH1D*)hc26->Clone();
+  int nbins = hv26->GetNbinsX();
   for ( int i = 0; i < nbins; ++i )
     {
-      double cov24 = 0;
-      double c24 = hc24->GetBinContent(i+1);
-      double ec24 = hc24->GetBinError(i+1);
-      double v24 = -9999;
-      double ev24 = 99999;
-      if ( c24 < 0 )
+      double c26 = hc26->GetBinContent(i+1);
+      double v26 = -9999;
+      double ev26 = -9999;
+      double two = htwo->GetBinContent(i+1);
+      double four = hfour->GetBinContent(i+1);
+      double six = hsix->GetBinContent(i+1);
+      double etwo = htwo->GetBinError(i+1);
+      double efour = hfour->GetBinError(i+1);
+      double esix = hsix->GetBinError(i+1);
+      if ( c26 > 0 && six != 0 )
         {
-          v24 = sqrt(sqrt(-c24));
-          ev24 = v24*(ec24/c24);
+          v26 = pow((0.25*c26),(1.0/6.0));
+          ev26 = (1.0/pow(c26,1.25)) *
+            sqrt(
+                 (4.5*(4*two*two-four)*(4*two*two-four)*etwo*etwo) +
+                 (4.5*two*two*efour*efour) +
+                 (1.0/18.0)*esix*six
+                 );
+          cout << i << " " << c26 << " " << v26 << endl;
         }
-      hv24->SetBinContent(i+1,v24);
-      hv24->SetBinError(i+1,ev24);
+      hv26->SetBinContent(i+1,v26);
+      hv26->SetBinError(i+1,ev26);
     }
-  return hv24;
+  return hv26;
 }
