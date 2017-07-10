@@ -8,9 +8,14 @@
 #include <TStyle.h>
 #include <TLegend.h>
 #include <TLine.h>
+#include <TGraphErrors.h>
+#include <TGraphAsymmErrors.h>
 
 #include <iostream>
 using namespace std;
+
+TGraphErrors* format_v2_pt(TH1* p);  // for rebinning 20 GeV
+TGraphErrors* format_v2_eta(TH1* p); // for rebinning 20 GeV
 
 void doenergy(int, int);
 void diagnostic(int, int);
@@ -55,6 +60,9 @@ void doenergy(int energy, int harmonic)
   TH1D* th1d_vncent_fvtxs_highpt = new TH1D("th1d_vncent_fvtxs_highpt", "", NMUL, -0.5, NMUL - 0.5);
 
 
+  double lopt = 0.7;
+  double hipt = 2.25;
+
   // --- loop over each centrality bin
   for (int ic = 0; ic < NMUL; ic++)
   {
@@ -92,17 +100,20 @@ void doenergy(int energy, int harmonic)
     float reso_FVTXS = sqrt((float_CNT_FVTXS * float_BBCS_FVTXS) / float_BBCS_CNT); // CSBS/BC
     float reso_FVTXN = sqrt((float_CNT_FVTXN * float_BBCS_FVTXN) / float_BBCS_CNT); // CNBN/BC
 
-    cout << "bbc resolution is " << reso_BBCS << endl;
-    cout << "fvtx resolution is " << reso_FVTXS << endl;
-    cout << "fvtxN resolution is " << reso_FVTXN << endl;
-
     if ( energy == 20 )
     {
       // --- i like chocolate and fudge and other tasty deserts
       cout << "Now making empirical adjustment for 20 GeV data" << endl;
-      reso_BBCS = 0.015;
-      reso_FVTXS = 0.04;
+      // reso_BBCS = 0.015;
+      // reso_FVTXS = 0.04;
+      // don't resolution correct the 20 GeV, so that we can rebin it later
+      reso_BBCS = 1;
+      reso_FVTXS = 1;
     }
+
+    cout << "bbc resolution is " << reso_BBCS << endl;
+    cout << "fvtx resolution is " << reso_FVTXS << endl;
+    cout << "fvtxN resolution is " << reso_FVTXN << endl;
 
 
     // --- FVTXS EP
@@ -113,11 +124,11 @@ void doenergy(int energy, int harmonic)
     TProfile* hvn_fvtxs = (TProfile*)file->Get(Form("fvtxs_v%d_both_docalib_cent%d", harmonic, ic));
     hvn_fvtxs->Scale(1.0 / reso_FVTXS);
 
-    float blpt = hvn_fvtxs->FindBin(0.5);
+    float blpt = hvn_fvtxs->FindBin(lopt);
     th1d_vncent_fvtxs_lowpt->SetBinContent(ic + 1, hvn_fvtxs->GetBinContent(blpt));
     th1d_vncent_fvtxs_lowpt->SetBinError(ic + 1, hvn_fvtxs->GetBinError(blpt));
 
-    float bhpt = hvn_fvtxs->FindBin(2.25);
+    float bhpt = hvn_fvtxs->FindBin(hipt);
     th1d_vncent_fvtxs_highpt->SetBinContent(ic + 1, hvn_fvtxs->GetBinContent(bhpt));
     th1d_vncent_fvtxs_highpt->SetBinError(ic + 1, hvn_fvtxs->GetBinError(bhpt));
 
@@ -777,3 +788,138 @@ void diagnostic(int energy, int harmonic)
   delete c1;
 
 }
+
+
+
+
+TGraphErrors* format_v2_pt(TH1* p)
+{
+  double x[15] = {0};
+  double y[15] = {0};
+  double e[15] = {0};
+
+  for(int i = 0; i < 15; ++i)
+  {
+    x[i] = (3./15)*(i+1) - 0.1;
+    y[i] = p->GetBinContent(i+1);
+    e[i] = p->GetBinError(i+1);
+  }
+
+  double newx[] = { 
+                   (x[1]+x[2])/2,
+                   (x[3]+x[4])/2,
+                   (x[5]+x[6]+x[7])/3,
+                   (x[8]+x[9]+x[10])/3,
+                   (x[11]+x[12]+x[13]+x[14])/4 
+                 };
+  //double newxe[] = { 0.2,0.2,0.3,0.3,0.4 };
+  double newxe[5] = {0};
+
+  double w[] = {
+                 0,
+                 1./(e[1]*e[1]), 1./(e[2]*e[2]),
+                 1./(e[3]*e[3]), 1./(e[4]*e[4]),
+                 1./(e[5]*e[5]), 1./(e[6]*e[6]),
+                 1./(e[7]*e[7]), 1./(e[8]*e[8]),
+                 1./(e[9]*e[9]), 1./(e[10]*e[10]),
+                 1./(e[11]*e[11]), 1./(e[12]*e[12]),
+                 1./(e[13]*e[13]), 1./(e[14]*e[14])
+               };
+      
+  double newy[] = { 
+                   (y[1]*w[1] + y[2]*w[2])/(w[1]+w[2]), 
+                   (y[3]*w[3] + y[4]*w[4])/(w[3]+w[4]),
+                   (y[5]*w[5] + y[6]*w[6] + y[7]*w[7])/(w[5]+w[6]+w[7]),
+                   (y[8]*w[8] + y[9]*w[9] + y[10]*w[10])/(w[8]+w[9]+w[10]),
+                   (y[11]*w[11] + y[12]*w[12] + y[13]*w[13] + y[14]*w[14])/(w[11]+w[12]+w[13]+w[14])
+                 };
+
+  double newye[] = { 
+                    1./sqrt(w[1]+w[2]), 1./sqrt(w[3]+w[4]),
+                    1./sqrt(w[5]+w[6]+w[7]), 1./sqrt(w[8]+w[9]+w[10]),
+                    1./sqrt(w[11]+w[12]+w[13]+w[14])
+                  };
+  TGraphErrors* g = new TGraphErrors(5, newx, newy, newxe, newye);
+
+  return g;
+
+}
+
+TGraphErrors* format_v2_eta(TH1* p)
+{
+  double x[32] = {0};
+  double y[32] = {0};
+  double e[32] = {0};
+
+  for(int i = 0; i < 32; ++i)
+  {
+    x[i] = (3.2/16)*(i+1) - 3.3;
+    y[i] = p->GetBinContent(i+1);
+    e[i] = p->GetBinError(i+1);
+  }
+
+  double newx[] = { 
+                   (x[1]+x[2])/2,
+                   (x[3]+x[4])/2,
+                   (x[5]+x[6])/2,
+                   (x[7]+x[8])/2,
+                   (x[9]+x[10])/2,
+                   (x[14]+x[15])/2,
+                   (x[16]+x[17])/2,
+                   (x[21]+x[22])/2,
+                   (x[23]+x[24])/2,
+                   (x[25]+x[26])/2,
+                   (x[27]+x[28]+x[29])/3
+                  };
+
+  //double newxe[] = { 0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.3 };
+  double newxe[11] = {0};
+
+  double w[] = {
+                 0,
+                 1./(e[1]*e[1]), 1./(e[2]*e[2]),
+                 1./(e[3]*e[3]), 1./(e[4]*e[4]),
+                 1./(e[5]*e[5]), 1./(e[6]*e[6]),
+                 1./(e[7]*e[7]), 1./(e[8]*e[8]),
+                 1./(e[9]*e[9]), 1./(e[10]*e[10]),
+                 0,0,0,
+                 1./(e[14]*e[14]), 1./(e[15]*e[15]),
+                 1./(e[16]*e[16]), 1./(e[17]*e[17]),
+                 0,0,0,
+                 1./(e[21]*e[21]), 1./(e[22]*e[22]),
+                 1./(e[23]*e[23]), 1./(e[24]*e[24]),
+                 1./(e[25]*e[25]), 1./(e[26]*e[26]),
+                 1./(e[27]*e[27]), 1./(e[28]*e[28]),
+                 1./(e[29]*e[29])
+               };
+
+  double newy[] = { 
+                    (y[1]*w[1] + y[2]*w[2])/(w[1]+w[2]),
+                    (y[3]*w[3] + y[4]*w[4])/(w[3]+w[4]),
+                    (y[5]*w[5] + y[6]*w[6])/(w[5]+w[6]),
+                    (y[7]*w[7] + y[8]*w[8])/(w[7]+w[8]),
+                    (y[9]*w[9] + y[10]*w[10])/(w[9]+w[10]),
+                    (y[14]*w[14] + y[15]*w[15])/(w[14]+w[15]),
+                    (y[16]*w[16] + y[17]*w[17])/(w[16]+w[17]),
+                    (y[21]*w[21] + y[22]*w[22])/(w[21]+w[22]),
+                    (y[23]*w[23] + y[24]*w[24])/(w[23]+w[24]),
+                    (y[25]*w[25] + y[26]*w[26])/(w[25]+w[26]),
+                    (y[27]*w[27] + y[28]*w[28] + y[29]*w[29])/(w[27]+w[28]+w[29])
+                  };
+
+  double newye[] = { 
+                     1./sqrt(w[1]+w[2]), 1./sqrt(w[3]+w[4]),
+                     1./sqrt(w[5]+w[6]), 1./sqrt(w[7]+w[8]),
+                     1./sqrt(w[9]+w[10]), 1./sqrt(w[14]+w[15]),
+                     1./sqrt(w[16]+w[17]), 1./sqrt(w[21]+w[22]),
+                     1./sqrt(w[23]+w[24]), 1./sqrt(w[25]+w[26]),
+                     1./sqrt(w[27]+w[28]+w[29])
+                   };
+
+  TGraphErrors* g = new TGraphErrors(11, newx, newy, newxe, newye);
+
+  return g;
+
+}
+
+
