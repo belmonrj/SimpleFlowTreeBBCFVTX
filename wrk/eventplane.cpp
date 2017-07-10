@@ -389,6 +389,11 @@ void flatten(int runNumber, int rp_recal_pass)
   TH1D* th1d_FVTXS_nclus = new TH1D("th1d_FVTXS_nclus", "", 200, -0.5, 1999.5);
   TH1D* th1d_FVTXN_nclus = new TH1D("th1d_FVTXN_nclus", "", 200, -0.5, 1999.5);
 
+  TH1D* th1d_cent_MBonly = new TH1D("th1d_cent_MBonly", "", 100, -0.5, 99.5);
+  TH1D* th1d_cent_CNonly = new TH1D("th1d_cent_CNonly", "", 100, -0.5, 99.5);
+  TH1D* th1d_cent_CNetMB = new TH1D("th1d_cent_CNetMB", "", 100, -0.5, 99.5);
+
+
   TProfile* tp1f_bbc_fcharge_ring = new TProfile("tp1f_bbc_fcharge_ring", ";BBC ring; charge/total", 5, -0.5, 4.5);
 
   TH2D* th2d_BBCq_cent = new TH2D("th2d_bbcq_cent", "", 200, -0.5, 199.5, 101, -0.5, 100.5);
@@ -993,7 +998,6 @@ void flatten(int runNumber, int rp_recal_pass)
     if ( energyflag == 20  ) passes_hm = trigger_scaled & trigger_FVTXNSBBCScentral;
     if ( energyflag == 39  ) passes_hm = trigger_scaled & trigger_FVTXNSBBCScentral;
 
-
     // ---------------------
     // --- centrality
     // ---------------------
@@ -1201,6 +1205,13 @@ void flatten(int runNumber, int rp_recal_pass)
       //cout << "bbc charge direct sum = " << bbc_qs << "+" << bbc_qn << "=" << bbc_qs+bbc_qn << endl;
       cout << "centrality = " << centrality << endl;
     }
+
+    // if ( isCN || isMB  ) th1d_cent_CNetMB->Fill(centrality);
+    // if ( isCN && !isMB ) th1d_cent_CNonly->Fill(centrality);
+    // if ( isMB && !isCN ) th1d_cent_MBonly->Fill(centrality);
+    th1d_cent_CNetMB->Fill(centrality);
+    if ( passes_hm ) th1d_cent_CNonly->Fill(centrality);
+    if ( passes_mb ) th1d_cent_MBonly->Fill(centrality);
 
     //cout << "HELLO HERE I AM" << endl;
 
