@@ -241,18 +241,18 @@ void flatten(int runNumber, int rp_recal_pass)
   // 3rd order Qx offset for FVTXS
   float qx3_offset_fvtxs[4][6] =
   {
-    {-0.1605, -0.1458, -0.1458, -0.1293, -0.1027, -0.0314}, // 200 GeV
-    {-0.1528, -0.1400, -0.1403, -0.1227, -0.0925, -0.0311}, // 62 GeV
-    {-0.1536, -0.1458, -0.1266, -0.1266, -0.1098,  0.0000}, // 39 GeV
-    {-0.1591, -0.1260, -0.1474, -0.0335,  0.0000,  0.0000}, // 20 GeV
+    { -0.1605, -0.1458, -0.1458, -0.1293, -0.1027, -0.0314}, // 200 GeV
+    { -0.1528, -0.1400, -0.1403, -0.1227, -0.0925, -0.0311}, // 62 GeV
+    { -0.1536, -0.1458, -0.1266, -0.1266, -0.1098,  0.0000}, // 39 GeV
+    { -0.1591, -0.1260, -0.1474, -0.0335,  0.0000,  0.0000}, // 20 GeV
   };
   //--
 
   //--
   // 3rd order Qx offset for BBCS
   // no obvious trend
-  float qx3_offset_bbcs[4][6] = {{0},{0},{0},{0}};
-  // float qx3_offset_bbcs[4][6] = 
+  float qx3_offset_bbcs[4][6] = {{0}, {0}, {0}, {0}};
+  // float qx3_offset_bbcs[4][6] =
   // {
   //   { 0.0044,  0.0156,  0.0047,  0.0122, -0.0011, 0.0059}, // 200 GeV
   //   {-0.0012,  0.0003, -0.0011, -0.0029, -0.0051, 0.0019}, // 62 GeV
@@ -391,6 +391,15 @@ void flatten(int runNumber, int rp_recal_pass)
 
   TProfile* tp1f_bbc_fcharge_ring = new TProfile("tp1f_bbc_fcharge_ring", ";BBC ring; charge/total", 5, -0.5, 4.5);
 
+  TH2D* th2d_BBCq_cent = new TH2D("th2d_bbcq_cent", "", 200, -0.5, 199.5, 101, -0.5, 100.5);
+  TH2D* th2d_FVTXSntrk_cent = new TH2D("th2d_fvtxsntrk_cent", "", 100, -0.5, 99.5, 101, -0.5, 100.5);
+  TH2D* th2d_FVTXnntrk_cent = new TH2D("th2d_fvtxnntrk_cent", "", 100, -0.5, 99.5, 101, -0.5, 100.5);
+  TH2D* th2d_FVTXSnclus_cent = new TH2D("th2d_fvtxsnclus_cent", "", 200, -0.5, 1999.5, 101, -0.5, 100.5);
+  TH2D* th2d_FVTXnnclus_cent = new TH2D("th2d_fvtxnnclus_cent", "", 200, -0.5, 1999.5, 101, -0.5, 100.5);
+
+  TH1D* th1d_nevent_MB = new TH1D("th1d_nevent_mb", "", 101, -0.5, 100.5);
+  TH1D* th1d_nevent_HM = new TH1D("th1d_nevent_hm", "", 101, -0.5, 100.5);
+  TH1D* th1d_nevent_all = new TH1D("th1d_nevent_all", "", 101, -0.5, 100.5);
 
   // --- event plane resolution, need to be centrality dependent
   TProfile* tp1f_reso2_BBC_CNT[NMUL];
@@ -972,6 +981,19 @@ void flatten(int runNumber, int rp_recal_pass)
       continue;
     }
 
+    bool passes_mb = false;
+    if ( energyflag == 200 ) passes_mb = trigger_scaled & trigger_BBCLL1narrow;
+    if ( energyflag == 62  ) passes_mb = trigger_scaled & trigger_BBCLL1narrow;
+    if ( energyflag == 20  ) passes_mb = trigger_scaled & trigger_FVTXNSBBCS;
+    if ( energyflag == 39  ) passes_mb = trigger_scaled & trigger_FVTXNSBBCS;
+
+    bool passes_hm = false;
+    if ( energyflag == 200 ) passes_hm = trigger_scaled & trigger_BBCLL1narrowcent;
+    if ( energyflag == 62  ) passes_hm = trigger_scaled & trigger_BBCLL1narrowcent;
+    if ( energyflag == 20  ) passes_hm = trigger_scaled & trigger_FVTXNSBBCScentral;
+    if ( energyflag == 39  ) passes_hm = trigger_scaled & trigger_FVTXNSBBCScentral;
+
+
     // ---------------------
     // --- centrality
     // ---------------------
@@ -1077,6 +1099,16 @@ void flatten(int runNumber, int rp_recal_pass)
     //------------------------------------------------------------//
     //                Calculating Event Planes                    //
     //------------------------------------------------------------//
+
+    // --- event counting
+    if ( passes_mb )
+      th1d_nevent_MB->Fill(centrality);
+    if ( passes_hm )
+      th1d_nevent_HM->Fill(centrality);
+    if ( passes_trigger )
+      th1d_nevent_all->Fill(centrality);
+
+
 
     //if ( ( say_event && verbosity > 0 ) || verbosity > 4 ) cout << "Calculating event planes" << endl;
 
@@ -1184,6 +1216,8 @@ void flatten(int runNumber, int rp_recal_pass)
       if ( bbc_nw_qw > 0 )
         tp1f_bbc_fcharge_ring->Fill(ir, bbcq_ring[ir] / bbc_nw_qw);
     }
+    th2d_BBCq_cent->Fill(bbc_nw_qw, centrality);
+
 
     // --------------
     // --- FVTX stuff
@@ -1311,6 +1345,8 @@ void flatten(int runNumber, int rp_recal_pass)
 
     th1d_FVTXS_nclus->Fill(fvtxs_qw[0]);
     th1d_FVTXN_nclus->Fill(fvtxn_qw[0]);
+    th2d_FVTXSnclus_cent->Fill(fvtxs_qw[0], centrality);
+    th2d_FVTXnnclus_cent->Fill(fvtxn_qw[0], centrality);
 
     // --- the array that has all of the Q vectors
     float sumxy[NHAR][NDETSHORT][4];
@@ -1780,6 +1816,8 @@ void flatten(int runNumber, int rp_recal_pass)
 
     if ( fvtx_tracks )
     {
+      int nfvtxts = 0;
+      int nfvtxtn = 0;
       // loop over fvtx tracks
       for ( int i = 0; i < nfvtxt; ++i )
       {
@@ -1795,8 +1833,16 @@ void flatten(int runNumber, int rp_recal_pass)
         if ( chisq > 5 ) continue;
         int ns = 0;
         int nn = 0;
-        if ( eta > 0 ) nn = 1;
-        else if ( eta < 0 ) ns = 1;
+        if ( eta > 0 )
+        {
+          nfvtxtn++;
+          nn = 1;
+        }
+        else if ( eta < 0 )
+        {
+          nfvtxts++;
+          ns = 1;
+        }
         // cout << "eta is " << eta << " and ns is " << ns << " and nn is " << nn << endl;
 
         bool west = (phi > -pi / 2. && phi < pi / 2.);
@@ -1899,6 +1945,9 @@ void flatten(int runNumber, int rp_recal_pass)
         } // check on fvtx clusters
 
       } // loop over fvtx tracks
+
+      th2d_FVTXSntrk_cent->Fill(nfvtxts, centrality);
+      th2d_FVTXnntrk_cent->Fill(nfvtxtn, centrality);
 
     } // check on fvtx tracks
 
