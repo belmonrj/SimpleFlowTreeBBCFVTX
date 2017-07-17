@@ -124,17 +124,32 @@ void doenergy(int energy, int harmonic)
     float reso_FVTXS = sqrt((float_CNT_FVTXS * float_BBCS_FVTXS) / float_BBCS_CNT); // CSBS/BC
     float reso_FVTXN = sqrt((float_CNT_FVTXN * float_BBCS_FVTXN) / float_BBCS_CNT); // CNBN/BC
 
-    float ereso_BBCS = sqrt( ( efloat_BBCS_CNT * efloat_BBCS_CNT / 4 * float_BBCS_CNT )
-                             + ( efloat_BBCS_FVTXS * efloat_BBCS_FVTXS / 4 * float_BBCS_FVTXS )
-                             + ( efloat_CNT_FVTXS * efloat_CNT_FVTXS / 4 * pow(float_CNT_FVTXS, 3) ) );
-    float ereso_FVTXS = sqrt( ( efloat_CNT_FVTXS * efloat_CNT_FVTXS / 4 * float_CNT_FVTXS )
-                              + ( efloat_BBCS_FVTXS * efloat_BBCS_FVTXS / 4 * float_BBCS_FVTXS )
-                              + ( efloat_BBCS_CNT * efloat_BBCS_CNT / 4 * pow(float_BBCS_CNT, 3) ) );
-    float ereso_FVTXN = sqrt( ( efloat_CNT_FVTXN * efloat_CNT_FVTXN / 4 * float_CNT_FVTXN )
-                              + ( efloat_BBCS_FVTXN * efloat_BBCS_FVTXN / 4 * float_BBCS_FVTXN )
-                              + ( efloat_BBCS_CNT * efloat_BBCS_CNT / 4 * pow(float_BBCS_CNT, 3) ) );
+    // old uncertainty calculations
+    // float ereso_BBCS = sqrt( ( efloat_BBCS_CNT * efloat_BBCS_CNT / 4 * float_BBCS_CNT )
+    //                          + ( efloat_BBCS_FVTXS * efloat_BBCS_FVTXS / 4 * float_BBCS_FVTXS )
+    //                          + ( efloat_CNT_FVTXS * efloat_CNT_FVTXS / 4 * pow(float_CNT_FVTXS, 3) ) );
+    // float ereso_FVTXS = sqrt( ( efloat_CNT_FVTXS * efloat_CNT_FVTXS / 4 * float_CNT_FVTXS )
+    //                           + ( efloat_BBCS_FVTXS * efloat_BBCS_FVTXS / 4 * float_BBCS_FVTXS )
+    //                           + ( efloat_BBCS_CNT * efloat_BBCS_CNT / 4 * pow(float_BBCS_CNT, 3) ) );
+    // float ereso_FVTXN = sqrt( ( efloat_CNT_FVTXN * efloat_CNT_FVTXN / 4 * float_CNT_FVTXN )
+    //                           + ( efloat_BBCS_FVTXN * efloat_BBCS_FVTXN / 4 * float_BBCS_FVTXN )
+    //                           + ( efloat_BBCS_CNT * efloat_BBCS_CNT / 4 * pow(float_BBCS_CNT, 3) ) );
 
-    dcnt[ic] = Form("%d GeV & %d & %.2e $\\pm$ %.2e & %.2e $\\pm$ %.2e & %.2e $\\pm$ %.2e \\\\",
+    float ereso_BBCS = reso_BBCS/2. * sqrt( pow(efloat_BBCS_CNT, 2)   / pow(float_BBCS_CNT, 2) 
+                                          + pow(efloat_BBCS_FVTXS, 2) / pow(float_BBCS_FVTXS, 2) 
+                                          + pow(efloat_CNT_FVTXS, 2)  / pow(float_CNT_FVTXS, 2) );
+
+    float ereso_FVTXS = reso_FVTXS/2. * sqrt( pow(efloat_CNT_FVTXS, 2)  / pow(float_CNT_FVTXS, 2) 
+                                            + pow(efloat_BBCS_FVTXS, 2) / pow(float_BBCS_FVTXS, 2) 
+                                            + pow(efloat_BBCS_CNT, 2)   / pow(float_BBCS_CNT, 2) );
+
+    float ereso_FVTXN = reso_FVTXN/2. * sqrt( pow(efloat_CNT_FVTXN, 2)  / pow(float_CNT_FVTXN, 2) 
+                                            + pow(efloat_BBCS_FVTXN, 2) / pow(float_BBCS_FVTXN, 2) 
+                                            + pow(efloat_BBCS_CNT, 2)   / pow(float_BBCS_CNT, 2) );
+
+
+
+    dcnt[ic] = Form("%d GeV & %d & %.3e $\\pm$ %.3e & %.3e $\\pm$ %.3e & %.3e $\\pm$ %.3e \\\\",
                             energy, ic,
                             reso_BBCS, ereso_BBCS,
                             reso_FVTXS, ereso_FVTXS,
