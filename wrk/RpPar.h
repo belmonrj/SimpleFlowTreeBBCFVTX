@@ -35,10 +35,16 @@ static const int NDET = 34; // number of detectors (see below)
 // 31 -- FVTXS clusters 0 1 3
 // 32 -- FVTXS clusters 0 2 3
 // 33 -- FVTXS clusters 1 2 3
-static const int NDETSHORT = 3; // number of detectors (see below)
+static const int NDETSHORT = 9; // number of detectors (see below)
 //  0 -- BBCS Psi2 calculated
 //  1 -- FVTXS Psi2 calculated
 //  2 -- FVTXN Psi2 calculated
+//  3 -- FVTXS layer 0 Psi2 calculated (with weight)
+//  4 -- FVTXS layer 1 Psi2 calculated (with weight)
+//  5 -- FVTXS layer 2 Psi2 calculated (with weight)
+//  6 -- FVTXS layer 3 Psi2 calculated (with weight)
+//  7 -- FVTXS [-1, -2] Psi2 calculated
+//  8 -- FVTXS [-2, -3] Psi2 calculated
 static const int NHAR = 4; // number of harmonics (1, 2, 3)
 static const int NMUL = 6; // centrality bins 0-5, 5-10, 10-20, 20-40, 40-60, 60-88
 static const int NZPS = 10; // number of z-vertex bins for flattening (very important for FVTX, maybe not so important for BBC)
@@ -50,6 +56,7 @@ static const int NMAT = 8; // all of these are for cnt matching ???
 static const int NPAR = 20; // for cnt matching ???
 static const int NETA = 8; // ???
 static const int NTRK = 50; // ???
+static const int NFVTXLAY = 4; // number of FVTX layers (each side)
 
 const float phbeta = 29.9792458;
 const float mpion  = 0.139570;

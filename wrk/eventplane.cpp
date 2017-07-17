@@ -107,8 +107,8 @@ int main(int argc, char *argv[])
 
   cout << "Now processing with run number " << run << endl;
 
-  // flatten(run, 1);
-  // flatten(run, 2);
+  flatten(run, 1);
+  flatten(run, 2);
   flatten(run, 3);
 
   return 0;
@@ -343,7 +343,8 @@ void flatten(int runNumber, int rp_recal_pass)
   int bbcs_index      =  0;
   int fvtxs_index     =  1;
   int fvtxn_index     =  2;
-
+  int fvtxsl_index    =  3;
+  int fvtxsa_index    =  7;
 
   //------------------------------------------------------------//
   //                                                            //
@@ -413,6 +414,12 @@ void flatten(int runNumber, int rp_recal_pass)
   TProfile* tp1f_reso2_BBC_FVTXN[NMUL];
   TProfile* tp1f_reso2_CNT_FVTXN[NMUL];
   TProfile* tp1f_reso2_FVTXS_FVTXN[NMUL];
+  TProfile* tp1f_reso2_BBC_FVTXSA[NMUL];
+  TProfile* tp1f_reso2_CNT_FVTXSA[NMUL];
+  TProfile* tp1f_reso2_BBC_FVTXSB[NMUL];
+  TProfile* tp1f_reso2_CNT_FVTXSB[NMUL];
+  TProfile* tp1f_reso2_BBC_FVTXSL[NMUL][NFVTXLAY];
+  TProfile* tp1f_reso2_CNT_FVTXSL[NMUL][NFVTXLAY];
 
   TProfile* tp1f_reso3_BBC_CNT[NMUL];
   TProfile* tp1f_reso3_BBC_FVTX[NMUL];
@@ -429,6 +436,16 @@ void flatten(int runNumber, int rp_recal_pass)
     tp1f_reso2_BBC_FVTXN[ic] = new TProfile(Form("tp1f_c%i_reso2_BBC_FVTXN", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
     tp1f_reso2_CNT_FVTXN[ic] = new TProfile(Form("tp1f_c%i_reso2_CNT_FVTXN", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
     tp1f_reso2_FVTXS_FVTXN[ic] = new TProfile(Form("tp1f_c%i_reso2_FVTXS_FVTXN", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+
+    tp1f_reso2_BBC_FVTXSA[ic] = new TProfile(Form("tp1f_c%i_reso2_BBC_FVTXSA", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+    tp1f_reso2_CNT_FVTXSA[ic] = new TProfile(Form("tp1f_c%i_reso2_CNT_FVTXSA", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+    tp1f_reso2_BBC_FVTXSB[ic] = new TProfile(Form("tp1f_c%i_reso2_BBC_FVTXSB", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+    tp1f_reso2_CNT_FVTXSB[ic] = new TProfile(Form("tp1f_c%i_reso2_CNT_FVTXSB", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+    for (int il = 0; il < NFVTXLAY; il++)
+    {
+      tp1f_reso2_BBC_FVTXSL[ic][il] = new TProfile(Form("tp1f_c%i_reso2_BBC_FVTXSL%i", ic, il), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+      tp1f_reso2_CNT_FVTXSL[ic][il] = new TProfile(Form("tp1f_c%i_reso2_CNT_FVTXSL%i", ic, il), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+    }
 
     tp1f_reso3_BBC_CNT[ic]  = new TProfile(Form("tp1f_c%i_reso3_BBC_CNT", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
     tp1f_reso3_BBC_FVTX[ic] = new TProfile(Form("tp1f_c%i_reso3_BBC_FVTX", ic), "", 1, -0.5, 0.5, -1e6, 1e6, "");
@@ -614,6 +631,18 @@ void flatten(int runNumber, int rp_recal_pass)
   TProfile* fvtxs_v2_west_docalib[NMUL];
   TProfile* fvtxs_v2_both_docalib[NMUL];
 
+  TProfile* fvtxsa_v2_east_docalib[NMUL];
+  TProfile* fvtxsa_v2_west_docalib[NMUL];
+  TProfile* fvtxsa_v2_both_docalib[NMUL];
+
+  TProfile* fvtxsb_v2_east_docalib[NMUL];
+  TProfile* fvtxsb_v2_west_docalib[NMUL];
+  TProfile* fvtxsb_v2_both_docalib[NMUL];
+
+  TProfile* fvtxsl_v2_east_docalib[NMUL][NFVTXLAY];
+  TProfile* fvtxsl_v2_west_docalib[NMUL][NFVTXLAY];
+  TProfile* fvtxsl_v2_both_docalib[NMUL][NFVTXLAY];
+
   TProfile* fvtxn_v2_east_docalib[NMUL];
   TProfile* fvtxn_v2_west_docalib[NMUL];
   TProfile* fvtxn_v2_both_docalib[NMUL];
@@ -660,6 +689,21 @@ void flatten(int runNumber, int rp_recal_pass)
     fvtxs_v2_both_docalib[ic] = new TProfile(Form("fvtxs_v2_both_docalib_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
     fvtxs_v2_east_docalib[ic] = new TProfile(Form("fvtxs_v2_east_docalib_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
     fvtxs_v2_west_docalib[ic] = new TProfile(Form("fvtxs_v2_west_docalib_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+
+    fvtxsa_v2_both_docalib[ic] = new TProfile(Form("fvtxsa_v2_both_docalib_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+    fvtxsa_v2_east_docalib[ic] = new TProfile(Form("fvtxsa_v2_east_docalib_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+    fvtxsa_v2_west_docalib[ic] = new TProfile(Form("fvtxsa_v2_west_docalib_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+
+    fvtxsb_v2_both_docalib[ic] = new TProfile(Form("fvtxsb_v2_both_docalib_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+    fvtxsb_v2_east_docalib[ic] = new TProfile(Form("fvtxsb_v2_east_docalib_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+    fvtxsb_v2_west_docalib[ic] = new TProfile(Form("fvtxsb_v2_west_docalib_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
+
+    for (int il = 0; il < NFVTXLAY; il++)
+    {
+      fvtxsl_v2_both_docalib[ic][il] = new TProfile(Form("fvtxsl%i_v2_both_docalib_cent%d", il, ic), "", NPTBINS, ptlim, -1.1, 1.1);
+      fvtxsl_v2_east_docalib[ic][il] = new TProfile(Form("fvtxsl%i_v2_east_docalib_cent%d", il, ic), "", NPTBINS, ptlim, -1.1, 1.1);
+      fvtxsl_v2_west_docalib[ic][il] = new TProfile(Form("fvtxsl%i_v2_west_docalib_cent%d", il, ic), "", NPTBINS, ptlim, -1.1, 1.1);
+    }
 
     fvtxn_v2_both_docalib[ic] = new TProfile(Form("fvtxn_v2_both_docalib_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
     fvtxn_v2_east_docalib[ic] = new TProfile(Form("fvtxn_v2_east_docalib_cent%d", ic), "", NPTBINS, ptlim, -1.1, 1.1);
@@ -1234,7 +1278,7 @@ void flatten(int runNumber, int rp_recal_pass)
     // --- FVTX stuff
     // --------------
 
-    float fvtxs_qx2[10];//all layers then 0 1 2 3
+    float fvtxs_qx2[10];//all layers then 0 1 2 3 A B
     float fvtxs_qy2[10];
     float fvtxs_qx3[10];//all layers then 0 1 2 3
     float fvtxs_qy3[10];
@@ -1334,8 +1378,26 @@ void flatten(int runNumber, int rp_recal_pass)
           fvtxs_qy3[0] += TMath::Sin(3 * phi);
           fvtxs_qx4[0] += TMath::Cos(4 * phi);
           fvtxs_qy4[0] += TMath::Sin(4 * phi);
-
           fvtxs_qw[0] += 1;
+
+
+          fvtxs_qx2[fvtxsl_index + fvtx_layer] += TMath::Cos(2 * phi);
+          fvtxs_qy2[fvtxsl_index + fvtx_layer] += TMath::Sin(2 * phi);
+          fvtxs_qw[fvtxsl_index + fvtx_layer] += 1;
+
+          if ( fvtx_eta > -2 )
+          {
+            fvtxs_qx2[fvtxsa_index] += TMath::Cos(2 * phi);
+            fvtxs_qy2[fvtxsa_index] += TMath::Sin(2 * phi);
+            fvtxs_qw[fvtxsa_index] += 1;
+          }
+          else
+          {
+            fvtxs_qx2[fvtxsa_index + 1] += TMath::Cos(2 * phi);
+            fvtxs_qy2[fvtxsa_index + 1] += TMath::Sin(2 * phi);
+            fvtxs_qw[fvtxsa_index + 1] += 1;
+          }
+
         } // check on south
 
         // --- north side
@@ -1394,6 +1456,19 @@ void flatten(int runNumber, int rp_recal_pass)
       sumxy[1][fvtxn_index][0] = fvtxn_qx2[0];
       sumxy[1][fvtxn_index][1] = fvtxn_qy2[0];
       sumxy[1][fvtxn_index][2] = fvtxn_qw[0];
+      for (int il = 0; il < NFVTXLAY; il++)
+      {
+        sumxy[1][fvtxsl_index + il][0] = fvtxs_qx2[fvtxsl_index + il];
+        sumxy[1][fvtxsl_index + il][1] = fvtxs_qy2[fvtxsl_index + il];
+        sumxy[1][fvtxsl_index + il][2] = fvtxs_qw[fvtxsl_index + il];
+      }
+      sumxy[1][fvtxsa_index][0] = fvtxs_qx2[fvtxsa_index];
+      sumxy[1][fvtxsa_index][1] = fvtxs_qy2[fvtxsa_index];
+      sumxy[1][fvtxsa_index][2] = fvtxs_qw[fvtxsa_index];
+      sumxy[1][fvtxsa_index + 1][0] = fvtxs_qx2[fvtxsa_index + 1];
+      sumxy[1][fvtxsa_index + 1][1] = fvtxs_qy2[fvtxsa_index + 1];
+      sumxy[1][fvtxsa_index + 1][2] = fvtxs_qw[fvtxsa_index + 1];
+
       sumxy[2][fvtxs_index][0] = fvtxs_qx3[0];
       sumxy[2][fvtxs_index][1] = fvtxs_qy3[0];
       sumxy[2][fvtxs_index][2] = fvtxs_qw[0];
@@ -1525,6 +1600,19 @@ void flatten(int runNumber, int rp_recal_pass)
     sumxy[1][fvtxs_index][1] = sin(sumxy[1][fvtxs_index][3] * 2) + qy2_offset_fvtxs[eidx][icent];
     sumxy[1][fvtxs_index][3] = atan2(sumxy[1][fvtxs_index][1], sumxy[1][fvtxs_index][0]) / (1 + 1.0);
 
+    // Qx/Qy offset on FVTXS Psi2
+    sumxy[1][fvtxsa_index][0] = cos(sumxy[1][fvtxsa_index][3] * 2) + qxOffset;
+    sumxy[1][fvtxsa_index][1] = sin(sumxy[1][fvtxsa_index][3] * 2) + qy2_offset_fvtxs[eidx][icent];
+    sumxy[1][fvtxsa_index][3] = atan2(sumxy[1][fvtxsa_index][1], sumxy[1][fvtxsa_index][0]) / (1 + 1.0);
+    sumxy[1][fvtxsa_index + 1][0] = cos(sumxy[1][fvtxsa_index + 1][3] * 2) + qxOffset;
+    sumxy[1][fvtxsa_index + 1][1] = sin(sumxy[1][fvtxsa_index + 1][3] * 2) + qy2_offset_fvtxs[eidx][icent];
+    sumxy[1][fvtxsa_index + 1][3] = atan2(sumxy[1][fvtxsa_index + 1][1], sumxy[1][fvtxsa_index + 1][0]) / (1 + 1.0);
+    for (int il = 0; il < NFVTXLAY; il++)
+    {
+      sumxy[1][fvtxsl_index + il][0] = cos(sumxy[1][fvtxsl_index + il][3] * 2) + qxOffset;
+      sumxy[1][fvtxsl_index + il][1] = sin(sumxy[1][fvtxsl_index + il][3] * 2) + qy2_offset_fvtxs[eidx][icent];
+      sumxy[1][fvtxsl_index + il][3] = atan2(sumxy[1][fvtxsl_index + il][1], sumxy[1][fvtxsl_index + il][0]) / (1 + 1.0);
+    }
     // Qy offset on BBCS Psi2
     sumxy[1][bbcs_index][0] = cos(sumxy[1][bbcs_index][3] * 2);
     sumxy[1][bbcs_index][1] = sin(sumxy[1][bbcs_index][3] * 2) + qy2_offset_bbcs[eidx][icent];
@@ -1624,6 +1712,14 @@ void flatten(int runNumber, int rp_recal_pass)
     // --- FVTX south and north
     tp1f_reso2_FVTXS_FVTXN[icent]->Fill(0.0, cos(2 * (fvtx_south_psi2_docalib - fvtx_north_psi2_docalib)));
     tp1f_reso3_FVTXS_FVTXN[icent]->Fill(0.0, cos(3 * (fvtx_south_psi3_docalib - fvtx_north_psi3_docalib)));
+
+    // --- BBC and FVTX S layers (also A, B)
+    tp1f_reso2_BBC_FVTXSA[icent]->Fill(0.0, cos(2 * (bbc_south_psi2_docalib - sumxy[1][fvtxsa_index][3])));
+    tp1f_reso2_BBC_FVTXSB[icent]->Fill(0.0, cos(2 * (bbc_south_psi2_docalib - sumxy[1][fvtxsa_index + 1][3])));
+    for (int il = 0; il < NFVTXLAY; il++)
+    {
+      tp1f_reso2_BBC_FVTXSL[icent][il]->Fill(0.0, cos(2 * (bbc_south_psi2_docalib - sumxy[1][fvtxsl_index + il][3])));
+    }
 
     // ----------------------------------------------------------------------------
 
@@ -1817,6 +1913,67 @@ void flatten(int runNumber, int rp_recal_pass)
             }
 
           } // check on ep north all layers
+
+
+          // south A layers
+          if ( -4.0 < sumxy[1][fvtxsa_index][3] && sumxy[1][fvtxsa_index][3] < 4.0 )
+          {
+
+            // --- 2nd harmonic
+            double fvtxsa_dphi2_docalib = phi_angle - sumxy[1][fvtxsa_index][3];
+            double cosfvtxsa_dphi2_docalib = TMath::Cos(2 * fvtxsa_dphi2_docalib);
+
+            fvtxsa_v2_both_docalib[icent]->Fill(pt_angle, cosfvtxsa_dphi2_docalib);
+            if ( dcarm == 1 ) fvtxsa_v2_west_docalib[icent]->Fill(pt_angle, cosfvtxsa_dphi2_docalib);
+            if ( dcarm == 0 ) fvtxsa_v2_east_docalib[icent]->Fill(pt_angle, cosfvtxsa_dphi2_docalib);
+
+            // --- ep resolutions
+            if ( pt_angle > 0.4 && pt_angle < 3.0 )
+              tp1f_reso2_CNT_FVTXSA[icent]->Fill(0.0, cosfvtxsa_dphi2_docalib);
+
+          } // check on ep south A layers
+
+
+          // south B layers
+          if ( -4.0 < sumxy[1][fvtxsa_index + 1][3] && sumxy[1][fvtxsa_index + 1][3] < 4.0 )
+          {
+
+            // --- 2nd harmonic
+            double fvtxsb_dphi2_docalib = phi_angle - sumxy[1][fvtxsa_index + 1][3];
+            double cosfvtxsb_dphi2_docalib = TMath::Cos(2 * fvtxsb_dphi2_docalib);
+
+            fvtxsb_v2_both_docalib[icent]->Fill(pt_angle, cosfvtxsb_dphi2_docalib);
+            if ( dcarm == 1 ) fvtxsb_v2_west_docalib[icent]->Fill(pt_angle, cosfvtxsb_dphi2_docalib);
+            if ( dcarm == 0 ) fvtxsb_v2_east_docalib[icent]->Fill(pt_angle, cosfvtxsb_dphi2_docalib);
+
+            // --- ep resolutions
+            if ( pt_angle > 0.4 && pt_angle < 3.0 )
+              tp1f_reso2_CNT_FVTXSB[icent]->Fill(0.0, cosfvtxsb_dphi2_docalib);
+
+          } // check on ep south B layers
+
+          // south layers
+          for (int il = 0; il < NFVTXLAY; il++)
+          {
+            if ( -4.0 < sumxy[1][fvtxsl_index + il][3] && sumxy[1][fvtxsl_index + il][3] < 4.0 )
+            {
+
+              // --- 2nd harmonic
+              double fvtxsl_dphi2_docalib = phi_angle - sumxy[1][fvtxsl_index + il][3];
+              double cosfvtxsl_dphi2_docalib = TMath::Cos(2 * fvtxsl_dphi2_docalib);
+
+              fvtxsl_v2_both_docalib[icent][il]->Fill(pt_angle, cosfvtxsl_dphi2_docalib);
+              if ( dcarm == 1 ) fvtxsl_v2_west_docalib[icent][il]->Fill(pt_angle, cosfvtxsl_dphi2_docalib);
+              if ( dcarm == 0 ) fvtxsl_v2_east_docalib[icent][il]->Fill(pt_angle, cosfvtxsl_dphi2_docalib);
+
+              // --- ep resolutions
+              if ( pt_angle > 0.4 && pt_angle < 3.0 )
+                tp1f_reso2_CNT_FVTXSL[icent][il]->Fill(0.0, cosfvtxsl_dphi2_docalib);
+
+            } // check on ep south layers
+          } // il
+
+
 
         } // check on fvtx clusters
 
