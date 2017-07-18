@@ -27,18 +27,22 @@ void makeplot_vnEP()
 
   outfile = TFile::Open("histograms_vnEPcent.root", "recreate");
 
-  for ( int i = 2; i < 4; ++i )
-  {
-    doenergy(200, i);
-    doenergy(62, i);
-    doenergy(39, i);
-    doenergy(20, i);
-    // ---
-    // diagnostic(200, i);
-    // diagnostic(62, i);
-    // diagnostic(39, i);
-    // diagnostic(20, i);
-  }
+  // for ( int i = 2; i < 4; ++i )
+  // {
+  //   doenergy(200, i);
+  //   doenergy(62, i);
+  //   doenergy(39, i);
+  //   doenergy(20, i);
+  //   // ---
+  //   // diagnostic(200, i);
+  //   // diagnostic(62, i);
+  //   // diagnostic(39, i);
+  //   // diagnostic(20, i);
+  // }
+  doenergy(200, 2);
+  doenergy(62, 2);
+  doenergy(39, 2);
+  doenergy(20, 2);
 
   outfile->Write();
   outfile->Close();
@@ -96,9 +100,11 @@ void doenergy(int energy, int harmonic)
     float float_CNT_FVTXS = tp1f_CNT_FVTXS->GetBinContent(1);
     float float_CNT_FVTXN = tp1f_CNT_FVTXN->GetBinContent(1);
 
+
     float reso_BBCS = sqrt((float_BBCS_CNT * float_BBCS_FVTXS) / float_CNT_FVTXS); // BCBS/CS
     float reso_FVTXS = sqrt((float_CNT_FVTXS * float_BBCS_FVTXS) / float_BBCS_CNT); // CSBS/BC
     float reso_FVTXN = sqrt((float_CNT_FVTXN * float_BBCS_FVTXN) / float_BBCS_CNT); // CNBN/BC
+
 
     if ( energy == 20 )
     {
@@ -111,9 +117,47 @@ void doenergy(int energy, int harmonic)
       reso_FVTXS = 1;
     }
 
-    cout << "bbc resolution is " << reso_BBCS << endl;
-    cout << "fvtx resolution is " << reso_FVTXS << endl;
-    cout << "fvtxN resolution is " << reso_FVTXN << endl;
+    cout << "bbc resolution is     " << reso_BBCS << endl;
+    cout << "fvtx resolution is    " << reso_FVTXS << endl;
+    cout << "fvtxN resolution is   " << reso_FVTXN << endl;
+
+    //-- resolution for segmented FVTX
+    TProfile* tp1f_BBCS_FVTXSA = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_BBC_FVTXSA", ic, harmonic));
+    TProfile* tp1f_BBCS_FVTXSB = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_BBC_FVTXSB", ic, harmonic));
+    TProfile* tp1f_BBCS_FVTXSL[NFVTXLAY];
+    for (int il = 0; il < NFVTXLAY; il++)
+      tp1f_BBCS_FVTXSL[il] = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_BBC_FVTXSL%i", ic, harmonic, il));
+
+    TProfile* tp1f_CNT_FVTXSA = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_CNT_FVTXSA", ic, harmonic));
+    TProfile* tp1f_CNT_FVTXSB = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_CNT_FVTXSB", ic, harmonic));
+    TProfile* tp1f_CNT_FVTXSL[NFVTXLAY];
+    for (int il = 0; il < NFVTXLAY; il++)
+      tp1f_CNT_FVTXSL[il] = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_CNT_FVTXSL%i", ic, harmonic, il));
+
+    float float_BBCS_FVTXSA = tp1f_BBCS_FVTXSA->GetBinContent(1);
+    float float_BBCS_FVTXSB = tp1f_BBCS_FVTXSB->GetBinContent(1);
+    float float_BBCS_FVTXSL[NFVTXLAY] = {0};
+    for (int il = 0; il < NFVTXLAY; il++)
+      float_BBCS_FVTXSL[il] = tp1f_BBCS_FVTXSL[il]->GetBinContent(1);
+
+    float float_CNT_FVTXSA = tp1f_CNT_FVTXSA->GetBinContent(1);
+    float float_CNT_FVTXSB = tp1f_CNT_FVTXSB->GetBinContent(1);
+    float float_CNT_FVTXSL[NFVTXLAY] = {0};
+    for (int il = 0; il < NFVTXLAY; il++)
+      float_CNT_FVTXSL[il] = tp1f_CNT_FVTXSL[il]->GetBinContent(1);
+
+    float reso_FVTXSA = sqrt((float_CNT_FVTXSA * float_BBCS_FVTXSA) / float_BBCS_CNT);
+    float reso_FVTXSB = sqrt((float_CNT_FVTXSB * float_BBCS_FVTXSB) / float_BBCS_CNT);
+    float reso_FVTXSL[NFVTXLAY] = {0};
+    for (int il = 0; il < NFVTXLAY; il++)
+      reso_FVTXSL[il] = sqrt((float_CNT_FVTXSL[il] * float_BBCS_FVTXSL[il]) / float_BBCS_CNT);
+
+
+    cout << "fvtxsA resolution is  " << reso_FVTXSA << endl;
+    cout << "fvtxsB resolution is  " << reso_FVTXSB << endl;
+    for (int il = 0; il < NFVTXLAY; il++)
+      cout << "fvtxsL" << il << " resolution is " << reso_FVTXSL[il] << endl;
+
 
 
     // --- FVTXS EP
@@ -171,6 +215,33 @@ void doenergy(int energy, int harmonic)
     hvneta_fvtxn->Scale(1.0 / reso_FVTXN);
 
 
+    // --- FVTXS segmented EP
+    TProfile* hvn_fvtxsa_east = (TProfile*)file->Get(Form("fvtxsa_v%d_east_docalib_cent%d", harmonic, ic));
+    hvn_fvtxsa_east->Scale(1.0 / reso_FVTXSA);
+    TProfile* hvn_fvtxsa_west = (TProfile*)file->Get(Form("fvtxsa_v%d_west_docalib_cent%d", harmonic, ic));
+    hvn_fvtxsa_west->Scale(1.0 / reso_FVTXSA);
+    TProfile* hvn_fvtxsa = (TProfile*)file->Get(Form("fvtxsa_v%d_both_docalib_cent%d", harmonic, ic));
+    hvn_fvtxsa->Scale(1.0 / reso_FVTXSA);
+
+    TProfile* hvn_fvtxsb_east = (TProfile*)file->Get(Form("fvtxsb_v%d_east_docalib_cent%d", harmonic, ic));
+    hvn_fvtxsb_east->Scale(1.0 / reso_FVTXSB);
+    TProfile* hvn_fvtxsb_west = (TProfile*)file->Get(Form("fvtxsb_v%d_west_docalib_cent%d", harmonic, ic));
+    hvn_fvtxsb_west->Scale(1.0 / reso_FVTXSB);
+    TProfile* hvn_fvtxsb = (TProfile*)file->Get(Form("fvtxsb_v%d_both_docalib_cent%d", harmonic, ic));
+    hvn_fvtxsb->Scale(1.0 / reso_FVTXSB);
+
+    TProfile *hvn_fvtxsl_east[NFVTXLAY];
+    TProfile *hvn_fvtxsl_west[NFVTXLAY];
+    TProfile *hvn_fvtxsl[NFVTXLAY];
+    for (int il = 0; il < NFVTXLAY; il++)
+    {
+      hvn_fvtxsl_east[il] = (TProfile*)file->Get(Form("fvtxsl%i_v%d_east_docalib_cent%d", il, harmonic, ic));
+      hvn_fvtxsl_east[il]->Scale(1.0 / reso_FVTXSL[il]);
+      hvn_fvtxsl_west[il] = (TProfile*)file->Get(Form("fvtxsl%i_v%d_west_docalib_cent%d", il, harmonic, ic));
+      hvn_fvtxsl_west[il]->Scale(1.0 / reso_FVTXSL[il]);
+      hvn_fvtxsl[il] = (TProfile*)file->Get(Form("fvtxsl%i_v%d_both_docalib_cent%d", il, harmonic, ic));
+      hvn_fvtxsl[il]->Scale(1.0 / reso_FVTXSL[il]);
+    }
 
     outfile->cd();
     hvn_bbcs->SetName(Form("tprofile_v%d_pT_eventplane_bbcs_c%d_%d", harmonic, ic, energy));
@@ -213,8 +284,31 @@ void doenergy(int energy, int harmonic)
     hvneta_fvtxn_east->Write();
     hvneta_fvtxn_west->Write();
 
+    hvn_fvtxsa_east->SetName(Form("tprofile_v%d_pT_east_eventplane_fvtxsa_c%d_%d", harmonic, ic, energy));
+    hvn_fvtxsa_west->SetName(Form("tprofile_v%d_pT_west_eventplane_fvtxsa_c%d_%d", harmonic, ic, energy));
+    hvn_fvtxsa->SetName(Form("tprofile_v%d_pT_eventplane_fvtxsa_c%d_%d", harmonic, ic, energy));
+    hvn_fvtxsb_east->SetName(Form("tprofile_v%d_pT_east_eventplane_fvtxsb_c%d_%d", harmonic, ic, energy));
+    hvn_fvtxsb_west->SetName(Form("tprofile_v%d_pT_west_eventplane_fvtxsb_c%d_%d", harmonic, ic, energy));
+    hvn_fvtxsb->SetName(Form("tprofile_v%d_pT_eventplane_fvtxsb_c%d_%d", harmonic, ic, energy));
+    for (int il = 0; il < NFVTXLAY; il++)
+    {
+      hvn_fvtxsl_east[il]->SetName(Form("tprofile_v%d_pT_east_eventplane_fvtxsl%i_c%d_%d", harmonic, il, ic, energy));
+      hvn_fvtxsl_west[il]->SetName(Form("tprofile_v%d_pT_west_eventplane_fvtxsl%i_c%d_%d", harmonic, il, ic, energy));
+      hvn_fvtxsl[il]->SetName(Form("tprofile_v%d_pT_eventplane_fvtxsl%i_c%d_%d", harmonic, il, ic, energy));
+    }
 
-
+    hvn_fvtxsa_east->Write();
+    hvn_fvtxsa_west->Write();
+    hvn_fvtxsa->Write();
+    hvn_fvtxsb_east->Write();
+    hvn_fvtxsb_west->Write();
+    hvn_fvtxsb->Write();
+    for (int il = 0; il < NFVTXLAY; il++)
+    {
+      hvn_fvtxsl_east[il]->Write();
+      hvn_fvtxsl_west[il]->Write();
+      hvn_fvtxsl[il]->Write();
+    }
 
   } // ic
 
@@ -225,7 +319,7 @@ void doenergy(int energy, int harmonic)
 
   th1d_vncent_fvtxs_lowpt->Write();
   th1d_vncent_fvtxs_highpt->Write();
-  
+
   // // ---
 
 
@@ -798,47 +892,47 @@ TGraphErrors* format_v2_pt(TH1* p)
   double y[15] = {0};
   double e[15] = {0};
 
-  for(int i = 0; i < 15; ++i)
+  for (int i = 0; i < 15; ++i)
   {
-    x[i] = (3./15)*(i+1) - 0.1;
-    y[i] = p->GetBinContent(i+1);
-    e[i] = p->GetBinError(i+1);
+    x[i] = (3. / 15) * (i + 1) - 0.1;
+    y[i] = p->GetBinContent(i + 1);
+    e[i] = p->GetBinError(i + 1);
   }
 
-  double newx[] = { 
-                   (x[1]+x[2])/2,
-                   (x[3]+x[4])/2,
-                   (x[5]+x[6]+x[7])/3,
-                   (x[8]+x[9]+x[10])/3,
-                   (x[11]+x[12]+x[13]+x[14])/4 
-                 };
+  double newx[] = {
+    (x[1] + x[2]) / 2,
+    (x[3] + x[4]) / 2,
+    (x[5] + x[6] + x[7]) / 3,
+    (x[8] + x[9] + x[10]) / 3,
+    (x[11] + x[12] + x[13] + x[14]) / 4
+  };
   //double newxe[] = { 0.2,0.2,0.3,0.3,0.4 };
   double newxe[5] = {0};
 
   double w[] = {
-                 0,
-                 1./(e[1]*e[1]), 1./(e[2]*e[2]),
-                 1./(e[3]*e[3]), 1./(e[4]*e[4]),
-                 1./(e[5]*e[5]), 1./(e[6]*e[6]),
-                 1./(e[7]*e[7]), 1./(e[8]*e[8]),
-                 1./(e[9]*e[9]), 1./(e[10]*e[10]),
-                 1./(e[11]*e[11]), 1./(e[12]*e[12]),
-                 1./(e[13]*e[13]), 1./(e[14]*e[14])
-               };
-      
-  double newy[] = { 
-                   (y[1]*w[1] + y[2]*w[2])/(w[1]+w[2]), 
-                   (y[3]*w[3] + y[4]*w[4])/(w[3]+w[4]),
-                   (y[5]*w[5] + y[6]*w[6] + y[7]*w[7])/(w[5]+w[6]+w[7]),
-                   (y[8]*w[8] + y[9]*w[9] + y[10]*w[10])/(w[8]+w[9]+w[10]),
-                   (y[11]*w[11] + y[12]*w[12] + y[13]*w[13] + y[14]*w[14])/(w[11]+w[12]+w[13]+w[14])
-                 };
+    0,
+    1. / (e[1]*e[1]), 1. / (e[2]*e[2]),
+    1. / (e[3]*e[3]), 1. / (e[4]*e[4]),
+    1. / (e[5]*e[5]), 1. / (e[6]*e[6]),
+    1. / (e[7]*e[7]), 1. / (e[8]*e[8]),
+    1. / (e[9]*e[9]), 1. / (e[10]*e[10]),
+    1. / (e[11]*e[11]), 1. / (e[12]*e[12]),
+    1. / (e[13]*e[13]), 1. / (e[14]*e[14])
+  };
 
-  double newye[] = { 
-                    1./sqrt(w[1]+w[2]), 1./sqrt(w[3]+w[4]),
-                    1./sqrt(w[5]+w[6]+w[7]), 1./sqrt(w[8]+w[9]+w[10]),
-                    1./sqrt(w[11]+w[12]+w[13]+w[14])
-                  };
+  double newy[] = {
+    (y[1]*w[1] + y[2]*w[2]) / (w[1] + w[2]),
+    (y[3]*w[3] + y[4]*w[4]) / (w[3] + w[4]),
+    (y[5]*w[5] + y[6]*w[6] + y[7]*w[7]) / (w[5] + w[6] + w[7]),
+    (y[8]*w[8] + y[9]*w[9] + y[10]*w[10]) / (w[8] + w[9] + w[10]),
+    (y[11]*w[11] + y[12]*w[12] + y[13]*w[13] + y[14]*w[14]) / (w[11] + w[12] + w[13] + w[14])
+  };
+
+  double newye[] = {
+    1. / sqrt(w[1] + w[2]), 1. / sqrt(w[3] + w[4]),
+    1. / sqrt(w[5] + w[6] + w[7]), 1. / sqrt(w[8] + w[9] + w[10]),
+    1. / sqrt(w[11] + w[12] + w[13] + w[14])
+  };
   TGraphErrors* g = new TGraphErrors(5, newx, newy, newxe, newye);
 
   return g;
@@ -851,70 +945,70 @@ TGraphErrors* format_v2_eta(TH1* p)
   double y[32] = {0};
   double e[32] = {0};
 
-  for(int i = 0; i < 32; ++i)
+  for (int i = 0; i < 32; ++i)
   {
-    x[i] = (3.2/16)*(i+1) - 3.3;
-    y[i] = p->GetBinContent(i+1);
-    e[i] = p->GetBinError(i+1);
+    x[i] = (3.2 / 16) * (i + 1) - 3.3;
+    y[i] = p->GetBinContent(i + 1);
+    e[i] = p->GetBinError(i + 1);
   }
 
-  double newx[] = { 
-                   (x[1]+x[2])/2,
-                   (x[3]+x[4])/2,
-                   (x[5]+x[6])/2,
-                   (x[7]+x[8])/2,
-                   (x[9]+x[10])/2,
-                   (x[14]+x[15])/2,
-                   (x[16]+x[17])/2,
-                   (x[21]+x[22])/2,
-                   (x[23]+x[24])/2,
-                   (x[25]+x[26])/2,
-                   (x[27]+x[28]+x[29])/3
-                  };
+  double newx[] = {
+    (x[1] + x[2]) / 2,
+    (x[3] + x[4]) / 2,
+    (x[5] + x[6]) / 2,
+    (x[7] + x[8]) / 2,
+    (x[9] + x[10]) / 2,
+    (x[14] + x[15]) / 2,
+    (x[16] + x[17]) / 2,
+    (x[21] + x[22]) / 2,
+    (x[23] + x[24]) / 2,
+    (x[25] + x[26]) / 2,
+    (x[27] + x[28] + x[29]) / 3
+  };
 
   //double newxe[] = { 0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.3 };
   double newxe[11] = {0};
 
   double w[] = {
-                 0,
-                 1./(e[1]*e[1]), 1./(e[2]*e[2]),
-                 1./(e[3]*e[3]), 1./(e[4]*e[4]),
-                 1./(e[5]*e[5]), 1./(e[6]*e[6]),
-                 1./(e[7]*e[7]), 1./(e[8]*e[8]),
-                 1./(e[9]*e[9]), 1./(e[10]*e[10]),
-                 0,0,0,
-                 1./(e[14]*e[14]), 1./(e[15]*e[15]),
-                 1./(e[16]*e[16]), 1./(e[17]*e[17]),
-                 0,0,0,
-                 1./(e[21]*e[21]), 1./(e[22]*e[22]),
-                 1./(e[23]*e[23]), 1./(e[24]*e[24]),
-                 1./(e[25]*e[25]), 1./(e[26]*e[26]),
-                 1./(e[27]*e[27]), 1./(e[28]*e[28]),
-                 1./(e[29]*e[29])
-               };
+    0,
+    1. / (e[1]*e[1]), 1. / (e[2]*e[2]),
+    1. / (e[3]*e[3]), 1. / (e[4]*e[4]),
+    1. / (e[5]*e[5]), 1. / (e[6]*e[6]),
+    1. / (e[7]*e[7]), 1. / (e[8]*e[8]),
+    1. / (e[9]*e[9]), 1. / (e[10]*e[10]),
+    0, 0, 0,
+    1. / (e[14]*e[14]), 1. / (e[15]*e[15]),
+    1. / (e[16]*e[16]), 1. / (e[17]*e[17]),
+    0, 0, 0,
+    1. / (e[21]*e[21]), 1. / (e[22]*e[22]),
+    1. / (e[23]*e[23]), 1. / (e[24]*e[24]),
+    1. / (e[25]*e[25]), 1. / (e[26]*e[26]),
+    1. / (e[27]*e[27]), 1. / (e[28]*e[28]),
+    1. / (e[29]*e[29])
+  };
 
-  double newy[] = { 
-                    (y[1]*w[1] + y[2]*w[2])/(w[1]+w[2]),
-                    (y[3]*w[3] + y[4]*w[4])/(w[3]+w[4]),
-                    (y[5]*w[5] + y[6]*w[6])/(w[5]+w[6]),
-                    (y[7]*w[7] + y[8]*w[8])/(w[7]+w[8]),
-                    (y[9]*w[9] + y[10]*w[10])/(w[9]+w[10]),
-                    (y[14]*w[14] + y[15]*w[15])/(w[14]+w[15]),
-                    (y[16]*w[16] + y[17]*w[17])/(w[16]+w[17]),
-                    (y[21]*w[21] + y[22]*w[22])/(w[21]+w[22]),
-                    (y[23]*w[23] + y[24]*w[24])/(w[23]+w[24]),
-                    (y[25]*w[25] + y[26]*w[26])/(w[25]+w[26]),
-                    (y[27]*w[27] + y[28]*w[28] + y[29]*w[29])/(w[27]+w[28]+w[29])
-                  };
+  double newy[] = {
+    (y[1]*w[1] + y[2]*w[2]) / (w[1] + w[2]),
+    (y[3]*w[3] + y[4]*w[4]) / (w[3] + w[4]),
+    (y[5]*w[5] + y[6]*w[6]) / (w[5] + w[6]),
+    (y[7]*w[7] + y[8]*w[8]) / (w[7] + w[8]),
+    (y[9]*w[9] + y[10]*w[10]) / (w[9] + w[10]),
+    (y[14]*w[14] + y[15]*w[15]) / (w[14] + w[15]),
+    (y[16]*w[16] + y[17]*w[17]) / (w[16] + w[17]),
+    (y[21]*w[21] + y[22]*w[22]) / (w[21] + w[22]),
+    (y[23]*w[23] + y[24]*w[24]) / (w[23] + w[24]),
+    (y[25]*w[25] + y[26]*w[26]) / (w[25] + w[26]),
+    (y[27]*w[27] + y[28]*w[28] + y[29]*w[29]) / (w[27] + w[28] + w[29])
+  };
 
-  double newye[] = { 
-                     1./sqrt(w[1]+w[2]), 1./sqrt(w[3]+w[4]),
-                     1./sqrt(w[5]+w[6]), 1./sqrt(w[7]+w[8]),
-                     1./sqrt(w[9]+w[10]), 1./sqrt(w[14]+w[15]),
-                     1./sqrt(w[16]+w[17]), 1./sqrt(w[21]+w[22]),
-                     1./sqrt(w[23]+w[24]), 1./sqrt(w[25]+w[26]),
-                     1./sqrt(w[27]+w[28]+w[29])
-                   };
+  double newye[] = {
+    1. / sqrt(w[1] + w[2]), 1. / sqrt(w[3] + w[4]),
+    1. / sqrt(w[5] + w[6]), 1. / sqrt(w[7] + w[8]),
+    1. / sqrt(w[9] + w[10]), 1. / sqrt(w[14] + w[15]),
+    1. / sqrt(w[16] + w[17]), 1. / sqrt(w[21] + w[22]),
+    1. / sqrt(w[23] + w[24]), 1. / sqrt(w[25] + w[26]),
+    1. / sqrt(w[27] + w[28] + w[29])
+  };
 
   TGraphErrors* g = new TGraphErrors(11, newx, newy, newxe, newye);
 

@@ -70,6 +70,13 @@ void doenergy(int energy, int harmonic)
   TProfile* tp1f_CNT_FVTXS[NMUL];
   TProfile* tp1f_CNT_FVTXN[NMUL];
 
+  TProfile* tp1f_BBCS_FVTXSA[NMUL];
+  TProfile* tp1f_BBCS_FVTXSB[NMUL];
+  TProfile* tp1f_BBCS_FVTXSL[NMUL][NFVTXLAY];
+  TProfile* tp1f_CNT_FVTXSA[NMUL];
+  TProfile* tp1f_CNT_FVTXSB[NMUL];
+  TProfile* tp1f_CNT_FVTXSL[NMUL][NFVTXLAY];
+
   TString dcor[NMUL];
   TString dcnt[NMUL];
   TString dfb[NMUL];
@@ -92,6 +99,17 @@ void doenergy(int energy, int harmonic)
     tp1f_BBCS_CNT[ic] = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_BBC_CNT", ic, harmonic));
     tp1f_CNT_FVTXS[ic] = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_CNT_FVTX", ic, harmonic));
     tp1f_CNT_FVTXN[ic] = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_CNT_FVTXN", ic, harmonic));
+
+    tp1f_BBCS_FVTXSA[ic] = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_BBC_FVTXSA", ic, harmonic));
+    tp1f_BBCS_FVTXSB[ic] = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_BBC_FVTXSB", ic, harmonic));
+    for (int il = 0; il < NFVTXLAY; il++)
+      tp1f_BBCS_FVTXSL[ic][il] = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_BBC_FVTXSL%i", ic, harmonic, il));
+
+    tp1f_CNT_FVTXSA[ic] = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_CNT_FVTXSA", ic, harmonic));
+    tp1f_CNT_FVTXSB[ic] = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_CNT_FVTXSB", ic, harmonic));
+    for (int il = 0; il < NFVTXLAY; il++)
+      tp1f_CNT_FVTXSL[ic][il] = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_CNT_FVTXSL%i", ic, harmonic, il));
+
 
     //-- get means & errors
     float float_BBCS_FVTXN = tp1f_BBCS_FVTXN[ic]->GetBinContent(1);
@@ -118,6 +136,30 @@ void doenergy(int energy, int harmonic)
                     float_FVTXN_FVTXS, efloat_FVTXN_FVTXS
                    );
 
+    float float_BBCS_FVTXSA = tp1f_BBCS_FVTXSA[ic]->GetBinContent(1);
+    float float_BBCS_FVTXSB = tp1f_BBCS_FVTXSB[ic]->GetBinContent(1);
+    float float_BBCS_FVTXSL[NFVTXLAY];
+    for (int il = 0; il < NFVTXLAY; il++)
+      float_BBCS_FVTXSL[il] = tp1f_BBCS_FVTXSL[ic][il]->GetBinContent(1);
+
+    float float_CNT_FVTXSA = tp1f_CNT_FVTXSA[ic]->GetBinContent(1);
+    float float_CNT_FVTXSB = tp1f_CNT_FVTXSB[ic]->GetBinContent(1);
+    float float_CNT_FVTXSL[NFVTXLAY];
+    for (int il = 0; il < NFVTXLAY; il++)
+      float_CNT_FVTXSL[il] = tp1f_CNT_FVTXSL[ic][il]->GetBinContent(1);
+
+    float efloat_BBCS_FVTXSA = tp1f_BBCS_FVTXSA[ic]->GetBinError(1);
+    float efloat_BBCS_FVTXSB = tp1f_BBCS_FVTXSB[ic]->GetBinError(1);
+    float efloat_BBCS_FVTXSL[NFVTXLAY];
+    for (int il = 0; il < NFVTXLAY; il++)
+      efloat_BBCS_FVTXSL[il] = tp1f_BBCS_FVTXSL[ic][il]->GetBinError(1);
+
+    float efloat_CNT_FVTXSA = tp1f_CNT_FVTXSA[ic]->GetBinError(1);
+    float efloat_CNT_FVTXSB = tp1f_CNT_FVTXSB[ic]->GetBinError(1);
+    float efloat_CNT_FVTXSL[NFVTXLAY];
+    for (int il = 0; il < NFVTXLAY; il++)
+      efloat_CNT_FVTXSL[il] = tp1f_CNT_FVTXSL[ic][il]->GetBinError(1);
+
 
     // --- event planes and correlations using CNT-BBCS-FVTXS(N)
     float reso_BBCS = sqrt((float_BBCS_CNT * float_BBCS_FVTXS) / float_CNT_FVTXS); // BCBS/CS
@@ -135,27 +177,69 @@ void doenergy(int energy, int harmonic)
     //                           + ( efloat_BBCS_FVTXN * efloat_BBCS_FVTXN / 4 * float_BBCS_FVTXN )
     //                           + ( efloat_BBCS_CNT * efloat_BBCS_CNT / 4 * pow(float_BBCS_CNT, 3) ) );
 
-    float ereso_BBCS = reso_BBCS/2. * sqrt( pow(efloat_BBCS_CNT, 2)   / pow(float_BBCS_CNT, 2) 
-                                          + pow(efloat_BBCS_FVTXS, 2) / pow(float_BBCS_FVTXS, 2) 
-                                          + pow(efloat_CNT_FVTXS, 2)  / pow(float_CNT_FVTXS, 2) );
+    float ereso_BBCS = reso_BBCS / 2. * sqrt( pow(efloat_BBCS_CNT, 2)   / pow(float_BBCS_CNT, 2)
+                       + pow(efloat_BBCS_FVTXS, 2) / pow(float_BBCS_FVTXS, 2)
+                       + pow(efloat_CNT_FVTXS, 2)  / pow(float_CNT_FVTXS, 2) );
 
-    float ereso_FVTXS = reso_FVTXS/2. * sqrt( pow(efloat_CNT_FVTXS, 2)  / pow(float_CNT_FVTXS, 2) 
-                                            + pow(efloat_BBCS_FVTXS, 2) / pow(float_BBCS_FVTXS, 2) 
-                                            + pow(efloat_BBCS_CNT, 2)   / pow(float_BBCS_CNT, 2) );
+    float ereso_FVTXS = reso_FVTXS / 2. * sqrt( pow(efloat_CNT_FVTXS, 2)  / pow(float_CNT_FVTXS, 2)
+                        + pow(efloat_BBCS_FVTXS, 2) / pow(float_BBCS_FVTXS, 2)
+                        + pow(efloat_BBCS_CNT, 2)   / pow(float_BBCS_CNT, 2) );
 
-    float ereso_FVTXN = reso_FVTXN/2. * sqrt( pow(efloat_CNT_FVTXN, 2)  / pow(float_CNT_FVTXN, 2) 
-                                            + pow(efloat_BBCS_FVTXN, 2) / pow(float_BBCS_FVTXN, 2) 
-                                            + pow(efloat_BBCS_CNT, 2)   / pow(float_BBCS_CNT, 2) );
+    float ereso_FVTXN = reso_FVTXN / 2. * sqrt( pow(efloat_CNT_FVTXN, 2)  / pow(float_CNT_FVTXN, 2)
+                        + pow(efloat_BBCS_FVTXN, 2) / pow(float_BBCS_FVTXN, 2)
+                        + pow(efloat_BBCS_CNT, 2)   / pow(float_BBCS_CNT, 2) );
 
 
 
     dcnt[ic] = Form("%d GeV & %d & %.3e $\\pm$ %.3e & %.3e $\\pm$ %.3e & %.3e $\\pm$ %.3e \\\\",
-                            energy, ic,
-                            reso_BBCS, ereso_BBCS,
-                            reso_FVTXS, ereso_FVTXS,
-                            reso_FVTXN, ereso_FVTXN
-                           );
+                    energy, ic,
+                    reso_BBCS, ereso_BBCS,
+                    reso_FVTXS, ereso_FVTXS,
+                    reso_FVTXN, ereso_FVTXN
+                   );
 
+
+    float reso_FVTXSA = sqrt((float_CNT_FVTXSA * float_BBCS_FVTXSA) / float_BBCS_CNT);
+    float reso_FVTXSB = sqrt((float_CNT_FVTXSB * float_BBCS_FVTXSB) / float_BBCS_CNT);
+    float reso_FVTXSL[NFVTXLAY];
+    for (int il = 0; il < NFVTXLAY; il++)
+      reso_FVTXSL[il] = sqrt((float_CNT_FVTXSL[il] * float_BBCS_FVTXSL[il]) / float_BBCS_CNT);
+
+
+    float ereso_FVTXSA = reso_FVTXSA / 2. * sqrt( pow(efloat_CNT_FVTXSA, 2)  / pow(float_CNT_FVTXSA, 2)
+                         + pow(efloat_BBCS_FVTXSA, 2) / pow(float_BBCS_FVTXSA, 2)
+                         + pow(efloat_BBCS_CNT, 2)   / pow(float_BBCS_CNT, 2) );
+    float ereso_FVTXSB = reso_FVTXSB / 2. * sqrt( pow(efloat_CNT_FVTXSB, 2)  / pow(float_CNT_FVTXSB, 2)
+                         + pow(efloat_BBCS_FVTXSB, 2) / pow(float_BBCS_FVTXSB, 2)
+                         + pow(efloat_BBCS_CNT, 2)   / pow(float_BBCS_CNT, 2) );
+    float ereso_FVTXSL[NFVTXLAY];
+    for (int il = 0; il < NFVTXLAY; il++)
+    {
+      ereso_FVTXSL[il] = reso_FVTXSL[il] / 2. * sqrt( pow(efloat_CNT_FVTXSL[il], 2)  / pow(float_CNT_FVTXSL[il], 2)
+                         + pow(efloat_BBCS_FVTXSL[il], 2) / pow(float_BBCS_FVTXSL[il], 2)
+                         + pow(efloat_BBCS_CNT, 2)   / pow(float_BBCS_CNT, 2) );
+
+    }
+
+    // dcnt[ic] = Form("%d GeV & %d & %.3e$\\pm$%.3e & %.3e$\\pm$%.3e & %.3e$\\pm$%.3e & %.3e$\\pm$%.3e & %.3e$\\pm$%.3e & %.3e$\\pm$%.3e & %.3e$\\pm$%.3e & %.3e$\\pm$%.3e \\\\",
+    //                 energy, ic,
+    //                 reso_BBCS, ereso_BBCS,
+    //                 reso_FVTXS, ereso_FVTXS,
+    //                 reso_FVTXSA, ereso_FVTXSA,
+    //                 reso_FVTXSB, ereso_FVTXSB,
+    //                 reso_FVTXSL[0], ereso_FVTXSL[0],
+    //                 reso_FVTXSL[1], ereso_FVTXSL[1],
+    //                 reso_FVTXSL[2], ereso_FVTXSL[2],
+    //                 reso_FVTXSL[3], ereso_FVTXSL[3]
+    //                );
+    dcnt[ic] = Form("%d GeV & %d & %.2e$\\pm$%.2e & %.2e$\\pm$%.2e & %.2e$\\pm$%.2e & %.2e$\\pm$%.2e & %.2e$\\pm$%.2e \\\\",
+                    energy, ic,
+                    reso_FVTXS, ereso_FVTXS,
+                    reso_FVTXSL[0], ereso_FVTXSL[0],
+                    reso_FVTXSL[1], ereso_FVTXSL[1],
+                    reso_FVTXSL[2], ereso_FVTXSL[2],
+                    reso_FVTXSL[3], ereso_FVTXSL[3]
+                   );
 
 
     // --- event planes and correlations using FVTXN-FVTXS-BBCS
@@ -175,11 +259,11 @@ void doenergy(int energy, int harmonic)
 
 
     dfb[ic] = Form("%d GeV & %d & %.2e $\\pm$ %.2e & %.2e $\\pm$ %.2e & %.2e $\\pm$ %.2e \\\\",
-                           energy, ic,
-                           reso_BBCS_fn, ereso_BBCS_fn,
-                           reso_FVTXS_fn, ereso_FVTXS_fn,
-                           reso_FVTXN_fn, ereso_FVTXN_fn
-                          );
+                   energy, ic,
+                   reso_BBCS_fn, ereso_BBCS_fn,
+                   reso_FVTXS_fn, ereso_FVTXS_fn,
+                   reso_FVTXN_fn, ereso_FVTXN_fn
+                  );
 
 
     // --- resolution comparisons
