@@ -172,10 +172,10 @@ void flatten(int runNumber, int rp_recal_pass)
 
   //---
   // all zeros
-  float qy2_offset_fvtxs[4][6] = {{0},{0},{0},{0}};
-  float qy2_offset_bbcs[4][6] = {{0},{0},{0},{0}};
-  float qx3_offset_fvtxs[4][6] = {{0},{0},{0},{0}};
-  float qx3_offset_bbcs[4][6] = {{0},{0},{0},{0}};
+  float qy2_offset_fvtxs[4][6] = {{0}, {0}, {0}, {0}};
+  float qy2_offset_bbcs[4][6] = {{0}, {0}, {0}, {0}};
+  float qx3_offset_fvtxs[4][6] = {{0}, {0}, {0}, {0}};
+  float qx3_offset_bbcs[4][6] = {{0}, {0}, {0}, {0}};
   //---
 
   //---
@@ -1163,7 +1163,8 @@ void flatten(int runNumber, int rp_recal_pass)
     // --- all numbers from Darren 2016-06-23
     const float x_off = 0.3;
     const float y_off = 0.02;
-    const float beam_angle = 0.001;
+    // const float beam_angle = 0.001;
+    const float beam_angle = 0.00;
     float vtx_z = d_bbcz;
     if ( eventfvtx_z > -999 ) vtx_z = eventfvtx_z;
     float vtx_x = x_off + atan(beam_angle) * vtx_z;
@@ -1731,6 +1732,23 @@ void flatten(int runNumber, int rp_recal_pass)
         float px    = d_px[itrk];
         float py    = d_py[itrk];
         float pz    = d_pz[itrk];
+
+        // to test effect of different beam angles
+        // we first need to rotate back by the
+        // 0.001 beam angle used when filling the trees
+        float pxo = px;
+        float pzo = pz;
+
+        px = pxo * cos(0.001) + pzo * sin(0.001);
+        pz = -1 * pxo * sin(0.001) + pzo * cos(0.001);
+
+        pxo = px;
+        pzo = pz;
+
+        // now we can rotate based on what's in beam_angle above
+        px = pxo * cos(-beam_angle) + pzo * sin(-beam_angle);
+        pz = -1 * pxo * sin(-beam_angle) + pzo * cos(-beam_angle);
+
         // float charge    = d_charge[itrk];
         float pc3sdz    = d_pc3sdz[itrk];
         float pc3sdphi  = d_pc3sdphi[itrk];
