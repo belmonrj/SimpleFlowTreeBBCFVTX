@@ -6,20 +6,30 @@
 #include <TStyle.h>
 #include <TString.h>
 #include <TProfile.h>
+#include <TGraphErrors.h>
+#include <TCanvas.h>
+#include <TLine.h>
+#include <TLatex.h>
+#include <TLegend.h>
 
 #include <iostream>
+#include <utility>
+#include <math.h>
 
 using namespace std;
 
+typedef pair<double, double> ValErr;
+
 void doenergy(int, int);
+ValErr calc_epreso(ValErr AB, ValErr AC, ValErr BC);
 
 void calculate_epreso()
 {
 
   doenergy(200, 2);
-  doenergy(62, 2);
-  doenergy(39, 2);
-  doenergy(20, 2);
+  // doenergy(62, 2);
+  // doenergy(39, 2);
+  // doenergy(20, 2);
 
   // doenergy(200,3);
   // doenergy(62,3);
@@ -61,227 +71,348 @@ void doenergy(int energy, int harmonic)
                     energy, mean_bbcs, mean_fvtxs, mean_fvtxn);
 
   // ---
-  // --- Now Centrality dependent
+  // --- Now Centrality & zvrtxdependent
   // ---
-  TProfile* tp1f_BBCS_FVTXN[NMUL];
-  TProfile* tp1f_BBCS_FVTXS[NMUL];
-  TProfile* tp1f_FVTXN_FVTXS[NMUL];
-  TProfile* tp1f_BBCS_CNT[NMUL];
-  TProfile* tp1f_CNT_FVTXS[NMUL];
-  TProfile* tp1f_CNT_FVTXN[NMUL];
+  TProfile* tp1f_BBCS_FVTXN[NMUL][NZPS];
+  TProfile* tp1f_BBCS_FVTXS[NMUL][NZPS];
+  TProfile* tp1f_FVTXN_FVTXS[NMUL][NZPS];
+  TProfile* tp1f_BBCS_CNT[NMUL][NZPS];
+  TProfile* tp1f_CNT_FVTXS[NMUL][NZPS];
+  TProfile* tp1f_CNT_FVTXN[NMUL][NZPS];
 
-  TProfile* tp1f_BBCS_FVTXSA[NMUL];
-  TProfile* tp1f_BBCS_FVTXSB[NMUL];
-  TProfile* tp1f_BBCS_FVTXSL[NMUL][NFVTXLAY];
-  TProfile* tp1f_CNT_FVTXSA[NMUL];
-  TProfile* tp1f_CNT_FVTXSB[NMUL];
-  TProfile* tp1f_CNT_FVTXSL[NMUL][NFVTXLAY];
+  TProfile* tp1f_BBCS_FVTXSA[NMUL][NZPS];
+  TProfile* tp1f_BBCS_FVTXSB[NMUL][NZPS];
+  TProfile* tp1f_BBCS_FVTXSL[NMUL][NZPS][NFVTXLAY];
+  TProfile* tp1f_CNT_FVTXSA[NMUL][NZPS];
+  TProfile* tp1f_CNT_FVTXSB[NMUL][NZPS];
+  TProfile* tp1f_CNT_FVTXSL[NMUL][NZPS][NFVTXLAY];
 
-  TString dcor[NMUL];
+  TProfile* tp1f_BBCS_FVTXN_sum[NMUL];
+  TProfile* tp1f_BBCS_FVTXS_sum[NMUL];
+  TProfile* tp1f_FVTXN_FVTXS_sum[NMUL];
+  TProfile* tp1f_BBCS_CNT_sum[NMUL];
+  TProfile* tp1f_CNT_FVTXS_sum[NMUL];
+  TProfile* tp1f_CNT_FVTXN_sum[NMUL];
+
+  TProfile* tp1f_BBCS_FVTXSA_sum[NMUL];
+  TProfile* tp1f_BBCS_FVTXSB_sum[NMUL];
+  TProfile* tp1f_BBCS_FVTXSL_sum[NMUL][NFVTXLAY];
+  TProfile* tp1f_CNT_FVTXSA_sum[NMUL];
+  TProfile* tp1f_CNT_FVTXSB_sum[NMUL];
+  TProfile* tp1f_CNT_FVTXSL_sum[NMUL][NFVTXLAY];
+
+
+  // ---
+  // --- Graphs for plotting
+  // ---
+  TGraphErrors *gRBBCS[NMUL];
+  TGraphErrors *gRFVTXS[NMUL];
+  TGraphErrors *gRFVTXSA[NMUL];
+  TGraphErrors *gRFVTXSB[NMUL];
+  TGraphErrors *gRFVTXSL[NMUL][NFVTXLAY];
+
+  int detMarker[] =
+  {kFullCircle, kFullSquare, kFullDiamond, kFullStar, kFullCross, kOpenCircle, kOpenSquare};
+  float detSize[] =
+  {1, 1, 1.5, 1.5, 1, 1, 1};
+  int detColor[] =
+  {kBlack, kBlue, kRed, kGreen + 2, kMagenta + 2, kYellow + 2, kOrange + 5};
+
+  // TString dcor[NMUL];
+  // TString dcnt[NMUL];
+  // TString dfb[NMUL];
+  // TString davg[NMUL];
+  // TString drat[NMUL];
+
+
   TString dcnt[NMUL];
-  TString dfb[NMUL];
-  TString davg[NMUL];
-  TString drat[NMUL];
+  TString dfvtxsab[NMUL];
+  TString dfvtxsl[NMUL];
 
   for (int ic = 0; ic < NMUL; ic++)
   {
+    gRBBCS[ic] = new TGraphErrors();
+    gRBBCS[ic]->SetMarkerStyle(kOpenCircle);
+    gRBBCS[ic]->SetMarkerSize(1.0);
+    gRBBCS[ic]->SetMarkerColor(kRed);
+    gRBBCS[ic]->SetLineColor(kRed);
 
-    // --- get histograms from file
-    tp1f_BBCS_FVTXN[ic] = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_BBC_FVTXN", ic, harmonic));
-    if (!tp1f_BBCS_FVTXN[ic])
-    {
-      cout << "ERROR!! Unable to find " << Form("tp1f_c%d_reso%d_BBC_FVTXN", ic, harmonic)
-           << " in file" << endl;
-      return;
-    }
-    tp1f_BBCS_FVTXS[ic] = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_BBC_FVTX", ic, harmonic));
-    tp1f_FVTXN_FVTXS[ic] = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_FVTXS_FVTXN", ic, harmonic));
-    tp1f_BBCS_CNT[ic] = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_BBC_CNT", ic, harmonic));
-    tp1f_CNT_FVTXS[ic] = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_CNT_FVTX", ic, harmonic));
-    tp1f_CNT_FVTXN[ic] = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_CNT_FVTXN", ic, harmonic));
+    gRFVTXS[ic] = new TGraphErrors();
+    gRFVTXS[ic]->SetMarkerStyle(detMarker[0]);
+    gRFVTXS[ic]->SetMarkerSize(detSize[0]);
+    gRFVTXS[ic]->SetMarkerColor(detColor[0]);
+    gRFVTXS[ic]->SetLineColor(detColor[0]);
 
-    tp1f_BBCS_FVTXSA[ic] = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_BBC_FVTXSA", ic, harmonic));
-    tp1f_BBCS_FVTXSB[ic] = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_BBC_FVTXSB", ic, harmonic));
-    for (int il = 0; il < NFVTXLAY; il++)
-      tp1f_BBCS_FVTXSL[ic][il] = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_BBC_FVTXSL%i", ic, harmonic, il));
-
-    tp1f_CNT_FVTXSA[ic] = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_CNT_FVTXSA", ic, harmonic));
-    tp1f_CNT_FVTXSB[ic] = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_CNT_FVTXSB", ic, harmonic));
-    for (int il = 0; il < NFVTXLAY; il++)
-      tp1f_CNT_FVTXSL[ic][il] = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_CNT_FVTXSL%i", ic, harmonic, il));
-
-
-    //-- get means & errors
-    float float_BBCS_FVTXN = tp1f_BBCS_FVTXN[ic]->GetBinContent(1);
-    float float_BBCS_FVTXS = tp1f_BBCS_FVTXS[ic]->GetBinContent(1);
-    float float_FVTXN_FVTXS = tp1f_FVTXN_FVTXS[ic]->GetBinContent(1);
-    float float_BBCS_CNT = tp1f_BBCS_CNT[ic]->GetBinContent(1);
-    float float_CNT_FVTXS = tp1f_CNT_FVTXS[ic]->GetBinContent(1);
-    float float_CNT_FVTXN = tp1f_CNT_FVTXN[ic]->GetBinContent(1);
-
-    float efloat_BBCS_FVTXN = tp1f_BBCS_FVTXN[ic]->GetBinError(1);
-    float efloat_BBCS_FVTXS = tp1f_BBCS_FVTXS[ic]->GetBinError(1);
-    float efloat_FVTXN_FVTXS = tp1f_FVTXN_FVTXS[ic]->GetBinError(1);
-    float efloat_BBCS_CNT = tp1f_BBCS_CNT[ic]->GetBinError(1);
-    float efloat_CNT_FVTXS = tp1f_CNT_FVTXS[ic]->GetBinError(1);
-    float efloat_CNT_FVTXN = tp1f_CNT_FVTXN[ic]->GetBinError(1);
-
-    dcor[ic] = Form("%d GeV & %d & %.2e $\\pm$ %.2e & %.2e $\\pm$ %.2e & %.2e $\\pm$ %.2e & %.2e $\\pm$ %.2e & %.2e $\\pm$ %.2e & %.2e $\\pm$ %.2e \\\\",
-                    energy, ic,
-                    float_BBCS_FVTXS, efloat_BBCS_FVTXS,
-                    float_BBCS_FVTXN, efloat_BBCS_FVTXN,
-                    float_BBCS_CNT, efloat_BBCS_CNT,
-                    float_CNT_FVTXS, efloat_CNT_FVTXS,
-                    float_CNT_FVTXN, efloat_CNT_FVTXN,
-                    float_FVTXN_FVTXS, efloat_FVTXN_FVTXS
-                   );
-
-    float float_BBCS_FVTXSA = tp1f_BBCS_FVTXSA[ic]->GetBinContent(1);
-    float float_BBCS_FVTXSB = tp1f_BBCS_FVTXSB[ic]->GetBinContent(1);
-    float float_BBCS_FVTXSL[NFVTXLAY];
-    for (int il = 0; il < NFVTXLAY; il++)
-      float_BBCS_FVTXSL[il] = tp1f_BBCS_FVTXSL[ic][il]->GetBinContent(1);
-
-    float float_CNT_FVTXSA = tp1f_CNT_FVTXSA[ic]->GetBinContent(1);
-    float float_CNT_FVTXSB = tp1f_CNT_FVTXSB[ic]->GetBinContent(1);
-    float float_CNT_FVTXSL[NFVTXLAY];
-    for (int il = 0; il < NFVTXLAY; il++)
-      float_CNT_FVTXSL[il] = tp1f_CNT_FVTXSL[ic][il]->GetBinContent(1);
-
-    float efloat_BBCS_FVTXSA = tp1f_BBCS_FVTXSA[ic]->GetBinError(1);
-    float efloat_BBCS_FVTXSB = tp1f_BBCS_FVTXSB[ic]->GetBinError(1);
-    float efloat_BBCS_FVTXSL[NFVTXLAY];
-    for (int il = 0; il < NFVTXLAY; il++)
-      efloat_BBCS_FVTXSL[il] = tp1f_BBCS_FVTXSL[ic][il]->GetBinError(1);
-
-    float efloat_CNT_FVTXSA = tp1f_CNT_FVTXSA[ic]->GetBinError(1);
-    float efloat_CNT_FVTXSB = tp1f_CNT_FVTXSB[ic]->GetBinError(1);
-    float efloat_CNT_FVTXSL[NFVTXLAY];
-    for (int il = 0; il < NFVTXLAY; il++)
-      efloat_CNT_FVTXSL[il] = tp1f_CNT_FVTXSL[ic][il]->GetBinError(1);
-
-
-    // --- event planes and correlations using CNT-BBCS-FVTXS(N)
-    float reso_BBCS = sqrt((float_BBCS_CNT * float_BBCS_FVTXS) / float_CNT_FVTXS); // BCBS/CS
-    float reso_FVTXS = sqrt((float_CNT_FVTXS * float_BBCS_FVTXS) / float_BBCS_CNT); // CSBS/BC
-    float reso_FVTXN = sqrt((float_CNT_FVTXN * float_BBCS_FVTXN) / float_BBCS_CNT); // CNBN/BC
-
-    // old uncertainty calculations
-    // float ereso_BBCS = sqrt( ( efloat_BBCS_CNT * efloat_BBCS_CNT / 4 * float_BBCS_CNT )
-    //                          + ( efloat_BBCS_FVTXS * efloat_BBCS_FVTXS / 4 * float_BBCS_FVTXS )
-    //                          + ( efloat_CNT_FVTXS * efloat_CNT_FVTXS / 4 * pow(float_CNT_FVTXS, 3) ) );
-    // float ereso_FVTXS = sqrt( ( efloat_CNT_FVTXS * efloat_CNT_FVTXS / 4 * float_CNT_FVTXS )
-    //                           + ( efloat_BBCS_FVTXS * efloat_BBCS_FVTXS / 4 * float_BBCS_FVTXS )
-    //                           + ( efloat_BBCS_CNT * efloat_BBCS_CNT / 4 * pow(float_BBCS_CNT, 3) ) );
-    // float ereso_FVTXN = sqrt( ( efloat_CNT_FVTXN * efloat_CNT_FVTXN / 4 * float_CNT_FVTXN )
-    //                           + ( efloat_BBCS_FVTXN * efloat_BBCS_FVTXN / 4 * float_BBCS_FVTXN )
-    //                           + ( efloat_BBCS_CNT * efloat_BBCS_CNT / 4 * pow(float_BBCS_CNT, 3) ) );
-
-    float ereso_BBCS = reso_BBCS / 2. * sqrt( pow(efloat_BBCS_CNT, 2)   / pow(float_BBCS_CNT, 2)
-                       + pow(efloat_BBCS_FVTXS, 2) / pow(float_BBCS_FVTXS, 2)
-                       + pow(efloat_CNT_FVTXS, 2)  / pow(float_CNT_FVTXS, 2) );
-
-    float ereso_FVTXS = reso_FVTXS / 2. * sqrt( pow(efloat_CNT_FVTXS, 2)  / pow(float_CNT_FVTXS, 2)
-                        + pow(efloat_BBCS_FVTXS, 2) / pow(float_BBCS_FVTXS, 2)
-                        + pow(efloat_BBCS_CNT, 2)   / pow(float_BBCS_CNT, 2) );
-
-    float ereso_FVTXN = reso_FVTXN / 2. * sqrt( pow(efloat_CNT_FVTXN, 2)  / pow(float_CNT_FVTXN, 2)
-                        + pow(efloat_BBCS_FVTXN, 2) / pow(float_BBCS_FVTXN, 2)
-                        + pow(efloat_BBCS_CNT, 2)   / pow(float_BBCS_CNT, 2) );
-
-
-
-    dcnt[ic] = Form("%d GeV & %d & %.3e $\\pm$ %.3e & %.3e $\\pm$ %.3e & %.3e $\\pm$ %.3e \\\\",
-                    energy, ic,
-                    reso_BBCS, ereso_BBCS,
-                    reso_FVTXS, ereso_FVTXS,
-                    reso_FVTXN, ereso_FVTXN
-                   );
-
-
-    float reso_FVTXSA = sqrt((float_CNT_FVTXSA * float_BBCS_FVTXSA) / float_BBCS_CNT);
-    float reso_FVTXSB = sqrt((float_CNT_FVTXSB * float_BBCS_FVTXSB) / float_BBCS_CNT);
-    float reso_FVTXSL[NFVTXLAY];
-    for (int il = 0; il < NFVTXLAY; il++)
-      reso_FVTXSL[il] = sqrt((float_CNT_FVTXSL[il] * float_BBCS_FVTXSL[il]) / float_BBCS_CNT);
-
-
-    float ereso_FVTXSA = reso_FVTXSA / 2. * sqrt( pow(efloat_CNT_FVTXSA, 2)  / pow(float_CNT_FVTXSA, 2)
-                         + pow(efloat_BBCS_FVTXSA, 2) / pow(float_BBCS_FVTXSA, 2)
-                         + pow(efloat_BBCS_CNT, 2)   / pow(float_BBCS_CNT, 2) );
-    float ereso_FVTXSB = reso_FVTXSB / 2. * sqrt( pow(efloat_CNT_FVTXSB, 2)  / pow(float_CNT_FVTXSB, 2)
-                         + pow(efloat_BBCS_FVTXSB, 2) / pow(float_BBCS_FVTXSB, 2)
-                         + pow(efloat_BBCS_CNT, 2)   / pow(float_BBCS_CNT, 2) );
-    float ereso_FVTXSL[NFVTXLAY];
     for (int il = 0; il < NFVTXLAY; il++)
     {
-      ereso_FVTXSL[il] = reso_FVTXSL[il] / 2. * sqrt( pow(efloat_CNT_FVTXSL[il], 2)  / pow(float_CNT_FVTXSL[il], 2)
-                         + pow(efloat_BBCS_FVTXSL[il], 2) / pow(float_BBCS_FVTXSL[il], 2)
-                         + pow(efloat_BBCS_CNT, 2)   / pow(float_BBCS_CNT, 2) );
+      gRFVTXSL[ic][il] = new TGraphErrors();
+      gRFVTXSL[ic][il]->SetMarkerStyle(detMarker[1 + il]);
+      gRFVTXSL[ic][il]->SetMarkerSize(detSize[1 + il]);
+      gRFVTXSL[ic][il]->SetMarkerColor(detColor[1 + il]);
+      gRFVTXSL[ic][il]->SetLineColor(detColor[1 + il]);
+    } // il
 
+    gRFVTXSA[ic] = new TGraphErrors();
+    gRFVTXSA[ic]->SetMarkerStyle(detMarker[NFVTXLAY + 2]);
+    gRFVTXSA[ic]->SetMarkerSize(detSize[NFVTXLAY + 2]);
+    gRFVTXSA[ic]->SetMarkerColor(detColor[NFVTXLAY + 2]);
+    gRFVTXSA[ic]->SetLineColor(detColor[NFVTXLAY + 2]);
+
+    gRFVTXSB[ic] = new TGraphErrors();
+    gRFVTXSB[ic]->SetMarkerStyle(detMarker[NFVTXLAY + 3]);
+    gRFVTXSB[ic]->SetMarkerSize(detSize[NFVTXLAY + 3]);
+    gRFVTXSB[ic]->SetMarkerColor(detColor[NFVTXLAY + 3]);
+    gRFVTXSB[ic]->SetLineColor(detColor[NFVTXLAY + 3]);
+
+    for (int iz = 0; iz < NZPS; iz++)
+    {
+
+      // --- get histograms from file
+      tp1f_BBCS_FVTXN[ic][iz] = (TProfile*)file->Get(Form("tp1f_c%d_z%d_reso%d_BBC_FVTXN", ic, iz, harmonic));
+      if (!tp1f_BBCS_FVTXN[ic][iz])
+      {
+        cout << "ERROR!! Unable to find " << Form("tp1f_c%d_z%d_reso%d_BBC_FVTXN", ic, iz, harmonic)
+             << " in file" << endl;
+        return;
+      }
+      tp1f_BBCS_FVTXS[ic][iz] = (TProfile*)file->Get(Form("tp1f_c%d_z%d_reso%d_BBC_FVTX", ic, iz, harmonic));
+      tp1f_FVTXN_FVTXS[ic][iz] = (TProfile*)file->Get(Form("tp1f_c%d_z%d_reso%d_FVTXS_FVTXN", ic, iz, harmonic));
+      tp1f_BBCS_CNT[ic][iz] = (TProfile*)file->Get(Form("tp1f_c%d_z%d_reso%d_BBC_CNT", ic, iz, harmonic));
+      tp1f_CNT_FVTXS[ic][iz] = (TProfile*)file->Get(Form("tp1f_c%d_z%d_reso%d_CNT_FVTX", ic, iz, harmonic));
+      tp1f_CNT_FVTXN[ic][iz] = (TProfile*)file->Get(Form("tp1f_c%d_z%d_reso%d_CNT_FVTXN", ic, iz, harmonic));
+
+      tp1f_BBCS_FVTXSA[ic][iz] = (TProfile*)file->Get(Form("tp1f_c%d_z%d_reso%d_BBC_FVTXSA", ic, iz, harmonic));
+      tp1f_BBCS_FVTXSB[ic][iz] = (TProfile*)file->Get(Form("tp1f_c%d_z%d_reso%d_BBC_FVTXSB", ic, iz, harmonic));
+      for (int il = 0; il < NFVTXLAY; il++)
+        tp1f_BBCS_FVTXSL[ic][iz][il] = (TProfile*)file->Get(Form("tp1f_c%d_z%d_reso%d_BBC_FVTXSL%i", ic, iz, harmonic, il));
+
+      tp1f_CNT_FVTXSA[ic][iz] = (TProfile*)file->Get(Form("tp1f_c%d_z%d_reso%d_CNT_FVTXSA", ic, iz, harmonic));
+      tp1f_CNT_FVTXSB[ic][iz] = (TProfile*)file->Get(Form("tp1f_c%d_z%d_reso%d_CNT_FVTXSB", ic, iz, harmonic));
+      for (int il = 0; il < NFVTXLAY; il++)
+        tp1f_CNT_FVTXSL[ic][iz][il] = (TProfile*)file->Get(Form("tp1f_c%d_z%d_reso%d_CNT_FVTXSL%i", ic, iz, harmonic, il));
+
+      // --- fill summed histograms
+      if ( iz == 0 )
+      {
+        tp1f_BBCS_FVTXS_sum[ic] =
+          (TProfile*) tp1f_BBCS_FVTXS[ic][iz]->Clone(Form("tp1f_BBCS_FVTXS_sum_c%i", ic));
+        tp1f_BBCS_CNT_sum[ic] =
+          (TProfile*) tp1f_BBCS_CNT[ic][iz]->Clone(Form("tp1f_BBCS_CNT_sum_c%i", ic));
+        tp1f_CNT_FVTXS_sum[ic] =
+          (TProfile*) tp1f_CNT_FVTXS[ic][iz]->Clone(Form("tp1f_CNT_FVTXS_sum_c%i", ic));
+
+        tp1f_BBCS_FVTXSA_sum[ic] =
+          (TProfile*) tp1f_BBCS_FVTXSA[ic][iz]->Clone(Form("tp1f_BBCS_FVTXSA_sum_c%i", ic));
+        tp1f_BBCS_FVTXSB_sum[ic] =
+          (TProfile*) tp1f_BBCS_FVTXSB[ic][iz]->Clone(Form("tp1f_BBCS_FVTXSB_sum_c%i", ic));
+        for (int il = 0; il < NFVTXLAY; il++)
+        {
+          tp1f_BBCS_FVTXSL_sum[ic][il] =
+            (TProfile*) tp1f_BBCS_FVTXSL[ic][iz][il]->Clone(Form("tp1f_BBCS_FVTXSL_sum_c%i_l%i", ic, il));
+        }
+        tp1f_CNT_FVTXSA_sum[ic] =
+          (TProfile*) tp1f_CNT_FVTXSA[ic][iz]->Clone(Form("tp1f_CNT_FVTXSA_sum_c%i", ic));
+        tp1f_CNT_FVTXSB_sum[ic] =
+          (TProfile*) tp1f_CNT_FVTXSB[ic][iz]->Clone(Form("tp1f_CNT_FVTXSB_sum_c%i", ic));
+        for (int il = 0; il < NFVTXLAY; il++)
+        {
+          tp1f_CNT_FVTXSL_sum[ic][il] =
+            (TProfile*) tp1f_CNT_FVTXSL[ic][iz][il]->Clone(Form("tp1f_CNT_FVTXSL_sum_c%i_l%i", ic, il));
+        }
+
+      }
+      else
+      {
+        tp1f_BBCS_CNT_sum[ic]->Add(tp1f_BBCS_CNT[ic][iz]);
+        tp1f_BBCS_FVTXS_sum[ic]->Add(tp1f_BBCS_FVTXS[ic][iz]);
+        tp1f_BBCS_FVTXSA_sum[ic]->Add(tp1f_BBCS_FVTXSA[ic][iz]);
+        tp1f_BBCS_FVTXSB_sum[ic]->Add(tp1f_BBCS_FVTXSB[ic][iz]);
+        for (int il = 0; il < NFVTXLAY; il++)
+          tp1f_BBCS_FVTXSL_sum[ic][il]->Add(tp1f_BBCS_FVTXSL[ic][iz][il]);
+
+        tp1f_CNT_FVTXS_sum[ic]->Add(tp1f_CNT_FVTXS[ic][iz]);
+        tp1f_CNT_FVTXSA_sum[ic]->Add(tp1f_CNT_FVTXSA[ic][iz]);
+        tp1f_CNT_FVTXSB_sum[ic]->Add(tp1f_CNT_FVTXSB[ic][iz]);
+        for (int il = 0; il < NFVTXLAY; il++)
+          tp1f_CNT_FVTXSL_sum[ic][il]->Add(tp1f_CNT_FVTXSL[ic][iz][il]);
+
+      }
+
+
+      //-- get means & errors & calculate resolution for CNT-Bakcward combos
+      ValErr BBCS_FVTXN = make_pair(tp1f_BBCS_FVTXN[ic][iz]->GetBinContent(1),
+                                    tp1f_BBCS_FVTXN[ic][iz]->GetBinError(1));
+      ValErr BBCS_FVTXS = make_pair(tp1f_BBCS_FVTXS[ic][iz]->GetBinContent(1),
+                                    tp1f_BBCS_FVTXS[ic][iz]->GetBinError(1));
+      ValErr FVTXN_FVTXS = make_pair(tp1f_FVTXN_FVTXS[ic][iz]->GetBinContent(1),
+                                     tp1f_FVTXN_FVTXS[ic][iz]->GetBinError(1));
+      ValErr CNT_BBCS = make_pair(tp1f_BBCS_CNT[ic][iz]->GetBinContent(1),
+                                  tp1f_BBCS_CNT[ic][iz]->GetBinError(1));
+      ValErr CNT_FVTXS = make_pair(tp1f_CNT_FVTXS[ic][iz]->GetBinContent(1),
+                                   tp1f_CNT_FVTXS[ic][iz]->GetBinError(1));
+      ValErr CNT_FVTXN = make_pair(tp1f_CNT_FVTXN[ic][iz]->GetBinContent(1),
+                                   tp1f_CNT_FVTXN[ic][iz]->GetBinError(1));
+
+      ValErr BBCS_FVTXSA = make_pair(tp1f_BBCS_FVTXSA[ic][iz]->GetBinContent(1),
+                                     tp1f_BBCS_FVTXSA[ic][iz]->GetBinError(1));
+      ValErr BBCS_FVTXSB = make_pair(tp1f_BBCS_FVTXSB[ic][iz]->GetBinContent(1),
+                                     tp1f_BBCS_FVTXSB[ic][iz]->GetBinError(1));
+      ValErr BBCS_FVTXSL[NFVTXLAY];
+      ValErr CNT_FVTXSA = make_pair(tp1f_CNT_FVTXSA[ic][iz]->GetBinContent(1),
+                                    tp1f_CNT_FVTXSA[ic][iz]->GetBinError(1));
+      ValErr CNT_FVTXSB = make_pair(tp1f_CNT_FVTXSB[ic][iz]->GetBinContent(1),
+                                    tp1f_CNT_FVTXSB[ic][iz]->GetBinError(1));
+      ValErr CNT_FVTXSL[NFVTXLAY];
+      for (int il = 0; il < NFVTXLAY; il++)
+      {
+        BBCS_FVTXSL[il] = make_pair(tp1f_BBCS_FVTXSL[ic][iz][il]->GetBinContent(1),
+                                    tp1f_BBCS_FVTXSL[ic][iz][il]->GetBinError(1));
+        CNT_FVTXSL[il] = make_pair(tp1f_CNT_FVTXSL[ic][iz][il]->GetBinContent(1),
+                                   tp1f_CNT_FVTXSL[ic][iz][il]->GetBinError(1));
+      }
+
+
+
+
+      ValErr RBBCS = calc_epreso(CNT_BBCS, BBCS_FVTXS, CNT_FVTXS);
+      ValErr RFVTXS = calc_epreso(CNT_FVTXS, BBCS_FVTXS, CNT_BBCS);
+      ValErr RFVTXN = calc_epreso(CNT_FVTXN, BBCS_FVTXN, CNT_BBCS);
+
+      ValErr RFVTXSA = calc_epreso(CNT_FVTXSA, BBCS_FVTXSA, CNT_BBCS);
+      ValErr RFVTXSB = calc_epreso(CNT_FVTXSB, BBCS_FVTXSB, CNT_BBCS);
+      ValErr RFVTXSL[NFVTXLAY];
+      for (int il = 0; il < NFVTXLAY; il++)
+        RFVTXSL[il] = calc_epreso(CNT_FVTXSL[il], BBCS_FVTXSL[il], CNT_BBCS);
+
+
+      // --- Fill tgraphs
+      double z = -10. + (iz + 0.5) * 20. / (float)NZPS;
+
+      gRBBCS[ic]->SetPoint(iz, z, RBBCS.first);
+      gRBBCS[ic]->SetPointError(iz, 0, RBBCS.second);
+
+      gRFVTXS[ic]->SetPoint(iz, z, RFVTXS.first);
+      gRFVTXS[ic]->SetPointError(iz, 0, RFVTXS.second);
+
+      gRFVTXSA[ic]->SetPoint(iz, z, RFVTXSA.first);
+      gRFVTXSA[ic]->SetPointError(iz, 0, RFVTXSA.second);
+
+      gRFVTXSB[ic]->SetPoint(iz, z, RFVTXSB.first);
+      gRFVTXSB[ic]->SetPointError(iz, 0, RFVTXSB.second);
+
+      for (int il = 0; il < NFVTXLAY; il++)
+      {
+        gRFVTXSL[ic][il]->SetPoint(iz, z, RFVTXSL[il].first);
+        gRFVTXSL[ic][il]->SetPointError(iz, 0, RFVTXSL[il].second);
+      }
+
+    } // iz
+
+    // --- get means & errors & calculate resolution for CNT-Bakcward combos
+    // --- summed over z
+    ValErr BBCS_FVTXS = make_pair(tp1f_BBCS_FVTXS_sum[ic]->GetBinContent(1),
+                                  tp1f_BBCS_FVTXS_sum[ic]->GetBinError(1));
+    ValErr CNT_BBCS = make_pair(tp1f_BBCS_CNT_sum[ic]->GetBinContent(1),
+                                tp1f_BBCS_CNT_sum[ic]->GetBinError(1));
+    ValErr CNT_FVTXS = make_pair(tp1f_CNT_FVTXS_sum[ic]->GetBinContent(1),
+                                 tp1f_CNT_FVTXS_sum[ic]->GetBinError(1));
+
+    ValErr BBCS_FVTXSA = make_pair(tp1f_BBCS_FVTXSA_sum[ic]->GetBinContent(1),
+                                   tp1f_BBCS_FVTXSA_sum[ic]->GetBinError(1));
+    ValErr BBCS_FVTXSB = make_pair(tp1f_BBCS_FVTXSB_sum[ic]->GetBinContent(1),
+                                   tp1f_BBCS_FVTXSB_sum[ic]->GetBinError(1));
+    ValErr BBCS_FVTXSL[NFVTXLAY];
+    ValErr CNT_FVTXSA = make_pair(tp1f_CNT_FVTXSA_sum[ic]->GetBinContent(1),
+                                  tp1f_CNT_FVTXSA_sum[ic]->GetBinError(1));
+    ValErr CNT_FVTXSB = make_pair(tp1f_CNT_FVTXSB_sum[ic]->GetBinContent(1),
+                                  tp1f_CNT_FVTXSB_sum[ic]->GetBinError(1));
+    ValErr CNT_FVTXSL[NFVTXLAY];
+    for (int il = 0; il < NFVTXLAY; il++)
+    {
+      BBCS_FVTXSL[il] = make_pair(tp1f_BBCS_FVTXSL_sum[ic][il]->GetBinContent(1),
+                                  tp1f_BBCS_FVTXSL_sum[ic][il]->GetBinError(1));
+      CNT_FVTXSL[il] = make_pair(tp1f_CNT_FVTXSL_sum[ic][il]->GetBinContent(1),
+                                 tp1f_CNT_FVTXSL_sum[ic][il]->GetBinError(1));
     }
 
-    // dcnt[ic] = Form("%d GeV & %d & %.3e$\\pm$%.3e & %.3e$\\pm$%.3e & %.3e$\\pm$%.3e & %.3e$\\pm$%.3e & %.3e$\\pm$%.3e & %.3e$\\pm$%.3e & %.3e$\\pm$%.3e & %.3e$\\pm$%.3e \\\\",
+
+
+
+    ValErr RBBCS = calc_epreso(CNT_BBCS, BBCS_FVTXS, CNT_FVTXS);
+    ValErr RFVTXS = calc_epreso(CNT_FVTXS, BBCS_FVTXS, CNT_BBCS);
+    // ValErr RFVTXN = calc_epreso(CNT_FVTXN, BBCS_FVTXN, CNT_BBCS);
+
+    ValErr RFVTXSA = calc_epreso(CNT_FVTXSA, BBCS_FVTXSA, CNT_BBCS);
+    ValErr RFVTXSB = calc_epreso(CNT_FVTXSB, BBCS_FVTXSB, CNT_BBCS);
+    ValErr RFVTXSL[NFVTXLAY];
+    for (int il = 0; il < NFVTXLAY; il++)
+      RFVTXSL[il] = calc_epreso(CNT_FVTXSL[il], BBCS_FVTXSL[il], CNT_BBCS);
+
+
+    dcnt[ic] = Form("%d GeV & %d & %.3e $\\pm$ %.3e & %.3e $\\pm$ %.3e \\\\",
+                    energy, ic,
+                    RBBCS.first, RBBCS.second,
+                    RFVTXS.first, RFVTXS.second
+                   );
+
+    dfvtxsab[ic] = Form("%d GeV & %d & %.3e$\\pm$%.3e & %.3e$\\pm$%.3e & %.3e$\\pm$%.3e & %.3e$\\pm$%.3e \\\\",
+                        energy, ic,
+                        RBBCS.first, RBBCS.second,
+                        RFVTXS.first, RFVTXS.second,
+                        RFVTXSA.first, RFVTXSA.second,
+                        RFVTXSB.first, RFVTXSB.second
+                       );
+
+    dfvtxsl[ic] = Form("%d GeV & %d & %.2e$\\pm$%.2e & %.2e$\\pm$%.2e & %.2e$\\pm$%.2e & %.2e$\\pm$%.2e & %.2e$\\pm$%.2e \\\\",
+                       energy, ic,
+                       RFVTXS.first, RFVTXS.second,
+                       RFVTXSL[0].first, RFVTXSL[0].second,
+                       RFVTXSL[1].first, RFVTXSL[1].second,
+                       RFVTXSL[2].first, RFVTXSL[2].second,
+                       RFVTXSL[3].first, RFVTXSL[3].second
+                      );
+
+
+    // // --- event planes and correlations using FVTXN-FVTXS-BBCS
+    // float reso_BBCS_fn  = sqrt((float_BBCS_FVTXN * float_BBCS_FVTXS) / float_FVTXN_FVTXS); // BNBS/NS
+    // float reso_FVTXS_fn = sqrt((float_FVTXN_FVTXS * float_BBCS_FVTXS) / float_BBCS_FVTXN); // NSBS/BN
+    // float reso_FVTXN_fn = sqrt((float_FVTXN_FVTXS * float_BBCS_FVTXN) / float_BBCS_FVTXS); // NSBN/BS
+
+    // float ereso_BBCS_fn  = sqrt( ( efloat_BBCS_FVTXN * efloat_BBCS_FVTXN / 4 * float_BBCS_FVTXN )
+    //                              + ( efloat_BBCS_FVTXS * efloat_BBCS_FVTXS / 4 * float_BBCS_FVTXS )
+    //                              + ( efloat_FVTXN_FVTXS * efloat_FVTXN_FVTXS / 4 * pow(float_FVTXN_FVTXS, 3) ) );
+    // float ereso_FVTXS_fn = sqrt( ( efloat_FVTXN_FVTXS * efloat_FVTXN_FVTXS / 4 * float_FVTXN_FVTXS )
+    //                              + ( efloat_BBCS_FVTXS * efloat_BBCS_FVTXS / 4 * float_BBCS_FVTXS )
+    //                              + ( efloat_BBCS_FVTXN * efloat_BBCS_FVTXN / 4 * pow(float_BBCS_FVTXN, 3) ) );
+    // float ereso_FVTXN_fn = sqrt( ( efloat_FVTXN_FVTXS * efloat_FVTXN_FVTXS / 4 * float_FVTXN_FVTXS )
+    //                              + ( efloat_BBCS_FVTXN * efloat_BBCS_FVTXN / 4 * float_BBCS_FVTXN )
+    //                              + ( efloat_BBCS_FVTXS * efloat_BBCS_FVTXS / 4 * pow(float_BBCS_FVTXS, 3) ) );
+
+
+    // dfb[ic] = Form("%d GeV & %d & %.2e $\\pm$ %.2e & %.2e $\\pm$ %.2e & %.2e $\\pm$ %.2e \\\\",
+    //                energy, ic,
+    //                reso_BBCS_fn, ereso_BBCS_fn,
+    //                reso_FVTXS_fn, ereso_FVTXS_fn,
+    //                reso_FVTXN_fn, ereso_FVTXN_fn
+    //               );
+
+
+    // // --- resolution comparisons
+    // float rat_BBCS  = reso_BBCS / reso_BBCS_fn;
+    // float rat_FVTXS = reso_FVTXS / reso_FVTXS_fn;
+    // float rat_FVTXN = reso_FVTXN / reso_FVTXN_fn;
+
+    // drat[ic] = Form("%d GeV & %d & %.2e & %.2e & %.2e \\\\",
     //                 energy, ic,
-    //                 reso_BBCS, ereso_BBCS,
-    //                 reso_FVTXS, ereso_FVTXS,
-    //                 reso_FVTXSA, ereso_FVTXSA,
-    //                 reso_FVTXSB, ereso_FVTXSB,
-    //                 reso_FVTXSL[0], ereso_FVTXSL[0],
-    //                 reso_FVTXSL[1], ereso_FVTXSL[1],
-    //                 reso_FVTXSL[2], ereso_FVTXSL[2],
-    //                 reso_FVTXSL[3], ereso_FVTXSL[3]
-    //                );
-    dcnt[ic] = Form("%d GeV & %d & %.2e$\\pm$%.2e & %.2e$\\pm$%.2e & %.2e$\\pm$%.2e & %.2e$\\pm$%.2e & %.2e$\\pm$%.2e \\\\",
-                    energy, ic,
-                    reso_FVTXS, ereso_FVTXS,
-                    reso_FVTXSL[0], ereso_FVTXSL[0],
-                    reso_FVTXSL[1], ereso_FVTXSL[1],
-                    reso_FVTXSL[2], ereso_FVTXSL[2],
-                    reso_FVTXSL[3], ereso_FVTXSL[3]
-                   );
+    //                 rat_BBCS, rat_FVTXS, rat_FVTXN);
 
+    // float avg_BBCS  = 0.5 * (reso_BBCS + reso_BBCS_fn);
+    // float avg_FVTXS = 0.5 * (reso_FVTXS + reso_FVTXS_fn);
+    // float avg_FVTXN = 0.5 * (reso_FVTXN + reso_FVTXN_fn);
 
-    // --- event planes and correlations using FVTXN-FVTXS-BBCS
-    float reso_BBCS_fn  = sqrt((float_BBCS_FVTXN * float_BBCS_FVTXS) / float_FVTXN_FVTXS); // BNBS/NS
-    float reso_FVTXS_fn = sqrt((float_FVTXN_FVTXS * float_BBCS_FVTXS) / float_BBCS_FVTXN); // NSBS/BN
-    float reso_FVTXN_fn = sqrt((float_FVTXN_FVTXS * float_BBCS_FVTXN) / float_BBCS_FVTXS); // NSBN/BS
-
-    float ereso_BBCS_fn  = sqrt( ( efloat_BBCS_FVTXN * efloat_BBCS_FVTXN / 4 * float_BBCS_FVTXN )
-                                 + ( efloat_BBCS_FVTXS * efloat_BBCS_FVTXS / 4 * float_BBCS_FVTXS )
-                                 + ( efloat_FVTXN_FVTXS * efloat_FVTXN_FVTXS / 4 * pow(float_FVTXN_FVTXS, 3) ) );
-    float ereso_FVTXS_fn = sqrt( ( efloat_FVTXN_FVTXS * efloat_FVTXN_FVTXS / 4 * float_FVTXN_FVTXS )
-                                 + ( efloat_BBCS_FVTXS * efloat_BBCS_FVTXS / 4 * float_BBCS_FVTXS )
-                                 + ( efloat_BBCS_FVTXN * efloat_BBCS_FVTXN / 4 * pow(float_BBCS_FVTXN, 3) ) );
-    float ereso_FVTXN_fn = sqrt( ( efloat_FVTXN_FVTXS * efloat_FVTXN_FVTXS / 4 * float_FVTXN_FVTXS )
-                                 + ( efloat_BBCS_FVTXN * efloat_BBCS_FVTXN / 4 * float_BBCS_FVTXN )
-                                 + ( efloat_BBCS_FVTXS * efloat_BBCS_FVTXS / 4 * pow(float_BBCS_FVTXS, 3) ) );
-
-
-    dfb[ic] = Form("%d GeV & %d & %.2e $\\pm$ %.2e & %.2e $\\pm$ %.2e & %.2e $\\pm$ %.2e \\\\",
-                   energy, ic,
-                   reso_BBCS_fn, ereso_BBCS_fn,
-                   reso_FVTXS_fn, ereso_FVTXS_fn,
-                   reso_FVTXN_fn, ereso_FVTXN_fn
-                  );
-
-
-    // --- resolution comparisons
-    float rat_BBCS  = reso_BBCS / reso_BBCS_fn;
-    float rat_FVTXS = reso_FVTXS / reso_FVTXS_fn;
-    float rat_FVTXN = reso_FVTXN / reso_FVTXN_fn;
-
-    drat[ic] = Form("%d GeV & %d & %.2e & %.2e & %.2e \\\\",
-                    energy, ic,
-                    rat_BBCS, rat_FVTXS, rat_FVTXN);
-
-    float avg_BBCS  = 0.5 * (reso_BBCS + reso_BBCS_fn);
-    float avg_FVTXS = 0.5 * (reso_FVTXS + reso_FVTXS_fn);
-    float avg_FVTXN = 0.5 * (reso_FVTXN + reso_FVTXN_fn);
-
-    davg[ic] = Form("%d GeV & %d & %.2e & %.2e & %.2e \\\\",
-                    energy, ic,
-                    avg_BBCS, avg_FVTXS, avg_FVTXN);
+    // davg[ic] = Form("%d GeV & %d & %.2e & %.2e & %.2e \\\\",
+    //                 energy, ic,
+    //                 avg_BBCS, avg_FVTXS, avg_FVTXN);
 
     // // ---
     // float reso_FVTXN_xb = sqrt ( ( float_FVTXN_FVTXS * float_CNT_FVTXN ) / float_CNT_FVTXS ) ; // NSNC/SC
@@ -311,34 +442,190 @@ void doenergy(int energy, int harmonic)
 
 
   // --- Print everything
-  cout << " means:" << endl;
-  cout << dm << endl;
+  // cout << " means:" << endl;
+  // cout << dm << endl;
 
-  cout << endl;
-  cout << " ep correlations:" << endl;
-  for (int ic = 0; ic < NMUL; ic++)
-    cout << dcor[ic] << endl;
+  // cout << endl;
+  // cout << " ep correlations:" << endl;
+  // for (int ic = 0; ic < NMUL; ic++)
+  //   cout << dcor[ic] << endl;
 
   cout << endl;
   cout << " resos cnt:" << endl;
+  cout << " E & c & R(BBCS) & R(FVTXS) " << endl;
   for (int ic = 0; ic < NMUL; ic++)
     cout << dcnt[ic] << endl;
 
   cout << endl;
-  cout << " resos fvtx:" << endl;
+  cout << " resos fvtxs ab:" << endl;
+  cout << " E & c & R(BBCS) & R(FVTXS) & R(FVTXSA) & R(FVTXSB)" << endl;
   for (int ic = 0; ic < NMUL; ic++)
-    cout << dfb[ic] << endl;
+    cout << dfvtxsab[ic] << endl;
 
   cout << endl;
-  cout << " resos ratio:" << endl;
+  cout << " resos fvtxs layers:" << endl;
+  cout << " E & c & R(FVTXS) & R(FVTXSL0) & R(FVTXSL1) & R(FVTXSL2) & R(FVTXSL3)" << endl;
   for (int ic = 0; ic < NMUL; ic++)
-    cout << drat[ic] << endl;
+    cout << dfvtxsl[ic] << endl;
 
-  cout << endl;
-  cout << " resos avg:" << endl;
-  for (int ic = 0; ic < NMUL; ic++)
-    cout << davg[ic] << endl;
+
+
+  // --- Plot
+  gStyle->SetOptStat(0);
+  gStyle->SetOptTitle(0);
+
+  int NDRAW = 2;
+  int icdraw[] = {0, 3, 4};
+  int drawMarker[] = {kFullCircle, kFullSquare, kFullDiamond};
+  int drawSize[] = {1.0, 1.0, 1.5};
+  int drawColor[] = {kBlack, kBlue, kRed, kGreen, kOrange + 5, kMagenta + 2};
+
+  int ie = 0;
+  if ( energy == 200)
+    ie = 0;
+  else if ( energy == 62 )
+    ie = 1;
+  else if ( energy == 39 )
+    ie = 2;
+  else if ( energy == 20 )
+    ie = 3;
+  else
+    ie = 0;
+  const char* centLabel[4][6] =
+  {
+    {"0-5%", "5-10%", "10-20%", "20-40%", "40-60%", "60-88%"},
+    {"0-5%", "5-10%", "10-20%", "20-40%", "40-60%", "60-88%"},
+    {"0-10%", "10-20%", "20-40%", "40-60%", "60-88%", ""},
+    {"0-20%", "20-40%", "40-60%", "60-88%", "", ""},
+  };
+
+  for (int i = 0; i < NDRAW; i++)
+  {
+    gRBBCS[icdraw[i]]->SetMarkerStyle(drawMarker[i]);
+    gRBBCS[icdraw[i]]->SetMarkerSize(drawSize[i]);
+    gRBBCS[icdraw[i]]->SetMarkerColor(drawColor[i]);
+    gRBBCS[icdraw[i]]->SetLineColor(drawColor[i]);
+
+    gRFVTXS[icdraw[i]]->SetMarkerStyle(drawMarker[i]);
+    gRFVTXS[icdraw[i]]->SetMarkerSize(drawSize[i]);
+    gRFVTXS[icdraw[i]]->SetMarkerColor(drawColor[i]);
+    gRFVTXS[icdraw[i]]->SetLineColor(drawColor[i]);
+
+    for (int il = 0; il < NFVTXLAY; il++)
+    {
+      gRFVTXSL[icdraw[i]][il]->SetMarkerStyle(drawMarker[i]);
+      gRFVTXSL[icdraw[i]][il]->SetMarkerSize(drawSize[i]);
+      gRFVTXSL[icdraw[i]][il]->SetMarkerColor(drawColor[i]);
+      gRFVTXSL[icdraw[i]][il]->SetLineColor(drawColor[i]);
+
+    }
+  }
+
+  TLegend *legdraw = new TLegend(0.2, 0.8, 0.9, 0.9);
+  legdraw->SetFillStyle(0);
+  legdraw->SetNColumns(NDRAW);
+  for (int i = 0; i < NDRAW; i++)
+    legdraw->AddEntry(gRBBCS[icdraw[i]], centLabel[ie][icdraw[i]], "P");
+
+  TH1D* haxis_zvrtx = new TH1D("haxis_zvrtx",
+                               ";z_{vrtx} [cm];#Psi_{2} resolution",
+                               100, -10, 10);
+  haxis_zvrtx->GetYaxis()->SetTitleFont(63);
+  haxis_zvrtx->GetYaxis()->SetLabelFont(63);
+  haxis_zvrtx->GetYaxis()->SetTitleSize(24);
+  haxis_zvrtx->GetYaxis()->SetTitleOffset(1.4);
+  haxis_zvrtx->GetYaxis()->SetLabelSize(20);
+  haxis_zvrtx->GetXaxis()->SetTitleFont(63);
+  haxis_zvrtx->GetXaxis()->SetLabelFont(63);
+  haxis_zvrtx->GetXaxis()->SetTitleSize(24);
+  haxis_zvrtx->GetXaxis()->SetTitleOffset(1.0);
+  haxis_zvrtx->GetXaxis()->SetLabelSize(20);
+
+  TLine lreso;
+  lreso.SetLineStyle(2);
+
+  TLatex ltitle;
+  ltitle.SetNDC();
+  ltitle.SetTextAlign(22);
+
+  TCanvas *cab = new TCanvas("cab", "ab", 1000, 1000);
+  cab->Divide(1, 2);
+
+  cab->cd(1);
+  haxis_zvrtx->GetYaxis()->SetRangeUser(0.0, 0.149);
+  haxis_zvrtx->DrawCopy();
+
+  for (int i = 0; i < NDRAW; i++)
+    gRBBCS[icdraw[i]]->Draw("P");
+  ltitle.DrawLatex(0.5, 0.95, Form("R(BBCS)  d+Au #sqrt{s_{_{NN}}} = %d GeV", energy));
+  legdraw->Draw("same");
+
+  cab->cd(2);
+  haxis_zvrtx->GetYaxis()->SetRangeUser(0.0, 0.30);
+  haxis_zvrtx->DrawCopy();
+
+  for (int i = 0; i < NDRAW; i++)
+    gRFVTXS[icdraw[i]]->Draw("P");
+  ltitle.DrawLatex(0.5, 0.95, Form("R(FVTXS)  d+Au #sqrt{s_{_{NN}}} = %d GeV", energy));
+
+  cab->Print(Form("pdfs/calc_epreso_zvrtx_dau%d.pdf", energy));
+
+
+  TCanvas *cfvtxl = new TCanvas("cfvtxl", "fvtxl", 500, 1000);
+  cfvtxl->Divide(1, 4);
+
+  for (int il = 0; il < NFVTXLAY; il++)
+  {
+    cfvtxl->cd(il + 1);
+    haxis_zvrtx->GetYaxis()->SetRangeUser(0.0, 0.30);
+    haxis_zvrtx->GetYaxis()->SetTitleSize(16);
+    haxis_zvrtx->GetYaxis()->SetTitleOffset(2.0);
+    haxis_zvrtx->GetYaxis()->SetLabelSize(12);
+    haxis_zvrtx->GetXaxis()->SetTitleSize(16);
+    haxis_zvrtx->GetXaxis()->SetTitleOffset(1.5);
+    haxis_zvrtx->GetXaxis()->SetLabelSize(12);
+    haxis_zvrtx->DrawCopy();
+
+    for (int i = 0; i < NDRAW; i++)
+      gRFVTXSL[icdraw[i]][il]->Draw("P");
+
+    ltitle.DrawLatex(0.5, 0.95, Form("R(FVTXS-L%i)  d+Au #sqrt{s_{_{NN}}} = %d GeV", il, energy));
+
+    if ( il == 0 )
+      legdraw->Draw("same");
+
+  }
+  cfvtxl->Print(Form("pdfs/calc_epreso_zvrtx_fvtxl_dau%d.pdf", energy));
+
+
+  // cout << endl;
+  // cout << " resos fvtx:" << endl;
+  // for (int ic = 0; ic < NMUL; ic++)
+  //   cout << dfb[ic] << endl;
+
+  // cout << endl;
+  // cout << " resos ratio:" << endl;
+  // for (int ic = 0; ic < NMUL; ic++)
+  //   cout << drat[ic] << endl;
+
+  // cout << endl;
+  // cout << " resos avg:" << endl;
+  // for (int ic = 0; ic < NMUL; ic++)
+  //   cout << davg[ic] << endl;
 
 
 }
+
+
+ValErr calc_epreso(ValErr AB, ValErr AC, ValErr BC)
+{
+
+  double reso = sqrt( (AB.first * AC.first) / BC.first );
+  double ereso = reso / 2. * sqrt( pow(AB.second / AB.first, 2) +
+                                   pow(AC.second / AC.first, 2) +
+                                   pow(BC.second / BC.first, 2) );
+
+  return make_pair(reso, ereso);
+}
+
 

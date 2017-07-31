@@ -107,8 +107,8 @@ int main(int argc, char *argv[])
 
   cout << "Now processing with run number " << run << endl;
 
-  // flatten(run, 1);
-  // flatten(run, 2);
+  flatten(run, 1);
+  flatten(run, 2);
   flatten(run, 3);
 
   return 0;
@@ -1127,8 +1127,7 @@ void flatten(int runNumber, int rp_recal_pass)
     // if ( runNumber >= 456652 && runNumber <= 458167 ) ZVTX = eventfvtx_z;
     if ( energyflag == 200 || energyflag == 62 ) ZVTX = d_bbcz;
     if ( energyflag == 39 || energyflag == 20 ) ZVTX = eventfvtx_z;
-    // if ( fabs(ZVTX) > 10.0 )
-    if ( fabs(ZVTX) > 2.0 )
+    if ( fabs(ZVTX) > 10.0 )
     {
       if ( verbosity > 1 ) cout << "vertex rejected" << endl;
       continue;
