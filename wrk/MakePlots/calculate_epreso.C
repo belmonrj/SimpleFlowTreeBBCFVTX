@@ -11,6 +11,8 @@
 #include <TLine.h>
 #include <TLatex.h>
 #include <TLegend.h>
+#include <TF1.h>
+#include <TBox.h>
 
 #include <iostream>
 #include <utility>
@@ -27,8 +29,8 @@ void calculate_epreso()
 {
 
   doenergy(200, 2);
-  // doenergy(62, 2);
-  // doenergy(39, 2);
+  doenergy(62, 2);
+  doenergy(39, 2);
   // doenergy(20, 2);
 
   // doenergy(200,3);
@@ -101,6 +103,15 @@ void doenergy(int energy, int harmonic)
   TProfile* tp1f_CNT_FVTXSB_sum[NMUL];
   TProfile* tp1f_CNT_FVTXSL_sum[NMUL][NFVTXLAY];
 
+
+  // ---
+  // --- Resolutions
+  // ---
+  ValErr RBBCS[NMUL];
+  ValErr RFVTXS[NMUL];
+  ValErr RFVTXSA[NMUL];
+  ValErr RFVTXSB[NMUL];
+  ValErr RFVTXSL[NMUL][NFVTXLAY];
 
   // ---
   // --- Graphs for plotting
@@ -338,38 +349,37 @@ void doenergy(int energy, int harmonic)
 
 
 
-    ValErr RBBCS = calc_epreso(CNT_BBCS, BBCS_FVTXS, CNT_FVTXS);
-    ValErr RFVTXS = calc_epreso(CNT_FVTXS, BBCS_FVTXS, CNT_BBCS);
+    RBBCS[ic] = calc_epreso(CNT_BBCS, BBCS_FVTXS, CNT_FVTXS);
+    RFVTXS[ic] = calc_epreso(CNT_FVTXS, BBCS_FVTXS, CNT_BBCS);
     // ValErr RFVTXN = calc_epreso(CNT_FVTXN, BBCS_FVTXN, CNT_BBCS);
 
-    ValErr RFVTXSA = calc_epreso(CNT_FVTXSA, BBCS_FVTXSA, CNT_BBCS);
-    ValErr RFVTXSB = calc_epreso(CNT_FVTXSB, BBCS_FVTXSB, CNT_BBCS);
-    ValErr RFVTXSL[NFVTXLAY];
+    RFVTXSA[ic] = calc_epreso(CNT_FVTXSA, BBCS_FVTXSA, CNT_BBCS);
+    RFVTXSB[ic] = calc_epreso(CNT_FVTXSB, BBCS_FVTXSB, CNT_BBCS);
     for (int il = 0; il < NFVTXLAY; il++)
-      RFVTXSL[il] = calc_epreso(CNT_FVTXSL[il], BBCS_FVTXSL[il], CNT_BBCS);
+      RFVTXSL[ic][il] = calc_epreso(CNT_FVTXSL[il], BBCS_FVTXSL[il], CNT_BBCS);
 
 
     dcnt[ic] = Form("%d GeV & %d & %.3e $\\pm$ %.3e & %.3e $\\pm$ %.3e \\\\",
                     energy, ic,
-                    RBBCS.first, RBBCS.second,
-                    RFVTXS.first, RFVTXS.second
+                    RBBCS[ic].first, RBBCS[ic].second,
+                    RFVTXS[ic].first, RFVTXS[ic].second
                    );
 
     dfvtxsab[ic] = Form("%d GeV & %d & %.3e$\\pm$%.3e & %.3e$\\pm$%.3e & %.3e$\\pm$%.3e & %.3e$\\pm$%.3e \\\\",
                         energy, ic,
-                        RBBCS.first, RBBCS.second,
-                        RFVTXS.first, RFVTXS.second,
-                        RFVTXSA.first, RFVTXSA.second,
-                        RFVTXSB.first, RFVTXSB.second
+                        RBBCS[ic].first, RBBCS[ic].second,
+                        RFVTXS[ic].first, RFVTXS[ic].second,
+                        RFVTXSA[ic].first, RFVTXSA[ic].second,
+                        RFVTXSB[ic].first, RFVTXSB[ic].second
                        );
 
     dfvtxsl[ic] = Form("%d GeV & %d & %.2e$\\pm$%.2e & %.2e$\\pm$%.2e & %.2e$\\pm$%.2e & %.2e$\\pm$%.2e & %.2e$\\pm$%.2e \\\\",
                        energy, ic,
-                       RFVTXS.first, RFVTXS.second,
-                       RFVTXSL[0].first, RFVTXSL[0].second,
-                       RFVTXSL[1].first, RFVTXSL[1].second,
-                       RFVTXSL[2].first, RFVTXSL[2].second,
-                       RFVTXSL[3].first, RFVTXSL[3].second
+                       RFVTXS[ic].first, RFVTXS[ic].second,
+                       RFVTXSL[ic][0].first, RFVTXSL[ic][0].second,
+                       RFVTXSL[ic][1].first, RFVTXSL[ic][1].second,
+                       RFVTXSL[ic][2].first, RFVTXSL[ic][2].second,
+                       RFVTXSL[ic][3].first, RFVTXSL[ic][3].second
                       );
 
 
@@ -474,11 +484,15 @@ void doenergy(int energy, int harmonic)
   gStyle->SetOptStat(0);
   gStyle->SetOptTitle(0);
 
+  TF1 *fc = new TF1("fc", "[0]", -10, 10);
+  fc->SetLineStyle(2);
+
   int NDRAW = 2;
-  int icdraw[] = {0, 3, 4};
-  int drawMarker[] = {kFullCircle, kFullSquare, kFullDiamond};
-  int drawSize[] = {1.0, 1.0, 1.5};
-  int drawColor[] = {kBlack, kBlue, kRed, kGreen, kOrange + 5, kMagenta + 2};
+  // int icdraw[] = {0, 1, 2, 3, 4, 5};
+  int icdraw[] = {0, 2, 4};
+  int drawMarker[] = {kFullCircle, kFullSquare, kFullDiamond, kFullCross, kFullStar, kOpenCircle};
+  int drawSize[] = {1.0, 1.0, 1.5, 1.5, 1.5, 1.0};
+  int drawColor[] = {kBlack, kBlue, kRed, kGreen + 2, kOrange + 5, kMagenta + 2};
 
   int ie = 0;
   if ( energy == 200)
@@ -521,11 +535,15 @@ void doenergy(int energy, int harmonic)
     }
   }
 
-  TLegend *legdraw = new TLegend(0.2, 0.8, 0.9, 0.9);
-  legdraw->SetFillStyle(0);
-  legdraw->SetNColumns(NDRAW);
-  for (int i = 0; i < NDRAW; i++)
-    legdraw->AddEntry(gRBBCS[icdraw[i]], centLabel[ie][icdraw[i]], "P");
+  TLegend *legbbcs;
+  TLegend *legfvtxs;
+  TLegend *legfvtxsl[NFVTXLAY];
+
+  // TLegend *legdraw = new TLegend(0.15, 0.8, 0.9, 0.9);
+  // legdraw->SetFillStyle(0);
+  // legdraw->SetNColumns(NDRAW);
+  // for (int i = 0; i < NDRAW; i++)
+  //   legdraw->AddEntry(gRBBCS[icdraw[i]], centLabel[ie][icdraw[i]], "P");
 
   TH1D* haxis_zvrtx = new TH1D("haxis_zvrtx",
                                ";z_{vrtx} [cm];#Psi_{2} resolution",
@@ -544,6 +562,9 @@ void doenergy(int energy, int harmonic)
   TLine lreso;
   lreso.SetLineStyle(2);
 
+  TBox breso;
+  breso.SetFillStyle(3002);
+
   TLatex ltitle;
   ltitle.SetNDC();
   ltitle.SetTextAlign(22);
@@ -555,18 +576,87 @@ void doenergy(int energy, int harmonic)
   haxis_zvrtx->GetYaxis()->SetRangeUser(0.0, 0.149);
   haxis_zvrtx->DrawCopy();
 
+  legbbcs = new TLegend(0.10, 0.8, 0.9, 0.9);
+  legbbcs->SetFillStyle(0);
+  legbbcs->SetNColumns(NDRAW);
+
   for (int i = 0; i < NDRAW; i++)
+  {
+    // gRBBCS[icdraw[i]]->Fit(fc, "RQ0N");
+
+    // lreso.SetLineColor(drawColor[i]);
+    // lreso.DrawLine(-10, fc->GetParameter(0), 10, fc->GetParameter(0));
+
+    // legbbcs->AddEntry(gRBBCS[icdraw[i]],
+    //                   Form("%s #LTR(#Psi_{2})#GT = %.3f #pm %.3f",
+    //                        centLabel[ie][icdraw[i]],
+    //                        fc->GetParameter(0),
+    //                        fc->GetParError(0) ),
+    //                        "P");
+
+    lreso.SetLineColor(drawColor[i]);
+    lreso.DrawLine(-10, RBBCS[icdraw[i]].first, 10, RBBCS[icdraw[i]].first);
+
+    breso.SetFillColor(drawColor[i]);
+    breso.DrawBox(-10, RBBCS[icdraw[i]].first - RBBCS[icdraw[i]].second,
+                  +10, RBBCS[icdraw[i]].first + RBBCS[icdraw[i]].second);
+
+
+    legbbcs->AddEntry(gRBBCS[icdraw[i]],
+                      Form("%s #LTR(#Psi_{2})#GT = %.3f #pm %.3f",
+                           centLabel[ie][icdraw[i]],
+                           RBBCS[icdraw[i]].first,
+                           RBBCS[icdraw[i]].second ),
+                      "P");
+
     gRBBCS[icdraw[i]]->Draw("P");
+  }
   ltitle.DrawLatex(0.5, 0.95, Form("R(BBCS)  d+Au #sqrt{s_{_{NN}}} = %d GeV", energy));
-  legdraw->Draw("same");
+  legbbcs->Draw("same");
 
   cab->cd(2);
-  haxis_zvrtx->GetYaxis()->SetRangeUser(0.0, 0.30);
+  haxis_zvrtx->GetYaxis()->SetRangeUser(0.0, 0.34);
   haxis_zvrtx->DrawCopy();
 
+  legfvtxs = new TLegend(0.10, 0.8, 0.9, 0.9);
+  legfvtxs->SetFillStyle(0);
+  legfvtxs->SetNColumns(NDRAW);
+
   for (int i = 0; i < NDRAW; i++)
+  {
+    // gRFVTXS[icdraw[i]]->Fit(fc, "RQ0N");
+
+    // lreso.SetLineColor(drawColor[i]);
+    // lreso.DrawLine(-10, fc->GetParameter(0), 10, fc->GetParameter(0));
+
+    // legfvtxs->AddEntry(gRFVTXS[icdraw[i]],
+    //                   Form("%s #LTR(#Psi_{2})#GT = %.3f #pm %.3f",
+    //                        centLabel[ie][icdraw[i]],
+    //                        fc->GetParameter(0),
+    //                        fc->GetParError(0) ),
+    //                        "P");
+
+    lreso.SetLineColor(drawColor[i]);
+    lreso.DrawLine(-10, RFVTXS[icdraw[i]].first, 10, RFVTXS[icdraw[i]].first);
+
+    breso.SetFillColor(drawColor[i]);
+    breso.DrawBox(-10, RFVTXS[icdraw[i]].first - RFVTXS[icdraw[i]].second,
+                  +10, RFVTXS[icdraw[i]].first + RFVTXS[icdraw[i]].second);
+
+
+    legfvtxs->AddEntry(gRFVTXS[icdraw[i]],
+                       Form("%s #LTR(#Psi_{2})#GT = %.3f #pm %.3f",
+                            centLabel[ie][icdraw[i]],
+                            RFVTXS[icdraw[i]].first,
+                            RFVTXS[icdraw[i]].second ),
+                       "P");
+
     gRFVTXS[icdraw[i]]->Draw("P");
+  }
+
   ltitle.DrawLatex(0.5, 0.95, Form("R(FVTXS)  d+Au #sqrt{s_{_{NN}}} = %d GeV", energy));
+  legfvtxs->Draw("same");
+
 
   cab->Print(Form("pdfs/calc_epreso_zvrtx_dau%d.pdf", energy));
 
@@ -586,17 +676,102 @@ void doenergy(int energy, int harmonic)
     haxis_zvrtx->GetXaxis()->SetLabelSize(12);
     haxis_zvrtx->DrawCopy();
 
+    legfvtxsl[il] = new TLegend(0.10, 0.8, 0.9, 0.9);
+    legfvtxsl[il]->SetFillStyle(0);
+    legfvtxsl[il]->SetNColumns(NDRAW);
+
     for (int i = 0; i < NDRAW; i++)
+    {
+      // gRFVTXS[icdraw[i]]->Fit(fc, "RQ0N");
+
+      // lreso.SetLineColor(drawColor[i]);
+      // lreso.DrawLine(-10, fc->GetParameter(0), 10, fc->GetParameter(0));
+
+      // legfvtxsl[il]->AddEntry(gRFVTXS[icdraw[i]],
+      //                   Form("%s #LTR(#Psi_{2})#GT = %.3f #pm %.3f",
+      //                        centLabel[ie][icdraw[i]],
+      //                        fc->GetParameter(0),
+      //                        fc->GetParError(0) ),
+      //                        "P");
+
+      lreso.SetLineColor(drawColor[i]);
+      lreso.DrawLine(-10, RFVTXSL[icdraw[i]][il].first, 10, RFVTXSL[icdraw[i]][il].first);
+
+      breso.SetFillColor(drawColor[i]);
+      breso.DrawBox(-10, RFVTXSL[icdraw[i]][il].first - RFVTXSL[icdraw[i]][il].second,
+                    +10, RFVTXSL[icdraw[i]][il].first + RFVTXSL[icdraw[i]][il].second);
+
+
+      legfvtxsl[il]->AddEntry(gRFVTXSL[icdraw[i]][il],
+                              Form("%s #LTR(#Psi_{2})#GT = %.3f #pm %.3f",
+                                   centLabel[ie][icdraw[i]],
+                                   RFVTXSL[icdraw[i]][il].first,
+                                   RFVTXSL[icdraw[i]][il].second ),
+                              "P");
+
       gRFVTXSL[icdraw[i]][il]->Draw("P");
+    }
+    legfvtxsl[il]->Draw("same");
 
     ltitle.DrawLatex(0.5, 0.95, Form("R(FVTXS-L%i)  d+Au #sqrt{s_{_{NN}}} = %d GeV", il, energy));
 
-    if ( il == 0 )
-      legdraw->Draw("same");
+    // if ( il == 0 )
+    //   legdraw->Draw("same");
 
   }
   cfvtxl->Print(Form("pdfs/calc_epreso_zvrtx_fvtxl_dau%d.pdf", energy));
 
+
+
+
+  TCanvas *clcent = new TCanvas("clcent", "fvtxsl cent", 1200, 1000);
+  clcent->SetMargin(0, 0, 0, 0);
+  clcent->Divide(4, NMUL);
+
+  for (int ic = 0; ic < NMUL; ic++)
+  {
+    for (int il = 0; il < NFVTXLAY; il++)
+    {
+      int pad = NFVTXLAY * ic + il + 1;
+
+      // cout << " " << ic << " " << il << " " << pad << endl;
+
+      clcent->GetPad(pad)->SetMargin(0.1, 0.02, 0.1, 0.02);
+      clcent->GetPad(pad)->SetTicks(1, 1);
+
+      clcent->cd(pad);
+      haxis_zvrtx->GetYaxis()->SetRangeUser(0.0, 0.30);
+      haxis_zvrtx->GetYaxis()->SetTitleSize(14);
+      haxis_zvrtx->GetYaxis()->SetTitleOffset(2.0);
+      haxis_zvrtx->GetYaxis()->SetLabelSize(10);
+      haxis_zvrtx->GetXaxis()->SetTitleSize(14);
+      haxis_zvrtx->GetXaxis()->SetTitleOffset(1.5);
+      haxis_zvrtx->GetXaxis()->SetLabelSize(10);
+      haxis_zvrtx->DrawCopy();
+
+      lreso.SetLineColor(drawColor[ic]);
+      lreso.DrawLine(-10, RFVTXSL[ic][il].first, 10, RFVTXSL[ic][il].first);
+
+      breso.SetFillColor(drawColor[ic]);
+      breso.DrawBox(-10, RFVTXSL[ic][il].first - RFVTXSL[ic][il].second,
+                    +10, RFVTXSL[ic][il].first + RFVTXSL[ic][il].second);
+
+      gRFVTXSL[ic][il]->SetMarkerStyle(drawMarker[ic]);
+      gRFVTXSL[ic][il]->SetMarkerSize(drawSize[ic]);
+      gRFVTXSL[ic][il]->SetMarkerColor(drawColor[ic]);
+      gRFVTXSL[ic][il]->SetLineColor(drawColor[ic]);
+      gRFVTXSL[ic][il]->Draw("P");
+
+      ltitle.DrawLatex(0.5, 0.90,
+                       Form("FVTXS-L%i  %d GeV  %s  #LTR(#Psi_{2})#GT = %.3f #pm %.3f",
+                            il, energy, centLabel[ie][ic],
+                            RFVTXSL[ic][il].first,
+                            RFVTXSL[ic][il].second));
+
+    } // il
+  } // ic
+
+  clcent->Print(Form("pdfs/calc_epreso_fvtxsl_all_dau%d.pdf", energy));
 
   // cout << endl;
   // cout << " resos fvtx:" << endl;
