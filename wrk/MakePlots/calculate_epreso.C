@@ -487,6 +487,10 @@ void doenergy(int energy, int harmonic)
   TF1 *fc = new TF1("fc", "[0]", -10, 10);
   fc->SetLineStyle(2);
 
+  TF1 *fsin = new TF1("fsin", "[0] + [1]*sin(x + [2]*x)", -10, 10);
+  fsin->SetLineColor(kRed);
+  fsin->SetLineStyle(2);
+
   int NDRAW = 2;
   // int icdraw[] = {0, 1, 2, 3, 4, 5};
   int icdraw[] = {0, 2, 4};
@@ -569,6 +573,9 @@ void doenergy(int energy, int harmonic)
   ltitle.SetNDC();
   ltitle.SetTextAlign(22);
 
+  TLatex lchisq;
+  lchisq.SetNDC();
+
   TCanvas *cab = new TCanvas("cab", "ab", 1000, 1000);
   cab->Divide(1, 2);
 
@@ -610,6 +617,23 @@ void doenergy(int energy, int harmonic)
                       "P");
 
     gRBBCS[icdraw[i]]->Draw("P");
+
+    if ( i == NDRAW - 1)
+    {
+      gRBBCS[icdraw[i]]->Fit(fsin, "RQ0N");
+      fsin->DrawCopy("same");
+
+      lchisq.SetTextColor(kRed);
+      lchisq.DrawLatex(0.2, 0.2, Form("#Chi^{2}/NDF(sin) = %.2f",
+                                      fsin->GetChisquare() / fsin->GetNDF()));
+
+      gRBBCS[icdraw[i]]->Fit(fc, "RQ0N");
+      lchisq.SetTextColor(kBlue);
+      lchisq.DrawLatex(0.6, 0.2, Form("#Chi^{2}/NDF(const) = %.2f",
+                                      fc->GetChisquare() / fc->GetNDF()));
+
+
+    }
   }
   ltitle.DrawLatex(0.5, 0.95, Form("R(BBCS)  d+Au #sqrt{s_{_{NN}}} = %d GeV", energy));
   legbbcs->Draw("same");
@@ -652,6 +676,22 @@ void doenergy(int energy, int harmonic)
                        "P");
 
     gRFVTXS[icdraw[i]]->Draw("P");
+
+    if ( i == NDRAW - 1)
+    {
+      gRFVTXS[icdraw[i]]->Fit(fsin, "RQ0N");
+      fsin->DrawCopy("same");
+
+      lchisq.SetTextColor(kRed);
+      lchisq.DrawLatex(0.2, 0.2, Form("#Chi^{2}/NDF(sin) = %.2f",
+                                      fsin->GetChisquare() / fsin->GetNDF()));
+
+      gRFVTXS[icdraw[i]]->Fit(fc, "RQ0N");
+      lchisq.SetTextColor(kBlue);
+      lchisq.DrawLatex(0.6, 0.2, Form("#Chi^{2}/NDF(const) = %.2f",
+                                      fc->GetChisquare() / fc->GetNDF()));
+
+    }
   }
 
   ltitle.DrawLatex(0.5, 0.95, Form("R(FVTXS)  d+Au #sqrt{s_{_{NN}}} = %d GeV", energy));
@@ -710,6 +750,23 @@ void doenergy(int energy, int harmonic)
                               "P");
 
       gRFVTXSL[icdraw[i]][il]->Draw("P");
+
+      if ( i == NDRAW - 1)
+      {
+        gRFVTXSL[icdraw[i]][il]->Fit(fsin, "RQ0N");
+        fsin->DrawCopy("same");
+
+        lchisq.SetTextColor(kRed);
+        lchisq.DrawLatex(0.2, 0.2, Form("#Chi^{2}/NDF(sin) = %.2f",
+                                        fsin->GetChisquare() / fsin->GetNDF()));
+
+        gRFVTXSL[icdraw[i]][il]->Fit(fc, "RQ0N");
+        lchisq.SetTextColor(kBlue);
+        lchisq.DrawLatex(0.6, 0.2, Form("#Chi^{2}/NDF(const) = %.2f",
+                                        fc->GetChisquare() / fc->GetNDF()));
+
+      }
+
     }
     legfvtxsl[il]->Draw("same");
 
