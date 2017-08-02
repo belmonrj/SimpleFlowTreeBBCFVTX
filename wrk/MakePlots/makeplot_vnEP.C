@@ -12,13 +12,15 @@
 #include <TGraphAsymmErrors.h>
 
 #include <iostream>
+#include <utility>
+
 using namespace std;
 
-TGraphErrors* format_v2_pt(TH1* p);  // for rebinning 20 GeV
-TGraphErrors* format_v2_eta(TH1* p); // for rebinning 20 GeV
+typedef pair<double, double> ValErr;
 
 void doenergy(int, int);
 void diagnostic(int, int);
+ValErr calc_epreso(ValErr AB, ValErr AC, ValErr BC);
 
 TFile* outfile;
 
@@ -75,35 +77,358 @@ void doenergy(int energy, int harmonic)
     cout << " --- E:" << energy << " h:" << harmonic << " c:" << ic << endl;
     cout << " --- " << endl;
 
+    // --- Declare zvrtx summed histograms
+    TProfile *tp1f_CNT_BBCS;
+    TProfile *tp1f_CNT_FVTXS;
+    TProfile *tp1f_CNT_FVTXSA;
+    TProfile *tp1f_CNT_FVTXSB;
+    TProfile *tp1f_CNT_FVTXSL[NFVTXLAY];
+
+    TProfile *tp1f_BBCS_FVTXS;
+    TProfile *tp1f_BBCS_FVTXSA;
+    TProfile *tp1f_BBCS_FVTXSB;
+    TProfile *tp1f_BBCS_FVTXSL[NFVTXLAY];
+
+    TProfile* hvnpt_bbcs_east;
+    TProfile* hvnpt_bbcs_west;
+    TProfile* hvnpt_bbcs_both;
+    TProfile* hvneta_bbcs_east;
+    TProfile* hvneta_bbcs_west;
+    TProfile* hvneta_bbcs_both;
+
+    TProfile* hvnpt_fvtxs_east;
+    TProfile* hvnpt_fvtxs_west;
+    TProfile* hvnpt_fvtxs_both;
+    TProfile* hvneta_fvtxs_east;
+    TProfile* hvneta_fvtxs_west;
+    TProfile* hvneta_fvtxs_both;
+
+    TProfile* hvnpt_fvtxsa_east;
+    TProfile* hvnpt_fvtxsa_west;
+    TProfile* hvnpt_fvtxsa_both;
+    TProfile* hvneta_fvtxsa_east;
+    TProfile* hvneta_fvtxsa_west;
+    TProfile* hvneta_fvtxsa_both;
+
+    TProfile* hvnpt_fvtxsb_east;
+    TProfile* hvnpt_fvtxsb_west;
+    TProfile* hvnpt_fvtxsb_both;
+    TProfile* hvneta_fvtxsb_east;
+    TProfile* hvneta_fvtxsb_west;
+    TProfile* hvneta_fvtxsb_both;
+
+    TProfile* hvnpt_fvtxsl_east[NFVTXLAY];
+    TProfile* hvnpt_fvtxsl_west[NFVTXLAY];
+    TProfile* hvnpt_fvtxsl_both[NFVTXLAY];
+    TProfile* hvneta_fvtxsl_east[NFVTXLAY];
+    TProfile* hvneta_fvtxsl_west[NFVTXLAY];
+    TProfile* hvneta_fvtxsl_both[NFVTXLAY];
+
+    TProfile* hvnpt_fvtxs_east_zres;
+    TProfile* hvnpt_fvtxs_west_zres;
+    TProfile* hvnpt_fvtxs_both_zres;
+
+    TProfile* hvnpt_bbcs_east_zres;
+    TProfile* hvnpt_bbcs_west_zres;
+    TProfile* hvnpt_bbcs_both_zres;
+
+    TProfile* hvnpt_fvtxsl_east_zres[NFVTXLAY];
+    TProfile* hvnpt_fvtxsl_west_zres[NFVTXLAY];
+    TProfile* hvnpt_fvtxsl_both_zres[NFVTXLAY];
+
+    // ---
+    // --- loop over zvrtx
+    // ---
+    for (int iz = 0; iz < NZPS; iz++)
+    {
+
+      // --- get histograms from file
+      file->cd();
+      TProfile* tp1f_CNT_BBCS_z = (TProfile*)file->Get(Form("tp1f_c%d_z%d_reso%d_BBC_CNT", ic, iz, harmonic));
+      TProfile* tp1f_CNT_FVTXS_z = (TProfile*)file->Get(Form("tp1f_c%d_z%d_reso%d_CNT_FVTX", ic, iz, harmonic));
+      TProfile* tp1f_CNT_FVTXSA_z = (TProfile*)file->Get(Form("tp1f_c%d_z%d_reso%d_CNT_FVTXSA", ic, iz, harmonic));
+      TProfile* tp1f_CNT_FVTXSB_z = (TProfile*)file->Get(Form("tp1f_c%d_z%d_reso%d_CNT_FVTXSB", ic, iz, harmonic));
+      TProfile* tp1f_CNT_FVTXSL_z[NFVTXLAY];
+      for (int il = 0; il < NFVTXLAY; il++)
+        tp1f_CNT_FVTXSL_z[il] = (TProfile*)file->Get(Form("tp1f_c%d_z%d_reso%d_CNT_FVTXSL%d", ic, iz, harmonic, il));
+
+      TProfile* tp1f_BBCS_FVTXS_z = (TProfile*)file->Get(Form("tp1f_c%d_z%d_reso%d_BBC_FVTX", ic, iz, harmonic));
+      TProfile* tp1f_BBCS_FVTXSA_z = (TProfile*)file->Get(Form("tp1f_c%d_z%d_reso%d_BBC_FVTXSA", ic, iz, harmonic));
+      TProfile* tp1f_BBCS_FVTXSB_z = (TProfile*)file->Get(Form("tp1f_c%d_z%d_reso%d_BBC_FVTXSB", ic, iz, harmonic));
+      TProfile* tp1f_BBCS_FVTXSL_z[NFVTXLAY];
+      for (int il = 0; il < NFVTXLAY; il++)
+        tp1f_BBCS_FVTXSL_z[il] = (TProfile*)file->Get(Form("tp1f_c%d_z%d_reso%d_BBC_FVTXSL%d", ic, iz, harmonic, il));
+
+      TProfile* hvnpt_bbcs_east_z = (TProfile*)file->Get(Form("bbcs_v%d_east_docalib_cent%d_zvtx%d", harmonic, ic, iz));
+      TProfile* hvnpt_bbcs_west_z = (TProfile*)file->Get(Form("bbcs_v%d_west_docalib_cent%d_zvtx%d", harmonic, ic, iz));
+      TProfile* hvnpt_bbcs_both_z = (TProfile*)file->Get(Form("bbcs_v%d_both_docalib_cent%d_zvtx%d", harmonic, ic, iz));
+      TProfile* hvneta_bbcs_east_z = (TProfile*)file->Get(Form("bbcs_v%deta_east_docalib_cent%d_zvtx%d", harmonic, ic, iz));
+      TProfile* hvneta_bbcs_west_z = (TProfile*)file->Get(Form("bbcs_v%deta_west_docalib_cent%d_zvtx%d", harmonic, ic, iz));
+      TProfile* hvneta_bbcs_both_z = (TProfile*)file->Get(Form("bbcs_v%deta_both_docalib_cent%d_zvtx%d", harmonic, ic, iz));
+
+      TProfile* hvnpt_fvtxs_east_z = (TProfile*)file->Get(Form("fvtxs_v%d_east_docalib_cent%d_zvtx%d", harmonic, ic, iz));
+      TProfile* hvnpt_fvtxs_west_z = (TProfile*)file->Get(Form("fvtxs_v%d_west_docalib_cent%d_zvtx%d", harmonic, ic, iz));
+      TProfile* hvnpt_fvtxs_both_z = (TProfile*)file->Get(Form("fvtxs_v%d_both_docalib_cent%d_zvtx%d", harmonic, ic, iz));
+      TProfile* hvneta_fvtxs_east_z = (TProfile*)file->Get(Form("fvtxs_v%deta_east_docalib_cent%d_zvtx%d", harmonic, ic, iz));
+      TProfile* hvneta_fvtxs_west_z = (TProfile*)file->Get(Form("fvtxs_v%deta_west_docalib_cent%d_zvtx%d", harmonic, ic, iz));
+      TProfile* hvneta_fvtxs_both_z = (TProfile*)file->Get(Form("fvtxs_v%deta_both_docalib_cent%d_zvtx%d", harmonic, ic, iz));
+
+      TProfile* hvnpt_fvtxsa_east_z = (TProfile*)file->Get(Form("fvtxsa_v%d_east_docalib_cent%d_zvtx%d", harmonic, ic, iz));
+      TProfile* hvnpt_fvtxsa_west_z = (TProfile*)file->Get(Form("fvtxsa_v%d_west_docalib_cent%d_zvtx%d", harmonic, ic, iz));
+      TProfile* hvnpt_fvtxsa_both_z = (TProfile*)file->Get(Form("fvtxsa_v%d_both_docalib_cent%d_zvtx%d", harmonic, ic, iz));
+      // TProfile* hvneta_fvtxsa_east_z = (TProfile*)file->Get(Form("fvtxsa_v%deta_east_docalib_cent%d_zvtx%d", harmonic, ic, iz));
+      // TProfile* hvneta_fvtxsa_west_z = (TProfile*)file->Get(Form("fvtxsa_v%deta_west_docalib_cent%d_zvtx%d", harmonic, ic, iz));
+      // TProfile* hvneta_fvtxsa_both_z = (TProfile*)file->Get(Form("fvtxsa_v%deta_both_docalib_cent%d_zvtx%d", harmonic, ic, iz));
+
+      TProfile* hvnpt_fvtxsb_east_z = (TProfile*)file->Get(Form("fvtxsb_v%d_east_docalib_cent%d_zvtx%d", harmonic, ic, iz));
+      TProfile* hvnpt_fvtxsb_west_z = (TProfile*)file->Get(Form("fvtxsb_v%d_west_docalib_cent%d_zvtx%d", harmonic, ic, iz));
+      TProfile* hvnpt_fvtxsb_both_z = (TProfile*)file->Get(Form("fvtxsb_v%d_both_docalib_cent%d_zvtx%d", harmonic, ic, iz));
+      // TProfile* hvneta_fvtxsb_east_z = (TProfile*)file->Get(Form("fvtxsb_v%deta_east_docalib_cent%d_zvtx%d", harmonic, ic, iz));
+      // TProfile* hvneta_fvtxsb_west_z = (TProfile*)file->Get(Form("fvtxsb_v%deta_west_docalib_cent%d_zvtx%d", harmonic, ic, iz));
+      // TProfile* hvneta_fvtxsb_both_z = (TProfile*)file->Get(Form("fvtxsb_v%deta_both_docalib_cent%d_zvtx%d", harmonic, ic, iz));
+
+      TProfile* hvnpt_fvtxsl_east_z[NFVTXLAY];
+      TProfile* hvnpt_fvtxsl_west_z[NFVTXLAY];
+      TProfile* hvnpt_fvtxsl_both_z[NFVTXLAY];
+      // TProfile* hvneta_fvtxsl_east_z[NFVTXLAY];
+      // TProfile* hvneta_fvtxsl_west_z[NFVTXLAY];
+      // TProfile* hvneta_fvtxsl_both_z[NFVTXLAY];
+      for (int il = 0; il < NFVTXLAY; il++)
+      {
+        hvnpt_fvtxsl_east_z[il] = (TProfile*)file->Get(Form("fvtxsl%d_v%d_east_docalib_cent%d_zvtx%d", il, harmonic, ic, iz));
+        hvnpt_fvtxsl_west_z[il] = (TProfile*)file->Get(Form("fvtxsl%d_v%d_west_docalib_cent%d_zvtx%d", il, harmonic, ic, iz));
+        hvnpt_fvtxsl_both_z[il] = (TProfile*)file->Get(Form("fvtxsl%d_v%d_both_docalib_cent%d_zvtx%d", il, harmonic, ic, iz));
+        // hvneta_fvtxsl_east_z[il] = (TProfile*)file->Get(Form("fvtxsl%d_v%deta_east_docalib_cent%d_zvtx%d", il, harmonic, ic, iz));
+        // hvneta_fvtxsl_west_z[il] = (TProfile*)file->Get(Form("fvtxsl%d_v%deta_west_docalib_cent%d_zvtx%d", il, harmonic, ic, iz));
+        // hvneta_fvtxsl_both_z[il] = (TProfile*)file->Get(Form("fvtxsl%d_v%deta_both_docalib_cent%d_zvtx%d", il, harmonic, ic, iz));
+      } // il
+
+      // --- summ histograms over zvrtx w/o correcting
+      if ( iz == 0 )
+      {
+
+        tp1f_CNT_BBCS = (TProfile*) tp1f_CNT_BBCS_z->Clone("tp1f_CNT_BBCS");
+        tp1f_CNT_FVTXS = (TProfile*) tp1f_CNT_FVTXS_z->Clone("tp1f_CNT_FVTXS");
+        tp1f_CNT_FVTXSA = (TProfile*) tp1f_CNT_FVTXSA_z->Clone("tp1f_CNT_FVTXSA");
+        tp1f_CNT_FVTXSB = (TProfile*) tp1f_CNT_FVTXSB_z->Clone("tp1f_CNT_FVTXSB");
+        for (int il = 0; il < NFVTXLAY; il++)
+          tp1f_CNT_FVTXSL[il] = (TProfile*) tp1f_CNT_FVTXSL_z[il]->Clone(Form("tp1f_CNT_FVTXSL%d", il));
+
+        tp1f_BBCS_FVTXS = (TProfile*) tp1f_BBCS_FVTXS_z->Clone("tp1f_BBCS_FVTXS");
+        tp1f_BBCS_FVTXSA = (TProfile*) tp1f_BBCS_FVTXSA_z->Clone("tp1f_BBCS_FVTXSA");
+        tp1f_BBCS_FVTXSB = (TProfile*) tp1f_BBCS_FVTXSB_z->Clone("tp1f_BBCS_FVTXSB");
+        for (int il = 0; il < NFVTXLAY; il++)
+          tp1f_BBCS_FVTXSL[il] = (TProfile*) tp1f_BBCS_FVTXSL_z[il]->Clone(Form("tp1f_BBCS_FVTXSL%d", il));
+
+
+        hvnpt_bbcs_east = (TProfile*) hvnpt_bbcs_east_z->Clone("hvnpt_bbcs_east");
+        hvnpt_bbcs_west = (TProfile*) hvnpt_bbcs_west_z->Clone("hvnpt_bbcs_west");
+        hvnpt_bbcs_both = (TProfile*) hvnpt_bbcs_both_z->Clone("hvnpt_bbcs_both");
+        hvneta_bbcs_east = (TProfile*) hvneta_bbcs_east_z->Clone("hvneta_bbcs_east");
+        hvneta_bbcs_west = (TProfile*) hvneta_bbcs_west_z->Clone("hvneta_bbcs_west");
+        hvneta_bbcs_both = (TProfile*) hvneta_bbcs_both_z->Clone("hvneta_bbcs_both");
+
+        hvnpt_fvtxs_east = (TProfile*) hvnpt_fvtxs_east_z->Clone("hvnpt_fvtxs_east");
+        hvnpt_fvtxs_west = (TProfile*) hvnpt_fvtxs_west_z->Clone("hvnpt_fvtxs_west");
+        hvnpt_fvtxs_both = (TProfile*) hvnpt_fvtxs_both_z->Clone("hvnpt_fvtxs_both");
+        hvneta_fvtxs_east = (TProfile*) hvneta_fvtxs_east_z->Clone("hvneta_fvtxs_east");
+        hvneta_fvtxs_west = (TProfile*) hvneta_fvtxs_west_z->Clone("hvneta_fvtxs_west");
+        hvneta_fvtxs_both = (TProfile*) hvneta_fvtxs_both_z->Clone("hvneta_fvtxs_both");
+
+        hvnpt_fvtxsa_east = (TProfile*) hvnpt_fvtxsa_east_z->Clone("hvnpt_fvtxsa_east");
+        hvnpt_fvtxsa_west = (TProfile*) hvnpt_fvtxsa_west_z->Clone("hvnpt_fvtxsa_west");
+        hvnpt_fvtxsa_both = (TProfile*) hvnpt_fvtxsa_both_z->Clone("hvnpt_fvtxsa_both");
+        // hvneta_fvtxsa_east = (TProfile*) hvneta_fvtxsa_east_z->Clone("hvneta_fvtxsa_east");
+        // hvneta_fvtxsa_west = (TProfile*) hvneta_fvtxsa_west_z->Clone("hvneta_fvtxsa_west");
+        // hvneta_fvtxsa_both = (TProfile*) hvneta_fvtxsa_both_z->Clone("hvneta_fvtxsa_both");
+
+        hvnpt_fvtxsb_east = (TProfile*) hvnpt_fvtxsb_east_z->Clone("hvnpt_fvtxsb_east");
+        hvnpt_fvtxsb_west = (TProfile*) hvnpt_fvtxsb_west_z->Clone("hvnpt_fvtxsb_west");
+        hvnpt_fvtxsb_both = (TProfile*) hvnpt_fvtxsb_both_z->Clone("hvnpt_fvtxsb_both");
+        // hvneta_fvtxsb_east = (TProfile*) hvneta_fvtxsb_east_z->Clone("hvneta_fvtxsb_east");
+        // hvneta_fvtxsb_west = (TProfile*) hvneta_fvtxsb_west_z->Clone("hvneta_fvtxsb_west");
+        // hvneta_fvtxsb_both = (TProfile*) hvneta_fvtxsb_both_z->Clone("hvneta_fvtxsb_both");
+
+        for (int il = 0; il < NFVTXLAY; il++)
+        {
+          hvnpt_fvtxsl_east[il] = (TProfile*) hvnpt_fvtxsl_east_z[il]->Clone(Form("hvnpt_fvtxsl%d_east", il));
+          hvnpt_fvtxsl_west[il] = (TProfile*) hvnpt_fvtxsl_west_z[il]->Clone(Form("hvnpt_fvtxsl%d_west", il));
+          hvnpt_fvtxsl_both[il] = (TProfile*) hvnpt_fvtxsl_both_z[il]->Clone(Form("hvnpt_fvtxsl%d_both", il));
+          // hvneta_fvtxsl_east[il] = (TProfile*) hvneta_fvtxsl_east_z[il]->Clone(Form("hvneta_fvtxsl%d_east", il));
+          // hvneta_fvtxsl_west[il] = (TProfile*) hvneta_fvtxsl_west_z[il]->Clone(Form("hvneta_fvtxsl%d_west", il));
+          // hvneta_fvtxsl_both[il] = (TProfile*) hvneta_fvtxsl_both_z[il]->Clone(Form("hvneta_fvtxsl%d_both", il));
+        }
+
+      }
+      else
+      {
+        tp1f_CNT_BBCS->Add(tp1f_CNT_BBCS_z);
+        tp1f_CNT_FVTXS->Add(tp1f_CNT_FVTXS_z);
+        tp1f_CNT_FVTXSA->Add(tp1f_CNT_FVTXSA_z);
+        tp1f_CNT_FVTXSB->Add(tp1f_CNT_FVTXSB_z);
+        for (int il = 0; il < NFVTXLAY; il++)
+          tp1f_CNT_FVTXSL[il]->Add(tp1f_CNT_FVTXSL_z[il]);
+
+        tp1f_BBCS_FVTXS->Add(tp1f_BBCS_FVTXS_z);
+        tp1f_BBCS_FVTXSA->Add(tp1f_BBCS_FVTXSA_z);
+        tp1f_BBCS_FVTXSB->Add(tp1f_BBCS_FVTXSB_z);
+        for (int il = 0; il < NFVTXLAY; il++)
+          tp1f_BBCS_FVTXSL[il]->Add(tp1f_BBCS_FVTXSL_z[il]);
+
+        hvnpt_bbcs_east->Add(hvnpt_bbcs_east_z);
+        hvnpt_bbcs_west->Add(hvnpt_bbcs_west_z);
+        hvnpt_bbcs_both->Add(hvnpt_bbcs_both_z);
+        hvneta_bbcs_east->Add(hvneta_bbcs_east_z);
+        hvneta_bbcs_west->Add(hvneta_bbcs_west_z);
+        hvneta_bbcs_both->Add(hvneta_bbcs_both_z);
+
+        hvnpt_fvtxs_east->Add(hvnpt_fvtxs_east_z);
+        hvnpt_fvtxs_west->Add(hvnpt_fvtxs_west_z);
+        hvnpt_fvtxs_both->Add(hvnpt_fvtxs_both_z);
+        hvneta_fvtxs_east->Add(hvneta_fvtxs_east_z);
+        hvneta_fvtxs_west->Add(hvneta_fvtxs_west_z);
+        hvneta_fvtxs_both->Add(hvneta_fvtxs_both_z);
+
+        hvnpt_fvtxsa_east->Add(hvnpt_fvtxsa_east_z);
+        hvnpt_fvtxsa_west->Add(hvnpt_fvtxsa_west_z);
+        hvnpt_fvtxsa_both->Add(hvnpt_fvtxsa_both_z);
+        // hvneta_fvtxsa_east->Add(hvneta_fvtxsa_east_z);
+        // hvneta_fvtxsa_west->Add(hvneta_fvtxsa_west_z);
+        // hvneta_fvtxsa_both->Add(hvneta_fvtxsa_both_z);
+
+        hvnpt_fvtxsb_east->Add(hvnpt_fvtxsb_east_z);
+        hvnpt_fvtxsb_west->Add(hvnpt_fvtxsb_west_z);
+        hvnpt_fvtxsb_both->Add(hvnpt_fvtxsb_both_z);
+        // hvneta_fvtxsb_east->Add(hvneta_fvtxsb_east_z);
+        // hvneta_fvtxsb_west->Add(hvneta_fvtxsb_west_z);
+        // hvneta_fvtxsb_both->Add(hvneta_fvtxsb_both_z);
+
+        for (int il = 0; il < NFVTXLAY; il++)
+        {
+          hvnpt_fvtxsl_east[il]->Add(hvnpt_fvtxsl_east_z[il]);
+          hvnpt_fvtxsl_west[il]->Add(hvnpt_fvtxsl_west_z[il]);
+          hvnpt_fvtxsl_both[il]->Add(hvnpt_fvtxsl_both_z[il]);
+          // hvneta_fvtxsl_east[il]->Add(hvneta_fvtxsl_east_z[il]);
+          // hvneta_fvtxsl_west[il]->Add(hvneta_fvtxsl_west_z[il]);
+          // hvneta_fvtxsl_both[il]->Add(hvneta_fvtxsl_both_z[il]);
+        } // il
+
+      }
+
+      // --- calculate ep resolution
+      ValErr CNT_BBCS_z = make_pair(tp1f_CNT_BBCS_z->GetBinContent(1),
+                                    tp1f_CNT_BBCS_z->GetBinError(1));
+      ValErr CNT_FVTXS_z = make_pair(tp1f_CNT_FVTXS_z->GetBinContent(1),
+                                     tp1f_CNT_FVTXS_z->GetBinError(1));
+      ValErr CNT_FVTXSL_z[NFVTXLAY];
+      for (int il = 0; il < NFVTXLAY; il++)
+        CNT_FVTXSL_z[il] = make_pair(tp1f_CNT_FVTXSL_z[il]->GetBinContent(1),
+                                     tp1f_CNT_FVTXSL_z[il]->GetBinError(1));
+
+      ValErr BBCS_FVTXS_z = make_pair(tp1f_BBCS_FVTXS_z->GetBinContent(1),
+                                      tp1f_BBCS_FVTXS_z->GetBinError(1));
+      ValErr BBCS_FVTXSL_z[NFVTXLAY];
+      for (int il = 0; il < NFVTXLAY; il++)
+        BBCS_FVTXSL_z[il] = make_pair(tp1f_BBCS_FVTXSL_z[il]->GetBinContent(1),
+                                      tp1f_BBCS_FVTXSL_z[il]->GetBinError(1));
+
+
+      float reso_BBCS_z = (calc_epreso(CNT_BBCS_z, BBCS_FVTXS_z, CNT_FVTXS_z)).first;
+      float reso_FVTXS_z = (calc_epreso(CNT_FVTXS_z, BBCS_FVTXS_z, CNT_BBCS_z)).first;
+      float reso_FVTXSL_z[NFVTXLAY];
+      for (int il = 0; il < NFVTXLAY; il++)
+        reso_FVTXSL_z[il] = (calc_epreso(CNT_FVTXSL_z[il], BBCS_FVTXSL_z[il], CNT_BBCS_z)).first;
+
+      // --- correct ep
+      hvnpt_bbcs_east_z->Scale(1. / reso_BBCS_z);
+      hvnpt_bbcs_west_z->Scale(1. / reso_BBCS_z);
+      hvnpt_bbcs_both_z->Scale(1. / reso_BBCS_z);
+
+      hvnpt_fvtxs_east_z->Scale(1. / reso_FVTXS_z);
+      hvnpt_fvtxs_west_z->Scale(1. / reso_FVTXS_z);
+      hvnpt_fvtxs_both_z->Scale(1. / reso_FVTXS_z);
+
+      for (int il = 0; il < NFVTXLAY; il++)
+      {
+        hvnpt_fvtxsl_east_z[il]->Scale(1. / reso_FVTXSL_z[il]);
+        hvnpt_fvtxsl_west_z[il]->Scale(1. / reso_FVTXSL_z[il]);
+        hvnpt_fvtxsl_both_z[il]->Scale(1. / reso_FVTXSL_z[il]);
+      }
+
+      // --- sum corrections
+      if ( iz == 0 )
+      {
+        hvnpt_bbcs_east_zres = (TProfile*) hvnpt_bbcs_east_z->Clone("hvnpt_bbcs_east_zres");
+        hvnpt_bbcs_west_zres = (TProfile*) hvnpt_bbcs_west_z->Clone("hvnpt_bbcs_west_zres");
+        hvnpt_bbcs_both_zres = (TProfile*) hvnpt_bbcs_both_z->Clone("hvnpt_bbcs_both_zres");
+
+        hvnpt_fvtxs_east_zres = (TProfile*) hvnpt_fvtxs_east_z->Clone("hvnpt_fvtxs_east_zres");
+        hvnpt_fvtxs_west_zres = (TProfile*) hvnpt_fvtxs_west_z->Clone("hvnpt_fvtxs_west_zres");
+        hvnpt_fvtxs_both_zres = (TProfile*) hvnpt_fvtxs_both_z->Clone("hvnpt_fvtxs_both_zres");
+
+        for (int il = 0; il < NFVTXLAY; il++)
+        {
+          hvnpt_fvtxsl_east_zres[il] = (TProfile*) hvnpt_fvtxsl_east_z[il]->Clone(Form("hvnpt_fvtxsl%d_east_zres", il));
+          hvnpt_fvtxsl_west_zres[il] = (TProfile*) hvnpt_fvtxsl_west_z[il]->Clone(Form("hvnpt_fvtxsl%d_west_zres", il));
+          hvnpt_fvtxsl_both_zres[il] = (TProfile*) hvnpt_fvtxsl_both_z[il]->Clone(Form("hvnpt_fvtxsl%d_both_zres", il));
+        }
+      }
+      else
+      {
+        hvnpt_bbcs_east_zres->Add(hvnpt_bbcs_east_z);
+        hvnpt_bbcs_west_zres->Add(hvnpt_bbcs_west_z);
+        hvnpt_bbcs_both_zres->Add(hvnpt_bbcs_both_z);
+
+        hvnpt_fvtxs_east_zres->Add(hvnpt_fvtxs_east_z);
+        hvnpt_fvtxs_west_zres->Add(hvnpt_fvtxs_west_z);
+        hvnpt_fvtxs_both_zres->Add(hvnpt_fvtxs_both_z);
+
+        for (int il = 0; il < NFVTXLAY; il++)
+        {
+          hvnpt_fvtxsl_east_zres[il]->Add(hvnpt_fvtxsl_east_z[il]);
+          hvnpt_fvtxsl_west_zres[il]->Add(hvnpt_fvtxsl_west_z[il]);
+          hvnpt_fvtxsl_both_zres[il]->Add(hvnpt_fvtxsl_both_z[il]);
+        }
+      }
+
+    } // iz
+
     // ---
     // --- Calculate EP resolutions
     // ---
 
-    // --- get histograms from file
-    file->cd();
-    TProfile* tp1f_BBCS_FVTXN = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_BBC_FVTXN", ic, harmonic));
-    if (!tp1f_BBCS_FVTXN)
-    {
-      cout << "ERROR!! Unable to find " << Form("tp1f_c%d_reso%d_BBC_FVTXN", ic, harmonic)
-           << " in file" << endl;
-      return;
-    }
-    TProfile* tp1f_BBCS_FVTXS = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_BBC_FVTX", ic, harmonic));
-    TProfile* tp1f_BBCS_CNT = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_BBC_CNT", ic, harmonic));
-    TProfile* tp1f_CNT_FVTXS = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_CNT_FVTX", ic, harmonic));
-    TProfile* tp1f_CNT_FVTXN = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_CNT_FVTXN", ic, harmonic));
+    ValErr CNT_BBCS = make_pair(tp1f_CNT_BBCS->GetBinContent(1),
+                                tp1f_CNT_BBCS->GetBinError(1));
+    ValErr CNT_FVTXS = make_pair(tp1f_CNT_FVTXS->GetBinContent(1),
+                                 tp1f_CNT_FVTXS->GetBinError(1));
+    ValErr CNT_FVTXSA = make_pair(tp1f_CNT_FVTXSA->GetBinContent(1),
+                                  tp1f_CNT_FVTXSA->GetBinError(1));
+    ValErr CNT_FVTXSB = make_pair(tp1f_CNT_FVTXSB->GetBinContent(1),
+                                  tp1f_CNT_FVTXSB->GetBinError(1));
+    ValErr CNT_FVTXSL[NFVTXLAY];
+    for (int il = 0; il < NFVTXLAY; il++)
+      CNT_FVTXSL[il] = make_pair(tp1f_CNT_FVTXSL[il]->GetBinContent(1),
+                                 tp1f_CNT_FVTXSL[il]->GetBinError(1));
 
-    //-- get means & errors
-    float float_BBCS_FVTXN = tp1f_BBCS_FVTXN->GetBinContent(1);
-    float float_BBCS_FVTXS = tp1f_BBCS_FVTXS->GetBinContent(1);
-    float float_BBCS_CNT = tp1f_BBCS_CNT->GetBinContent(1);
-    float float_CNT_FVTXS = tp1f_CNT_FVTXS->GetBinContent(1);
-    float float_CNT_FVTXN = tp1f_CNT_FVTXN->GetBinContent(1);
+    ValErr BBCS_FVTXS = make_pair(tp1f_BBCS_FVTXS->GetBinContent(1),
+                                  tp1f_BBCS_FVTXS->GetBinError(1));
+    ValErr BBCS_FVTXSA = make_pair(tp1f_BBCS_FVTXSA->GetBinContent(1),
+                                   tp1f_BBCS_FVTXSA->GetBinError(1));
+    ValErr BBCS_FVTXSB = make_pair(tp1f_BBCS_FVTXSB->GetBinContent(1),
+                                   tp1f_BBCS_FVTXSB->GetBinError(1));
+    ValErr BBCS_FVTXSL[NFVTXLAY];
+    for (int il = 0; il < NFVTXLAY; il++)
+      BBCS_FVTXSL[il] = make_pair(tp1f_BBCS_FVTXSL[il]->GetBinContent(1),
+                                  tp1f_BBCS_FVTXSL[il]->GetBinError(1));
 
 
-    float reso_BBCS = sqrt((float_BBCS_CNT * float_BBCS_FVTXS) / float_CNT_FVTXS); // BCBS/CS
-    float reso_FVTXS = sqrt((float_CNT_FVTXS * float_BBCS_FVTXS) / float_BBCS_CNT); // CSBS/BC
-    float reso_FVTXN = sqrt((float_CNT_FVTXN * float_BBCS_FVTXN) / float_BBCS_CNT); // CNBN/BC
+    float reso_BBCS = (calc_epreso(CNT_BBCS, BBCS_FVTXS, CNT_FVTXS)).first;
+    float reso_FVTXS = (calc_epreso(CNT_FVTXS, BBCS_FVTXS, CNT_BBCS)).first;
+    float reso_FVTXSA = (calc_epreso(CNT_FVTXSA, BBCS_FVTXSA, CNT_BBCS)).first;
+    float reso_FVTXSB = (calc_epreso(CNT_FVTXSB, BBCS_FVTXSB, CNT_BBCS)).first;
+    float reso_FVTXSL[NFVTXLAY];
+    for (int il = 0; il < NFVTXLAY; il++)
+      reso_FVTXSL[il] = (calc_epreso(CNT_FVTXSL[il], BBCS_FVTXSL[il], CNT_BBCS)).first;
 
 
     if ( energy == 20 )
@@ -119,196 +444,167 @@ void doenergy(int energy, int harmonic)
 
     cout << "bbc resolution is     " << reso_BBCS << endl;
     cout << "fvtx resolution is    " << reso_FVTXS << endl;
-    cout << "fvtxN resolution is   " << reso_FVTXN << endl;
-
-    //-- resolution for segmented FVTX
-    TProfile* tp1f_BBCS_FVTXSA = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_BBC_FVTXSA", ic, harmonic));
-    TProfile* tp1f_BBCS_FVTXSB = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_BBC_FVTXSB", ic, harmonic));
-    TProfile* tp1f_BBCS_FVTXSL[NFVTXLAY];
-    for (int il = 0; il < NFVTXLAY; il++)
-      tp1f_BBCS_FVTXSL[il] = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_BBC_FVTXSL%i", ic, harmonic, il));
-
-    TProfile* tp1f_CNT_FVTXSA = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_CNT_FVTXSA", ic, harmonic));
-    TProfile* tp1f_CNT_FVTXSB = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_CNT_FVTXSB", ic, harmonic));
-    TProfile* tp1f_CNT_FVTXSL[NFVTXLAY];
-    for (int il = 0; il < NFVTXLAY; il++)
-      tp1f_CNT_FVTXSL[il] = (TProfile*)file->Get(Form("tp1f_c%d_reso%d_CNT_FVTXSL%i", ic, harmonic, il));
-
-    float float_BBCS_FVTXSA = tp1f_BBCS_FVTXSA->GetBinContent(1);
-    float float_BBCS_FVTXSB = tp1f_BBCS_FVTXSB->GetBinContent(1);
-    float float_BBCS_FVTXSL[NFVTXLAY] = {0};
-    for (int il = 0; il < NFVTXLAY; il++)
-      float_BBCS_FVTXSL[il] = tp1f_BBCS_FVTXSL[il]->GetBinContent(1);
-
-    float float_CNT_FVTXSA = tp1f_CNT_FVTXSA->GetBinContent(1);
-    float float_CNT_FVTXSB = tp1f_CNT_FVTXSB->GetBinContent(1);
-    float float_CNT_FVTXSL[NFVTXLAY] = {0};
-    for (int il = 0; il < NFVTXLAY; il++)
-      float_CNT_FVTXSL[il] = tp1f_CNT_FVTXSL[il]->GetBinContent(1);
-
-    float reso_FVTXSA = sqrt((float_CNT_FVTXSA * float_BBCS_FVTXSA) / float_BBCS_CNT);
-    float reso_FVTXSB = sqrt((float_CNT_FVTXSB * float_BBCS_FVTXSB) / float_BBCS_CNT);
-    float reso_FVTXSL[NFVTXLAY] = {0};
-    for (int il = 0; il < NFVTXLAY; il++)
-      reso_FVTXSL[il] = sqrt((float_CNT_FVTXSL[il] * float_BBCS_FVTXSL[il]) / float_BBCS_CNT);
-
-
     cout << "fvtxsA resolution is  " << reso_FVTXSA << endl;
     cout << "fvtxsB resolution is  " << reso_FVTXSB << endl;
     for (int il = 0; il < NFVTXLAY; il++)
       cout << "fvtxsL" << il << " resolution is " << reso_FVTXSL[il] << endl;
 
 
-
-    // --- FVTXS EP
-    TProfile* hvn_fvtxs_east = (TProfile*)file->Get(Form("fvtxs_v%d_east_docalib_cent%d", harmonic, ic));
-    hvn_fvtxs_east->Scale(1.0 / reso_FVTXS);
-    TProfile* hvn_fvtxs_west = (TProfile*)file->Get(Form("fvtxs_v%d_west_docalib_cent%d", harmonic, ic));
-    hvn_fvtxs_west->Scale(1.0 / reso_FVTXS);
-    TProfile* hvn_fvtxs = (TProfile*)file->Get(Form("fvtxs_v%d_both_docalib_cent%d", harmonic, ic));
-    hvn_fvtxs->Scale(1.0 / reso_FVTXS);
-
-    float blpt = hvn_fvtxs->FindBin(lopt);
-    th1d_vncent_fvtxs_lowpt->SetBinContent(ic + 1, hvn_fvtxs->GetBinContent(blpt));
-    th1d_vncent_fvtxs_lowpt->SetBinError(ic + 1, hvn_fvtxs->GetBinError(blpt));
-
-    float bhpt = hvn_fvtxs->FindBin(hipt);
-    th1d_vncent_fvtxs_highpt->SetBinContent(ic + 1, hvn_fvtxs->GetBinContent(bhpt));
-    th1d_vncent_fvtxs_highpt->SetBinError(ic + 1, hvn_fvtxs->GetBinError(bhpt));
-
-
-    TProfile* hvneta_fvtxs_east = (TProfile*)file->Get(Form("fvtxs_v%deta_east_docalib_cent%d", harmonic, ic));
-    hvneta_fvtxs_east->Scale(1.0 / reso_FVTXS);
-    TProfile* hvneta_fvtxs_west = (TProfile*)file->Get(Form("fvtxs_v%deta_west_docalib_cent%d", harmonic, ic));
-    hvneta_fvtxs_west->Scale(1.0 / reso_FVTXS);
-    TProfile* hvneta_fvtxs = (TProfile*)file->Get(Form("fvtxs_v%deta_both_docalib_cent%d", harmonic, ic));
-    hvneta_fvtxs->Scale(1.0 / reso_FVTXS);
-
-    // --- BBCS EP
-    TProfile* hvn_bbcs_east = (TProfile*)file->Get(Form("bbcs_v%d_east_docalib_cent%d", harmonic, ic));
-    hvn_bbcs_east->Scale(1.0 / reso_BBCS);
-    TProfile* hvn_bbcs_west = (TProfile*)file->Get(Form("bbcs_v%d_west_docalib_cent%d", harmonic, ic));
-    hvn_bbcs_west->Scale(1.0 / reso_BBCS);
-    TProfile* hvn_bbcs = (TProfile*)file->Get(Form("bbcs_v%d_both_docalib_cent%d", harmonic, ic));
-    hvn_bbcs->Scale(1.0 / reso_BBCS);
-
-    TProfile* hvneta_bbcs_east = (TProfile*)file->Get(Form("bbcs_v%deta_east_docalib_cent%d", harmonic, ic));
+    // --- divide by resolution
+    hvnpt_bbcs_east->Scale(1.0 / reso_BBCS);
+    hvnpt_bbcs_west->Scale(1.0 / reso_BBCS);
+    hvnpt_bbcs_both->Scale(1.0 / reso_BBCS);
     hvneta_bbcs_east->Scale(1.0 / reso_BBCS);
-    TProfile* hvneta_bbcs_west = (TProfile*)file->Get(Form("bbcs_v%deta_west_docalib_cent%d", harmonic, ic));
     hvneta_bbcs_west->Scale(1.0 / reso_BBCS);
-    TProfile* hvneta_bbcs = (TProfile*)file->Get(Form("bbcs_v%deta_both_docalib_cent%d", harmonic, ic));
-    hvneta_bbcs->Scale(1.0 / reso_BBCS);
+    hvneta_bbcs_both->Scale(1.0 / reso_BBCS);
 
-    // --- FVTXN EP
-    TProfile* hvn_fvtxn_east = (TProfile*)file->Get(Form("fvtxn_v%d_east_docalib_cent%d", harmonic, ic));
-    hvn_fvtxn_east->Scale(1.0 / reso_FVTXN);
-    TProfile* hvn_fvtxn_west = (TProfile*)file->Get(Form("fvtxn_v%d_west_docalib_cent%d", harmonic, ic));
-    hvn_fvtxn_west->Scale(1.0 / reso_FVTXN);
-    TProfile* hvn_fvtxn = (TProfile*)file->Get(Form("fvtxn_v%d_both_docalib_cent%d", harmonic, ic));
-    hvn_fvtxn->Scale(1.0 / reso_FVTXN);
+    hvnpt_fvtxs_east->Scale(1.0 / reso_FVTXS);
+    hvnpt_fvtxs_west->Scale(1.0 / reso_FVTXS);
+    hvnpt_fvtxs_both->Scale(1.0 / reso_FVTXS);
+    hvneta_fvtxs_east->Scale(1.0 / reso_FVTXS);
+    hvneta_fvtxs_west->Scale(1.0 / reso_FVTXS);
+    hvneta_fvtxs_both->Scale(1.0 / reso_FVTXS);
 
-    TProfile* hvneta_fvtxn_east = (TProfile*)file->Get(Form("fvtxn_v%deta_east_docalib_cent%d", harmonic, ic));
-    hvneta_fvtxn_east->Scale(1.0 / reso_FVTXN);
-    TProfile* hvneta_fvtxn_west = (TProfile*)file->Get(Form("fvtxn_v%deta_west_docalib_cent%d", harmonic, ic));
-    hvneta_fvtxn_west->Scale(1.0 / reso_FVTXN);
-    TProfile* hvneta_fvtxn = (TProfile*)file->Get(Form("fvtxn_v%deta_both_docalib_cent%d", harmonic, ic));
-    hvneta_fvtxn->Scale(1.0 / reso_FVTXN);
+    hvnpt_fvtxsa_east->Scale(1.0 / reso_FVTXSA);
+    hvnpt_fvtxsa_west->Scale(1.0 / reso_FVTXSA);
+    hvnpt_fvtxsa_both->Scale(1.0 / reso_FVTXSA);
+    // hvneta_fvtxsa_east->Scale(1.0 / reso_FVTXSA);
+    // hvneta_fvtxsa_west->Scale(1.0 / reso_FVTXSA);
+    // hvneta_fvtxsa_both->Scale(1.0 / reso_FVTXSA);
 
+    hvnpt_fvtxsb_east->Scale(1.0 / reso_FVTXSB);
+    hvnpt_fvtxsb_west->Scale(1.0 / reso_FVTXSB);
+    hvnpt_fvtxsb_both->Scale(1.0 / reso_FVTXSB);
+    // hvneta_fvtxsb_east->Scale(1.0 / reso_FVTXSB);
+    // hvneta_fvtxsb_west->Scale(1.0 / reso_FVTXSB);
+    // hvneta_fvtxsb_both->Scale(1.0 / reso_FVTXSB);
 
-    // --- FVTXS segmented EP
-    TProfile* hvn_fvtxsa_east = (TProfile*)file->Get(Form("fvtxsa_v%d_east_docalib_cent%d", harmonic, ic));
-    hvn_fvtxsa_east->Scale(1.0 / reso_FVTXSA);
-    TProfile* hvn_fvtxsa_west = (TProfile*)file->Get(Form("fvtxsa_v%d_west_docalib_cent%d", harmonic, ic));
-    hvn_fvtxsa_west->Scale(1.0 / reso_FVTXSA);
-    TProfile* hvn_fvtxsa = (TProfile*)file->Get(Form("fvtxsa_v%d_both_docalib_cent%d", harmonic, ic));
-    hvn_fvtxsa->Scale(1.0 / reso_FVTXSA);
-
-    TProfile* hvn_fvtxsb_east = (TProfile*)file->Get(Form("fvtxsb_v%d_east_docalib_cent%d", harmonic, ic));
-    hvn_fvtxsb_east->Scale(1.0 / reso_FVTXSB);
-    TProfile* hvn_fvtxsb_west = (TProfile*)file->Get(Form("fvtxsb_v%d_west_docalib_cent%d", harmonic, ic));
-    hvn_fvtxsb_west->Scale(1.0 / reso_FVTXSB);
-    TProfile* hvn_fvtxsb = (TProfile*)file->Get(Form("fvtxsb_v%d_both_docalib_cent%d", harmonic, ic));
-    hvn_fvtxsb->Scale(1.0 / reso_FVTXSB);
-
-    TProfile *hvn_fvtxsl_east[NFVTXLAY];
-    TProfile *hvn_fvtxsl_west[NFVTXLAY];
-    TProfile *hvn_fvtxsl[NFVTXLAY];
     for (int il = 0; il < NFVTXLAY; il++)
     {
-      hvn_fvtxsl_east[il] = (TProfile*)file->Get(Form("fvtxsl%i_v%d_east_docalib_cent%d", il, harmonic, ic));
-      hvn_fvtxsl_east[il]->Scale(1.0 / reso_FVTXSL[il]);
-      hvn_fvtxsl_west[il] = (TProfile*)file->Get(Form("fvtxsl%i_v%d_west_docalib_cent%d", il, harmonic, ic));
-      hvn_fvtxsl_west[il]->Scale(1.0 / reso_FVTXSL[il]);
-      hvn_fvtxsl[il] = (TProfile*)file->Get(Form("fvtxsl%i_v%d_both_docalib_cent%d", il, harmonic, ic));
-      hvn_fvtxsl[il]->Scale(1.0 / reso_FVTXSL[il]);
+      hvnpt_fvtxsl_east[il]->Scale(1.0 / reso_FVTXSL[il]);
+      hvnpt_fvtxsl_west[il]->Scale(1.0 / reso_FVTXSL[il]);
+      hvnpt_fvtxsl_both[il]->Scale(1.0 / reso_FVTXSL[il]);
+      // hvneta_fvtxsl_east[il]->Scale(1.0 / reso_FVTXSL[il]);
+      // hvneta_fvtxsl_west[il]->Scale(1.0 / reso_FVTXSL[il]);
+      // hvneta_fvtxsl_both[il]->Scale(1.0 / reso_FVTXSL[il]);
     }
 
+
+    float blpt = hvnpt_fvtxs_both->FindBin(lopt);
+    th1d_vncent_fvtxs_lowpt->SetBinContent(ic + 1, hvnpt_fvtxs_both->GetBinContent(blpt));
+    th1d_vncent_fvtxs_lowpt->SetBinError(ic + 1, hvnpt_fvtxs_both->GetBinError(blpt));
+
+    float bhpt = hvnpt_fvtxs_both->FindBin(hipt);
+    th1d_vncent_fvtxs_highpt->SetBinContent(ic + 1, hvnpt_fvtxs_both->GetBinContent(bhpt));
+    th1d_vncent_fvtxs_highpt->SetBinError(ic + 1, hvnpt_fvtxs_both->GetBinError(bhpt));
+
+
+    // --- write to file
     outfile->cd();
-    hvn_bbcs->SetName(Form("tprofile_v%d_pT_eventplane_bbcs_c%d_%d", harmonic, ic, energy));
-    hvn_bbcs_east->SetName(Form("tprofile_v%d_pT_east_eventplane_bbcs_c%d_%d", harmonic, ic, energy));
-    hvn_bbcs_west->SetName(Form("tprofile_v%d_pT_west_eventplane_bbcs_c%d_%d", harmonic, ic, energy));
-    hvn_fvtxs->SetName(Form("tprofile_v%d_pT_eventplane_fvtxs_c%d_%d", harmonic, ic, energy));
-    hvn_fvtxs_east->SetName(Form("tprofile_v%d_pT_east_eventplane_fvtxs_c%d_%d", harmonic, ic, energy));
-    hvn_fvtxs_west->SetName(Form("tprofile_v%d_pT_west_eventplane_fvtxs_c%d_%d", harmonic, ic, energy));
-    hvn_fvtxn->SetName(Form("tprofile_v%d_pT_eventplane_fvtxn_c%d_%d", harmonic, ic, energy));
-    hvn_fvtxn_east->SetName(Form("tprofile_v%d_pT_east_eventplane_fvtxn_c%d_%d", harmonic, ic, energy));
-    hvn_fvtxn_west->SetName(Form("tprofile_v%d_pT_west_eventplane_fvtxn_c%d_%d", harmonic, ic, energy));
-    hvneta_bbcs->SetName(Form("tprofile_v%d_eta_eventplane_bbcs_c%d_%d", harmonic, ic, energy));
+
+    hvnpt_bbcs_both->SetName(Form("tprofile_v%d_pT_eventplane_bbcs_c%d_%d", harmonic, ic, energy));
+    hvnpt_bbcs_east->SetName(Form("tprofile_v%d_pT_east_eventplane_bbcs_c%d_%d", harmonic, ic, energy));
+    hvnpt_bbcs_west->SetName(Form("tprofile_v%d_pT_west_eventplane_bbcs_c%d_%d", harmonic, ic, energy));
+    hvneta_bbcs_both->SetName(Form("tprofile_v%d_eta_eventplane_bbcs_c%d_%d", harmonic, ic, energy));
     hvneta_bbcs_east->SetName(Form("tprofile_v%d_eta_east_eventplane_bbcs_c%d_%d", harmonic, ic, energy));
     hvneta_bbcs_west->SetName(Form("tprofile_v%d_eta_west_eventplane_bbcs_c%d_%d", harmonic, ic, energy));
-    hvneta_fvtxs->SetName(Form("tprofile_v%d_eta_eventplane_fvtxs_c%d_%d", harmonic, ic, energy));
+
+    hvnpt_fvtxs_both->SetName(Form("tprofile_v%d_pT_eventplane_fvtxs_c%d_%d", harmonic, ic, energy));
+    hvnpt_fvtxs_east->SetName(Form("tprofile_v%d_pT_east_eventplane_fvtxs_c%d_%d", harmonic, ic, energy));
+    hvnpt_fvtxs_west->SetName(Form("tprofile_v%d_pT_west_eventplane_fvtxs_c%d_%d", harmonic, ic, energy));
+    hvneta_fvtxs_both->SetName(Form("tprofile_v%d_eta_eventplane_fvtxs_c%d_%d", harmonic, ic, energy));
     hvneta_fvtxs_east->SetName(Form("tprofile_v%d_eta_east_eventplane_fvtxs_c%d_%d", harmonic, ic, energy));
     hvneta_fvtxs_west->SetName(Form("tprofile_v%d_eta_west_eventplane_fvtxs_c%d_%d", harmonic, ic, energy));
-    hvneta_fvtxn->SetName(Form("tprofile_v%d_eta_eventplane_fvtxn_c%d_%d", harmonic, ic, energy));
-    hvneta_fvtxn_east->SetName(Form("tprofile_v%d_eta_east_eventplane_fvtxn_c%d_%d", harmonic, ic, energy));
-    hvneta_fvtxn_west->SetName(Form("tprofile_v%d_eta_west_eventplane_fvtxn_c%d_%d", harmonic, ic, energy));
 
-    hvn_bbcs->Write();
-    hvn_bbcs_east->Write();
-    hvn_bbcs_west->Write();
-    hvneta_bbcs->Write();
+    hvnpt_fvtxsa_both->SetName(Form("tprofile_v%d_pT_eventplane_fvtxsa_c%d_%d", harmonic, ic, energy));
+    hvnpt_fvtxsa_east->SetName(Form("tprofile_v%d_pT_east_eventplane_fvtxsa_c%d_%d", harmonic, ic, energy));
+    hvnpt_fvtxsa_west->SetName(Form("tprofile_v%d_pT_west_eventplane_fvtxsa_c%d_%d", harmonic, ic, energy));
+    // hvneta_fvtxsa_both->SetName(Form("tprofile_v%d_eta_eventplane_fvtxsa_c%d_%d", harmonic, ic, energy));
+    // hvneta_fvtxsa_east->SetName(Form("tprofile_v%d_eta_east_eventplane_fvtxsa_c%d_%d", harmonic, ic, energy));
+    // hvneta_fvtxsa_west->SetName(Form("tprofile_v%d_eta_west_eventplane_fvtxsa_c%d_%d", harmonic, ic, energy));
+
+    hvnpt_fvtxsb_both->SetName(Form("tprofile_v%d_pT_eventplane_fvtxsb_c%d_%d", harmonic, ic, energy));
+    hvnpt_fvtxsb_east->SetName(Form("tprofile_v%d_pT_east_eventplane_fvtxsb_c%d_%d", harmonic, ic, energy));
+    hvnpt_fvtxsb_west->SetName(Form("tprofile_v%d_pT_west_eventplane_fvtxsb_c%d_%d", harmonic, ic, energy));
+    // hvneta_fvtxsb_both->SetName(Form("tprofile_v%d_eta_eventplane_fvtxsb_c%d_%d", harmonic, ic, energy));
+    // hvneta_fvtxsb_east->SetName(Form("tprofile_v%d_eta_east_eventplane_fvtxsb_c%d_%d", harmonic, ic, energy));
+    // hvneta_fvtxsb_west->SetName(Form("tprofile_v%d_eta_west_eventplane_fvtxsb_c%d_%d", harmonic, ic, energy));
+
+    for (int il = 0; il < NFVTXLAY; il++)
+    {
+      hvnpt_fvtxsl_both[il]->SetName(Form("tprofile_v%d_pT_eventplane_fvtxsl%d_c%d_%d", harmonic, il, ic, energy));
+      hvnpt_fvtxsl_east[il]->SetName(Form("tprofile_v%d_pT_east_eventplane_fvtxsl%d_c%d_%d", harmonic, il, ic, energy));
+      hvnpt_fvtxsl_west[il]->SetName(Form("tprofile_v%d_pT_west_eventplane_fvtxsl%d_c%d_%d", harmonic, il, ic, energy));
+      // hvneta_fvtxsl_both[il]->SetName(Form("tprofile_v%d_eta_eventplane_fvtxsl%d_c%d_%d", harmonic, il, ic, energy));
+      // hvneta_fvtxsl_east[il]->SetName(Form("tprofile_v%d_eta_east_eventplane_fvtxsl%d_c%d_%d", harmonic, il, ic, energy));
+      // hvneta_fvtxsl_west[il]->SetName(Form("tprofile_v%d_eta_west_eventplane_fvtxsl%d_c%d_%d", harmonic, il, ic, energy));
+    } // il
+
+    hvnpt_bbcs_east_zres->SetName(Form("tprofile_v%d_pT_east_eventplane_bbcs_zres_c%d_%d", harmonic, ic, energy));
+    hvnpt_bbcs_west_zres->SetName(Form("tprofile_v%d_pT_west_eventplane_bbcs_zres_c%d_%d", harmonic, ic, energy));
+    hvnpt_bbcs_both_zres->SetName(Form("tprofile_v%d_pT_eventplane_bbcs_zres_c%d_%d", harmonic, ic, energy));
+
+    hvnpt_fvtxs_east_zres->SetName(Form("tprofile_v%d_pT_east_eventplane_fvtxs_zres_c%d_%d", harmonic, ic, energy));
+    hvnpt_fvtxs_west_zres->SetName(Form("tprofile_v%d_pT_west_eventplane_fvtxs_zres_c%d_%d", harmonic, ic, energy));
+    hvnpt_fvtxs_both_zres->SetName(Form("tprofile_v%d_pT_eventplane_fvtxs_zres_c%d_%d", harmonic, ic, energy));
+
+    for (int il = 0; il < NFVTXLAY; il++)
+    {
+      hvnpt_fvtxsl_east_zres[il]->SetName(Form("tprofile_v%d_pT_east_eventplane_fvtxsl%d_zres_c%d_%d", harmonic, il, ic, energy));
+      hvnpt_fvtxsl_west_zres[il]->SetName(Form("tprofile_v%d_pT_west_eventplane_fvtxsl%d_zres_c%d_%d", harmonic, il, ic, energy));
+      hvnpt_fvtxsl_both_zres[il]->SetName(Form("tprofile_v%d_pT_eventplane_fvtxsl%d_zres_c%d_%d", harmonic, il, ic, energy));
+    } // il
+
+    hvnpt_bbcs_east->Write();
+    hvnpt_bbcs_west->Write();
+    hvnpt_bbcs_both->Write();
     hvneta_bbcs_east->Write();
     hvneta_bbcs_west->Write();
+    hvneta_bbcs_both->Write();
 
-    hvn_fvtxs->Write();
-    hvn_fvtxs_east->Write();
-    hvn_fvtxs_west->Write();
-    hvneta_fvtxs->Write();
+    hvnpt_fvtxs_east->Write();
+    hvnpt_fvtxs_west->Write();
+    hvnpt_fvtxs_both->Write();
     hvneta_fvtxs_east->Write();
     hvneta_fvtxs_west->Write();
+    hvneta_fvtxs_both->Write();
 
-    hvn_fvtxn->Write();
-    hvn_fvtxn_east->Write();
-    hvn_fvtxn_west->Write();
-    hvneta_fvtxn->Write();
-    hvneta_fvtxn_east->Write();
-    hvneta_fvtxn_west->Write();
+    hvnpt_fvtxsa_east->Write();
+    hvnpt_fvtxsa_west->Write();
+    hvnpt_fvtxsa_both->Write();
+    // hvneta_fvtxsa_east->Write();
+    // hvneta_fvtxsa_west->Write();
+    // hvneta_fvtxsa_both->Write();
 
-    hvn_fvtxsa_east->SetName(Form("tprofile_v%d_pT_east_eventplane_fvtxsa_c%d_%d", harmonic, ic, energy));
-    hvn_fvtxsa_west->SetName(Form("tprofile_v%d_pT_west_eventplane_fvtxsa_c%d_%d", harmonic, ic, energy));
-    hvn_fvtxsa->SetName(Form("tprofile_v%d_pT_eventplane_fvtxsa_c%d_%d", harmonic, ic, energy));
-    hvn_fvtxsb_east->SetName(Form("tprofile_v%d_pT_east_eventplane_fvtxsb_c%d_%d", harmonic, ic, energy));
-    hvn_fvtxsb_west->SetName(Form("tprofile_v%d_pT_west_eventplane_fvtxsb_c%d_%d", harmonic, ic, energy));
-    hvn_fvtxsb->SetName(Form("tprofile_v%d_pT_eventplane_fvtxsb_c%d_%d", harmonic, ic, energy));
+    hvnpt_fvtxsb_east->Write();
+    hvnpt_fvtxsb_west->Write();
+    hvnpt_fvtxsb_both->Write();
+    // hvneta_fvtxsb_east->Write();
+    // hvneta_fvtxsb_west->Write();
+    // hvneta_fvtxsb_both->Write();
+
+    hvnpt_bbcs_east_zres->Write();
+    hvnpt_bbcs_west_zres->Write();
+    hvnpt_bbcs_both_zres->Write();
+
+    hvnpt_fvtxs_east_zres->Write();
+    hvnpt_fvtxs_west_zres->Write();
+    hvnpt_fvtxs_both_zres->Write();
+
     for (int il = 0; il < NFVTXLAY; il++)
     {
-      hvn_fvtxsl_east[il]->SetName(Form("tprofile_v%d_pT_east_eventplane_fvtxsl%i_c%d_%d", harmonic, il, ic, energy));
-      hvn_fvtxsl_west[il]->SetName(Form("tprofile_v%d_pT_west_eventplane_fvtxsl%i_c%d_%d", harmonic, il, ic, energy));
-      hvn_fvtxsl[il]->SetName(Form("tprofile_v%d_pT_eventplane_fvtxsl%i_c%d_%d", harmonic, il, ic, energy));
+      hvnpt_fvtxsl_east[il]->Write();
+      hvnpt_fvtxsl_west[il]->Write();
+      hvnpt_fvtxsl_both[il]->Write();
+      // hvneta_fvtxsl_east[il]->Write();
+      // hvneta_fvtxsl_west[il]->Write();
+      // hvneta_fvtxsl_both[il]->Write();
+
+      hvnpt_fvtxsl_east_zres[il]->Write();
+      hvnpt_fvtxsl_west_zres[il]->Write();
+      hvnpt_fvtxsl_both_zres[il]->Write();
     }
 
-    hvn_fvtxsa_east->Write();
-    hvn_fvtxsa_west->Write();
-    hvn_fvtxsa->Write();
-    hvn_fvtxsb_east->Write();
-    hvn_fvtxsb_west->Write();
-    hvn_fvtxsb->Write();
-    for (int il = 0; il < NFVTXLAY; il++)
-    {
-      hvn_fvtxsl_east[il]->Write();
-      hvn_fvtxsl_west[il]->Write();
-      hvn_fvtxsl[il]->Write();
-    }
 
   } // ic
 
@@ -320,369 +616,6 @@ void doenergy(int energy, int harmonic)
   th1d_vncent_fvtxs_lowpt->Write();
   th1d_vncent_fvtxs_highpt->Write();
 
-  // // ---
-
-
-  // // ---
-
-  // TProfile* tp1f_bbc_cnt = (TProfile*)file->Get(Form("tp1f_reso%d_BBC_CNT", harmonic));
-  // TProfile* tp1f_cnt_fvtx = (TProfile*)file->Get(Form("tp1f_reso%d_CNT_FVTX", harmonic));
-  // TProfile* tp1f_cnt_fvtxN = (TProfile*)file->Get(Form("tp1f_reso%d_CNT_FVTXN", harmonic));
-
-  // float float_bbc_cnt = tp1f_bbc_cnt->GetBinContent(1);
-  // float float_cnt_fvtx = tp1f_cnt_fvtx->GetBinContent(1);
-  // float float_cnt_fvtxN = tp1f_cnt_fvtxN->GetBinContent(1);
-
-  // cout << "bbc-cnt " << float_bbc_cnt << endl;
-  // cout << "cnt-fvtxs " << float_cnt_fvtx << endl;
-  // cout << "cbt-fvtxn " << float_cnt_fvtxN << endl;
-
-  // if ( float_bbc_cnt < 0 ) { cout << "YOU'RE GONNA DIE (bbcs-cnt)" << endl; }
-  // if ( float_cnt_fvtx < 0 ) { cout << "YOU'RE GONNA DIE (cnt-fvtxs)" << endl; }
-  // if ( float_cnt_fvtxN < 0 ) { cout << "YOU'RE GONNA DIE (cnt-fvtxn)" << endl; }
-
-  // float reso_bbc = sqrt((float_bbc_cnt * float_bbc_fvtx) / float_cnt_fvtx); // BCBS/CS
-  // float reso_fvtx = sqrt((float_cnt_fvtx * float_bbc_fvtx) / float_bbc_cnt); // CSBS/BC
-  // float reso_fvtxN = sqrt((float_cnt_fvtxN * float_bbc_fvtxN) / float_bbc_cnt); // CNBN/BC
-
-  // cout << "bbc resolution is " << reso_bbc << endl;
-  // cout << "fvtx resolution is " << reso_fvtx << endl;
-  // cout << "fvtxN resolution is " << reso_fvtxN << endl;
-
-  // // ---
-
-  // float reso_fvtxN_xb = sqrt ( ( float_fvtxN_fvtx * float_cnt_fvtxN ) / float_cnt_fvtx ) ; // NSNC/SC
-
-  // cout << "fvtxN resolution is " << reso_fvtxN_xb << endl;
-
-  // // ---
-
-  // if ( energy == 20 )
-  // {
-  //   // --- i like chocolate and fudge and other tasty deserts
-  //   cout << "Now making empirical adjustment for 20 GeV data" << endl;
-  //   reso_bbc = 0.015;
-  //   reso_fvtx = 0.04;
-  // }
-
-  // // ---
-
-  // TProfile* hvn_fvtxs_east = (TProfile*)file->Get(Form("fvtxs_v%d_east_docalib", harmonic));
-  // hvn_fvtxs_east->Scale(1.0 / reso_fvtx);
-  // TProfile* hvn_fvtxs_west = (TProfile*)file->Get(Form("fvtxs_v%d_west_docalib", harmonic));
-  // hvn_fvtxs_west->Scale(1.0 / reso_fvtx);
-
-  // TProfile* hvn_fvtxs = (TProfile*)file->Get(Form("fvtxs_v%d_both_docalib", harmonic));
-  // hvn_fvtxs->Scale(1.0 / reso_fvtx);
-  // ofstream fout((const char*)Form("DataTextFiles/run16dau%d_v%dfvtxs.dat", energy, harmonic));
-  // for ( int i = 0; i < hvn_fvtxs->GetNbinsX(); ++i ) fout << hvn_fvtxs->GetBinCenter(i + 1) << " " << hvn_fvtxs->GetBinContent(i + 1) << " " << hvn_fvtxs->GetBinError(i + 1) << " " << endl;
-  // fout.close();
-  // hvn_fvtxs->Draw();
-  // // the 62 GeV is actually 62.4 and the 20 GeV is actually 19.6, so need to modify
-  // hvn_fvtxs->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = %d GeV", energy));
-  // if ( energy == 62 ) hvn_fvtxs->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = 62.4 GeV"));
-  // if ( energy == 20 ) hvn_fvtxs->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = 19.6 GeV"));
-  // hvn_fvtxs->SetMaximum(0.17);
-  // if ( energy == 39 ) hvn_fvtxs->SetMaximum(0.27);
-  // hvn_fvtxs->SetMinimum(0.0);
-  // TLine line(0, 0, 3, 0);
-  // line.SetLineStyle(2);
-  // line.SetLineWidth(2);
-  // if ( energy == 20 )
-  // {
-  //   hvn_fvtxs->SetMaximum(0.5);
-  //   hvn_fvtxs->SetMinimum(-0.2);
-  //   line.Draw();
-  // }
-  // if ( harmonic == 3 )
-  // {
-  //   hvn_fvtxs->SetMaximum(0.08);
-  //   hvn_fvtxs->SetMinimum(-0.02);
-  //   line.Draw();
-  // }
-  // hvn_fvtxs->GetXaxis()->SetTitle("p_{T} (GeV/c)");
-  // hvn_fvtxs->GetYaxis()->SetTitle(Form("v_{%d}{EP}", harmonic));
-  // hvn_fvtxs->GetYaxis()->SetTitleOffset(1.25);
-
-  // ifstream finpub("ppg161.dat");
-  // float pt[13], pubvn[13], epubvn[13], esyspubvn[13];
-  // for ( int i = 0; i < 13; ++i )
-  // {
-  //   finpub >> pt[i] >> pubvn[i] >> epubvn[i] >> esyspubvn[i];
-  // }
-
-  // TGraphErrors* tge_pub = new TGraphErrors(13, pt, pubvn, 0, epubvn);
-  // tge_pub->SetMarkerStyle(kFullCircle);
-  // if ( harmonic == 2 ) tge_pub->Draw("p");
-
-  // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxs.pdf", energy, harmonic));
-  // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxs.png", energy, harmonic));
-
-  // // ---
-  // TProfile* hvn_bbcs_east = (TProfile*)file->Get(Form("bbcs_v%d_east_docalib", harmonic));
-  // hvn_bbcs_east->Scale(1.0 / reso_bbc);
-  // TProfile* hvn_bbcs_west = (TProfile*)file->Get(Form("bbcs_v%d_west_docalib", harmonic));
-  // hvn_bbcs_west->Scale(1.0 / reso_bbc);
-  // // ---
-
-  // TProfile* hvn_bbcs = (TProfile*)file->Get(Form("bbcs_v%d_both_docalib", harmonic));
-  // hvn_bbcs->SetLineColor(kRed);
-  // hvn_bbcs->Scale(1.0 / reso_bbc);
-  // hvn_bbcs->Draw("same");
-
-  // if ( energy == 20 )
-  // {
-  //   hvn_fvtxs->SetMaximum(1.0);
-  //   hvn_fvtxs->SetMinimum(-0.5);
-  //   line.Draw();
-  // }
-
-  // TLegend* leg = new TLegend(0.18, 0.68, 0.38, 0.88);
-  // leg->AddEntry(hvn_fvtxs, "Run16 FVTXS", "el");
-  // leg->AddEntry(hvn_bbcs, "Run16 BBCS", "el");
-  // if ( energy == 200 && harmonic == 2 ) leg->AddEntry(tge_pub, "Run8 (ppg161)", "p");
-  // else if ( harmonic == 2 ) leg->AddEntry(tge_pub, "Run8 (200 GeV)", "p");
-  // leg->SetTextSize(0.05);
-  // leg->Draw();
-
-  // TLatex* latex = new TLatex(0.2, 0.2, "EP resolutions calculated with CNT");
-  // latex->SetNDC();
-  // latex->SetTextSize(0.05);
-  // //latex->Draw();
-
-  // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsbbcs.pdf", energy, harmonic));
-  // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsbbcs.png", energy, harmonic));
-
-  // TProfile* xhvn_bbcs = (TProfile*)hvn_bbcs->Clone();
-  // TProfile* xhvn_fvtxs = (TProfile*)hvn_fvtxs->Clone();
-  // xhvn_fvtxs->Add(xhvn_bbcs);
-  // xhvn_fvtxs->SetLineColor(kBlack);
-  // xhvn_fvtxs->SetMarkerColor(kBlack);
-  // xhvn_fvtxs->SetMarkerStyle(kOpenCircle);
-  // xhvn_fvtxs->Draw("same");
-
-  // double x[15], y[15], exh[15], eyh[15], exl[15], eyl[15];
-  // for ( int i = 0; i < 15; ++i )
-  // {
-  //   x[i] = xhvn_fvtxs->GetBinCenter(i + 1);
-  //   y[i] = xhvn_fvtxs->GetBinContent(i + 1);
-  //   exl[i] = 0;
-  //   exh[i] = 0;
-  //   double a = hvn_fvtxs->GetBinContent(i + 1) - y[i];
-  //   double b = hvn_bbcs->GetBinContent(i + 1) - y[i];
-  //   if ( a > b )
-  //   {
-  //     eyl[i] = fabs(b);
-  //     eyh[i] = fabs(a);
-  //   }
-  //   else
-  //   {
-  //     eyl[i] = fabs(a);
-  //     eyh[i] = fabs(b);
-  //   }
-  // }
-  // TGraphAsymmErrors* tgae = new TGraphAsymmErrors(15, x, y, exl, exh, eyl, eyh);
-  // tgae->SetMarkerStyle(1);
-  // tgae->SetMarkerColor(kGray);
-  // tgae->SetLineColor(kGray);
-  // tgae->SetLineWidth(15);
-  // tgae->Draw("pz");
-  // xhvn_fvtxs->Draw("same");
-  // if ( harmonic == 3 ) line.Draw();
-
-  // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsbbcsA.pdf", energy, harmonic));
-  // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsbbcsA.png", energy, harmonic));
-
-  // xhvn_fvtxs->Draw();
-  // if ( harmonic == 3 ) line.Draw();
-
-  // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsbbcsAO.pdf", energy, harmonic));
-  // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsbbcsAO.png", energy, harmonic));
-
-
-
-  // TProfile* hvn_fvtxn = (TProfile*)file->Get(Form("fvtxn_v%d_both_docalib", harmonic));
-  // hvn_fvtxn->SetLineColor(kGreen + 2);
-  // hvn_fvtxn->Scale(1.0 / reso_fvtxN);
-  // hvn_fvtxn->Draw("same");
-
-  // delete leg;
-
-  // TLegend* leg3 = new TLegend(0.18, 0.68, 0.38, 0.88);
-  // leg3->AddEntry(hvn_fvtxs, "Run16 FVTXS", "el");
-  // leg3->AddEntry(hvn_fvtxn, "Run16 FVTXN", "el");
-  // leg3->AddEntry(hvn_bbcs, "Run16 BBCS", "el");
-  // if ( energy == 200 && harmonic == 2 ) leg3->AddEntry(tge_pub, "Run8 (ppg161)", "p");
-  // else if ( harmonic == 2 ) leg3->AddEntry(tge_pub, "Run8 (200 GeV)", "p");
-  // leg3->SetTextSize(0.05);
-  // leg3->Draw();
-
-  // //latex->Draw();
-
-  // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsnbbcs.pdf", energy, harmonic));
-  // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsnbbcs.png", energy, harmonic));
-
-  // // hvn_fvtxn->Scale(reso_fvtxN/reso_fvtxN_fn);
-  // // hvn_fvtxs->Scale(reso_fvtx/reso_fvtx_fn);
-  // // hvn_bbcs->Scale(reso_bbc/reso_bbc_fn);
-
-  // // delete latex;
-  // // latex = new TLatex(0.2,0.2,"EP resolutions calculated without CNT");
-  // // latex->SetNDC();
-  // // latex->SetTextSize(0.05);
-  // // latex->Draw();
-
-  // // //  latex->DrawLatex(0.2,0.2,"EP resolutions calculated without CNT");
-
-  // // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsnbbcs_fn.pdf",energy,harmonic));
-  // // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsnbbcs_fn.png",energy,harmonic));
-
-  // // c1->Clear();
-  // // hvn_fvtxs->Draw();
-  // // hvn_bbcs->Draw("same");
-  // // tge_pub->Draw("p");
-  // // leg = new TLegend(0.18,0.68,0.38,0.88);
-  // // leg->AddEntry(hvn_fvtxs,"Run16 FVTXS","el");
-  // // leg->AddEntry(hvn_bbcs,"Run16 BBCS","el");
-  // // if ( energy == 200 && harmonic == 2 ) leg->AddEntry(tge_pub,"Run8 (ppg161)","p");
-  // // else if ( harmonic == 2 ) leg->AddEntry(tge_pub,"Run8 (200 GeV)","p");
-  // // leg->SetTextSize(0.05);
-  // // leg->Draw();
-
-  // // latex->Draw();
-
-  // // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsbbcs_fn.pdf",energy,harmonic));
-  // // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsbbcs_fn.png",energy,harmonic));
-
-  // // hvn_fvtxn->Scale(2*reso_fvtxN_fn/(reso_fvtxN_fn+reso_fvtxN));
-  // // hvn_fvtxs->Scale(2*reso_fvtx_fn/(reso_fvtx_fn+reso_fvtx));
-  // // hvn_bbcs->Scale(2*reso_bbc_fn/(reso_bbc_fn+reso_bbc));
-
-  // // delete latex;
-  // // latex = new TLatex(0.2,0.2,"Average EP resolutions with and without CNT");
-  // // latex->SetNDC();
-  // // latex->SetTextSize(0.05);
-  // // latex->Draw();
-
-  // // //  latex->DrawLatex(0.2,0.2,"Average of EP resolutions with and without CNT");
-
-  // // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsbbcs_ave.pdf",energy,harmonic));
-  // // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsbbcs_ave.png",energy,harmonic));
-
-  // // delete leg;
-  // // hvn_fvtxn->Draw("same");
-  // // leg3->Draw();
-
-  // //latex->Draw();
-
-  // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsnbbcs_ave.pdf", energy, harmonic));
-  // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%d_fvtxsnbbcs_ave.png", energy, harmonic));
-
-  // c1->Clear();
-
-
-
-  // // --- now eta plots
-
-  // TProfile* hvneta_bbcs = (TProfile*)file->Get(Form("bbcs_v%deta_both_docalib", harmonic));
-  // hvneta_bbcs->SetLineColor(kBlack);
-  // hvneta_bbcs->Scale(1.0 / reso_bbc);
-  // hvneta_bbcs->Draw();
-  // hvneta_bbcs->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = %d GeV", energy));
-  // if ( energy == 62 ) hvneta_bbcs->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = 62.4 GeV"));
-  // if ( energy == 20 ) hvneta_bbcs->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = 19.6 GeV"));
-  // hvneta_bbcs->SetMaximum(0.1);
-  // hvneta_bbcs->SetMinimum(0.0);
-  // if ( energy <= 39 || harmonic == 3 ) hvneta_bbcs->SetMinimum(-0.02);
-  // if ( energy == 20 )
-  // {
-  //   hvneta_bbcs->SetMaximum(0.3);
-  //   hvneta_bbcs->SetMinimum(-0.2);
-  //   TLine line(-3.1, 0, 3.1, 0);
-  //   line.SetLineStyle(2);
-  //   line.SetLineWidth(2);
-  //   line.Draw();
-  // }
-  // hvneta_bbcs->GetXaxis()->SetTitle("#eta");
-  // hvneta_bbcs->GetYaxis()->SetTitle(Form("v_{%d}{EP}", harmonic));
-  // hvneta_bbcs->GetYaxis()->SetTitleOffset(1.25);
-  // TLegend* leta = new TLegend(0.68, 0.68, 0.88, 0.88);
-  // leta->AddEntry(hvneta_bbcs, "BBCS", "el");
-  // leta->SetTextSize(0.05);
-  // leta->Draw();
-
-  // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%deta_bbcs.pdf", energy, harmonic));
-  // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%deta_bbcs.png", energy, harmonic));
-
-  // TProfile* hvneta_fvtxs = (TProfile*)file->Get(Form("fvtxs_v%deta_both_docalib", harmonic));
-  // hvneta_fvtxs->SetLineColor(kBlue);
-  // hvneta_fvtxs->Scale(1.0 / reso_fvtx);
-  // hvneta_fvtxs->Draw("same");
-  // leta->AddEntry(hvneta_fvtxs, "FVTXS", "el");
-  // leta->Draw();
-
-  // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%deta_fvtxsbbcs.pdf", energy, harmonic));
-  // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%deta_fvtxsbbcs.png", energy, harmonic));
-
-  // // --- clean
-  // hvneta_bbcs->SetBinContent(1, -9);
-  // hvneta_bbcs->SetBinContent(12, -9);
-  // hvneta_bbcs->SetBinContent(21, -9);
-  // hvneta_bbcs->SetBinContent(32, -9);
-  // hvneta_fvtxs->SetBinContent(21, -9);
-  // hvneta_fvtxs->SetBinContent(32, -9);
-
-  // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%deta_cleaned_fvtxsbbcs.pdf", energy, harmonic));
-  // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%deta_cleaned_fvtxsbbcs.png", energy, harmonic));
-
-  // TH1D* hvneta_bbcs_m = (TH1D*)hvneta_bbcs->Clone();
-  // TH1D* hvneta_fvtxs_m = (TH1D*)hvneta_fvtxs->Clone();
-  // hvneta_fvtxs_m->Divide(hvneta_bbcs_m);
-  // hvneta_fvtxs_m->Draw();
-  // hvneta_fvtxs_m->SetMinimum(0.0);
-  // hvneta_fvtxs_m->SetMaximum(2.0);
-  // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%deta_ratio_fvtxsbbcs.pdf", energy, harmonic));
-  // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%deta_ratio_fvtxsbbcs.png", energy, harmonic));
-
-  // // TFile* fcorr = TFile::Open("ampt_vneta_correction.root");
-  // // //TProfile* tp1f_corr = (TProfile*)fcorr->Get("hv2eta_corr_sys");
-  // // TProfile* tp1f_corr = (TProfile*)fcorr->Get("v2eta_correction_dAu200");
-  // // TH1D* th1d_corr = tp1f_corr->ProjectionX();
-  // // hvneta_bbcs->Divide(th1d_corr);
-  // // hvneta_fvtxs->Divide(th1d_corr);
-  // // hvneta_bbcs->Draw();
-  // // hvneta_fvtxs->Draw("same");
-  // // leta->Draw();
-
-  // // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%deta_corrected_fvtxsbbcs.pdf",energy,harmonic));
-  // // c1->Print(Form("FigsHarmonicCoefficient/run16dau%d_v%deta_corrected_fvtxsbbcs.png",energy,harmonic));
-
-  // delete c1;
-
-
-  // if ( harmonic == 3 ) hvn_fvtxs = xhvn_fvtxs;
-
-  // hvneta_fvtxs->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = %d GeV", energy));
-  // if ( energy == 62 ) hvneta_fvtxs->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = 62.4 GeV"));
-  // if ( energy == 20 ) hvneta_fvtxs->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = 19.6 GeV"));
-
-  // outfile->cd();
-  // hvn_bbcs->SetName(Form("tprofile_v%d_pT_eventplane_bbcs_%d", harmonic, energy));
-  // hvn_bbcs_east->SetName(Form("tprofile_v%d_pT_east_eventplane_bbcs_%d", harmonic, energy));
-  // hvn_bbcs_west->SetName(Form("tprofile_v%d_pT_west_eventplane_bbcs_%d", harmonic, energy));
-  // hvn_fvtxs->SetName(Form("tprofile_v%d_pT_eventplane_fvtxs_%d", harmonic, energy));
-  // hvn_fvtxs_east->SetName(Form("tprofile_v%d_pT_east_eventplane_fvtxs_%d", harmonic, energy));
-  // hvn_fvtxs_west->SetName(Form("tprofile_v%d_pT_west_eventplane_fvtxs_%d", harmonic, energy));
-  // hvneta_bbcs->SetName(Form("tprofile_v%d_eta_eventplane_bbcs_%d", harmonic, energy));
-  // hvneta_fvtxs->SetName(Form("tprofile_v%d_eta_eventplane_fvtxs_%d", harmonic, energy));
-  // hvn_bbcs->Write();
-  // hvn_bbcs_east->Write();
-  // hvn_bbcs_west->Write();
-  // hvn_fvtxs->Write();
-  // hvn_fvtxs_east->Write();
-  // hvn_fvtxs_west->Write();
-  // hvneta_bbcs->Write();
-  // hvneta_fvtxs->Write();
 
 }
 
@@ -1014,6 +947,18 @@ TGraphErrors* format_v2_eta(TH1* p)
 
   return g;
 
+}
+
+
+ValErr calc_epreso(ValErr AB, ValErr AC, ValErr BC)
+{
+
+  double reso = sqrt( (AB.first * AC.first) / BC.first );
+  double ereso = reso / 2. * sqrt( pow(AB.second / AB.first, 2) +
+                                   pow(AC.second / AC.first, 2) +
+                                   pow(BC.second / BC.first, 2) );
+
+  return make_pair(reso, ereso);
 }
 
 
