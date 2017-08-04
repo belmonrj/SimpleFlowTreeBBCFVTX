@@ -21,6 +21,8 @@ typedef pair<double, double> ValErr;
 void doenergy(int, int);
 void diagnostic(int, int);
 ValErr calc_epreso(ValErr AB, ValErr AC, ValErr BC);
+ValErr int_vn(TProfile *pvn, int bl, int bh);
+
 
 TFile* outfile;
 
@@ -64,6 +66,15 @@ void doenergy(int energy, int harmonic)
   // --- Histograms for v2 vs centrality at low & high pT
   TH1D* th1d_vncent_fvtxs_lowpt = new TH1D("th1d_vncent_fvtxs_lowpt", "", NMUL, -0.5, NMUL - 0.5);
   TH1D* th1d_vncent_fvtxs_highpt = new TH1D("th1d_vncent_fvtxs_highpt", "", NMUL, -0.5, NMUL - 0.5);
+
+  // --- graphs of integrated v2 vs centrality
+  TGraphErrors *gvn_bbcs_cent = new TGraphErrors();
+  TGraphErrors *gvn_fvtxs_cent = new TGraphErrors();
+  TGraphErrors *gvn_fvtxsa_cent = new TGraphErrors();
+  TGraphErrors *gvn_fvtxsb_cent = new TGraphErrors();
+  TGraphErrors *gvn_fvtxsl_cent[NFVTXLAY];
+  for (int il = 0; il < NFVTXLAY; il++)
+    gvn_fvtxsl_cent[il] = new TGraphErrors();
 
 
   double lopt = 0.7;
@@ -135,6 +146,33 @@ void doenergy(int energy, int harmonic)
     TProfile* hvnpt_fvtxsl_east_zres[NFVTXLAY];
     TProfile* hvnpt_fvtxsl_west_zres[NFVTXLAY];
     TProfile* hvnpt_fvtxsl_both_zres[NFVTXLAY];
+
+    TProfile* hvnpt_bbcs_east_zvtx[NZPS];
+    TProfile* hvnpt_bbcs_west_zvtx[NZPS];
+    TProfile* hvnpt_bbcs_both_zvtx[NZPS];
+
+    TProfile* hvnpt_fvtxs_east_zvtx[NZPS];
+    TProfile* hvnpt_fvtxs_west_zvtx[NZPS];
+    TProfile* hvnpt_fvtxs_both_zvtx[NZPS];
+
+    TProfile* hvnpt_fvtxsa_east_zvtx[NZPS];
+    TProfile* hvnpt_fvtxsa_west_zvtx[NZPS];
+    TProfile* hvnpt_fvtxsa_both_zvtx[NZPS];
+
+    TProfile* hvnpt_fvtxsb_east_zvtx[NZPS];
+    TProfile* hvnpt_fvtxsb_west_zvtx[NZPS];
+    TProfile* hvnpt_fvtxsb_both_zvtx[NZPS];
+
+    TProfile* hvnpt_fvtxsl_east_zvtx[NZPS][NFVTXLAY];
+    TProfile* hvnpt_fvtxsl_west_zvtx[NZPS][NFVTXLAY];
+    TProfile* hvnpt_fvtxsl_both_zvtx[NZPS][NFVTXLAY];
+
+    TGraphErrors *gvn_bbcs_zdep = new TGraphErrors();
+    TGraphErrors *gvn_bbcs_zdep_sys = new TGraphErrors();
+
+    TGraphErrors *gvn_fvtxs_zdep = new TGraphErrors();
+    TGraphErrors *gvn_fvtxs_zdep_sys = new TGraphErrors();
+
 
     // ---
     // --- loop over zvrtx
@@ -313,7 +351,7 @@ void doenergy(int energy, int harmonic)
           // hvneta_fvtxsl_both[il]->Add(hvneta_fvtxsl_both_z[il]);
         } // il
 
-      }
+      } // else
 
       // --- calculate ep resolution
       ValErr CNT_BBCS_z = make_pair(tp1f_CNT_BBCS_z->GetBinContent(1),
@@ -333,26 +371,58 @@ void doenergy(int energy, int harmonic)
                                       tp1f_BBCS_FVTXSL_z[il]->GetBinError(1));
 
 
-      float reso_BBCS_z = (calc_epreso(CNT_BBCS_z, BBCS_FVTXS_z, CNT_FVTXS_z)).first;
-      float reso_FVTXS_z = (calc_epreso(CNT_FVTXS_z, BBCS_FVTXS_z, CNT_BBCS_z)).first;
-      float reso_FVTXSL_z[NFVTXLAY];
+      ValErr reso_BBCS_z = (calc_epreso(CNT_BBCS_z, BBCS_FVTXS_z, CNT_FVTXS_z));
+      ValErr reso_FVTXS_z = (calc_epreso(CNT_FVTXS_z, BBCS_FVTXS_z, CNT_BBCS_z));
+      ValErr reso_FVTXSL_z[NFVTXLAY];
       for (int il = 0; il < NFVTXLAY; il++)
-        reso_FVTXSL_z[il] = (calc_epreso(CNT_FVTXSL_z[il], BBCS_FVTXSL_z[il], CNT_BBCS_z)).first;
+        reso_FVTXSL_z[il] = (calc_epreso(CNT_FVTXSL_z[il], BBCS_FVTXSL_z[il], CNT_BBCS_z));
+
+      // --- get the pt integrated result (before resolution correction)
+      float z = -10. + (iz + 0.5) * 20. / (float)NZPS;
+
+      int bl = hvnpt_bbcs_both_z->GetXaxis()->FindBin(0.5);
+      int bh = hvnpt_bbcs_both_z->GetXaxis()->FindBin(2.0) - 1;
+
+      // bbcs
+      ValErr bbcs_int = int_vn(hvnpt_bbcs_both_z, bl, bh);
+      float bbcs_sys = reso_BBCS_z.second / reso_BBCS_z.first;
+
+      // correct for resolution
+      bbcs_int.first /= reso_BBCS_z.first;
+      bbcs_int.second /= reso_BBCS_z.first;
+
+      // add resolution uncertainty in quadriture
+      bbcs_int.second = bbcs_int.first * sqrt(pow(bbcs_int.second / bbcs_int.first, 2) + pow(bbcs_sys, 2));
+
+      gvn_bbcs_zdep->SetPoint(iz, z - 0.1, bbcs_int.first);
+      gvn_bbcs_zdep->SetPointError(iz, 0, bbcs_int.second);
+
+      // fvtxs
+      ValErr fvtxs_int = int_vn(hvnpt_fvtxs_both_z, bl, bh);
+      float fvtxs_sys = reso_FVTXS_z.second / reso_FVTXS_z.first;
+
+      fvtxs_int.first /= reso_FVTXS_z.first;
+      fvtxs_int.second /= reso_FVTXS_z.first;
+
+      fvtxs_int.second = fvtxs_int.first * sqrt(pow(fvtxs_int.second / fvtxs_int.first, 2) + pow(fvtxs_sys, 2));
+
+      gvn_fvtxs_zdep->SetPoint(iz, z - 0.1, fvtxs_int.first);
+      gvn_fvtxs_zdep->SetPointError(iz, 0, fvtxs_int.second);
 
       // --- correct ep
-      hvnpt_bbcs_east_z->Scale(1. / reso_BBCS_z);
-      hvnpt_bbcs_west_z->Scale(1. / reso_BBCS_z);
-      hvnpt_bbcs_both_z->Scale(1. / reso_BBCS_z);
+      hvnpt_bbcs_east_z->Scale(1. / reso_BBCS_z.first);
+      hvnpt_bbcs_west_z->Scale(1. / reso_BBCS_z.first);
+      hvnpt_bbcs_both_z->Scale(1. / reso_BBCS_z.first);
 
-      hvnpt_fvtxs_east_z->Scale(1. / reso_FVTXS_z);
-      hvnpt_fvtxs_west_z->Scale(1. / reso_FVTXS_z);
-      hvnpt_fvtxs_both_z->Scale(1. / reso_FVTXS_z);
+      hvnpt_fvtxs_east_z->Scale(1. / reso_FVTXS_z.first);
+      hvnpt_fvtxs_west_z->Scale(1. / reso_FVTXS_z.first);
+      hvnpt_fvtxs_both_z->Scale(1. / reso_FVTXS_z.first);
 
       for (int il = 0; il < NFVTXLAY; il++)
       {
-        hvnpt_fvtxsl_east_z[il]->Scale(1. / reso_FVTXSL_z[il]);
-        hvnpt_fvtxsl_west_z[il]->Scale(1. / reso_FVTXSL_z[il]);
-        hvnpt_fvtxsl_both_z[il]->Scale(1. / reso_FVTXSL_z[il]);
+        hvnpt_fvtxsl_east_z[il]->Scale(1. / reso_FVTXSL_z[il].first);
+        hvnpt_fvtxsl_west_z[il]->Scale(1. / reso_FVTXSL_z[il].first);
+        hvnpt_fvtxsl_both_z[il]->Scale(1. / reso_FVTXSL_z[il].first);
       }
 
       // --- sum corrections
@@ -391,6 +461,26 @@ void doenergy(int energy, int harmonic)
         }
       }
 
+
+      // --- save the zvrtx dependent v2's after resolution correction
+      //     note I should have just done this above, this is really a hack
+
+      hvnpt_bbcs_east_zvtx[iz] = (TProfile*) hvnpt_bbcs_east_z->Clone(Form("hvnpt_bbcs_east_z%i", iz));
+      hvnpt_bbcs_west_zvtx[iz] = (TProfile*) hvnpt_bbcs_west_z->Clone(Form("hvnpt_bbcs_west_z%i", iz));
+      hvnpt_bbcs_both_zvtx[iz] = (TProfile*) hvnpt_bbcs_both_z->Clone(Form("hvnpt_bbcs_both_z%i", iz));
+
+      hvnpt_fvtxs_east_zvtx[iz] = (TProfile*) hvnpt_fvtxs_east_z->Clone(Form("hvnpt_fvtxs_east_z%i", iz));
+      hvnpt_fvtxs_west_zvtx[iz] = (TProfile*) hvnpt_fvtxs_west_z->Clone(Form("hvnpt_fvtxs_west_z%i", iz));
+      hvnpt_fvtxs_both_zvtx[iz] = (TProfile*) hvnpt_fvtxs_both_z->Clone(Form("hvnpt_fvtxs_both_z%i", iz));
+
+      for (int il = 0; il < NFVTXLAY; il++)
+      {
+        hvnpt_fvtxsl_east_zvtx[iz][il] = (TProfile*) hvnpt_fvtxsl_east_z[il]->Clone(Form("hvnpt_fvtxsl%i_east_z%i", il, iz));
+        hvnpt_fvtxsl_west_zvtx[iz][il] = (TProfile*) hvnpt_fvtxsl_west_z[il]->Clone(Form("hvnpt_fvtxsl%i_west_z%i", il, iz));
+        hvnpt_fvtxsl_both_zvtx[iz][il] = (TProfile*) hvnpt_fvtxsl_both_z[il]->Clone(Form("hvnpt_fvtxsl%i_both_z%i", il, iz));
+      } // il
+
+
     } // iz
 
     // ---
@@ -422,13 +512,13 @@ void doenergy(int energy, int harmonic)
                                   tp1f_BBCS_FVTXSL[il]->GetBinError(1));
 
 
-    float reso_BBCS = (calc_epreso(CNT_BBCS, BBCS_FVTXS, CNT_FVTXS)).first;
-    float reso_FVTXS = (calc_epreso(CNT_FVTXS, BBCS_FVTXS, CNT_BBCS)).first;
-    float reso_FVTXSA = (calc_epreso(CNT_FVTXSA, BBCS_FVTXSA, CNT_BBCS)).first;
-    float reso_FVTXSB = (calc_epreso(CNT_FVTXSB, BBCS_FVTXSB, CNT_BBCS)).first;
-    float reso_FVTXSL[NFVTXLAY];
+    ValErr reso_BBCS = calc_epreso(CNT_BBCS, BBCS_FVTXS, CNT_FVTXS);
+    ValErr reso_FVTXS = calc_epreso(CNT_FVTXS, BBCS_FVTXS, CNT_BBCS);
+    ValErr reso_FVTXSA = calc_epreso(CNT_FVTXSA, BBCS_FVTXSA, CNT_BBCS);
+    ValErr reso_FVTXSB = calc_epreso(CNT_FVTXSB, BBCS_FVTXSB, CNT_BBCS);
+    ValErr reso_FVTXSL[NFVTXLAY];
     for (int il = 0; il < NFVTXLAY; il++)
-      reso_FVTXSL[il] = (calc_epreso(CNT_FVTXSL[il], BBCS_FVTXSL[il], CNT_BBCS)).first;
+      reso_FVTXSL[il] = calc_epreso(CNT_FVTXSL[il], BBCS_FVTXSL[il], CNT_BBCS);
 
 
     if ( energy == 20 )
@@ -438,55 +528,126 @@ void doenergy(int energy, int harmonic)
       // reso_BBCS = 0.015;
       // reso_FVTXS = 0.04;
       // don't resolution correct the 20 GeV, so that we can rebin it later
-      reso_BBCS = 1;
-      reso_FVTXS = 1;
+      reso_BBCS.first = 1;
+      reso_FVTXS.first = 1;
     }
 
-    cout << "bbc resolution is     " << reso_BBCS << endl;
-    cout << "fvtx resolution is    " << reso_FVTXS << endl;
-    cout << "fvtxsA resolution is  " << reso_FVTXSA << endl;
-    cout << "fvtxsB resolution is  " << reso_FVTXSB << endl;
+    cout << "bbc resolution is     " << reso_BBCS.first << endl;
+    cout << "fvtx resolution is    " << reso_FVTXS.first << endl;
+    cout << "fvtxsA resolution is  " << reso_FVTXSA.first << endl;
+    cout << "fvtxsB resolution is  " << reso_FVTXSB.first << endl;
     for (int il = 0; il < NFVTXLAY; il++)
-      cout << "fvtxsL" << il << " resolution is " << reso_FVTXSL[il] << endl;
+      cout << "fvtxsL" << il << " resolution is " << reso_FVTXSL[il].first << endl;
+
+
+
+    // --- get the pt integrated result (before resolution correction)
+    int bl = hvnpt_bbcs_both->GetXaxis()->FindBin(0.5);
+    int bh = hvnpt_bbcs_both->GetXaxis()->FindBin(2.0) - 1;
+
+    // bbcs
+    ValErr bbcs_int = int_vn(hvnpt_bbcs_both, bl, bh);
+    float bbcs_sys = reso_BBCS.second / reso_BBCS.first;
+    // correct for resolution
+    bbcs_int.first /= reso_BBCS.first;
+    bbcs_int.second /= reso_BBCS.first;
+    // add resolution uncertainty in quadriture
+    bbcs_int.second = bbcs_int.first * sqrt(pow(bbcs_int.second / bbcs_int.first, 2) + pow(bbcs_sys, 2));
+    // fill tgraph
+    gvn_bbcs_cent->SetPoint(ic, ic, bbcs_int.first);
+    gvn_bbcs_cent->SetPointError(ic, 0, bbcs_int.second);
+
+    // fvtxs
+    ValErr fvtxs_int = int_vn(hvnpt_fvtxs_both, bl, bh);
+    float fvtxs_sys = reso_FVTXS.second / reso_FVTXS.first;
+    // correct for resolution
+    fvtxs_int.first /= reso_FVTXS.first;
+    fvtxs_int.second /= reso_FVTXS.first;
+    // add resolution uncertainty in quadriture
+    fvtxs_int.second = fvtxs_int.first * sqrt(pow(fvtxs_int.second / fvtxs_int.first, 2) + pow(fvtxs_sys, 2));
+    // fill tgraph
+    gvn_fvtxs_cent->SetPoint(ic, ic, fvtxs_int.first);
+    gvn_fvtxs_cent->SetPointError(ic, 0, fvtxs_int.second);
+
+    // fvtxsa
+    ValErr fvtxsa_int = int_vn(hvnpt_fvtxsa_both, bl, bh);
+    float fvtxsa_sys = reso_FVTXSA.second / reso_FVTXSA.first;
+    // correct for resolution
+    fvtxsa_int.first /= reso_FVTXSA.first;
+    fvtxsa_int.second /= reso_FVTXSA.first;
+    // add resolution uncertainty in quadriture
+    fvtxsa_int.second = fvtxsa_int.first * sqrt(pow(fvtxsa_int.second / fvtxsa_int.first, 2) + pow(fvtxsa_sys, 2));
+    // fill tgraph
+    gvn_fvtxsa_cent->SetPoint(ic, ic, fvtxsa_int.first);
+    gvn_fvtxsa_cent->SetPointError(ic, 0, fvtxsa_int.second);
+
+    // fvtxsb
+    ValErr fvtxsb_int = int_vn(hvnpt_fvtxsb_both, bl, bh);
+    float fvtxsb_sys = reso_FVTXSB.second / reso_FVTXSB.first;
+    // correct for resolution
+    fvtxsb_int.first /= reso_FVTXSB.first;
+    fvtxsb_int.second /= reso_FVTXSB.first;
+    // add resolution uncertainty in quadriture
+    fvtxsb_int.second = fvtxsb_int.first * sqrt(pow(fvtxsb_int.second / fvtxsb_int.first, 2) + pow(fvtxsb_sys, 2));
+    // fill tgraph
+    gvn_fvtxsb_cent->SetPoint(ic, ic, fvtxsb_int.first);
+    gvn_fvtxsb_cent->SetPointError(ic, 0, fvtxsb_int.second);
+
+    // fvtxsl
+    for (int il = 0; il < NFVTXLAY; il++)
+    {
+      ValErr fvtxsl_int = int_vn(hvnpt_fvtxsl_both[il], bl, bh);
+      float fvtxsl_sys = reso_FVTXSL[il].second / reso_FVTXSL[il].first;
+      // correct for resolution
+      fvtxsl_int.first /= reso_FVTXSL[il].first;
+      fvtxsl_int.second /= reso_FVTXSL[il].first;
+      // add resolution uncertainty in quadriture
+      fvtxsl_int.second = fvtxsl_int.first * sqrt(pow(fvtxsl_int.second / fvtxsl_int.first, 2) + pow(fvtxsl_sys, 2));
+      // fill tgraph
+      gvn_fvtxsl_cent[il]->SetPoint(ic, ic, fvtxsl_int.first);
+      gvn_fvtxsl_cent[il]->SetPointError(ic, 0, fvtxsl_int.second);
+    } // il
+
+
 
 
     // --- divide by resolution
-    hvnpt_bbcs_east->Scale(1.0 / reso_BBCS);
-    hvnpt_bbcs_west->Scale(1.0 / reso_BBCS);
-    hvnpt_bbcs_both->Scale(1.0 / reso_BBCS);
-    hvneta_bbcs_east->Scale(1.0 / reso_BBCS);
-    hvneta_bbcs_west->Scale(1.0 / reso_BBCS);
-    hvneta_bbcs_both->Scale(1.0 / reso_BBCS);
+    hvnpt_bbcs_east->Scale(1.0 / reso_BBCS.first);
+    hvnpt_bbcs_west->Scale(1.0 / reso_BBCS.first);
+    hvnpt_bbcs_both->Scale(1.0 / reso_BBCS.first);
+    hvneta_bbcs_east->Scale(1.0 / reso_BBCS.first);
+    hvneta_bbcs_west->Scale(1.0 / reso_BBCS.first);
+    hvneta_bbcs_both->Scale(1.0 / reso_BBCS.first);
 
-    hvnpt_fvtxs_east->Scale(1.0 / reso_FVTXS);
-    hvnpt_fvtxs_west->Scale(1.0 / reso_FVTXS);
-    hvnpt_fvtxs_both->Scale(1.0 / reso_FVTXS);
-    hvneta_fvtxs_east->Scale(1.0 / reso_FVTXS);
-    hvneta_fvtxs_west->Scale(1.0 / reso_FVTXS);
-    hvneta_fvtxs_both->Scale(1.0 / reso_FVTXS);
+    hvnpt_fvtxs_east->Scale(1.0 / reso_FVTXS.first);
+    hvnpt_fvtxs_west->Scale(1.0 / reso_FVTXS.first);
+    hvnpt_fvtxs_both->Scale(1.0 / reso_FVTXS.first);
+    hvneta_fvtxs_east->Scale(1.0 / reso_FVTXS.first);
+    hvneta_fvtxs_west->Scale(1.0 / reso_FVTXS.first);
+    hvneta_fvtxs_both->Scale(1.0 / reso_FVTXS.first);
 
-    hvnpt_fvtxsa_east->Scale(1.0 / reso_FVTXSA);
-    hvnpt_fvtxsa_west->Scale(1.0 / reso_FVTXSA);
-    hvnpt_fvtxsa_both->Scale(1.0 / reso_FVTXSA);
-    // hvneta_fvtxsa_east->Scale(1.0 / reso_FVTXSA);
-    // hvneta_fvtxsa_west->Scale(1.0 / reso_FVTXSA);
-    // hvneta_fvtxsa_both->Scale(1.0 / reso_FVTXSA);
+    hvnpt_fvtxsa_east->Scale(1.0 / reso_FVTXSA.first);
+    hvnpt_fvtxsa_west->Scale(1.0 / reso_FVTXSA.first);
+    hvnpt_fvtxsa_both->Scale(1.0 / reso_FVTXSA.first);
+    // hvneta_fvtxsa_east->Scale(1.0 / reso_FVTXSA.first);
+    // hvneta_fvtxsa_west->Scale(1.0 / reso_FVTXSA.first);
+    // hvneta_fvtxsa_both->Scale(1.0 / reso_FVTXSA.first);
 
-    hvnpt_fvtxsb_east->Scale(1.0 / reso_FVTXSB);
-    hvnpt_fvtxsb_west->Scale(1.0 / reso_FVTXSB);
-    hvnpt_fvtxsb_both->Scale(1.0 / reso_FVTXSB);
-    // hvneta_fvtxsb_east->Scale(1.0 / reso_FVTXSB);
-    // hvneta_fvtxsb_west->Scale(1.0 / reso_FVTXSB);
-    // hvneta_fvtxsb_both->Scale(1.0 / reso_FVTXSB);
+    hvnpt_fvtxsb_east->Scale(1.0 / reso_FVTXSB.first);
+    hvnpt_fvtxsb_west->Scale(1.0 / reso_FVTXSB.first);
+    hvnpt_fvtxsb_both->Scale(1.0 / reso_FVTXSB.first);
+    // hvneta_fvtxsb_east->Scale(1.0 / reso_FVTXSB.first);
+    // hvneta_fvtxsb_west->Scale(1.0 / reso_FVTXSB.first);
+    // hvneta_fvtxsb_both->Scale(1.0 / reso_FVTXSB.first);
 
     for (int il = 0; il < NFVTXLAY; il++)
     {
-      hvnpt_fvtxsl_east[il]->Scale(1.0 / reso_FVTXSL[il]);
-      hvnpt_fvtxsl_west[il]->Scale(1.0 / reso_FVTXSL[il]);
-      hvnpt_fvtxsl_both[il]->Scale(1.0 / reso_FVTXSL[il]);
-      // hvneta_fvtxsl_east[il]->Scale(1.0 / reso_FVTXSL[il]);
-      // hvneta_fvtxsl_west[il]->Scale(1.0 / reso_FVTXSL[il]);
-      // hvneta_fvtxsl_both[il]->Scale(1.0 / reso_FVTXSL[il]);
+      hvnpt_fvtxsl_east[il]->Scale(1.0 / reso_FVTXSL[il].first);
+      hvnpt_fvtxsl_west[il]->Scale(1.0 / reso_FVTXSL[il].first);
+      hvnpt_fvtxsl_both[il]->Scale(1.0 / reso_FVTXSL[il].first);
+      // hvneta_fvtxsl_east[il]->Scale(1.0 / reso_FVTXSL[il].first);
+      // hvneta_fvtxsl_west[il]->Scale(1.0 / reso_FVTXSL[il].first);
+      // hvneta_fvtxsl_both[il]->Scale(1.0 / reso_FVTXSL[il].first);
     }
 
 
@@ -555,6 +716,32 @@ void doenergy(int energy, int harmonic)
       hvnpt_fvtxsl_both_zres[il]->SetName(Form("tprofile_v%d_pT_eventplane_fvtxsl%d_zres_c%d_%d", harmonic, il, ic, energy));
     } // il
 
+
+    for (int iz = 0; iz < NZPS; iz++)
+    {
+      hvnpt_bbcs_east_zvtx[iz]->SetName(Form("tprofile_v%d_pT_east_eventplane_bbcs_z%d_c%d_%d", harmonic, iz, ic, energy));
+      hvnpt_bbcs_west_zvtx[iz]->SetName(Form("tprofile_v%d_pT_west_eventplane_bbcs_z%d_c%d_%d", harmonic, iz, ic, energy));
+      hvnpt_bbcs_both_zvtx[iz]->SetName(Form("tprofile_v%d_pT_eventplane_bbcs_z%d_c%d_%d", harmonic, iz, ic, energy));
+
+      hvnpt_fvtxs_east_zvtx[iz]->SetName(Form("tprofile_v%d_pT_east_eventplane_fvtxs_z%d_c%d_%d", harmonic, iz, ic, energy));
+      hvnpt_fvtxs_west_zvtx[iz]->SetName(Form("tprofile_v%d_pT_west_eventplane_fvtxs_z%d_c%d_%d", harmonic, iz, ic, energy));
+      hvnpt_fvtxs_both_zvtx[iz]->SetName(Form("tprofile_v%d_pT_eventplane_fvtxs_z%d_c%d_%d", harmonic, iz, ic, energy));
+
+      for (int il = 0; il < NFVTXLAY; il++)
+      {
+        hvnpt_fvtxsl_east_zvtx[iz][il]->SetName(Form("tprofile_v%d_pT_east_eventplane_fvtxsl%d_z%d_c%d_%d", harmonic, il, iz, ic, energy));
+        hvnpt_fvtxsl_west_zvtx[iz][il]->SetName(Form("tprofile_v%d_pT_west_eventplane_fvtxsl%d_z%d_c%d_%d", harmonic, il, iz, ic, energy));
+        hvnpt_fvtxsl_both_zvtx[iz][il]->SetName(Form("tprofile_v%d_pT_eventplane_fvtxsl%d_z%d_c%d_%d", harmonic, il, iz, ic, energy));
+      } // il
+
+    } // iz
+
+    gvn_bbcs_zdep->SetName(Form("tgraph_v%d_zvtx_eventplane_bbcs_c%d_%d", harmonic, ic, energy));
+    gvn_bbcs_zdep_sys->SetName(Form("tgraph_v%d_zvtx_sys_eventplane_bbcs_c%d_%d", harmonic, ic, energy));
+
+    gvn_fvtxs_zdep->SetName(Form("tgraph_v%d_zvtx_eventplane_fvtxs_c%d_%d", harmonic, ic, energy));
+    gvn_fvtxs_zdep_sys->SetName(Form("tgraph_v%d_zvtx_sys_eventplane_fvtxs_c%d_%d", harmonic, ic, energy));
+
     hvnpt_bbcs_east->Write();
     hvnpt_bbcs_west->Write();
     hvnpt_bbcs_both->Write();
@@ -605,6 +792,29 @@ void doenergy(int energy, int harmonic)
       hvnpt_fvtxsl_both_zres[il]->Write();
     }
 
+    for (int iz = 0; iz < NZPS; iz++)
+    {
+      hvnpt_bbcs_east_zvtx[iz]->Write();
+      hvnpt_bbcs_west_zvtx[iz]->Write();
+      hvnpt_bbcs_both_zvtx[iz]->Write();
+
+      hvnpt_fvtxs_east_zvtx[iz]->Write();
+      hvnpt_fvtxs_west_zvtx[iz]->Write();
+      hvnpt_fvtxs_both_zvtx[iz]->Write();
+
+      for (int il = 0; il < NFVTXLAY; il++)
+      {
+        hvnpt_fvtxsl_east_zvtx[iz][il]->Write();
+        hvnpt_fvtxsl_west_zvtx[iz][il]->Write();
+        hvnpt_fvtxsl_both_zvtx[iz][il]->Write();
+      } // il
+    } // iz
+
+    gvn_bbcs_zdep->Write();
+    gvn_bbcs_zdep_sys->Write();
+
+    gvn_fvtxs_zdep->Write();
+    gvn_fvtxs_zdep_sys->Write();
 
   } // ic
 
@@ -613,8 +823,24 @@ void doenergy(int energy, int harmonic)
   th1d_vncent_fvtxs_lowpt->SetName(Form("th1d_v%d_cent_lowpt_eventplane_fvtxs_%d", harmonic, energy));
   th1d_vncent_fvtxs_highpt->SetName(Form("th1d_v%d_cent_highpt_eventplane_fvtxs_%d", harmonic, energy));
 
+  gvn_bbcs_cent->SetName(Form("tgraph_v%d_cent_eventplane_bbcs_%d", harmonic, energy));
+  gvn_fvtxs_cent->SetName(Form("tgraph_v%d_cent_eventplane_fvtxs_%d", harmonic, energy));
+  gvn_fvtxsa_cent->SetName(Form("tgraph_v%d_cent_eventplane_fvtxsa_%d", harmonic, energy));
+  gvn_fvtxsb_cent->SetName(Form("tgraph_v%d_cent_eventplane_fvtxsb_%d", harmonic, energy));
+  for (int il = 0; il < NFVTXLAY; il++)
+    gvn_fvtxsl_cent[il]->SetName(Form("tgraph_v%d_cent_eventplane_fvtxsl%d_%d", harmonic, il, energy));
+
+
   th1d_vncent_fvtxs_lowpt->Write();
   th1d_vncent_fvtxs_highpt->Write();
+
+  gvn_bbcs_cent->Write();
+  gvn_fvtxs_cent->Write();
+  gvn_fvtxsa_cent->Write();
+  gvn_fvtxsb_cent->Write();
+  for (int il = 0; il < NFVTXLAY; il++)
+    gvn_fvtxsl_cent[il]->Write();
+
 
 
 }
@@ -961,4 +1187,23 @@ ValErr calc_epreso(ValErr AB, ValErr AC, ValErr BC)
   return make_pair(reso, ereso);
 }
 
+ValErr int_vn(TProfile *pvn, int bl, int bh)
+{
+  float vn_int = 0;
+  float vn_e = 0;
+  float w = 0;
+  for (int ix = bl; ix <= bh; ix++)
+  {
+    float bc, be;
+    bc = pvn->GetBinContent(ix);
+    be = pvn->GetBinError(ix);
+
+    vn_int += bc / (be * be);
+    w += 1. / (be * be);
+  }
+  vn_int /= w;
+  vn_e = sqrt(1. / w);
+
+  return make_pair(vn_int, vn_e);
+}
 
