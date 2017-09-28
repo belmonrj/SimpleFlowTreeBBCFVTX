@@ -107,8 +107,8 @@ int main(int argc, char *argv[])
 
   cout << "Now processing with run number " << run << endl;
 
-  // flatten(run, 1);
-  // flatten(run, 2);
+  flatten(run, 1);
+  flatten(run, 2);
   flatten(run, 3);
 
   return 0;
@@ -172,10 +172,12 @@ void flatten(int runNumber, int rp_recal_pass)
 
   //---
   // all zeros
-  // float qy2_offset_fvtxs[4][6] = {{0}, {0}, {0}, {0}};
-  // float qy2_offset_bbcs[4][6] = {{0}, {0}, {0}, {0}};
-  // float qx3_offset_fvtxs[4][6] = {{0}, {0}, {0}, {0}};
-  // float qx3_offset_bbcs[4][6] = {{0}, {0}, {0}, {0}};
+  float qy2_offset_fvtxs[4][6] = {{0}, {0}, {0}, {0}};
+  float qy2_offset_bbcs[4][6] = {{0}, {0}, {0}, {0}};
+  float qx3_offset_fvtxs[4][6] = {{0}, {0}, {0}, {0}};
+  float qx3_offset_bbcs[4][6] = {{0}, {0}, {0}, {0}};
+  float qy2_offset_fvtxsl[4][4][6] ={{{0}}};
+  float qx3_offset_fvtxsl[4][4][6] ={{{0}}};
   //---
 
   //---
@@ -189,46 +191,48 @@ void flatten(int runNumber, int rp_recal_pass)
   //   // { -0.000, -0.005, -0.014, -0.028, -0.051, -0.104}, //39 GeV
   //   // { -0.001, -0.008, -0.014, -0.028, -0.051, -0.121}, //20 GeV
   // };
-  float qy2_offset_fvtxs[4][6] =
-  {
-    { -0.0026, -0.0000, -0.0000, -0.0130, -0.0407, -0.1108}, //200 GeV
-    { -0.0017, -0.0072, -0.0126, -0.0244, -0.0566, -0.1332}, //62 GeV
-    { -0.0028, -0.0045, -0.0164, -0.0333, -0.0433, 0.0}, //39 GeV
-    { -0.0154, -0.0139, -0.0110, -0.0497, 0.0, 0.0}, //20 GeV
-  };
+  // float qy2_offset_fvtxs[4][6] =
+  // {
+  //   { -0.0026, -0.0000, -0.0000, -0.0130, -0.0407, -0.1108}, //200 GeV
+  //   { -0.0017, -0.0072, -0.0126, -0.0244, -0.0566, -0.1332}, //62 GeV
+  //   { -0.0028, -0.0045, -0.0164, -0.0333, -0.0433, 0.0}, //39 GeV
+  //   { -0.0154, -0.0139, -0.0110, -0.0497, 0.0, 0.0}, //20 GeV
+  // };
 
   // itr 4
-  float qy2_offset_fvtxsl[4][4][6] =
-  {
-// 200 GeV
-    {
-      { -0.0244, -0.0338, -0.0342, -0.0595, -0.1147, -0.2237}, // layer 0
-      { +0.0037, +0.0114, +0.0145, +0.0183, +0.0186, +0.0300}, // layer 1
-      { +0.0020, +0.0143, +0.0113, -0.0036, -0.0067, -0.0319}, // layer 2
-      { +0.0063, +0.0233, +0.0201, +0.0143, +0.0156, +0.0436}, // layer 3
-    },
-// 62 GeV
-    {
-      { -0.0325, -0.0450, -0.0487, -0.0865, -0.1272, -0.2329}, // layer 0
-      { +0.0137, +0.0100, +0.0101, +0.0111, +0.0207, +0.0290}, // layer 1
-      { +0.0027, -0.0023, -0.0060, -0.0091, -0.0256, -0.0623}, // layer 2
-      { +0.0084, +0.0093, +0.0041, +0.0069, +0.0158, +0.0318}, // layer 3
-    },
-// 39 GeV
-    {
-      { -0.0286, -0.0343, -0.0504, -0.0704, -0.0910, +0.0000}, // layer 0
-      { +0.0168, +0.0155, +0.0151, +0.0165, +0.0240, +0.0000}, // layer 1
-      { +0.0080, +0.0029, +0.0047, -0.0032, -0.0026, +0.0000}, // layer 2
-      { -0.0002, -0.0023, -0.0066, -0.0060, -0.0163, +0.0000}, // layer 3
-    },
-// 20 GeV
-    {
-      { -0.0577, -0.0432, -0.0828, -0.0411, +0.0000, +0.0000}, // layer 0
-      { +0.0062, +0.0129, +0.0297, -0.0732, +0.0000, +0.0000}, // layer 1
-      { -0.0064, -0.0006, -0.0110, -0.0990, +0.0000, +0.0000}, // layer 2
-      { -0.0058, +0.0101, +0.0170, -0.0472, +0.0000, +0.0000}, // layer 3
-    },
-  };
+//   float qy2_offset_fvtxsl[4][4][6] =
+//   {
+// // 200 GeV
+//     {
+//       { -0.0244, -0.0338, -0.0342, -0.0595, -0.1147, -0.2237}, // layer 0
+//       { +0.0037, +0.0114, +0.0145, +0.0183, +0.0186, +0.0300}, // layer 1
+//       { +0.0020, +0.0143, +0.0113, -0.0036, -0.0067, -0.0319}, // layer 2
+//       { +0.0063, +0.0233, +0.0201, +0.0143, +0.0156, +0.0436}, // layer 3
+//     },
+// // 62 GeV
+//     {
+//       { -0.0325, -0.0450, -0.0487, -0.0865, -0.1272, -0.2329}, // layer 0
+//       { +0.0137, +0.0100, +0.0101, +0.0111, +0.0207, +0.0290}, // layer 1
+//       { +0.0027, -0.0023, -0.0060, -0.0091, -0.0256, -0.0623}, // layer 2
+//       { +0.0084, +0.0093, +0.0041, +0.0069, +0.0158, +0.0318}, // layer 3
+//     },
+// // 39 GeV
+//     {
+//       { -0.0286, -0.0343, -0.0504, -0.0704, -0.0910, +0.0000}, // layer 0
+//       { +0.0168, +0.0155, +0.0151, +0.0165, +0.0240, +0.0000}, // layer 1
+//       { +0.0080, +0.0029, +0.0047, -0.0032, -0.0026, +0.0000}, // layer 2
+//       { -0.0002, -0.0023, -0.0066, -0.0060, -0.0163, +0.0000}, // layer 3
+//     },
+// // 20 GeV
+//     {
+//       { -0.0577, -0.0432, -0.0828, -0.0411, +0.0000, +0.0000}, // layer 0
+//       { +0.0062, +0.0129, +0.0297, -0.0732, +0.0000, +0.0000}, // layer 1
+//       { -0.0064, -0.0006, -0.0110, -0.0990, +0.0000, +0.0000}, // layer 2
+//       { -0.0058, +0.0101, +0.0170, -0.0472, +0.0000, +0.0000}, // layer 3
+//     },
+//   };
+
+
   //---
   //---
   // Systematic check (x1.50)
@@ -260,31 +264,31 @@ void flatten(int runNumber, int rp_recal_pass)
 
   //---
   // 2nd order Qy offset for BBCS
-  float qy2_offset_bbcs[4][6] =
-  {
-    { -0.0037, -0.0096, -0.0000, -0.0000, -0.0082, -0.0000}, //200 GeV
-    { -0.0020, -0.0020, -0.0036, -0.0041, +0.0010, -0.0009}, //62 GeV
-    { -0.0052, -0.0038, +0.0014, -0.0019, -0.0060, -0.0000}, //39 GeV
-    { +0.0005, -0.0181, +0.0002, -0.0451, -0.0000, -0.0000}, //20 GeV
-  };
+  // float qy2_offset_bbcs[4][6] =
+  // {
+  //   { -0.0037, -0.0096, -0.0000, -0.0000, -0.0082, -0.0000}, //200 GeV
+  //   { -0.0020, -0.0020, -0.0036, -0.0041, +0.0010, -0.0009}, //62 GeV
+  //   { -0.0052, -0.0038, +0.0014, -0.0019, -0.0060, -0.0000}, //39 GeV
+  //   { +0.0005, -0.0181, +0.0002, -0.0451, -0.0000, -0.0000}, //20 GeV
+  // };
   //---
 
 
   //--
   // 3rd order Qx offset for FVTXS
-  float qx3_offset_fvtxs[4][6] =
-  {
-    { -0.1605, -0.1458, -0.1458, -0.1293, -0.1027, -0.0314}, // 200 GeV
-    { -0.1528, -0.1400, -0.1403, -0.1227, -0.0925, -0.0311}, // 62 GeV
-    { -0.1536, -0.1458, -0.1266, -0.1266, -0.1098,  0.0000}, // 39 GeV
-    { -0.1591, -0.1260, -0.1474, -0.0335,  0.0000,  0.0000}, // 20 GeV
-  };
+  // float qx3_offset_fvtxs[4][6] =
+  // {
+  //   { -0.1605, -0.1458, -0.1458, -0.1293, -0.1027, -0.0314}, // 200 GeV
+  //   { -0.1528, -0.1400, -0.1403, -0.1227, -0.0925, -0.0311}, // 62 GeV
+  //   { -0.1536, -0.1458, -0.1266, -0.1266, -0.1098,  0.0000}, // 39 GeV
+  //   { -0.1591, -0.1260, -0.1474, -0.0335,  0.0000,  0.0000}, // 20 GeV
+  // };
   //--
 
   //--
   // 3rd order Qx offset for BBCS
   // no obvious trend
-  float qx3_offset_bbcs[4][6] = {{0}, {0}, {0}, {0}};
+  // float qx3_offset_bbcs[4][6] = {{0}, {0}, {0}, {0}};
   // float qx3_offset_bbcs[4][6] =
   // {
   //   { 0.0044,  0.0156,  0.0047,  0.0122, -0.0011, 0.0059}, // 200 GeV
@@ -471,7 +475,13 @@ void flatten(int runNumber, int rp_recal_pass)
   TProfile* tp1f_reso3_CNT_FVTX[NMUL][NZPS];
   TProfile* tp1f_reso3_BBC_FVTXN[NMUL][NZPS];
   TProfile* tp1f_reso3_CNT_FVTXN[NMUL][NZPS];
+  TProfile* tp1f_reso3_BBC_FVTXSA[NMUL][NZPS];
+  TProfile* tp1f_reso3_CNT_FVTXSA[NMUL][NZPS];
+  TProfile* tp1f_reso3_BBC_FVTXSB[NMUL][NZPS];
+  TProfile* tp1f_reso3_CNT_FVTXSB[NMUL][NZPS];
   TProfile* tp1f_reso3_FVTXS_FVTXN[NMUL][NZPS];
+  TProfile* tp1f_reso3_BBC_FVTXSL[NMUL][NZPS][NFVTXLAY];
+  TProfile* tp1f_reso3_CNT_FVTXSL[NMUL][NZPS][NFVTXLAY];
 
   for (int ic = 0; ic < NMUL; ic++)
   {
@@ -500,6 +510,16 @@ void flatten(int runNumber, int rp_recal_pass)
       tp1f_reso3_BBC_FVTXN[ic][iz] = new TProfile(Form("tp1f_c%i_z%i_reso3_BBC_FVTXN", ic, iz), "", 1, -0.5, 0.5, -1e6, 1e6, "");
       tp1f_reso3_CNT_FVTXN[ic][iz] = new TProfile(Form("tp1f_c%i_z%i_reso3_CNT_FVTXN", ic, iz), "", 1, -0.5, 0.5, -1e6, 1e6, "");
       tp1f_reso3_FVTXS_FVTXN[ic][iz] = new TProfile(Form("tp1f_c%i_z%i_reso3_FVTXS_FVTXN", ic, iz), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+
+      tp1f_reso3_BBC_FVTXSA[ic][iz] = new TProfile(Form("tp1f_c%i_z%i_reso3_BBC_FVTXSA", ic, iz), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+      tp1f_reso3_CNT_FVTXSA[ic][iz] = new TProfile(Form("tp1f_c%i_z%i_reso3_CNT_FVTXSA", ic, iz), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+      tp1f_reso3_BBC_FVTXSB[ic][iz] = new TProfile(Form("tp1f_c%i_z%i_reso3_BBC_FVTXSB", ic, iz), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+      tp1f_reso3_CNT_FVTXSB[ic][iz] = new TProfile(Form("tp1f_c%i_z%i_reso3_CNT_FVTXSB", ic, iz), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+      for (int il = 0; il < NFVTXLAY; il++)
+      {
+        tp1f_reso3_BBC_FVTXSL[ic][iz][il] = new TProfile(Form("tp1f_c%i_z%i_reso3_BBC_FVTXSL%i", ic, iz, il), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+        tp1f_reso3_CNT_FVTXSL[ic][iz][il] = new TProfile(Form("tp1f_c%i_z%i_reso3_CNT_FVTXSL%i", ic, iz, il), "", 1, -0.5, 0.5, -1e6, 1e6, "");
+      }
     } // iz
   } // ic
 
@@ -695,6 +715,7 @@ void flatten(int runNumber, int rp_recal_pass)
   TProfile* fvtxn_v2_west_docalib[NMUL][NZPS];
   TProfile* fvtxn_v2_both_docalib[NMUL][NZPS];
 
+
   TProfile* bbcs_v3_east_docalib[NMUL][NZPS];
   TProfile* bbcs_v3_west_docalib[NMUL][NZPS];
   TProfile* bbcs_v3_both_docalib[NMUL][NZPS];
@@ -702,6 +723,18 @@ void flatten(int runNumber, int rp_recal_pass)
   TProfile* fvtxs_v3_east_docalib[NMUL][NZPS];
   TProfile* fvtxs_v3_west_docalib[NMUL][NZPS];
   TProfile* fvtxs_v3_both_docalib[NMUL][NZPS];
+
+  TProfile* fvtxsa_v3_east_docalib[NMUL][NZPS];
+  TProfile* fvtxsa_v3_west_docalib[NMUL][NZPS];
+  TProfile* fvtxsa_v3_both_docalib[NMUL][NZPS];
+
+  TProfile* fvtxsb_v3_east_docalib[NMUL][NZPS];
+  TProfile* fvtxsb_v3_west_docalib[NMUL][NZPS];
+  TProfile* fvtxsb_v3_both_docalib[NMUL][NZPS];
+
+  TProfile* fvtxsl_v3_east_docalib[NMUL][NZPS][NFVTXLAY];
+  TProfile* fvtxsl_v3_west_docalib[NMUL][NZPS][NFVTXLAY];
+  TProfile* fvtxsl_v3_both_docalib[NMUL][NZPS][NFVTXLAY];
 
   TProfile* fvtxn_v3_east_docalib[NMUL][NZPS];
   TProfile* fvtxn_v3_west_docalib[NMUL][NZPS];
@@ -759,6 +792,7 @@ void flatten(int runNumber, int rp_recal_pass)
       fvtxn_v2_east_docalib[ic][iz] = new TProfile(Form("fvtxn_v2_east_docalib_cent%d_zvtx%d", ic, iz), "", NPTBINS, ptlim, -1.1, 1.1);
       fvtxn_v2_west_docalib[ic][iz] = new TProfile(Form("fvtxn_v2_west_docalib_cent%d_zvtx%d", ic, iz), "", NPTBINS, ptlim, -1.1, 1.1);
 
+      //-- v3
       bbcs_v3_both_docalib[ic][iz] = new TProfile(Form("bbcs_v3_both_docalib_cent%d_zvtx%d", ic, iz), "", NPTBINS, ptlim, -1.1, 1.1);
       bbcs_v3_east_docalib[ic][iz] = new TProfile(Form("bbcs_v3_east_docalib_cent%d_zvtx%d", ic, iz), "", NPTBINS, ptlim, -1.1, 1.1);
       bbcs_v3_west_docalib[ic][iz] = new TProfile(Form("bbcs_v3_west_docalib_cent%d_zvtx%d", ic, iz), "", NPTBINS, ptlim, -1.1, 1.1);
@@ -766,6 +800,21 @@ void flatten(int runNumber, int rp_recal_pass)
       fvtxs_v3_both_docalib[ic][iz] = new TProfile(Form("fvtxs_v3_both_docalib_cent%d_zvtx%d", ic, iz), "", NPTBINS, ptlim, -1.1, 1.1);
       fvtxs_v3_east_docalib[ic][iz] = new TProfile(Form("fvtxs_v3_east_docalib_cent%d_zvtx%d", ic, iz), "", NPTBINS, ptlim, -1.1, 1.1);
       fvtxs_v3_west_docalib[ic][iz] = new TProfile(Form("fvtxs_v3_west_docalib_cent%d_zvtx%d", ic, iz), "", NPTBINS, ptlim, -1.1, 1.1);
+
+      fvtxsa_v3_both_docalib[ic][iz] = new TProfile(Form("fvtxsa_v3_both_docalib_cent%d_zvtx%d", ic, iz), "", NPTBINS, ptlim, -1.1, 1.1);
+      fvtxsa_v3_east_docalib[ic][iz] = new TProfile(Form("fvtxsa_v3_east_docalib_cent%d_zvtx%d", ic, iz), "", NPTBINS, ptlim, -1.1, 1.1);
+      fvtxsa_v3_west_docalib[ic][iz] = new TProfile(Form("fvtxsa_v3_west_docalib_cent%d_zvtx%d", ic, iz), "", NPTBINS, ptlim, -1.1, 1.1);
+
+      fvtxsb_v3_both_docalib[ic][iz] = new TProfile(Form("fvtxsb_v3_both_docalib_cent%d_zvtx%d", ic, iz), "", NPTBINS, ptlim, -1.1, 1.1);
+      fvtxsb_v3_east_docalib[ic][iz] = new TProfile(Form("fvtxsb_v3_east_docalib_cent%d_zvtx%d", ic, iz), "", NPTBINS, ptlim, -1.1, 1.1);
+      fvtxsb_v3_west_docalib[ic][iz] = new TProfile(Form("fvtxsb_v3_west_docalib_cent%d_zvtx%d", ic, iz), "", NPTBINS, ptlim, -1.1, 1.1);
+
+      for (int il = 0; il < NFVTXLAY; il++)
+      {
+        fvtxsl_v3_both_docalib[ic][iz][il] = new TProfile(Form("fvtxsl%i_v3_both_docalib_cent%d_zvtx%d", il, ic, iz), "", NPTBINS, ptlim, -1.1, 1.1);
+        fvtxsl_v3_east_docalib[ic][iz][il] = new TProfile(Form("fvtxsl%i_v3_east_docalib_cent%d_zvtx%d", il, ic, iz), "", NPTBINS, ptlim, -1.1, 1.1);
+        fvtxsl_v3_west_docalib[ic][iz][il] = new TProfile(Form("fvtxsl%i_v3_west_docalib_cent%d_zvtx%d", il, ic, iz), "", NPTBINS, ptlim, -1.1, 1.1);
+      }
 
       fvtxn_v3_both_docalib[ic][iz] = new TProfile(Form("fvtxn_v3_both_docalib_cent%d_zvtx%d", ic, iz), "", NPTBINS, ptlim, -1.1, 1.1);
       fvtxn_v3_east_docalib[ic][iz] = new TProfile(Form("fvtxn_v3_east_docalib_cent%d_zvtx%d", ic, iz), "", NPTBINS, ptlim, -1.1, 1.1);
@@ -1434,13 +1483,6 @@ void flatten(int runNumber, int rp_recal_pass)
 
           fvtxs_qx2[0] += TMath::Cos(2 * phi);
           fvtxs_qy2[0] += TMath::Sin(2 * phi);
-          fvtxs_qx3[0] += TMath::Cos(3 * phi);
-          fvtxs_qy3[0] += TMath::Sin(3 * phi);
-          fvtxs_qx4[0] += TMath::Cos(4 * phi);
-          fvtxs_qy4[0] += TMath::Sin(4 * phi);
-          fvtxs_qw[0] += 1;
-
-
           fvtxs_qx2[fvtxsl_index + fvtx_layer] += TMath::Cos(2 * phi);
           fvtxs_qy2[fvtxsl_index + fvtx_layer] += TMath::Sin(2 * phi);
           fvtxs_qw[fvtxsl_index + fvtx_layer] += 1;
@@ -1457,6 +1499,50 @@ void flatten(int runNumber, int rp_recal_pass)
             fvtxs_qy2[fvtxsa_index + 1] += TMath::Sin(2 * phi);
             fvtxs_qw[fvtxsa_index + 1] += 1;
           }
+
+
+
+          fvtxs_qx3[0] += TMath::Cos(3 * phi);
+          fvtxs_qy3[0] += TMath::Sin(3 * phi);
+          fvtxs_qx3[fvtxsl_index + fvtx_layer] += TMath::Cos(3 * phi);
+          fvtxs_qy3[fvtxsl_index + fvtx_layer] += TMath::Sin(3 * phi);
+          fvtxs_qw[fvtxsl_index + fvtx_layer] += 1;
+
+          if ( fvtx_eta > -2 )
+          {
+            fvtxs_qx3[fvtxsa_index] += TMath::Cos(3 * phi);
+            fvtxs_qy3[fvtxsa_index] += TMath::Sin(3 * phi);
+            fvtxs_qw[fvtxsa_index] += 1;
+          }
+          else
+          {
+            fvtxs_qx3[fvtxsa_index + 1] += TMath::Cos(3 * phi);
+            fvtxs_qy3[fvtxsa_index + 1] += TMath::Sin(3 * phi);
+            fvtxs_qw[fvtxsa_index + 1] += 1;
+          }
+
+
+          fvtxs_qx4[0] += TMath::Cos(4 * phi);
+          fvtxs_qy4[0] += TMath::Sin(4 * phi);
+          fvtxs_qw[0] += 1;
+          fvtxs_qx4[fvtxsl_index + fvtx_layer] += TMath::Cos(4 * phi);
+          fvtxs_qy4[fvtxsl_index + fvtx_layer] += TMath::Sin(4 * phi);
+          fvtxs_qw[fvtxsl_index + fvtx_layer] += 1;
+
+          if ( fvtx_eta > -2 )
+          {
+            fvtxs_qx4[fvtxsa_index] += TMath::Cos(4 * phi);
+            fvtxs_qy4[fvtxsa_index] += TMath::Sin(4 * phi);
+            fvtxs_qw[fvtxsa_index] += 1;
+          }
+          else
+          {
+            fvtxs_qx4[fvtxsa_index + 1] += TMath::Cos(4 * phi);
+            fvtxs_qy4[fvtxsa_index + 1] += TMath::Sin(4 * phi);
+            fvtxs_qw[fvtxsa_index + 1] += 1;
+          }
+
+
 
         } // check on south
 
@@ -1535,12 +1621,37 @@ void flatten(int runNumber, int rp_recal_pass)
       sumxy[2][fvtxn_index][0] = fvtxn_qx3[0];
       sumxy[2][fvtxn_index][1] = fvtxn_qy3[0];
       sumxy[2][fvtxn_index][2] = fvtxn_qw[0];
+      for (int il = 0; il < NFVTXLAY; il++)
+      {
+        sumxy[2][fvtxsl_index + il][0] = fvtxs_qx3[fvtxsl_index + il];
+        sumxy[2][fvtxsl_index + il][1] = fvtxs_qy3[fvtxsl_index + il];
+        sumxy[2][fvtxsl_index + il][2] = fvtxs_qw[fvtxsl_index + il];
+      }
+      sumxy[2][fvtxsa_index][0] = fvtxs_qx3[fvtxsa_index];
+      sumxy[2][fvtxsa_index][1] = fvtxs_qy3[fvtxsa_index];
+      sumxy[2][fvtxsa_index][2] = fvtxs_qw[fvtxsa_index];
+      sumxy[2][fvtxsa_index + 1][0] = fvtxs_qx3[fvtxsa_index + 1];
+      sumxy[2][fvtxsa_index + 1][1] = fvtxs_qy3[fvtxsa_index + 1];
+      sumxy[2][fvtxsa_index + 1][2] = fvtxs_qw[fvtxsa_index + 1];
+
       sumxy[3][fvtxs_index][0] = fvtxs_qx4[0];
       sumxy[3][fvtxs_index][1] = fvtxs_qy4[0];
       sumxy[3][fvtxs_index][2] = fvtxs_qw[0];
       sumxy[3][fvtxn_index][0] = fvtxn_qx4[0];
       sumxy[3][fvtxn_index][1] = fvtxn_qy4[0];
       sumxy[3][fvtxn_index][2] = fvtxn_qw[0];
+      for (int il = 0; il < NFVTXLAY; il++)
+      {
+        sumxy[3][fvtxsl_index + il][0] = fvtxs_qx4[fvtxsl_index + il];
+        sumxy[3][fvtxsl_index + il][1] = fvtxs_qy4[fvtxsl_index + il];
+        sumxy[3][fvtxsl_index + il][2] = fvtxs_qw[fvtxsl_index + il];
+      }
+      sumxy[3][fvtxsa_index][0] = fvtxs_qx4[fvtxsa_index];
+      sumxy[3][fvtxsa_index][1] = fvtxs_qy4[fvtxsa_index];
+      sumxy[3][fvtxsa_index][2] = fvtxs_qw[fvtxsa_index];
+      sumxy[3][fvtxsa_index + 1][0] = fvtxs_qx4[fvtxsa_index + 1];
+      sumxy[3][fvtxsa_index + 1][1] = fvtxs_qy4[fvtxsa_index + 1];
+      sumxy[3][fvtxsa_index + 1][2] = fvtxs_qw[fvtxsa_index + 1];
     } // check on clusters
 
 
@@ -1673,6 +1784,7 @@ void flatten(int runNumber, int rp_recal_pass)
       sumxy[1][fvtxsl_index + il][1] = sin(sumxy[1][fvtxsl_index + il][3] * 2) + qy2_offset_fvtxsl[eidx][il][icent];
       sumxy[1][fvtxsl_index + il][3] = atan2(sumxy[1][fvtxsl_index + il][1], sumxy[1][fvtxsl_index + il][0]) / (1 + 1.0);
     }
+
     // Qy offset on BBCS Psi2
     sumxy[1][bbcs_index][0] = cos(sumxy[1][bbcs_index][3] * 2);
     sumxy[1][bbcs_index][1] = sin(sumxy[1][bbcs_index][3] * 2) + qy2_offset_bbcs[eidx][icent];
@@ -1682,6 +1794,15 @@ void flatten(int runNumber, int rp_recal_pass)
     sumxy[2][fvtxs_index][0] = cos(sumxy[2][fvtxs_index][3] * 3) + qx3_offset_fvtxs[eidx][icent];
     sumxy[2][fvtxs_index][1] = sin(sumxy[2][fvtxs_index][3] * 2);
     sumxy[2][fvtxs_index][3] = atan2(sumxy[2][fvtxs_index][1], sumxy[2][fvtxs_index][0]) / (2 + 1.0);
+    sumxy[2][fvtxsa_index + 1][0] = cos(sumxy[2][fvtxsa_index + 1][3] * 2) + qx3_offset_fvtxs[eidx][icent];
+    sumxy[2][fvtxsa_index + 1][1] = sin(sumxy[2][fvtxsa_index + 1][3] * 2);
+    sumxy[2][fvtxsa_index + 1][3] = atan2(sumxy[2][fvtxsa_index + 1][1], sumxy[2][fvtxsa_index + 1][0]) / (2 + 1.0);
+    for (int il = 0; il < NFVTXLAY; il++)
+    {
+      sumxy[2][fvtxsl_index + il][0] = cos(sumxy[2][fvtxsl_index + il][3] * 2) + qx3_offset_fvtxsl[eidx][il][icent];
+      sumxy[2][fvtxsl_index + il][1] = sin(sumxy[2][fvtxsl_index + il][3] * 2);
+      sumxy[2][fvtxsl_index + il][3] = atan2(sumxy[2][fvtxsl_index + il][1], sumxy[2][fvtxsl_index + il][0]) / (1 + 1.0);
+    }
 
     // Qx offset on BBCS Psi3
     sumxy[2][bbcs_index][0] = cos(sumxy[2][bbcs_index][3] * 3) + qx3_offset_bbcs[eidx][icent];
@@ -1779,6 +1900,12 @@ void flatten(int runNumber, int rp_recal_pass)
     for (int il = 0; il < NFVTXLAY; il++)
     {
       tp1f_reso2_BBC_FVTXSL[icent][izvtx][il]->Fill(0.0, cos(2 * (bbc_south_psi2_docalib - sumxy[1][fvtxsl_index + il][3])));
+    }
+    tp1f_reso3_BBC_FVTXSA[icent][izvtx]->Fill(0.0, cos(3 * (bbc_south_psi3_docalib - sumxy[2][fvtxsa_index][3])));
+    tp1f_reso3_BBC_FVTXSB[icent][izvtx]->Fill(0.0, cos(3 * (bbc_south_psi3_docalib - sumxy[2][fvtxsa_index + 1][3])));
+    for (int il = 0; il < NFVTXLAY; il++)
+    {
+      tp1f_reso3_BBC_FVTXSL[icent][izvtx][il]->Fill(0.0, cos(3 * (bbc_south_psi3_docalib - sumxy[2][fvtxsl_index + il][3])));
     }
 
     // ----------------------------------------------------------------------------
@@ -2004,9 +2131,20 @@ void flatten(int runNumber, int rp_recal_pass)
             if ( dcarm == 1 ) fvtxsa_v2_west_docalib[icent][izvtx]->Fill(pt_angle, cosfvtxsa_dphi2_docalib);
             if ( dcarm == 0 ) fvtxsa_v2_east_docalib[icent][izvtx]->Fill(pt_angle, cosfvtxsa_dphi2_docalib);
 
+            // --- 3rd harmonic
+            double fvtxsa_dphi3_docalib = phi_angle - sumxy[2][fvtxsa_index][3];
+            double cosfvtxsa_dphi3_docalib = TMath::Cos(3 * fvtxsa_dphi3_docalib);
+
+            fvtxsa_v3_both_docalib[icent][izvtx]->Fill(pt_angle, cosfvtxsa_dphi3_docalib);
+            if ( dcarm == 1 ) fvtxsa_v3_west_docalib[icent][izvtx]->Fill(pt_angle, cosfvtxsa_dphi3_docalib);
+            if ( dcarm == 0 ) fvtxsa_v3_east_docalib[icent][izvtx]->Fill(pt_angle, cosfvtxsa_dphi3_docalib);
+
             // --- ep resolutions
             if ( pt_angle > 0.4 && pt_angle < 3.0 )
+	    {
               tp1f_reso2_CNT_FVTXSA[icent][izvtx]->Fill(0.0, cosfvtxsa_dphi2_docalib);
+              tp1f_reso3_CNT_FVTXSA[icent][izvtx]->Fill(0.0, cosfvtxsa_dphi3_docalib);
+	    }
 
           } // check on ep south A layers
 
@@ -2023,9 +2161,20 @@ void flatten(int runNumber, int rp_recal_pass)
             if ( dcarm == 1 ) fvtxsb_v2_west_docalib[icent][izvtx]->Fill(pt_angle, cosfvtxsb_dphi2_docalib);
             if ( dcarm == 0 ) fvtxsb_v2_east_docalib[icent][izvtx]->Fill(pt_angle, cosfvtxsb_dphi2_docalib);
 
+            // --- 3rd harmonic
+            double fvtxsb_dphi3_docalib = phi_angle - sumxy[2][fvtxsa_index + 1][3];
+            double cosfvtxsb_dphi3_docalib = TMath::Cos(3 * fvtxsb_dphi3_docalib);
+
+            fvtxsb_v3_both_docalib[icent][izvtx]->Fill(pt_angle, cosfvtxsb_dphi3_docalib);
+            if ( dcarm == 1 ) fvtxsb_v3_west_docalib[icent][izvtx]->Fill(pt_angle, cosfvtxsb_dphi3_docalib);
+            if ( dcarm == 0 ) fvtxsb_v3_east_docalib[icent][izvtx]->Fill(pt_angle, cosfvtxsb_dphi3_docalib);
+
             // --- ep resolutions
             if ( pt_angle > 0.4 && pt_angle < 3.0 )
+	    {
               tp1f_reso2_CNT_FVTXSB[icent][izvtx]->Fill(0.0, cosfvtxsb_dphi2_docalib);
+              tp1f_reso3_CNT_FVTXSB[icent][izvtx]->Fill(0.0, cosfvtxsb_dphi3_docalib);
+	    }
 
           } // check on ep south B layers
 
@@ -2043,9 +2192,20 @@ void flatten(int runNumber, int rp_recal_pass)
               if ( dcarm == 1 ) fvtxsl_v2_west_docalib[icent][izvtx][il]->Fill(pt_angle, cosfvtxsl_dphi2_docalib);
               if ( dcarm == 0 ) fvtxsl_v2_east_docalib[icent][izvtx][il]->Fill(pt_angle, cosfvtxsl_dphi2_docalib);
 
+              // --- 3rd harmonic
+              double fvtxsl_dphi3_docalib = phi_angle - sumxy[2][fvtxsl_index + il][3];
+              double cosfvtxsl_dphi3_docalib = TMath::Cos(2 * fvtxsl_dphi3_docalib);
+
+              fvtxsl_v3_both_docalib[icent][izvtx][il]->Fill(pt_angle, cosfvtxsl_dphi3_docalib);
+              if ( dcarm == 1 ) fvtxsl_v3_west_docalib[icent][izvtx][il]->Fill(pt_angle, cosfvtxsl_dphi3_docalib);
+              if ( dcarm == 0 ) fvtxsl_v3_east_docalib[icent][izvtx][il]->Fill(pt_angle, cosfvtxsl_dphi3_docalib);
+
               // --- ep resolutions
               if ( pt_angle > 0.4 && pt_angle < 3.0 )
+	      {
                 tp1f_reso2_CNT_FVTXSL[icent][izvtx][il]->Fill(0.0, cosfvtxsl_dphi2_docalib);
+                tp1f_reso3_CNT_FVTXSL[icent][izvtx][il]->Fill(0.0, cosfvtxsl_dphi3_docalib);
+	      }
 
             } // check on ep south layers
           } // il
