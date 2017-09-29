@@ -107,8 +107,8 @@ int main(int argc, char *argv[])
 
   cout << "Now processing with run number " << run << endl;
 
-  flatten(run, 1);
-  flatten(run, 2);
+  //  flatten(run, 1);
+  //  flatten(run, 2);
   flatten(run, 3);
 
   return 0;
@@ -166,7 +166,7 @@ void flatten(int runNumber, int rp_recal_pass)
   float fracCut = 0.95; // pile up rejection < fracCut (better place??)
   // float fracCut = 0.98; // pile up rejection < fracCut (better place??)
 
-  bool tight_trkcuts = false; // flag for tight cnt & fvtx track cuts (true=tight)
+  bool tight_trkcuts = true; // flag for tight cnt & fvtx track cuts (true=tight)
 
   float qxOffset = 0.0; // offset to Qx values
 
