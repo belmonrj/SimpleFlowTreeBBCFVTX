@@ -166,7 +166,7 @@ void flatten(int runNumber, int rp_recal_pass)
   float fracCut = 0.95; // pile up rejection < fracCut (better place??)
   // float fracCut = 0.98; // pile up rejection < fracCut (better place??)
 
-  bool tight_trkcuts = false; // flag for tight cnt & fvtx track cuts (true=tight)
+  bool tight_trkcuts = true; // flag for tight cnt & fvtx track cuts (true=tight)
 
   float qxOffset = 0.0; // offset to Qx values
 
@@ -1792,16 +1792,16 @@ void flatten(int runNumber, int rp_recal_pass)
 
     // Qx offset on FVTXS Psi3
     sumxy[2][fvtxs_index][0] = cos(sumxy[2][fvtxs_index][3] * 3) + qx3_offset_fvtxs[eidx][icent];
-    sumxy[2][fvtxs_index][1] = sin(sumxy[2][fvtxs_index][3] * 2);
+    sumxy[2][fvtxs_index][1] = sin(sumxy[2][fvtxs_index][3] * 3);
     sumxy[2][fvtxs_index][3] = atan2(sumxy[2][fvtxs_index][1], sumxy[2][fvtxs_index][0]) / (2 + 1.0);
-    sumxy[2][fvtxsa_index + 1][0] = cos(sumxy[2][fvtxsa_index + 1][3] * 2) + qx3_offset_fvtxs[eidx][icent];
-    sumxy[2][fvtxsa_index + 1][1] = sin(sumxy[2][fvtxsa_index + 1][3] * 2);
+    sumxy[2][fvtxsa_index + 1][0] = cos(sumxy[2][fvtxsa_index + 1][3] * 3) + qx3_offset_fvtxs[eidx][icent];
+    sumxy[2][fvtxsa_index + 1][1] = sin(sumxy[2][fvtxsa_index + 1][3] * 3);
     sumxy[2][fvtxsa_index + 1][3] = atan2(sumxy[2][fvtxsa_index + 1][1], sumxy[2][fvtxsa_index + 1][0]) / (2 + 1.0);
     for (int il = 0; il < NFVTXLAY; il++)
     {
-      sumxy[2][fvtxsl_index + il][0] = cos(sumxy[2][fvtxsl_index + il][3] * 2) + qx3_offset_fvtxsl[eidx][il][icent];
-      sumxy[2][fvtxsl_index + il][1] = sin(sumxy[2][fvtxsl_index + il][3] * 2);
-      sumxy[2][fvtxsl_index + il][3] = atan2(sumxy[2][fvtxsl_index + il][1], sumxy[2][fvtxsl_index + il][0]) / (1 + 1.0);
+      sumxy[2][fvtxsl_index + il][0] = cos(sumxy[2][fvtxsl_index + il][3] * 3) + qx3_offset_fvtxsl[eidx][il][icent];
+      sumxy[2][fvtxsl_index + il][1] = sin(sumxy[2][fvtxsl_index + il][3] * 3);
+      sumxy[2][fvtxsl_index + il][3] = atan2(sumxy[2][fvtxsl_index + il][1], sumxy[2][fvtxsl_index + il][0]) / (2 + 1.0);
     }
 
     // Qx offset on BBCS Psi3
