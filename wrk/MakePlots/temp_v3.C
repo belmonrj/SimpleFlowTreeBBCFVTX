@@ -6,9 +6,9 @@ void temp_v3()
 {
 
   doenergy(200);
-  doenergy(62);
-  doenergy(20);
-  doenergy(39);
+  // doenergy(62);
+  // doenergy(20);
+  // doenergy(39);
 
 }
 
@@ -68,10 +68,10 @@ void doenergy(int energy)
 
   hv3_fvtxs->Scale(1.0/reso_fvtx);
   hv3_fvtxs->Draw();
-  hv3_fvtxs->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = %d GeV",energy));
+  //hv3_fvtxs->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = %d GeV",energy));
   if ( energy == 62 ) hv3_fvtxs->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = 62.4 GeV"));
   if ( energy == 20 ) hv3_fvtxs->SetTitle(Form("d+Au collisions at #sqrt{s_{NN}} = 19.6 GeV"));
-  hv3_fvtxs->SetMaximum(0.15);
+  hv3_fvtxs->SetMaximum(0.05);
   hv3_fvtxs->SetMinimum(0.0);
   hv3_fvtxs->GetXaxis()->SetTitle("p_{T} (GeV/c)");
   hv3_fvtxs->GetYaxis()->SetTitle("v_{3}{EP}");
@@ -99,7 +99,7 @@ void doenergy(int energy)
   // c1->Print("run16dau200_v3_fvtxsbbcs.png");
 
   hv3_fvtxs->SetMinimum(-0.05);
-  hv3_fvtxs->SetMaximum(0.15);
+  hv3_fvtxs->SetMaximum(0.10);
 
   TLine line(0.0,0.0,3.0,0.0);
   line.SetLineStyle(2);
