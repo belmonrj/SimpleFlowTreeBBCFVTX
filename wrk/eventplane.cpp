@@ -168,6 +168,10 @@ void flatten(int runNumber, int rp_recal_pass)
 
   bool tight_trkcuts = true; // flag for tight cnt & fvtx track cuts (true=tight)
 
+  // float reso_lpt = 0.4; // low-pT cut for PHCentralTracks when calculating ep resolution
+  float reso_lpt = 0.2; // low-pT cut for PHCentralTracks when calculating ep resolution
+  float reso_hpt = 3.0; // hi-pT cut for PHCentralTracks when calculating ep resolution
+
   //---
   // all zeros
   float qy2_offset_fvtxs[4][6] = {{0}, {0}, {0}, {0}};
@@ -1771,13 +1775,8 @@ void flatten(int runNumber, int rp_recal_pass)
         pzo = pz;
 
         // now we can rotate based on what's in beam_angle above
-        // px = pxo * cos(-beam_angle) + pzo * sin(-beam_angle);
-        // pz = -1 * pxo * sin(-beam_angle) + pzo * cos(-beam_angle);
-
-
-        // recreate the rotation bug from the preliminary
         px = pxo * cos(-beam_angle) + pzo * sin(-beam_angle);
-        pz = -1 * px * sin(-beam_angle) + pzo * cos(-beam_angle);
+        pz = -1 * pxo * sin(-beam_angle) + pzo * cos(-beam_angle);
 
         // float charge    = d_charge[itrk];
         float pc3sdz    = d_pc3sdz[itrk];
@@ -1845,7 +1844,7 @@ void flatten(int runNumber, int rp_recal_pass)
               if ( dcarm == 0 ) bbcs_vneta_east_docalib[ih][icent][izvtx]->Fill(eta, cosbbc_dphi);
 
               // --- resolutions
-              if ( pt_angle > 0.4 && pt_angle < 3.0 )
+              if ( pt_angle > reso_lpt && pt_angle < reso_hpt )
               {
                 tp1f_reso_BBC_CNT[ih][icent][izvtx]->Fill(0.0, cosbbc_dphi);
               }
@@ -1873,7 +1872,7 @@ void flatten(int runNumber, int rp_recal_pass)
               if ( dcarm == 0 ) fvtxs_vneta_east_docalib[ih][icent][izvtx]->Fill(eta, cosfvtxs_dphi);
 
               // --- ep resolutions
-              if ( pt_angle > 0.4 && pt_angle < 3.0 )
+              if ( pt_angle > reso_lpt && pt_angle < reso_hpt )
               {
                 tp1f_reso_CNT_FVTX[ih][icent][izvtx]->Fill(0.0, cosfvtxs_dphi);
               }
@@ -1899,7 +1898,7 @@ void flatten(int runNumber, int rp_recal_pass)
 
 
               // --- ep resolutions
-              if ( pt_angle > 0.4 && pt_angle < 3.0 )
+              if ( pt_angle > reso_lpt && pt_angle < reso_hpt )
               {
                 tp1f_reso_CNT_FVTXN[ih][icent][izvtx]->Fill(0.0, cosfvtxn_dphi);
               }
@@ -1920,7 +1919,7 @@ void flatten(int runNumber, int rp_recal_pass)
               if ( dcarm == 0 ) fvtxsa_vn_east_docalib[ih][icent][izvtx]->Fill(pt_angle, cosfvtxsa_dphi);
 
               // --- ep resolutions
-              if ( pt_angle > 0.4 && pt_angle < 3.0 )
+              if ( pt_angle > reso_lpt && pt_angle < reso_hpt )
               {
                 tp1f_reso_CNT_FVTXSA[ih][icent][izvtx]->Fill(0.0, cosfvtxsa_dphi);
               }
@@ -1941,7 +1940,7 @@ void flatten(int runNumber, int rp_recal_pass)
               if ( dcarm == 0 ) fvtxsb_vn_east_docalib[ih][icent][izvtx]->Fill(pt_angle, cosfvtxsb_dphi);
 
               // --- ep resolutions
-              if ( pt_angle > 0.4 && pt_angle < 3.0 )
+              if ( pt_angle > reso_lpt && pt_angle < reso_hpt )
               {
                 tp1f_reso_CNT_FVTXSB[ih][icent][izvtx]->Fill(0.0, cosfvtxsb_dphi);
               }
@@ -1963,7 +1962,7 @@ void flatten(int runNumber, int rp_recal_pass)
                 if ( dcarm == 0 ) fvtxsl_vn_east_docalib[ih][icent][izvtx][il]->Fill(pt_angle, cosfvtxsl_dphi);
 
                 // --- ep resolutions
-                if ( pt_angle > 0.4 && pt_angle < 3.0 )
+                if ( pt_angle > reso_lpt && pt_angle < reso_hpt )
                 {
                   tp1f_reso_CNT_FVTXSL[ih][icent][izvtx][il]->Fill(0.0, cosfvtxsl_dphi);
                 }
