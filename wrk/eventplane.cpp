@@ -168,9 +168,10 @@ void flatten(int runNumber, int rp_recal_pass)
 
   bool tight_trkcuts = false; // flag for tight cnt & fvtx track cuts (true=tight)
 
-  float reso_lpt = 0.4; // low-pT cut for PHCentralTracks when calculating ep resolution
-  // float reso_lpt = 0.2; // low-pT cut for PHCentralTracks when calculating ep resolution
-  float reso_hpt = 3.0; // hi-pT cut for PHCentralTracks when calculating ep resolution
+  // float reso_lpt = 0.4; // low-pT cut for PHCentralTracks when calculating ep resolution
+  float reso_lpt = 0.2; // low-pT cut for PHCentralTracks when calculating ep resolution
+  // float reso_hpt = 3.0; // hi-pT cut for PHCentralTracks when calculating ep resolution
+  float reso_hpt = 2.0; // hi-pT cut for PHCentralTracks when calculating ep resolution
 
   //---
   // all zeros
@@ -1774,13 +1775,13 @@ void flatten(int runNumber, int rp_recal_pass)
         pxo = px;
         pzo = pz;
 
-        // // now we can rotate based on what's in beam_angle above
-        // px = pxo * cos(-beam_angle) + pzo * sin(-beam_angle);
-        // pz = -1 * pxo * sin(-beam_angle) + pzo * cos(-beam_angle);
-
-        // reimplement rotation bug
+        // now we can rotate based on what's in beam_angle above
         px = pxo * cos(-beam_angle) + pzo * sin(-beam_angle);
-        pz = -1 * px * sin(-beam_angle) + pzo * cos(-beam_angle);
+        pz = -1 * pxo * sin(-beam_angle) + pzo * cos(-beam_angle);
+
+        // // reimplement rotation bug
+        // px = pxo * cos(-beam_angle) + pzo * sin(-beam_angle);
+        // pz = -1 * px * sin(-beam_angle) + pzo * cos(-beam_angle);
 
         // float charge    = d_charge[itrk];
         float pc3sdz    = d_pc3sdz[itrk];
