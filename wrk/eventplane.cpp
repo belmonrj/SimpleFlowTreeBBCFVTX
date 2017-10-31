@@ -166,7 +166,7 @@ void flatten(int runNumber, int rp_recal_pass)
   float fracCut = 0.95; // pile up rejection < fracCut (better place??)
   // float fracCut = 0.98; // pile up rejection < fracCut (better place??)
 
-  bool tight_trkcuts = false; // flag for tight cnt & fvtx track cuts (true=tight)
+  bool tight_trkcuts = true; // flag for tight cnt & fvtx track cuts (true=tight)
 
   // float reso_lpt = 0.4; // low-pT cut for PHCentralTracks when calculating ep resolution
   float reso_lpt = 0.2; // low-pT cut for PHCentralTracks when calculating ep resolution
