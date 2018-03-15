@@ -27,7 +27,7 @@ void InputData(vector<string> &indata);
 void RunMyMacro(const char *modulemacro = "Run_SimpleFlowTreeBBCFVTX.C",  // your anataxi macro name
                 const char *outfile     = "test.root",   // <module_name>_<run>-<sequence>.root
                 const int nevnt         = 100000,               // number of events
-                const char *system      = "Run16dAu200CAnVXMBP107") // system type
+                const char *system      = "Run14HeAu200MinBias") // system type
 {
   int starttime = TDatime().GetTime();
   cout<<"    Start Time: "<<starttime<<endl<<endl;
