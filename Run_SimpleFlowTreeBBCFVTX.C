@@ -36,7 +36,7 @@ void Run_SimpleFlowTreeBBCFVTX(
   sflow->set_create_ttree(true);
   sflow->set_write_bbc(true);
   sflow->set_write_cnt(true);
-  sflow->set_write_fvtx_clusters(true); // i guess?
+  sflow->set_write_fvtx_clusters(false);
   sflow->set_write_fvtx(true);
   sflow->set_use_runlist(false);                     //use the runlist to select for good runs
   //sflow->set_runlist_file(string);
