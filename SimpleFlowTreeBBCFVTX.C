@@ -855,9 +855,10 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
       PHSnglCentralTrack *strk = ctrk->get_track(itrk);
 
       //-- Only write out good PHCentralTracks
-      if ( !_utils->is_cnt_track_ok(strk) )
-        continue;
-
+      if ( use_utils )
+        {
+          if ( !_utils->is_cnt_track_ok(strk) ) continue;
+        }
 
       float mom         = strk->get_mom();
       float zed         = strk->get_zed();
