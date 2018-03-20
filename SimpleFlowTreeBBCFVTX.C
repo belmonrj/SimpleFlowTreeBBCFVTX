@@ -140,7 +140,7 @@ int SimpleFlowTreeBBCFVTX::Init(PHCompositeNode *topNode)
     {
       _ntp_event -> Branch("bbc_qn", &bbc_qn, "bbc_qn/F");
       _ntp_event -> Branch("bbc_qs", &bbc_qs, "bbc_qs/F");
-      _ntp_event -> Branch("d_BBC_charge", &d_BBC_charge, "d_BBC_charge[128]/F");
+      _ntp_event -> Branch("d_BBC_charge", &d_BBC_charge, "d_BBC_charge[N_TUBES]/F");
       //_ntp_event -> Branch("d_BBCs_Qy",&d_BBCs_Qy,"d_BBCs_Qy[221]/F");
       //_ntp_event -> Branch("d_BBCs_Qw",&d_BBCs_Qw,"d_BBCs_Qw[221]/F");
     }
@@ -296,7 +296,7 @@ int SimpleFlowTreeBBCFVTX::ResetEvent(PHCompositeNode *topNode)
     d_Qw[i] = 0;
   }
 
-  for (int i = 0; i < 128; i++)
+  for (int i = 0; i < N_TUBES; i++)
   {
     d_BBC_charge[i] = 0.0;
 
@@ -508,9 +508,9 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
       zvtx = _utils->get_vrtx(topNode);
       if ( _verbosity > 1 ) cout << "got the vertex from utils" << endl;
     }
-  else if ( fabs(zvtx) > 12.0 )
+  else if ( fabs(zvtx) > 10.0 )
     {
-      if ( _verbosity > 1 ) cout << "utils class not available, imposing hard coded 12 cm vertex cut" << endl;
+      if ( _verbosity > 1 ) cout << "utils class not available, imposing hard coded 10 cm vertex cut" << endl;
       return EVENT_OK;
     }
 
@@ -625,7 +625,7 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
     if (bbcraw)
     {
       if ( _verbosity > 1 ) cout << "now getting tube information" << endl;
-      for ( int ipmt = 0; ipmt < 128; ++ipmt )
+      for ( int ipmt = 0; ipmt < N_TUBES; ++ipmt )
       {
 
         short iadc    = bbcraw->get_Adc(ipmt);
@@ -743,6 +743,14 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
 
       TFvtxCompactTrk* fvtx_trk = trk_ptr->get();
 
+      // --- get the track patterns
+      bool pattern0 = ((fvtx_trk->get_hit_pattern() & 0x3) > 0);
+      bool pattern2 = ((fvtx_trk->get_hit_pattern() & (0x3 << 2)) > 0 );
+      bool pattern4 = ((fvtx_trk->get_hit_pattern() & (0x3 << 4)) > 0 );
+      bool pattern6 = ((fvtx_trk->get_hit_pattern() & (0x3 << 6)) > 0 );
+      int nhits_special = pattern0 + pattern2 + pattern4 + pattern6;
+      if ( nhits_special < 3 ) continue;
+
       //-- Only write out good fvtx tracks
       if ( use_utils )
         {
@@ -759,6 +767,7 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
       float fvtx_y      = fvtx_trk->get_fvtx_vtx().getY();
       float fvtx_z      = fvtx_trk->get_fvtx_vtx().getZ();
       int   nfhits      = (int)fvtx_trk->get_nhits();
+      float chisq = fvtx_trk->get_chi2_ndf();
 
       // fix total momentum to 1.0 (for rotating due to beamtilt)
       double pxo = 1.0 * TMath::Sin(the) * TMath::Cos(phi);
@@ -802,12 +811,18 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
 
       //float DCA_R      = sqrt((DCA_x*DCA_x) + (DCA_y*DCA_y));
 
+      if ( !use_utils )
+        {
+          if ( fabs(DCA_x) > 2.0 || fabs(DCA_y) > 2.0 ) continue;
+          if ( chisq < 0.0 ||chisq > 5.0 ) continue;
+        }
+
       if (ntr < N_FTRK_MAX)
       {
         feta[ntr]   = eta;
         fthe[ntr]   = the;
         fphi[ntr]   = phi;
-        fchisq[ntr] = fvtx_trk->get_chi2_ndf();
+        fchisq[ntr] = chisq;
         farm[ntr]   = arm;
         fnhits[ntr] = nfhits;
         fDCA_X[ntr] = DCA_x;

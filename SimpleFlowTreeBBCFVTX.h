@@ -29,6 +29,8 @@ static const int N_CTRK_MAX = 75; // max number of PHCentralTracks
 //static const int N_FTRK_MAX = 200; // max number of FVTX tracks
 static const int N_FTRK_MAX = 400; // increased for HeAu
 
+static const int N_TUBES = 64; // 64 is south only, change to 128 if want north as well
+
 class Fun4AllHistoManager;
 class BbcCalib;
 class BbcGeo;
@@ -138,7 +140,7 @@ class SimpleFlowTreeBBCFVTX: public SubsysReco
   // if (_write_bbc)
   float bbc_qn;
   float bbc_qs;
-  float d_BBC_charge[128]; // charge from each bbc tube for south (first 64) and north (second 64)
+  float d_BBC_charge[N_TUBES]; // charge from each bbc tube for south (first 64) and north (second 64)
 
   // if (_write_fvtx_clusters)
   int   d_nFVTX_clus;
