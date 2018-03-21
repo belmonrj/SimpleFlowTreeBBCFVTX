@@ -140,7 +140,7 @@ int SimpleFlowTreeBBCFVTX::Init(PHCompositeNode *topNode)
     {
       _ntp_event -> Branch("bbc_qn", &bbc_qn, "bbc_qn/F");
       _ntp_event -> Branch("bbc_qs", &bbc_qs, "bbc_qs/F");
-      _ntp_event -> Branch("d_BBC_charge", &d_BBC_charge, "d_BBC_charge[N_TUBES]/F");
+      _ntp_event -> Branch("d_BBC_charge", &d_BBC_charge, Form("d_BBC_charge[%d]/F",N_TUBES));
       //_ntp_event -> Branch("d_BBCs_Qy",&d_BBCs_Qy,"d_BBCs_Qy[221]/F");
       //_ntp_event -> Branch("d_BBCs_Qw",&d_BBCs_Qw,"d_BBCs_Qw[221]/F");
     }
@@ -473,6 +473,8 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
   event = evthead->get_EvtSequence();
   trigger_scaled = triggers->get_lvl1_trigscaled();
   trigger_live = triggers->get_lvl1_triglive();
+
+  if ( centrality > 5 ) return EVENT_OK;
 
   if ( !use_utils )
     {
