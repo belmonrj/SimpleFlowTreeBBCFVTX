@@ -892,11 +892,18 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
       double px = pxo;
       double py = pyo;
       double pz = pzo;
+
+      //cout << "event: " << event << endl;
+      //cout << mom << " " << sqrt(px*px + py*py + pz*pz) << endl;
+      //cout << px << " " << py << " " << pz << endl;
+
       if ( use_utils )
         {
           px = _utils->rotate_x(pxo, pzo);
           pz = _utils->rotate_z(pxo, pzo);
         }
+
+      //cout << mom << " " << sqrt(px*px + py*py + pz*pz) << endl;
 
       int charge = strk->get_charge();
 
@@ -917,6 +924,11 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
       d_cntpc3sdz[counter] = pc3sdz;
       d_cntpc3sdphi[counter] = pc3sdphi;
 
+      if ( _verbosity > 1 )
+        {
+          cout << px << "\n" << py << "\n" << pz << endl;
+          cout << d_cntpx[counter] << "\n" << d_cntpy[counter] << "\n" << d_cntpz[counter] << endl;
+        }
       ++counter;
 
     } // loop over tracks

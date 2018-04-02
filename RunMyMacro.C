@@ -28,6 +28,8 @@ void RunMyMacro(const char *modulemacro = "Run_SimpleFlowTreeBBCFVTX.C",  // you
                 const char *outfile     = "test.root",   // <module_name>_<run>-<sequence>.root
                 const int nevnt         = 100000,               // number of events
                 const char *system      = "Run14HeAu200MinBias") // system type
+                //const char *system      = "Run15pAu200FvtxMBPro107") // system type
+                //const char *system      = "Run15pAl200MBPro104") // system type
 {
   int starttime = TDatime().GetTime();
   cout<<"    Start Time: "<<starttime<<endl<<endl;
