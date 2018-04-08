@@ -167,6 +167,7 @@ class SimpleFlowTreeBBCFVTX: public SubsysReco
   float fchisq[N_FTRK_MAX];
   int farm[N_FTRK_MAX];
   int fnhits[N_FTRK_MAX];
+  int fnhitx[N_FTRK_MAX];
   float fDCA_X[N_FTRK_MAX];
   float fDCA_Y[N_FTRK_MAX];
 

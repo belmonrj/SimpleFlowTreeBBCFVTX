@@ -175,6 +175,7 @@ int SimpleFlowTreeBBCFVTX::Init(PHCompositeNode *topNode)
       _ntp_event -> Branch("fchisq", &fchisq, "fchisq[ntracklets]/F");
       _ntp_event -> Branch("farm", &farm, "farm[ntracklets]/I");
       _ntp_event -> Branch("fnhits", &fnhits, "fnhits[ntracklets]/I");
+      _ntp_event -> Branch("fnhitx", &fnhitx, "fnhitx[ntracklets]/I");
       _ntp_event -> Branch("fDCA_X", &fDCA_X, "fDCA_X[ntracklets]/F");
       _ntp_event -> Branch("fDCA_Y", &fDCA_Y, "fDCA_Y[ntracklets]/F");
     }
@@ -318,6 +319,7 @@ int SimpleFlowTreeBBCFVTX::ResetEvent(PHCompositeNode *topNode)
       fthe[i]      = -9999;
       fchisq[i]    = -9999;
       fnhits[i]    = -9999;
+      fnhitx[i]    = -9999;
       fDCA_X[i]    = -9999;
       fDCA_Y[i]    = -9999;
     }
@@ -827,6 +829,7 @@ int SimpleFlowTreeBBCFVTX::process_event(PHCompositeNode *topNode)
         fchisq[ntr] = chisq;
         farm[ntr]   = arm;
         fnhits[ntr] = nfhits;
+        fnhitx[ntr] = nhits_special;
         fDCA_X[ntr] = DCA_x;
         fDCA_Y[ntr] = DCA_y;
       }
