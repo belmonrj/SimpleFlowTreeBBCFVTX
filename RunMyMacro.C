@@ -27,6 +27,7 @@ void InputData(vector<string> &indata);
 void RunMyMacro(const char *modulemacro = "Run_SimpleFlowTreeBBCFVTX.C",  // your anataxi macro name
                 const char *outfile     = "test.root",   // <module_name>_<run>-<sequence>.root
                 const int nevnt         = 100000,               // number of events
+                //const char *system      = "Run14AuAu200MuonsMBPro104") // system type
                 const char *system      = "Run14HeAu200MinBias") // system type
                 //const char *system      = "Run15pAu200FvtxMBPro107") // system type
                 //const char *system      = "Run15pAl200MBPro104") // system type
