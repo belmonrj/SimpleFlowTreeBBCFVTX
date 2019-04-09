@@ -1,0 +1,103 @@
+Universe        = vanilla
+Notification    = Complete
+Executable      = /phenix/plhf/belmonrj/offline/AnalysisTrain/SimpleFlowTreeBBCFVTX/wrk/cumulants.csh
+Rank            = CPU_Speed
+Priority        = +1
+Initialdir      = /phenix/plhf/belmonrj/offline/AnalysisTrain/SimpleFlowTreeBBCFVTX/wrk
+Error           = /phenix/plhf/belmonrj/offline/AnalysisTrain/SimpleFlowTreeBBCFVTX/wrk/log/cjob_$(Process).err
+Log             = /phenix/plhf/belmonrj/offline/AnalysisTrain/SimpleFlowTreeBBCFVTX/wrk/log/cjob_$(Process).log
+Output          = /phenix/plhf/belmonrj/offline/AnalysisTrain/SimpleFlowTreeBBCFVTX/wrk/log/cjob_$(Process).out
++Experiment     = "phenix"
++Job_Type       = "cas"
+
+
+Arguments = 454774
+Queue 1
+
+Arguments = 454777
+Queue 1
+
+Arguments = 454778
+Queue 1
+
+Arguments = 454782
+Queue 1
+
+Arguments = 454783
+Queue 1
+
+Arguments = 454784
+Queue 1
+
+Arguments = 454785
+Queue 1
+
+Arguments = 454786
+Queue 1
+
+Arguments = 454789
+Queue 1
+
+Arguments = 454794
+Queue 1
+
+Arguments = 454797
+Queue 1
+
+Arguments = 454798
+Queue 1
+
+Arguments = 454799
+Queue 1
+
+Arguments = 454800
+Queue 1
+
+Arguments = 454802
+Queue 1
+
+Arguments = 454808
+Queue 1
+
+Arguments = 454809
+Queue 1
+
+Arguments = 454810
+Queue 1
+
+Arguments = 454811
+Queue 1
+
+Arguments = 454933
+Queue 1
+
+Arguments = 454934
+Queue 1
+
+Arguments = 454935
+Queue 1
+
+Arguments = 454936
+Queue 1
+
+Arguments = 454937
+Queue 1
+
+Arguments = 454943
+Queue 1
+
+Arguments = 454944
+Queue 1
+
+Arguments = 454945
+Queue 1
+
+Arguments = 454946
+Queue 1
+
+Arguments = 454947
+Queue 1
+
+Arguments = 454948
+Queue 1
+
