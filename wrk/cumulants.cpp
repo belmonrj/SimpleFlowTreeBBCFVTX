@@ -777,10 +777,10 @@ void documulants(int runNumber)
           // if ( energyflag == 62  && centrality > 10 ) continue;
           // if ( energyflag == 20  && centrality > 20 ) continue;
           // if ( energyflag == 39  && centrality > 20 ) continue;
-          if ( energyflag == 200 && centrality > 5  ) continue;
-          if ( energyflag == 62  && centrality > 5  ) continue;
-          if ( energyflag == 20  && centrality > 20 ) continue;
-          if ( energyflag == 39  && centrality > 10 ) continue;
+          // if ( energyflag == 200 && centrality > 5  ) continue;
+          // if ( energyflag == 62  && centrality > 5  ) continue;
+          // if ( energyflag == 20  && centrality > 20 ) continue;
+          // if ( energyflag == 39  && centrality > 10 ) continue;
         }
 
       double ZVTX = -9999;
@@ -2285,10 +2285,10 @@ void dooffsets(int runNumber)
           // if ( energyflag == 62  && centrality > 10 ) continue;
           // if ( energyflag == 20  && centrality > 20 ) continue;
           // if ( energyflag == 39  && centrality > 20 ) continue;
-          if ( energyflag == 200 && centrality > 5  ) continue;
-          if ( energyflag == 62  && centrality > 5  ) continue;
-          if ( energyflag == 20  && centrality > 20 ) continue;
-          if ( energyflag == 39  && centrality > 10 ) continue;
+          // if ( energyflag == 200 && centrality > 5  ) continue;
+          // if ( energyflag == 62  && centrality > 5  ) continue;
+          // if ( energyflag == 20  && centrality > 20 ) continue;
+          // if ( energyflag == 39  && centrality > 10 ) continue;
         }
 
       double ZVTX = -9999;
