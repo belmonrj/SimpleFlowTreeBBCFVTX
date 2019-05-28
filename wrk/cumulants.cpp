@@ -1660,6 +1660,7 @@ void documulants(int runNumber)
 
 
       // --- now have a look at some 4 particle cumulants
+      good_4_event = ( nfvtxt >= 4 ); // new special test
       if ( good_4_event )
 	{
 	  // ---
