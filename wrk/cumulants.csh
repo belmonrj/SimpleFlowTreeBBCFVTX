@@ -9,5 +9,5 @@ source /opt/phenix/bin/phenix_setup.csh
 
 echo now running with argument $1
 
-./cumulants.exe $1
+./cumulants $1
 
