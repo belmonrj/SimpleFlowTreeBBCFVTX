@@ -112,7 +112,8 @@ void flatten(int runNumber, int passNumber)
   // sprintf(outFile1,"%s%d%s","SpecialProjects/RootFiles/svrb_",runNumber,".root");
   TFile* tf_histo_inn = NULL;
   if ( passNumber > 0 ) tf_histo_inn = TFile::Open(Form("SpecialProjects/RootFiles/svrb_run%d_pass%d.root",runNumber,passNumber-1)); // need null for pass zero
-  TFile* tf_histo_out = new TFile(Form("SpecialProjects/RootFiles/svrb_run%d_pass%d.root",runNumber,passNumber),"recreate");
+  //TFile* tf_histo_out = new TFile(Form("SpecialProjects/RootFiles/svrb_run%d_pass%d.root",runNumber,passNumber),"recreate");
+  TFile* tf_histo_out = new TFile(Form("check_run%d_pass%d.root",runNumber,passNumber),"recreate");
   if ( !tf_histo_out )
     {
       cout << "FATAL ERROR: Unable to create output file!" << endl;
@@ -121,7 +122,8 @@ void flatten(int runNumber, int passNumber)
 
 
   // --- get the number of files for this run number
-  string pipe_out = (string) gSystem->GetFromPipe(Form("ls input/tree_%010d_*.root | grep -c r",runNumber));
+  //string pipe_out = (string) gSystem->GetFromPipe(Form("ls input/tree_%010d_*.root | grep -c r",runNumber));
+  string pipe_out = (string) gSystem->GetFromPipe(Form("ls input/%d_*.root | grep -c r",runNumber));
   int nfiles = 0;
   nfiles = atoi(pipe_out.c_str());
   cout<<"nfiles: "<<nfiles<<endl;
@@ -132,7 +134,8 @@ void flatten(int runNumber, int passNumber)
   for ( int ifile = 0; ifile < nfiles; ++ifile )
     {
       char filename[500];
-      sprintf(filename,"input/tree_%010d_%04d.root",runNumber,ifile);
+      //sprintf(filename,"input/tree_%010d_%04d.root",runNumber,ifile);
+      sprintf(filename,"input/%d_%d.root",runNumber,ifile);
       cout<<"adding to tchain: "<<filename<<endl;
       ntp_event_chain->Add(filename);
     }
@@ -142,8 +145,8 @@ void flatten(int runNumber, int passNumber)
 
   initialize_pmt_position();
 
-  bool fvtx_clusters = true;
-  bool bbc_pmts      = true;
+  bool fvtx_clusters = false;
+  bool bbc_pmts      = false;
   bool cnt_tracks    = true;
 
 
@@ -783,6 +786,7 @@ void flatten(int runNumber, int passNumber)
   TH1D* th1d_step1_Psi2_FVTXN = new TH1D("th1d_step1_Psi2_FVTXN","",220,-4.1,4.1);
   TH1D* th1d_step1_Psi3_FVTXN = new TH1D("th1d_step1_Psi3_FVTXN","",220,-4.1,4.1);
 
+  TH1D* th1d_cnt_phi = new TH1D("th1d_cnt_phi","",640,-3.2,3.2);
 
 
   //------------------------------------------------------------//
@@ -1727,6 +1731,8 @@ void flatten(int runNumber, int passNumber)
               float pt = sqrt(px*px+py*py);
 
               if ( pt < 0.2 || pt > 5.0 ) continue; // pt cut added 2016-06-30
+
+              th1d_cnt_phi->Fill(phi0);
 
               // --- rotation on single particles here
               px = pz*sin(-beam_angle) + px*cos(-beam_angle);
