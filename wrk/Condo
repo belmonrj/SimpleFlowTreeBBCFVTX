@@ -1,6 +1,6 @@
 Universe        = vanilla
 Notification    = Complete
-Executable      = /phenix/plhf/belmonrj/offline/AnalysisTrain/SimpleFlowTreeBBCFVTX/wrk/flattening.exe
+Executable      = /phenix/plhf/belmonrj/offline/AnalysisTrain/SimpleFlowTreeBBCFVTX/wrk/flattening
 Requirements    = (CPU_Speed >= 1 && CPU_Experiment == "phenix")
 Rank            = CPU_Speed
 Priority        = +1
