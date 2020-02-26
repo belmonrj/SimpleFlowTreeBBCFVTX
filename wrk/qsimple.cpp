@@ -786,7 +786,12 @@ void flatten(int runNumber, int passNumber)
   TH1D* th1d_step1_Psi2_FVTXN = new TH1D("th1d_step1_Psi2_FVTXN","",220,-4.1,4.1);
   TH1D* th1d_step1_Psi3_FVTXN = new TH1D("th1d_step1_Psi3_FVTXN","",220,-4.1,4.1);
 
-  TH1D* th1d_cnt_phi = new TH1D("th1d_cnt_phi","",640,-3.2,3.2);
+  TH1D* th1d_cnt_both_phi = new TH1D("th1d_cnt_both_phi","",640,-3.2,3.2);
+  TH1D* th1d_cnt_east_phi = new TH1D("th1d_cnt_east_phi","",640,-3.2,3.2);
+  TH1D* th1d_cnt_west_phi = new TH1D("th1d_cnt_west_phi","",640,-3.2,3.2);
+  TH1D* th1d_cnt_both_phi_high = new TH1D("th1d_cnt_both_phi_high","",640,-3.2,3.2);
+  TH1D* th1d_cnt_east_phi_high = new TH1D("th1d_cnt_east_phi_high","",640,-3.2,3.2);
+  TH1D* th1d_cnt_west_phi_high = new TH1D("th1d_cnt_west_phi_high","",640,-3.2,3.2);
 
 
   //------------------------------------------------------------//
@@ -1732,7 +1737,15 @@ void flatten(int runNumber, int passNumber)
 
               if ( pt < 0.2 || pt > 5.0 ) continue; // pt cut added 2016-06-30
 
-              th1d_cnt_phi->Fill(phi0);
+              th1d_cnt_both_phi->Fill(phi0);
+              if ( dcarm == 0 ) th1d_cnt_east_phi->Fill(phi0);
+              if ( dcarm == 1 ) th1d_cnt_west_phi->Fill(phi0);
+              if ( pt > 1.0 )
+                {
+                  th1d_cnt_both_phi_high->Fill(phi0);
+                  if ( dcarm == 0 ) th1d_cnt_east_phi_high->Fill(phi0);
+                  if ( dcarm == 1 ) th1d_cnt_west_phi_high->Fill(phi0);
+                }
 
               // --- rotation on single particles here
               px = pz*sin(-beam_angle) + px*cos(-beam_angle);
