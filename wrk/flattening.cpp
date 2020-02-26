@@ -592,6 +592,88 @@ void flatten(int runNumber, int rp_recal_pass)
   TProfile* tp1f_reso3_BBC_FVTX123 = new TProfile("tp1f_reso3_BBC_FVTX123","",1,-0.5,0.5,-1e6,1e6,"");
   TProfile* tp1f_reso3_CNT_FVTX123 = new TProfile("tp1f_reso3_CNT_FVTX123","",1,-0.5,0.5,-1e6,1e6,"");
 
+  // --- event plane resolution
+  TProfile* tp1f_reso2_east_BBC_CNT = new TProfile("tp1f_reso2_east_BBC_CNT","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_east_BBC_FVTX = new TProfile("tp1f_reso2_east_BBC_FVTX","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_east_CNT_FVTX = new TProfile("tp1f_reso2_east_CNT_FVTX","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_east_BBC_FVTX0 = new TProfile("tp1f_reso2_east_BBC_FVTX0","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_east_CNT_FVTX0 = new TProfile("tp1f_reso2_east_CNT_FVTX0","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_east_BBC_FVTX1 = new TProfile("tp1f_reso2_east_BBC_FVTX1","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_east_CNT_FVTX1 = new TProfile("tp1f_reso2_east_CNT_FVTX1","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_east_BBC_FVTX2 = new TProfile("tp1f_reso2_east_BBC_FVTX2","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_east_CNT_FVTX2 = new TProfile("tp1f_reso2_east_CNT_FVTX2","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_east_BBC_FVTX3 = new TProfile("tp1f_reso2_east_BBC_FVTX3","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_east_CNT_FVTX3 = new TProfile("tp1f_reso2_east_CNT_FVTX3","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_east_BBC_FVTX012 = new TProfile("tp1f_reso2_east_BBC_FVTX012","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_east_CNT_FVTX012 = new TProfile("tp1f_reso2_east_CNT_FVTX012","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_east_BBC_FVTX013 = new TProfile("tp1f_reso2_east_BBC_FVTX013","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_east_CNT_FVTX013 = new TProfile("tp1f_reso2_east_CNT_FVTX013","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_east_BBC_FVTX023 = new TProfile("tp1f_reso2_east_BBC_FVTX023","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_east_CNT_FVTX023 = new TProfile("tp1f_reso2_east_CNT_FVTX023","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_east_BBC_FVTX123 = new TProfile("tp1f_reso2_east_BBC_FVTX123","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_east_CNT_FVTX123 = new TProfile("tp1f_reso2_east_CNT_FVTX123","",1,-0.5,0.5,-1e6,1e6,"");
+
+  TProfile* tp1f_reso3_east_BBC_CNT = new TProfile("tp1f_reso3_east_BBC_CNT","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_east_BBC_FVTX = new TProfile("tp1f_reso3_east_BBC_FVTX","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_east_CNT_FVTX = new TProfile("tp1f_reso3_east_CNT_FVTX","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_east_BBC_FVTX0 = new TProfile("tp1f_reso3_east_BBC_FVTX0","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_east_CNT_FVTX0 = new TProfile("tp1f_reso3_east_CNT_FVTX0","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_east_BBC_FVTX1 = new TProfile("tp1f_reso3_east_BBC_FVTX1","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_east_CNT_FVTX1 = new TProfile("tp1f_reso3_east_CNT_FVTX1","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_east_BBC_FVTX2 = new TProfile("tp1f_reso3_east_BBC_FVTX2","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_east_CNT_FVTX2 = new TProfile("tp1f_reso3_east_CNT_FVTX2","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_east_BBC_FVTX3 = new TProfile("tp1f_reso3_east_BBC_FVTX3","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_east_CNT_FVTX3 = new TProfile("tp1f_reso3_east_CNT_FVTX3","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_east_BBC_FVTX012 = new TProfile("tp1f_reso3_east_BBC_FVTX012","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_east_CNT_FVTX012 = new TProfile("tp1f_reso3_east_CNT_FVTX012","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_east_BBC_FVTX013 = new TProfile("tp1f_reso3_east_BBC_FVTX013","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_east_CNT_FVTX013 = new TProfile("tp1f_reso3_east_CNT_FVTX013","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_east_BBC_FVTX023 = new TProfile("tp1f_reso3_east_BBC_FVTX023","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_east_CNT_FVTX023 = new TProfile("tp1f_reso3_east_CNT_FVTX023","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_east_BBC_FVTX123 = new TProfile("tp1f_reso3_east_BBC_FVTX123","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_east_CNT_FVTX123 = new TProfile("tp1f_reso3_east_CNT_FVTX123","",1,-0.5,0.5,-1e6,1e6,"");
+
+  // --- event plane resolution
+  TProfile* tp1f_reso2_west_BBC_CNT = new TProfile("tp1f_reso2_west_BBC_CNT","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_west_BBC_FVTX = new TProfile("tp1f_reso2_west_BBC_FVTX","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_west_CNT_FVTX = new TProfile("tp1f_reso2_west_CNT_FVTX","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_west_BBC_FVTX0 = new TProfile("tp1f_reso2_west_BBC_FVTX0","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_west_CNT_FVTX0 = new TProfile("tp1f_reso2_west_CNT_FVTX0","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_west_BBC_FVTX1 = new TProfile("tp1f_reso2_west_BBC_FVTX1","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_west_CNT_FVTX1 = new TProfile("tp1f_reso2_west_CNT_FVTX1","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_west_BBC_FVTX2 = new TProfile("tp1f_reso2_west_BBC_FVTX2","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_west_CNT_FVTX2 = new TProfile("tp1f_reso2_west_CNT_FVTX2","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_west_BBC_FVTX3 = new TProfile("tp1f_reso2_west_BBC_FVTX3","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_west_CNT_FVTX3 = new TProfile("tp1f_reso2_west_CNT_FVTX3","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_west_BBC_FVTX012 = new TProfile("tp1f_reso2_west_BBC_FVTX012","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_west_CNT_FVTX012 = new TProfile("tp1f_reso2_west_CNT_FVTX012","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_west_BBC_FVTX013 = new TProfile("tp1f_reso2_west_BBC_FVTX013","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_west_CNT_FVTX013 = new TProfile("tp1f_reso2_west_CNT_FVTX013","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_west_BBC_FVTX023 = new TProfile("tp1f_reso2_west_BBC_FVTX023","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_west_CNT_FVTX023 = new TProfile("tp1f_reso2_west_CNT_FVTX023","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_west_BBC_FVTX123 = new TProfile("tp1f_reso2_west_BBC_FVTX123","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso2_west_CNT_FVTX123 = new TProfile("tp1f_reso2_west_CNT_FVTX123","",1,-0.5,0.5,-1e6,1e6,"");
+
+  TProfile* tp1f_reso3_west_BBC_CNT = new TProfile("tp1f_reso3_west_BBC_CNT","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_west_BBC_FVTX = new TProfile("tp1f_reso3_west_BBC_FVTX","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_west_CNT_FVTX = new TProfile("tp1f_reso3_west_CNT_FVTX","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_west_BBC_FVTX0 = new TProfile("tp1f_reso3_west_BBC_FVTX0","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_west_CNT_FVTX0 = new TProfile("tp1f_reso3_west_CNT_FVTX0","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_west_BBC_FVTX1 = new TProfile("tp1f_reso3_west_BBC_FVTX1","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_west_CNT_FVTX1 = new TProfile("tp1f_reso3_west_CNT_FVTX1","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_west_BBC_FVTX2 = new TProfile("tp1f_reso3_west_BBC_FVTX2","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_west_CNT_FVTX2 = new TProfile("tp1f_reso3_west_CNT_FVTX2","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_west_BBC_FVTX3 = new TProfile("tp1f_reso3_west_BBC_FVTX3","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_west_CNT_FVTX3 = new TProfile("tp1f_reso3_west_CNT_FVTX3","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_west_BBC_FVTX012 = new TProfile("tp1f_reso3_west_BBC_FVTX012","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_west_CNT_FVTX012 = new TProfile("tp1f_reso3_west_CNT_FVTX012","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_west_BBC_FVTX013 = new TProfile("tp1f_reso3_west_BBC_FVTX013","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_west_CNT_FVTX013 = new TProfile("tp1f_reso3_west_CNT_FVTX013","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_west_BBC_FVTX023 = new TProfile("tp1f_reso3_west_BBC_FVTX023","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_west_CNT_FVTX023 = new TProfile("tp1f_reso3_west_CNT_FVTX023","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_west_BBC_FVTX123 = new TProfile("tp1f_reso3_west_BBC_FVTX123","",1,-0.5,0.5,-1e6,1e6,"");
+  TProfile* tp1f_reso3_west_CNT_FVTX123 = new TProfile("tp1f_reso3_west_CNT_FVTX123","",1,-0.5,0.5,-1e6,1e6,"");
+
   // ---
   TProfile* tp1f_z_reso2_BBC_CNT = new TProfile("tp1f_z_reso2_BBC_CNT","",20,-10,10,-1e6,1e6,"");
   TProfile* tp1f_z_reso2_BBC_FVTX = new TProfile("tp1f_z_reso2_BBC_FVTX","",20,-10,10,-1e6,1e6,"");
