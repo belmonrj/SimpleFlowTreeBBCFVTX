@@ -28,12 +28,12 @@ ValErr calc_epreso(ValErr AB, ValErr AC, ValErr BC);
 void calculate_epreso()
 {
 
-  doenergy(200, 2);
-  doenergy(62, 2);
-  doenergy(39, 2);
+  // doenergy(200, 2);
+  // doenergy(62, 2);
+  // doenergy(39, 2);
   // doenergy(20, 2);
 
-  // doenergy(200,3);
+  doenergy(200,3);
   // doenergy(62,3);
   // doenergy(39,3);
   // doenergy(20,3);
@@ -50,7 +50,8 @@ void doenergy(int energy, int harmonic)
   // gStyle->SetOptTitle(1);
 
   // TFile* file = TFile::Open(Form("input/combined_%d.root",energy));
-  TFile* file = TFile::Open(Form("../output/hist_dAu%d.root", energy));
+  // TFile* file = TFile::Open(Form("../output/hist_dAu%d.root", energy));
+  TFile* file = TFile::Open(Form("../output/noqoff_loosereso/hist_dAu%d.root", energy));
   if (!file)
   {
     cout << "ERROR!! Unable to find file for energy " << energy << endl;
@@ -136,11 +137,13 @@ void doenergy(int energy, int harmonic)
   // TString drat[NMUL];
 
 
+  TString dcor[NMUL];
   TString dcnt[NMUL];
   TString dfvtxsab[NMUL];
   TString dfvtxsl[NMUL];
 
-  for (int ic = 0; ic < NMUL; ic++)
+  // for (int ic = 0; ic < NMUL; ic++)
+  for (int ic = 0; ic < 1; ic++)
   {
     gRBBCS[ic] = new TGraphErrors();
     gRBBCS[ic]->SetMarkerStyle(kOpenCircle);
@@ -358,6 +361,13 @@ void doenergy(int energy, int harmonic)
     for (int il = 0; il < NFVTXLAY; il++)
       RFVTXSL[ic][il] = calc_epreso(CNT_FVTXSL[il], BBCS_FVTXSL[il], CNT_BBCS);
 
+    dcor[ic] = Form("%d GeV & %d & %.3e $\\pm$ %.3e & %.3e $\\pm$ %.3e  & %.3e $\\pm$ %.3e \\\\",
+                    energy, ic,
+                    BBCS_FVTXS.first, BBCS_FVTXS.second,
+                    CNT_BBCS.first, CNT_BBCS.second,
+                    CNT_FVTXS.first, CNT_FVTXS.second
+                   );
+
 
     dcnt[ic] = Form("%d GeV & %d & %.3e $\\pm$ %.3e & %.3e $\\pm$ %.3e \\\\",
                     energy, ic,
@@ -455,10 +465,11 @@ void doenergy(int energy, int harmonic)
   // cout << " means:" << endl;
   // cout << dm << endl;
 
-  // cout << endl;
-  // cout << " ep correlations:" << endl;
-  // for (int ic = 0; ic < NMUL; ic++)
-  //   cout << dcor[ic] << endl;
+  cout << endl;
+  cout << " ep correlations:" << endl;
+  cout << " E & c & BBCS-FVTXS & CNT-BBCS & CNT-FVTXS " << endl;
+  for (int ic = 0; ic < NMUL; ic++)
+    cout << dcor[ic] << endl;
 
   cout << endl;
   cout << " resos cnt:" << endl;

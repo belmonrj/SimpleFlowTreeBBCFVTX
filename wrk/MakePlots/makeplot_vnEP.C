@@ -31,22 +31,22 @@ void makeplot_vnEP()
 
   outfile = TFile::Open("histograms_vnEPcent.root", "recreate");
 
-  // for ( int i = 2; i < 4; ++i )
-  // {
-  //   doenergy(200, i);
-  //   doenergy(62, i);
-  //   doenergy(39, i);
-  //   doenergy(20, i);
-  //   // ---
-  //   // diagnostic(200, i);
-  //   // diagnostic(62, i);
-  //   // diagnostic(39, i);
-  //   // diagnostic(20, i);
-  // }
-  doenergy(200, 2);
-  doenergy(62, 2);
-  doenergy(39, 2);
-  doenergy(20, 2);
+  for ( int i = 2; i < 4; ++i )
+  {
+    doenergy(200, i);
+    doenergy(62, i);
+    doenergy(39, i);
+    doenergy(20, i);
+  // ---
+  // diagnostic(200, i);
+  // diagnostic(62, i);
+  // diagnostic(39, i);
+  // diagnostic(20, i);
+  }
+  //  doenergy(200, 2);
+  //  doenergy(62, 2);
+  //  doenergy(39, 2);
+  //  doenergy(20, 2);
 
   outfile->Write();
   outfile->Close();
@@ -68,13 +68,30 @@ void doenergy(int energy, int harmonic)
   TH1D* th1d_vncent_fvtxs_highpt = new TH1D("th1d_vncent_fvtxs_highpt", "", NMUL, -0.5, NMUL - 0.5);
 
   // --- graphs of integrated v2 vs centrality
-  TGraphErrors *gvn_bbcs_cent = new TGraphErrors();
-  TGraphErrors *gvn_fvtxs_cent = new TGraphErrors();
-  TGraphErrors *gvn_fvtxsa_cent = new TGraphErrors();
-  TGraphErrors *gvn_fvtxsb_cent = new TGraphErrors();
-  TGraphErrors *gvn_fvtxsl_cent[NFVTXLAY];
+  TGraphErrors *gvn_bbcs_both_cent = new TGraphErrors();
+  TGraphErrors *gvn_fvtxs_both_cent = new TGraphErrors();
+  TGraphErrors *gvn_fvtxsa_both_cent = new TGraphErrors();
+  TGraphErrors *gvn_fvtxsb_both_cent = new TGraphErrors();
+  TGraphErrors *gvn_fvtxsl_both_cent[NFVTXLAY];
   for (int il = 0; il < NFVTXLAY; il++)
-    gvn_fvtxsl_cent[il] = new TGraphErrors();
+    gvn_fvtxsl_both_cent[il] = new TGraphErrors();
+
+  TGraphErrors *gvn_bbcs_east_cent = new TGraphErrors();
+  TGraphErrors *gvn_fvtxs_east_cent = new TGraphErrors();
+  TGraphErrors *gvn_fvtxsa_east_cent = new TGraphErrors();
+  TGraphErrors *gvn_fvtxsb_east_cent = new TGraphErrors();
+  TGraphErrors *gvn_fvtxsl_east_cent[NFVTXLAY];
+  for (int il = 0; il < NFVTXLAY; il++)
+    gvn_fvtxsl_east_cent[il] = new TGraphErrors();
+
+  TGraphErrors *gvn_bbcs_west_cent = new TGraphErrors();
+  TGraphErrors *gvn_fvtxs_west_cent = new TGraphErrors();
+  TGraphErrors *gvn_fvtxsa_west_cent = new TGraphErrors();
+  TGraphErrors *gvn_fvtxsb_west_cent = new TGraphErrors();
+  TGraphErrors *gvn_fvtxsl_west_cent[NFVTXLAY];
+  for (int il = 0; il < NFVTXLAY; il++)
+    gvn_fvtxsl_west_cent[il] = new TGraphErrors();
+
 
 
   double lopt = 0.7;
@@ -554,8 +571,31 @@ void doenergy(int energy, int harmonic)
     // add resolution uncertainty in quadriture
     bbcs_int.second = bbcs_int.first * sqrt(pow(bbcs_int.second / bbcs_int.first, 2) + pow(bbcs_sys, 2));
     // fill tgraph
-    gvn_bbcs_cent->SetPoint(ic, ic, bbcs_int.first);
-    gvn_bbcs_cent->SetPointError(ic, 0, bbcs_int.second);
+    gvn_bbcs_both_cent->SetPoint(ic, ic, bbcs_int.first);
+    gvn_bbcs_both_cent->SetPointError(ic, 0, bbcs_int.second);
+
+    bbcs_int = int_vn(hvnpt_bbcs_east, bl, bh);
+    bbcs_sys = reso_BBCS.second / reso_BBCS.first;
+    // correct for resolution
+    bbcs_int.first /= reso_BBCS.first;
+    bbcs_int.second /= reso_BBCS.first;
+    // add resolution uncertainty in quadriture
+    bbcs_int.second = bbcs_int.first * sqrt(pow(bbcs_int.second / bbcs_int.first, 2) + pow(bbcs_sys, 2));
+    // fill tgraph
+    gvn_bbcs_east_cent->SetPoint(ic, ic, bbcs_int.first);
+    gvn_bbcs_east_cent->SetPointError(ic, 0, bbcs_int.second);
+
+    bbcs_int = int_vn(hvnpt_bbcs_west, bl, bh);
+    bbcs_sys = reso_BBCS.second / reso_BBCS.first;
+    // correct for resolution
+    bbcs_int.first /= reso_BBCS.first;
+    bbcs_int.second /= reso_BBCS.first;
+    // add resolution uncertainty in quadriture
+    bbcs_int.second = bbcs_int.first * sqrt(pow(bbcs_int.second / bbcs_int.first, 2) + pow(bbcs_sys, 2));
+    // fill tgraph
+    gvn_bbcs_west_cent->SetPoint(ic, ic, bbcs_int.first);
+    gvn_bbcs_west_cent->SetPointError(ic, 0, bbcs_int.second);
+
 
     // fvtxs
     ValErr fvtxs_int = int_vn(hvnpt_fvtxs_both, bl, bh);
@@ -566,8 +606,31 @@ void doenergy(int energy, int harmonic)
     // add resolution uncertainty in quadriture
     fvtxs_int.second = fvtxs_int.first * sqrt(pow(fvtxs_int.second / fvtxs_int.first, 2) + pow(fvtxs_sys, 2));
     // fill tgraph
-    gvn_fvtxs_cent->SetPoint(ic, ic, fvtxs_int.first);
-    gvn_fvtxs_cent->SetPointError(ic, 0, fvtxs_int.second);
+    gvn_fvtxs_both_cent->SetPoint(ic, ic, fvtxs_int.first);
+    gvn_fvtxs_both_cent->SetPointError(ic, 0, fvtxs_int.second);
+
+    fvtxs_int = int_vn(hvnpt_fvtxs_east, bl, bh);
+    fvtxs_sys = reso_FVTXS.second / reso_FVTXS.first;
+    // correct for resolution
+    fvtxs_int.first /= reso_FVTXS.first;
+    fvtxs_int.second /= reso_FVTXS.first;
+    // add resolution uncertainty in quadriture
+    fvtxs_int.second = fvtxs_int.first * sqrt(pow(fvtxs_int.second / fvtxs_int.first, 2) + pow(fvtxs_sys, 2));
+    // fill tgraph
+    gvn_fvtxs_east_cent->SetPoint(ic, ic, fvtxs_int.first);
+    gvn_fvtxs_east_cent->SetPointError(ic, 0, fvtxs_int.second);
+
+    fvtxs_int = int_vn(hvnpt_fvtxs_west, bl, bh);
+    fvtxs_sys = reso_FVTXS.second / reso_FVTXS.first;
+    // correct for resolution
+    fvtxs_int.first /= reso_FVTXS.first;
+    fvtxs_int.second /= reso_FVTXS.first;
+    // add resolution uncertainty in quadriture
+    fvtxs_int.second = fvtxs_int.first * sqrt(pow(fvtxs_int.second / fvtxs_int.first, 2) + pow(fvtxs_sys, 2));
+    // fill tgraph
+    gvn_fvtxs_west_cent->SetPoint(ic, ic, fvtxs_int.first);
+    gvn_fvtxs_west_cent->SetPointError(ic, 0, fvtxs_int.second);
+
 
     // fvtxsa
     ValErr fvtxsa_int = int_vn(hvnpt_fvtxsa_both, bl, bh);
@@ -578,8 +641,31 @@ void doenergy(int energy, int harmonic)
     // add resolution uncertainty in quadriture
     fvtxsa_int.second = fvtxsa_int.first * sqrt(pow(fvtxsa_int.second / fvtxsa_int.first, 2) + pow(fvtxsa_sys, 2));
     // fill tgraph
-    gvn_fvtxsa_cent->SetPoint(ic, ic, fvtxsa_int.first);
-    gvn_fvtxsa_cent->SetPointError(ic, 0, fvtxsa_int.second);
+    gvn_fvtxsa_both_cent->SetPoint(ic, ic, fvtxsa_int.first);
+    gvn_fvtxsa_both_cent->SetPointError(ic, 0, fvtxsa_int.second);
+
+    fvtxsa_int = int_vn(hvnpt_fvtxsa_east, bl, bh);
+    fvtxsa_sys = reso_FVTXSA.second / reso_FVTXSA.first;
+    // correct for resolution
+    fvtxsa_int.first /= reso_FVTXSA.first;
+    fvtxsa_int.second /= reso_FVTXSA.first;
+    // add resolution uncertainty in quadriture
+    fvtxsa_int.second = fvtxsa_int.first * sqrt(pow(fvtxsa_int.second / fvtxsa_int.first, 2) + pow(fvtxsa_sys, 2));
+    // fill tgraph
+    gvn_fvtxsa_east_cent->SetPoint(ic, ic, fvtxsa_int.first);
+    gvn_fvtxsa_east_cent->SetPointError(ic, 0, fvtxsa_int.second);
+
+    fvtxsa_int = int_vn(hvnpt_fvtxsa_west, bl, bh);
+    fvtxsa_sys = reso_FVTXSA.second / reso_FVTXSA.first;
+    // correct for resolution
+    fvtxsa_int.first /= reso_FVTXSA.first;
+    fvtxsa_int.second /= reso_FVTXSA.first;
+    // add resolution uncertainty in quadriture
+    fvtxsa_int.second = fvtxsa_int.first * sqrt(pow(fvtxsa_int.second / fvtxsa_int.first, 2) + pow(fvtxsa_sys, 2));
+    // fill tgraph
+    gvn_fvtxsa_west_cent->SetPoint(ic, ic, fvtxsa_int.first);
+    gvn_fvtxsa_west_cent->SetPointError(ic, 0, fvtxsa_int.second);
+
 
     // fvtxsb
     ValErr fvtxsb_int = int_vn(hvnpt_fvtxsb_both, bl, bh);
@@ -590,8 +676,31 @@ void doenergy(int energy, int harmonic)
     // add resolution uncertainty in quadriture
     fvtxsb_int.second = fvtxsb_int.first * sqrt(pow(fvtxsb_int.second / fvtxsb_int.first, 2) + pow(fvtxsb_sys, 2));
     // fill tgraph
-    gvn_fvtxsb_cent->SetPoint(ic, ic, fvtxsb_int.first);
-    gvn_fvtxsb_cent->SetPointError(ic, 0, fvtxsb_int.second);
+    gvn_fvtxsb_both_cent->SetPoint(ic, ic, fvtxsb_int.first);
+    gvn_fvtxsb_both_cent->SetPointError(ic, 0, fvtxsb_int.second);
+
+    fvtxsb_int = int_vn(hvnpt_fvtxsb_east, bl, bh);
+    fvtxsb_sys = reso_FVTXSB.second / reso_FVTXSB.first;
+    // correct for resolution
+    fvtxsb_int.first /= reso_FVTXSB.first;
+    fvtxsb_int.second /= reso_FVTXSB.first;
+    // add resolution uncertainty in quadriture
+    fvtxsb_int.second = fvtxsb_int.first * sqrt(pow(fvtxsb_int.second / fvtxsb_int.first, 2) + pow(fvtxsb_sys, 2));
+    // fill tgraph
+    gvn_fvtxsb_east_cent->SetPoint(ic, ic, fvtxsb_int.first);
+    gvn_fvtxsb_east_cent->SetPointError(ic, 0, fvtxsb_int.second);
+
+    fvtxsb_int = int_vn(hvnpt_fvtxsb_west, bl, bh);
+    fvtxsb_sys = reso_FVTXSB.second / reso_FVTXSB.first;
+    // correct for resolution
+    fvtxsb_int.first /= reso_FVTXSB.first;
+    fvtxsb_int.second /= reso_FVTXSB.first;
+    // add resolution uncertainty in quadriture
+    fvtxsb_int.second = fvtxsb_int.first * sqrt(pow(fvtxsb_int.second / fvtxsb_int.first, 2) + pow(fvtxsb_sys, 2));
+    // fill tgraph
+    gvn_fvtxsb_west_cent->SetPoint(ic, ic, fvtxsb_int.first);
+    gvn_fvtxsb_west_cent->SetPointError(ic, 0, fvtxsb_int.second);
+
 
     // fvtxsl
     for (int il = 0; il < NFVTXLAY; il++)
@@ -604,8 +713,30 @@ void doenergy(int energy, int harmonic)
       // add resolution uncertainty in quadriture
       fvtxsl_int.second = fvtxsl_int.first * sqrt(pow(fvtxsl_int.second / fvtxsl_int.first, 2) + pow(fvtxsl_sys, 2));
       // fill tgraph
-      gvn_fvtxsl_cent[il]->SetPoint(ic, ic, fvtxsl_int.first);
-      gvn_fvtxsl_cent[il]->SetPointError(ic, 0, fvtxsl_int.second);
+      gvn_fvtxsl_both_cent[il]->SetPoint(ic, ic, fvtxsl_int.first);
+      gvn_fvtxsl_both_cent[il]->SetPointError(ic, 0, fvtxsl_int.second);
+
+      fvtxsl_int = int_vn(hvnpt_fvtxsl_east[il], bl, bh);
+      fvtxsl_sys = reso_FVTXSL[il].second / reso_FVTXSL[il].first;
+      // correct for resolution
+      fvtxsl_int.first /= reso_FVTXSL[il].first;
+      fvtxsl_int.second /= reso_FVTXSL[il].first;
+      // add resolution uncertainty in quadriture
+      fvtxsl_int.second = fvtxsl_int.first * sqrt(pow(fvtxsl_int.second / fvtxsl_int.first, 2) + pow(fvtxsl_sys, 2));
+      // fill tgraph
+      gvn_fvtxsl_east_cent[il]->SetPoint(ic, ic, fvtxsl_int.first);
+      gvn_fvtxsl_east_cent[il]->SetPointError(ic, 0, fvtxsl_int.second);
+
+      fvtxsl_int = int_vn(hvnpt_fvtxsl_west[il], bl, bh);
+      fvtxsl_sys = reso_FVTXSL[il].second / reso_FVTXSL[il].first;
+      // correct for resolution
+      fvtxsl_int.first /= reso_FVTXSL[il].first;
+      fvtxsl_int.second /= reso_FVTXSL[il].first;
+      // add resolution uncertainty in quadriture
+      fvtxsl_int.second = fvtxsl_int.first * sqrt(pow(fvtxsl_int.second / fvtxsl_int.first, 2) + pow(fvtxsl_sys, 2));
+      // fill tgraph
+      gvn_fvtxsl_west_cent[il]->SetPoint(ic, ic, fvtxsl_int.first);
+      gvn_fvtxsl_west_cent[il]->SetPointError(ic, 0, fvtxsl_int.second);
     } // il
 
 
@@ -823,23 +954,50 @@ void doenergy(int energy, int harmonic)
   th1d_vncent_fvtxs_lowpt->SetName(Form("th1d_v%d_cent_lowpt_eventplane_fvtxs_%d", harmonic, energy));
   th1d_vncent_fvtxs_highpt->SetName(Form("th1d_v%d_cent_highpt_eventplane_fvtxs_%d", harmonic, energy));
 
-  gvn_bbcs_cent->SetName(Form("tgraph_v%d_cent_eventplane_bbcs_%d", harmonic, energy));
-  gvn_fvtxs_cent->SetName(Form("tgraph_v%d_cent_eventplane_fvtxs_%d", harmonic, energy));
-  gvn_fvtxsa_cent->SetName(Form("tgraph_v%d_cent_eventplane_fvtxsa_%d", harmonic, energy));
-  gvn_fvtxsb_cent->SetName(Form("tgraph_v%d_cent_eventplane_fvtxsb_%d", harmonic, energy));
+  gvn_bbcs_both_cent->SetName(Form("tgraph_v%d_cent_eventplane_bbcs_%d", harmonic, energy));
+  gvn_fvtxs_both_cent->SetName(Form("tgraph_v%d_cent_eventplane_fvtxs_%d", harmonic, energy));
+  gvn_fvtxsa_both_cent->SetName(Form("tgraph_v%d_cent_eventplane_fvtxsa_%d", harmonic, energy));
+  gvn_fvtxsb_both_cent->SetName(Form("tgraph_v%d_cent_eventplane_fvtxsb_%d", harmonic, energy));
   for (int il = 0; il < NFVTXLAY; il++)
-    gvn_fvtxsl_cent[il]->SetName(Form("tgraph_v%d_cent_eventplane_fvtxsl%d_%d", harmonic, il, energy));
+    gvn_fvtxsl_both_cent[il]->SetName(Form("tgraph_v%d_cent_eventplane_fvtxsl%d_%d", harmonic, il, energy));
 
+  gvn_bbcs_east_cent->SetName(Form("tgraph_v%d_cent_east_eventplane_bbcs_%d", harmonic, energy));
+  gvn_fvtxs_east_cent->SetName(Form("tgraph_v%d_cent_east_eventplane_fvtxs_%d", harmonic, energy));
+  gvn_fvtxsa_east_cent->SetName(Form("tgraph_v%d_cent_east_eventplane_fvtxsa_%d", harmonic, energy));
+  gvn_fvtxsb_east_cent->SetName(Form("tgraph_v%d_cent_east_eventplane_fvtxsb_%d", harmonic, energy));
+  for (int il = 0; il < NFVTXLAY; il++)
+    gvn_fvtxsl_east_cent[il]->SetName(Form("tgraph_v%d_cent_east_eventplane_fvtxsl%d_%d", harmonic, il, energy));
+
+  gvn_bbcs_west_cent->SetName(Form("tgraph_v%d_cent_west_eventplane_bbcs_%d", harmonic, energy));
+  gvn_fvtxs_west_cent->SetName(Form("tgraph_v%d_cent_west_eventplane_fvtxs_%d", harmonic, energy));
+  gvn_fvtxsa_west_cent->SetName(Form("tgraph_v%d_cent_west_eventplane_fvtxsa_%d", harmonic, energy));
+  gvn_fvtxsb_west_cent->SetName(Form("tgraph_v%d_cent_west_eventplane_fvtxsb_%d", harmonic, energy));
+  for (int il = 0; il < NFVTXLAY; il++)
+    gvn_fvtxsl_west_cent[il]->SetName(Form("tgraph_v%d_cent_west_eventplane_fvtxsl%d_%d", harmonic, il, energy));
 
   th1d_vncent_fvtxs_lowpt->Write();
   th1d_vncent_fvtxs_highpt->Write();
 
-  gvn_bbcs_cent->Write();
-  gvn_fvtxs_cent->Write();
-  gvn_fvtxsa_cent->Write();
-  gvn_fvtxsb_cent->Write();
+  gvn_bbcs_both_cent->Write();
+  gvn_fvtxs_both_cent->Write();
+  gvn_fvtxsa_both_cent->Write();
+  gvn_fvtxsb_both_cent->Write();
   for (int il = 0; il < NFVTXLAY; il++)
-    gvn_fvtxsl_cent[il]->Write();
+    gvn_fvtxsl_both_cent[il]->Write();
+
+  gvn_bbcs_east_cent->Write();
+  gvn_fvtxs_east_cent->Write();
+  gvn_fvtxsa_east_cent->Write();
+  gvn_fvtxsb_east_cent->Write();
+  for (int il = 0; il < NFVTXLAY; il++)
+    gvn_fvtxsl_east_cent[il]->Write();
+
+  gvn_bbcs_west_cent->Write();
+  gvn_fvtxs_west_cent->Write();
+  gvn_fvtxsa_west_cent->Write();
+  gvn_fvtxsb_west_cent->Write();
+  for (int il = 0; il < NFVTXLAY; il++)
+    gvn_fvtxsl_west_cent[il]->Write();
 
 
 
@@ -1042,138 +1200,6 @@ void diagnostic(int energy, int harmonic)
 
 }
 
-
-
-
-TGraphErrors* format_v2_pt(TH1* p)
-{
-  double x[15] = {0};
-  double y[15] = {0};
-  double e[15] = {0};
-
-  for (int i = 0; i < 15; ++i)
-  {
-    x[i] = (3. / 15) * (i + 1) - 0.1;
-    y[i] = p->GetBinContent(i + 1);
-    e[i] = p->GetBinError(i + 1);
-  }
-
-  double newx[] = {
-    (x[1] + x[2]) / 2,
-    (x[3] + x[4]) / 2,
-    (x[5] + x[6] + x[7]) / 3,
-    (x[8] + x[9] + x[10]) / 3,
-    (x[11] + x[12] + x[13] + x[14]) / 4
-  };
-  //double newxe[] = { 0.2,0.2,0.3,0.3,0.4 };
-  double newxe[5] = {0};
-
-  double w[] = {
-    0,
-    1. / (e[1]*e[1]), 1. / (e[2]*e[2]),
-    1. / (e[3]*e[3]), 1. / (e[4]*e[4]),
-    1. / (e[5]*e[5]), 1. / (e[6]*e[6]),
-    1. / (e[7]*e[7]), 1. / (e[8]*e[8]),
-    1. / (e[9]*e[9]), 1. / (e[10]*e[10]),
-    1. / (e[11]*e[11]), 1. / (e[12]*e[12]),
-    1. / (e[13]*e[13]), 1. / (e[14]*e[14])
-  };
-
-  double newy[] = {
-    (y[1]*w[1] + y[2]*w[2]) / (w[1] + w[2]),
-    (y[3]*w[3] + y[4]*w[4]) / (w[3] + w[4]),
-    (y[5]*w[5] + y[6]*w[6] + y[7]*w[7]) / (w[5] + w[6] + w[7]),
-    (y[8]*w[8] + y[9]*w[9] + y[10]*w[10]) / (w[8] + w[9] + w[10]),
-    (y[11]*w[11] + y[12]*w[12] + y[13]*w[13] + y[14]*w[14]) / (w[11] + w[12] + w[13] + w[14])
-  };
-
-  double newye[] = {
-    1. / sqrt(w[1] + w[2]), 1. / sqrt(w[3] + w[4]),
-    1. / sqrt(w[5] + w[6] + w[7]), 1. / sqrt(w[8] + w[9] + w[10]),
-    1. / sqrt(w[11] + w[12] + w[13] + w[14])
-  };
-  TGraphErrors* g = new TGraphErrors(5, newx, newy, newxe, newye);
-
-  return g;
-
-}
-
-TGraphErrors* format_v2_eta(TH1* p)
-{
-  double x[32] = {0};
-  double y[32] = {0};
-  double e[32] = {0};
-
-  for (int i = 0; i < 32; ++i)
-  {
-    x[i] = (3.2 / 16) * (i + 1) - 3.3;
-    y[i] = p->GetBinContent(i + 1);
-    e[i] = p->GetBinError(i + 1);
-  }
-
-  double newx[] = {
-    (x[1] + x[2]) / 2,
-    (x[3] + x[4]) / 2,
-    (x[5] + x[6]) / 2,
-    (x[7] + x[8]) / 2,
-    (x[9] + x[10]) / 2,
-    (x[14] + x[15]) / 2,
-    (x[16] + x[17]) / 2,
-    (x[21] + x[22]) / 2,
-    (x[23] + x[24]) / 2,
-    (x[25] + x[26]) / 2,
-    (x[27] + x[28] + x[29]) / 3
-  };
-
-  //double newxe[] = { 0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.3 };
-  double newxe[11] = {0};
-
-  double w[] = {
-    0,
-    1. / (e[1]*e[1]), 1. / (e[2]*e[2]),
-    1. / (e[3]*e[3]), 1. / (e[4]*e[4]),
-    1. / (e[5]*e[5]), 1. / (e[6]*e[6]),
-    1. / (e[7]*e[7]), 1. / (e[8]*e[8]),
-    1. / (e[9]*e[9]), 1. / (e[10]*e[10]),
-    0, 0, 0,
-    1. / (e[14]*e[14]), 1. / (e[15]*e[15]),
-    1. / (e[16]*e[16]), 1. / (e[17]*e[17]),
-    0, 0, 0,
-    1. / (e[21]*e[21]), 1. / (e[22]*e[22]),
-    1. / (e[23]*e[23]), 1. / (e[24]*e[24]),
-    1. / (e[25]*e[25]), 1. / (e[26]*e[26]),
-    1. / (e[27]*e[27]), 1. / (e[28]*e[28]),
-    1. / (e[29]*e[29])
-  };
-
-  double newy[] = {
-    (y[1]*w[1] + y[2]*w[2]) / (w[1] + w[2]),
-    (y[3]*w[3] + y[4]*w[4]) / (w[3] + w[4]),
-    (y[5]*w[5] + y[6]*w[6]) / (w[5] + w[6]),
-    (y[7]*w[7] + y[8]*w[8]) / (w[7] + w[8]),
-    (y[9]*w[9] + y[10]*w[10]) / (w[9] + w[10]),
-    (y[14]*w[14] + y[15]*w[15]) / (w[14] + w[15]),
-    (y[16]*w[16] + y[17]*w[17]) / (w[16] + w[17]),
-    (y[21]*w[21] + y[22]*w[22]) / (w[21] + w[22]),
-    (y[23]*w[23] + y[24]*w[24]) / (w[23] + w[24]),
-    (y[25]*w[25] + y[26]*w[26]) / (w[25] + w[26]),
-    (y[27]*w[27] + y[28]*w[28] + y[29]*w[29]) / (w[27] + w[28] + w[29])
-  };
-
-  double newye[] = {
-    1. / sqrt(w[1] + w[2]), 1. / sqrt(w[3] + w[4]),
-    1. / sqrt(w[5] + w[6]), 1. / sqrt(w[7] + w[8]),
-    1. / sqrt(w[9] + w[10]), 1. / sqrt(w[14] + w[15]),
-    1. / sqrt(w[16] + w[17]), 1. / sqrt(w[21] + w[22]),
-    1. / sqrt(w[23] + w[24]), 1. / sqrt(w[25] + w[26]),
-    1. / sqrt(w[27] + w[28] + w[29])
-  };
-
-  TGraphErrors* g = new TGraphErrors(11, newx, newy, newxe, newye);
-
-  return g;
-
-}
 
 
 ValErr calc_epreso(ValErr AB, ValErr AC, ValErr BC)

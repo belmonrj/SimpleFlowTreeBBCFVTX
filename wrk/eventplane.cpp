@@ -9,25 +9,26 @@
 #endif
 
 //#ifndef __CINT__
-#include "TROOT.h"
-#include "TFile.h"
-#include "TChain.h"
-#include "TMath.h"
-#include "TH1.h"
-#include "TH2.h"
-#include "TH3.h"
-#include "TF1.h"
-#include "TStyle.h"
-#include "TCanvas.h"
-#include "TProfile.h"
-#include "TVector2.h"
-#include "TTree.h"
-#include "TNtuple.h"
-#include "TRandom.h"
-#include "TLorentzVector.h"
-#include "TSystem.h"
-#include "TComplex.h"
-#include "TGraph.h"
+#include <TROOT.h>
+#include <TFile.h>
+#include <TChain.h>
+#include <TMath.h>
+#include <TH1.h>
+#include <TH2.h>
+#include <TH3.h>
+#include <TF1.h>
+#include <TStyle.h>
+#include <TCanvas.h>
+#include <TProfile.h>
+#include <TVector2.h>
+#include <TTree.h>
+#include <TNtuple.h>
+#include <TRandom.h>
+#include <TLorentzVector.h>
+#include <TSystem.h>
+#include <TComplex.h>
+#include <TGraph.h>
+#include <TString.h>
 //#endif
 
 // global pmt variables
@@ -107,8 +108,8 @@ int main(int argc, char *argv[])
 
   cout << "Now processing with run number " << run << endl;
 
-  // flatten(run, 1);
-  // flatten(run, 2);
+  flatten(run, 1);
+  flatten(run, 2);
   flatten(run, 3);
 
   return 0;
@@ -127,15 +128,39 @@ void flatten(int runNumber, int rp_recal_pass)
 
   cout << "runNumber = " << runNumber << " rp_recal_pass = " << rp_recal_pass << endl;
 
+  TString species;
   int energyflag = 0;
+  // --- Run15pAu200
+  if ( runNumber >= 432637 && runNumber <= 436647 )
+  {
+    species = "pau";
+    energyflag = 200;
+  }
   // --- Run16dAu200
-  if ( runNumber >= 454774 && runNumber <= 455639 ) energyflag = 200;
+  if ( runNumber >= 454774 && runNumber <= 455639 )
+  {
+    species = "dau";
+    energyflag = 200;
+  }
   // --- Run16dAu62
-  if ( runNumber >= 455792 && runNumber <= 456283 ) energyflag = 62;
+  if ( runNumber >= 455792 && runNumber <= 456283 )
+  {
+    species = "dau";
+    energyflag = 62;
+  }
   // --- Run16dAu20
-  if ( runNumber >= 456652 && runNumber <= 457298 ) energyflag = 20;
+  if ( runNumber >= 456652 && runNumber <= 457298 )
+  {
+    species = "dau";
+    energyflag = 20;
+  }
   // --- Run16dAu39
-  if ( runNumber >= 457634 && runNumber <= 458167 ) energyflag = 39;
+  if ( runNumber >= 457634 && runNumber <= 458167 )
+  {
+    species = "dau";
+    energyflag = 39;
+  }
+
 
   int eidx = -1;
   if (energyflag == 200)
@@ -166,7 +191,7 @@ void flatten(int runNumber, int rp_recal_pass)
   float fracCut = 0.95; // pile up rejection < fracCut (better place??)
   // float fracCut = 0.98; // pile up rejection < fracCut (better place??)
 
-  bool tight_trkcuts = true; // flag for tight cnt & fvtx track cuts (true=tight)
+  bool tight_trkcuts = false; // flag for tight cnt & fvtx track cuts (true=tight)
 
   // float reso_lpt = 0.4; // low-pT cut for PHCentralTracks when calculating ep resolution
   float reso_lpt = 0.2; // low-pT cut for PHCentralTracks when calculating ep resolution
@@ -175,56 +200,56 @@ void flatten(int runNumber, int rp_recal_pass)
 
   //---
   // all zeros
-  // float qy2_offset_fvtxs[4][6] = {{0}, {0}, {0}, {0}};
-  // float qy2_offset_bbcs[4][6] = {{0}, {0}, {0}, {0}};
-  // float qx3_offset_fvtxs[4][6] = {{0}, {0}, {0}, {0}};
-  // float qx3_offset_bbcs[4][6] = {{0}, {0}, {0}, {0}};
-  // float qy2_offset_fvtxsl[4][4][6] ={{{0}}};
-  // float qx3_offset_fvtxsl[4][4][6] ={{{0}}};
+  float qy2_offset_fvtxs[4][6] = {{0}, {0}, {0}, {0}};
+  float qy2_offset_bbcs[4][6] = {{0}, {0}, {0}, {0}};
+  float qx3_offset_fvtxs[4][6] = {{0}, {0}, {0}, {0}};
+  float qx3_offset_bbcs[4][6] = {{0}, {0}, {0}, {0}};
+  float qy2_offset_fvtxsl[4][4][6] = {{{0}}};
+  float qx3_offset_fvtxsl[4][4][6] = {{{0}}};
   //---
 
   //---
-  // full values (4th iteration)
-  float qy2_offset_fvtxs[4][6] =
-  {
-    { -0.0026, -0.0000, -0.0000, -0.0130, -0.0407, -0.1108}, //200 GeV
-    { -0.0017, -0.0072, -0.0126, -0.0244, -0.0566, -0.1332}, //62 GeV
-    { -0.0028, -0.0045, -0.0164, -0.0333, -0.0433, 0.0}, //39 GeV
-    { -0.0154, -0.0139, -0.0110, -0.0497, 0.0, 0.0}, //20 GeV
-  };
+//   // full values (4th iteration)
+  // float qy2_offset_fvtxs[4][6] =
+  // {
+  //   { -0.0026, -0.0000, -0.0000, -0.0130, -0.0407, -0.1108}, //200 GeV
+  //   { -0.0017, -0.0072, -0.0126, -0.0244, -0.0566, -0.1332}, //62 GeV
+  //   { -0.0028, -0.0045, -0.0164, -0.0333, -0.0433, 0.0}, //39 GeV
+  //   { -0.0154, -0.0139, -0.0110, -0.0497, 0.0, 0.0}, //20 GeV
+  // };
 
   // itr 4
-  float qy2_offset_fvtxsl[4][4][6] =
-  {
-//200 GeV
-    {
-      { -0.0244, -0.0338, -0.0342, -0.0595, -0.1147, -0.2237}, // layer 0
-      { +0.0037, +0.0114, +0.0145, +0.0183, +0.0186, +0.0300}, // layer 1
-      { +0.0020, +0.0143, +0.0113, -0.0036, -0.0067, -0.0319}, // layer 2
-      { +0.0063, +0.0233, +0.0201, +0.0143, +0.0156, +0.0436}, // layer 3
-    },
-//62 GeV
-    {
-      { -0.0325, -0.0450, -0.0487, -0.0865, -0.1272, -0.2329}, // layer 0
-      { +0.0137, +0.0100, +0.0101, +0.0111, +0.0207, +0.0290}, // layer 1
-      { +0.0027, -0.0023, -0.0060, -0.0091, -0.0256, -0.0623}, // layer 2
-      { +0.0084, +0.0093, +0.0041, +0.0069, +0.0158, +0.0318}, // layer 3
-    },
-//39 GeV
-    {
-      { -0.0286, -0.0343, -0.0504, -0.0704, -0.0910, +0.0000}, // layer 0
-      { +0.0168, +0.0155, +0.0151, +0.0165, +0.0240, +0.0000}, // layer 1
-      { +0.0080, +0.0029, +0.0047, -0.0032, -0.0026, +0.0000}, // layer 2
-      { -0.0002, -0.0023, -0.0066, -0.0060, -0.0163, +0.0000}, // layer 3
-    },
-//20 GeV
-    {
-      { -0.0577, -0.0432, -0.0828, -0.0411, +0.0000, +0.0000}, // layer 0
-      { +0.0062, +0.0129, +0.0297, -0.0732, +0.0000, +0.0000}, // layer 1
-      { -0.0064, -0.0006, -0.0110, -0.0990, +0.0000, +0.0000}, // layer 2
-      { -0.0058, +0.0101, +0.0170, -0.0472, +0.0000, +0.0000}, // layer 3
-    },
-  };
+//   float qy2_offset_fvtxsl[4][4][6] =
+//   {
+// //200 GeV
+//     {
+//       { -0.0244, -0.0338, -0.0342, -0.0595, -0.1147, -0.2237}, // layer 0
+//       { +0.0037, +0.0114, +0.0145, +0.0183, +0.0186, +0.0300}, // layer 1
+//       { +0.0020, +0.0143, +0.0113, -0.0036, -0.0067, -0.0319}, // layer 2
+//       { +0.0063, +0.0233, +0.0201, +0.0143, +0.0156, +0.0436}, // layer 3
+//     },
+// //62 GeV
+//     {
+//       { -0.0325, -0.0450, -0.0487, -0.0865, -0.1272, -0.2329}, // layer 0
+//       { +0.0137, +0.0100, +0.0101, +0.0111, +0.0207, +0.0290}, // layer 1
+//       { +0.0027, -0.0023, -0.0060, -0.0091, -0.0256, -0.0623}, // layer 2
+//       { +0.0084, +0.0093, +0.0041, +0.0069, +0.0158, +0.0318}, // layer 3
+//     },
+// //39 GeV
+//     {
+//       { -0.0286, -0.0343, -0.0504, -0.0704, -0.0910, +0.0000}, // layer 0
+//       { +0.0168, +0.0155, +0.0151, +0.0165, +0.0240, +0.0000}, // layer 1
+//       { +0.0080, +0.0029, +0.0047, -0.0032, -0.0026, +0.0000}, // layer 2
+//       { -0.0002, -0.0023, -0.0066, -0.0060, -0.0163, +0.0000}, // layer 3
+//     },
+// //20 GeV
+//     {
+//       { -0.0577, -0.0432, -0.0828, -0.0411, +0.0000, +0.0000}, // layer 0
+//       { +0.0062, +0.0129, +0.0297, -0.0732, +0.0000, +0.0000}, // layer 1
+//       { -0.0064, -0.0006, -0.0110, -0.0990, +0.0000, +0.0000}, // layer 2
+//       { -0.0058, +0.0101, +0.0170, -0.0472, +0.0000, +0.0000}, // layer 3
+//     },
+//   };
 
 
   //---
@@ -258,74 +283,74 @@ void flatten(int runNumber, int rp_recal_pass)
 
   //---
   // 2nd order Qy offset for BBCS
-  float qy2_offset_bbcs[4][6] =
-  {
-    { -0.0037, -0.0096, -0.0000, -0.0000, -0.0082, -0.0000}, //200 GeV
-    { -0.0020, -0.0020, -0.0036, -0.0041, +0.0010, -0.0009}, //62 GeV
-    { -0.0052, -0.0038, +0.0014, -0.0019, -0.0060, -0.0000}, //39 GeV
-    { +0.0005, -0.0181, +0.0002, -0.0451, -0.0000, -0.0000}, //20 GeV
-  };
+  // float qy2_offset_bbcs[4][6] =
+  // {
+  //   { -0.0037, -0.0096, -0.0000, -0.0000, -0.0082, -0.0000}, //200 GeV
+  //   { -0.0020, -0.0020, -0.0036, -0.0041, +0.0010, -0.0009}, //62 GeV
+  //   { -0.0052, -0.0038, +0.0014, -0.0019, -0.0060, -0.0000}, //39 GeV
+  //   { +0.0005, -0.0181, +0.0002, -0.0451, -0.0000, -0.0000}, //20 GeV
+  // };
   //---
 
 
   //--
   // 3rd order Qx offset for FVTXS
 // itr 2
-  float qx3_offset_fvtxs[4][6] =
-  {
-    { -0.0004, -0.0069, +0.0038, +0.0202, +0.0543, +0.1627 }, // 200 GeV
-    { +0.0067, +0.0105, +0.0129, +0.0353, +0.0666, +0.1466 }, // 62 GeV
-    { +0.0085, +0.0086, +0.0229, +0.0310, +0.0392, +0.0000 }, // 39 GeV
-    { -0.0063, +0.0099, +0.0223, -0.0174, +0.0000, +0.0000 }, // 20 GeV
-  };
+  // float qx3_offset_fvtxs[4][6] =
+  // {
+  //   { -0.0004, -0.0069, +0.0038, +0.0202, +0.0543, +0.1627 }, // 200 GeV
+  //   { +0.0067, +0.0105, +0.0129, +0.0353, +0.0666, +0.1466 }, // 62 GeV
+  //   { +0.0085, +0.0086, +0.0229, +0.0310, +0.0392, +0.0000 }, // 39 GeV
+  //   { -0.0063, +0.0099, +0.0223, -0.0174, +0.0000, +0.0000 }, // 20 GeV
+  // };
   //--
 
   //--
   // 3rd order Qx offset for BBCS
 // itr 2
-  float qx3_offset_bbcs[4][6] =
-  {
-    { +0.0059, -0.0040, +0.0083, +0.0103, -0.0105, -0.0012 }, // 200 GeV
-    { +0.0021, +0.0001, -0.0019, +0.0037, -0.0024, -0.0024 }, // 62 GeV
-    { +0.0011, +0.0007, +0.0021, +0.0017, +0.0019, +0.0000 }, // 39 GeV
-    { +0.0189, +0.0119, -0.0079, -0.0904, +0.0000, +0.0000 }, // 20 GeV
-  };
+  // float qx3_offset_bbcs[4][6] =
+  // {
+  //   { +0.0059, -0.0040, +0.0083, +0.0103, -0.0105, -0.0012 }, // 200 GeV
+  //   { +0.0021, +0.0001, -0.0019, +0.0037, -0.0024, -0.0024 }, // 62 GeV
+  //   { +0.0011, +0.0007, +0.0021, +0.0017, +0.0019, +0.0000 }, // 39 GeV
+  //   { +0.0189, +0.0119, -0.0079, -0.0904, +0.0000, +0.0000 }, // 20 GeV
+  // };
   //--
 
   //-- 3rd order Qx for FVTXSL
-// itr 2
-  float qx3_offset_fvtxsl[4][4][6] =
-  {
-// 200 GeV
-    {
-      { +0.0276, +0.0355, +0.0386, +0.0717, +0.1333, +0.2943}, // layer 0
-      { -0.0054, -0.0147, -0.0159, -0.0105, -0.0019, +0.0142}, // layer 1
-      { -0.0062, -0.0086, -0.0043, -0.0021, +0.0048, +0.0231}, // layer 2
-      { -0.0094, -0.0114, -0.0128, -0.0036, -0.0001, +0.0259}, // layer 3
-    },
-// 62 GeV
-    {
-      { +0.0381, +0.0425, +0.0553, +0.0887, +0.1464, +0.2891}, // layer 0
-      { -0.0078, -0.0077, -0.0108, +0.0012, +0.0020, +0.0266}, // layer 1
-      { -0.0002, -0.0006, +0.0005, +0.0042, +0.0073, +0.0228}, // layer 2
-      { -0.0059, -0.0034, -0.0036, +0.0012, -0.0019, +0.0017}, // layer 3
-    },
-// 39 GeV
-    {
-      { +0.0366, +0.0398, +0.0621, +0.0823, +0.1060, +0.0000}, // layer 0
-      { -0.0032, -0.0060, -0.0043, -0.0001, -0.0053, +0.0000}, // layer 1
-      { +0.0011, +0.0013, +0.0066, +0.0067, +0.0055, +0.0000}, // layer 2
-      { -0.0054, -0.0071, -0.0027, +0.0003, -0.0019, +0.0000}, // layer 3
-    },
-// 20 GeV
-    {
-      { +0.0246, +0.0542, +0.0758, +0.0816, +0.0000, +0.0000}, // layer 0
-      { -0.0165, -0.0097, -0.0072, -0.0960, +0.0000, +0.0000}, // layer 1
-      { +0.0027, -0.0012, +0.0029, -0.0194, +0.0000, +0.0000}, // layer 2
-      { -0.0189, -0.0062, -0.0154, -0.0036, +0.0000, +0.0000}, // layer 3
-    },
-  };
-  
+// // itr 2
+//   float qx3_offset_fvtxsl[4][4][6] =
+//   {
+// // 200 GeV
+//     {
+//       { +0.0276, +0.0355, +0.0386, +0.0717, +0.1333, +0.2943}, // layer 0
+//       { -0.0054, -0.0147, -0.0159, -0.0105, -0.0019, +0.0142}, // layer 1
+//       { -0.0062, -0.0086, -0.0043, -0.0021, +0.0048, +0.0231}, // layer 2
+//       { -0.0094, -0.0114, -0.0128, -0.0036, -0.0001, +0.0259}, // layer 3
+//     },
+// // 62 GeV
+//     {
+//       { +0.0381, +0.0425, +0.0553, +0.0887, +0.1464, +0.2891}, // layer 0
+//       { -0.0078, -0.0077, -0.0108, +0.0012, +0.0020, +0.0266}, // layer 1
+//       { -0.0002, -0.0006, +0.0005, +0.0042, +0.0073, +0.0228}, // layer 2
+//       { -0.0059, -0.0034, -0.0036, +0.0012, -0.0019, +0.0017}, // layer 3
+//     },
+// // 39 GeV
+//     {
+//       { +0.0366, +0.0398, +0.0621, +0.0823, +0.1060, +0.0000}, // layer 0
+//       { -0.0032, -0.0060, -0.0043, -0.0001, -0.0053, +0.0000}, // layer 1
+//       { +0.0011, +0.0013, +0.0066, +0.0067, +0.0055, +0.0000}, // layer 2
+//       { -0.0054, -0.0071, -0.0027, +0.0003, -0.0019, +0.0000}, // layer 3
+//     },
+// // 20 GeV
+//     {
+//       { +0.0246, +0.0542, +0.0758, +0.0816, +0.0000, +0.0000}, // layer 0
+//       { -0.0165, -0.0097, -0.0072, -0.0960, +0.0000, +0.0000}, // layer 1
+//       { +0.0027, -0.0012, +0.0029, -0.0194, +0.0000, +0.0000}, // layer 2
+//       { -0.0189, -0.0062, -0.0154, -0.0036, +0.0000, +0.0000}, // layer 3
+//     },
+//   };
+
   //--
   cout << " frac cut: " << fracCut << endl;
   cout << " tight_trkcuts: " << tight_trkcuts << endl;
@@ -350,7 +375,7 @@ void flatten(int runNumber, int rp_recal_pass)
 
 
   // --- get the number of files for this run number
-  string pipe_out = (string) gSystem->GetFromPipe(Form("ls input/%d_*.root | grep -c r", runNumber));
+  string pipe_out = (string) gSystem->GetFromPipe(Form("ls input_%s/%d_*.root | grep -c r", species.Data(), runNumber));
   int nfiles = 0;
   nfiles = atoi(pipe_out.c_str());
   cout << "nfiles: " << nfiles << endl;
@@ -360,7 +385,7 @@ void flatten(int runNumber, int rp_recal_pass)
   TChain *ntp_event_chain = new TChain("ntp_event");
   for ( int ifile = 0; ifile < nfiles; ++ifile )
   {
-    sprintf(filename, "input/%d_%d.root", runNumber, ifile);
+    sprintf(filename, "input_%s/%d_%d.root", species.Data(), runNumber, ifile);
     cout << "adding to tchain: " << filename << endl;
     ntp_event_chain->Add(filename);
   }
@@ -427,7 +452,7 @@ void flatten(int runNumber, int rp_recal_pass)
 
 
   char outFile1[300];
-  sprintf(outFile1, "%s%d%s%d%s", "output/files_", energyflag, "/hist_", runNumber, ".root");
+  sprintf(outFile1, "%s%s%d%s%d%s", "output/files_", species.Data(), energyflag, "/hist_", runNumber, ".root");
   cout << "histogram output file: " << outFile1 << endl;
 
   TFile *mData1 = TFile::Open(outFile1, "recreate");
@@ -1165,12 +1190,30 @@ void flatten(int runNumber, int rp_recal_pass)
 
 
     //if ( ( say_event && verbosity > 0 ) || verbosity > 4 ) cout << "Calculating event planes" << endl;
+    // // --- all numbers from Darren 2016-06-23 (d+Au)
+    // const float x_off = 0.3;
+    // const float y_off = 0.02;
+    // const float beam_angle = 0.001;
+    // // const float beam_angle = 0.00;
 
-    // --- all numbers from Darren 2016-06-23
-    const float x_off = 0.3;
-    const float y_off = 0.02;
-    const float beam_angle = 0.001;
-    // const float beam_angle = 0.00;
+    float x_off, y_off, beam_angle, beam_angle_new;
+    if ( species.Contains("dau") )
+    {
+      // --- all numbers from Darren 2016-06-23 (d+Au)
+      x_off = 0.3;
+      y_off = 0.02;
+      beam_angle = 0.001;
+      beam_angle_new = beam_angle;
+    }
+    if ( species.Contains("pau") )
+    {
+      // --- all numbers from Darren 2016-06-23 (p+Au)
+      x_off = 0.21;
+      y_off = 0.05;
+      beam_angle = 0.0036;
+      beam_angle_new = beam_angle;
+    }
+
     float vtx_z = d_bbcz;
     if ( eventfvtx_z > -999 ) vtx_z = eventfvtx_z;
     float vtx_x = x_off + atan(beam_angle) * vtx_z;
@@ -1766,22 +1809,25 @@ void flatten(int runNumber, int rp_recal_pass)
         // to test effect of different beam angles
         // we first need to rotate back by the
         // 0.001 beam angle used when filling the trees
-        float pxo = px;
-        float pzo = pz;
+        if ( fabs( beam_angle_new - beam_angle) > 0.0001 )
+        {
+          float pxo = px;
+          float pzo = pz;
 
-        px = pxo * cos(0.001) + pzo * sin(0.001);
-        pz = -1 * pxo * sin(0.001) + pzo * cos(0.001);
+          px = pxo * cos(beam_angle) + pzo * sin(beam_angle);
+          pz = -1 * pxo * sin(beam_angle) + pzo * cos(beam_angle);
 
-        pxo = px;
-        pzo = pz;
+          pxo = px;
+          pzo = pz;
 
-        // now we can rotate based on what's in beam_angle above
-        px = pxo * cos(-beam_angle) + pzo * sin(-beam_angle);
-        pz = -1 * pxo * sin(-beam_angle) + pzo * cos(-beam_angle);
+          // now we can rotate based on what's in beam_angle above
+          px = pxo * cos(-beam_angle_new) + pzo * sin(-beam_angle_new);
+          pz = -1 * pxo * sin(-beam_angle_new) + pzo * cos(-beam_angle_new);
 
-        // // reimplement rotation bug
-        // px = pxo * cos(-beam_angle) + pzo * sin(-beam_angle);
-        // pz = -1 * px * sin(-beam_angle) + pzo * cos(-beam_angle);
+          // // reimplement rotation bug
+          // px = pxo * cos(-beam_angle_new) + pzo * sin(-beam_angle_new);
+          // pz = -1 * px * sin(-beam_angle_new) + pzo * cos(-beam_angle_new);
+        }
 
         // float charge    = d_charge[itrk];
         float pc3sdz    = d_pc3sdz[itrk];
